@@ -19,10 +19,51 @@ type RegisterLateFn = unsafe extern "C" fn() -> i32;
 
 static REGISTER_LATE_FN: AtomicPtr<c_void> = AtomicPtr::new(std::ptr::null_mut());
 static PLUGIN_ID: OnceLock<i32> = OnceLock::new();
+static BRIDGE_INIT_RESULT: OnceLock<i32> = OnceLock::new();
 
 #[unsafe(no_mangle)]
 pub extern "C" fn AEHotLoaderCore_SetRegisterFn(ptr: *mut c_void) {
     REGISTER_LATE_FN.store(ptr, Ordering::Release);
+}
+
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn AEHotLoaderCore_InitBridge(
+    sp_basic_suite: *const ae::sys::SPBasicSuite,
+) -> i32 {
+    if sp_basic_suite.is_null() {
+        return -1101;
+    }
+
+    if let Some(result) = BRIDGE_INIT_RESULT.get() {
+        return *result;
+    }
+
+    let result = (|| -> Result<i32, ae::Error> {
+        let _pica = ae::PicaBasicSuite::from_sp_basic_suite_raw(sp_basic_suite);
+
+        let utility = ae::aegp::suites::Utility::new()?;
+        let plugin_id = utility.register_with_aegp("AEHotLoaderBridge")?;
+        let _ = PLUGIN_ID.set(plugin_id);
+
+        let register = ae::aegp::suites::RegisterNonAegp::new()?;
+        register.register_idle_hook(
+            plugin_id,
+            Box::new(|_, _min_time| {
+                process_bridge_request();
+                Ok(())
+            }),
+            (),
+        )?;
+
+        Ok(0)
+    })();
+
+    let code = match result {
+        Ok(code) => code,
+        Err(_) => -1102,
+    };
+    let _ = BRIDGE_INIT_RESULT.set(code);
+    code
 }
 
 fn register_late_effect() -> i32 {
@@ -164,23 +205,7 @@ impl AdobePluginGlobal for Plugin {
         _: &mut ae::Parameters<Params>,
     ) -> Result<(), ae::Error> {
         match cmd {
-            ae::Command::GlobalSetup => {
-                if PLUGIN_ID.get().is_none() {
-                    let utility = ae::aegp::suites::Utility::new()?;
-                    let plugin_id = utility.register_with_aegp("AEHotLoaderBridge")?;
-                    let _ = PLUGIN_ID.set(plugin_id);
-
-                    let register = ae::aegp::suites::RegisterNonAegp::new()?;
-                    register.register_idle_hook(
-                        plugin_id,
-                        Box::new(|_, _min_time| {
-                            process_bridge_request();
-                            Ok(())
-                        }),
-                        (),
-                    )?;
-                }
-            }
+            ae::Command::GlobalSetup => {}
             ae::Command::About => {
                 out_data.set_return_msg(
                     "AE Hot Loader bridge\rBackground helper for the dockable ScriptUI panel.",
