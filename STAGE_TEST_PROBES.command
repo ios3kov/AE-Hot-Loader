@@ -12,7 +12,7 @@ for required in "$STRICT" "$PERMISSIVE" "$ELASTIC" "$STELLAR"; do
   [[ -d "$required" ]] || { echo "Missing: $required"; exit 2; }
 done
 
-if ! pgrep -x "Adobe After Effects" >/dev/null 2>&1; then
+if ! pgrep -x "After Effects" >/dev/null 2>&1; then
   echo "ERROR: After Effects must already be running before staging the probes."
   echo "Open AE first, wait until it is fully loaded, then run this script again."
   exit 3
