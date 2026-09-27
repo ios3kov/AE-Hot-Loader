@@ -13,7 +13,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use ae::{
     AegpPlugin, Error,
     aegp::{
-        CommandHookStatus, HookPriority, InstalledEffectKey,
+        CommandHookStatus, HookPriority, InstalledEffectKey, MenuId, MenuOrder,
         suites::{Command, Effect as EffectSuite, Register},
     },
     define_general_plugin,
@@ -417,6 +417,8 @@ fn run_roots_via_ae_command(roots: Vec<PathBuf>) -> Result<Vec<(PathBuf, i32)>, 
         .get()
         .ok_or_else(|| "Loader command is not initialized.".to_string())?;
 
+    let expected_count = roots.len();
+
     let pending = PENDING_RUNTIME_ROOTS.get_or_init(|| Mutex::new(Vec::new()));
     {
         let mut pending = pending
@@ -441,10 +443,19 @@ fn run_roots_via_ae_command(roots: Vec<PathBuf>) -> Result<Vec<(PathBuf, i32)>, 
         .and_then(|suite| suite.do_command(command))
         .map_err(|error| format!("AEGP_DoCommand failed: {error:?}"))?;
 
-    results
+    let collected = results
         .lock()
         .map(|results| results.clone())
-        .map_err(|_| "Command results lock failed after dispatch.".to_string())
+        .map_err(|_| "Command results lock failed after dispatch.".to_string())?;
+
+    if collected.len() != expected_count {
+        return Err(format!(
+            "AEGP command hook did not execute completely: expected {expected_count} result(s), got {}.",
+            collected.len()
+        ));
+    }
+
+    Ok(collected)
 }
 
 enum ReloadResult {
@@ -510,7 +521,7 @@ fn reload_plugins() -> ReloadResult {
                         "reload: command root={} result={result}",
                         root.display()
                     ));
-                    if result < 0 {
+                    if result <= 0 {
                         failures.push(format!("{} ({result})", root.display()));
                     }
                 }
@@ -531,7 +542,7 @@ fn reload_plugins() -> ReloadResult {
 
     if !new_bundles.is_empty() {
         let mut message = format!(
-            "Staged and queued {} new bundle(s) through isolated runtime root(s).",
+            "Loader command executed for {} new bundle(s) through isolated runtime root(s).",
             new_bundles.len()
         );
 
@@ -614,6 +625,12 @@ impl AegpPlugin for Agent {
 
         let command_suite = Command::new()?;
         let loader_command = command_suite.unique_command()?;
+        command_suite.insert_command(
+            "AE Hot Loader Internal",
+            loader_command,
+            MenuId::None,
+            MenuOrder::Bottom,
+        )?;
         let _ = LOADER_COMMAND.set(loader_command);
 
         let register = Register::new()?;
