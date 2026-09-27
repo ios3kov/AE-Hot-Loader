@@ -301,10 +301,7 @@ fn reload_plugins() -> ReloadResult {
     }
 
     if !failures.is_empty() {
-        return ReloadResult::Error(format!(
-            "Internal loader failed: {}",
-            failures.join(", ")
-        ));
+        return ReloadResult::Error(format!("Internal loader failed: {}", failures.join(", ")));
     }
 
     if loaded_total > 0 {
