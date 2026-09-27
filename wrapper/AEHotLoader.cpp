@@ -194,7 +194,7 @@ A_Err AEHotLoader_RegisterLateEffect() {
     bool expected = false;
     if (!g_late_registered.compare_exchange_strong(expected, true)) {
         Log("late: already registered in this AE process");
-        return 0;
+        return 1;
     }
 
     Log("late: invoking saved AE registration callback");
