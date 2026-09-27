@@ -38,9 +38,6 @@ using CoreEffectMainFn = PF_Err (*)(
     PF_LayerDef*,
     void*);
 
-using CoreSetRegisterFn = void (*)(void*);
-using CoreInitBridgeFn = std::int32_t (*)(const SPBasicSuite*);
-
 extern "C" A_Err AEHotLoader_RegisterLateEffect();
 
 namespace {
@@ -59,13 +56,11 @@ constexpr A_long kRegistrationReservedInfo = 8;
 
 PF_PluginDataPtr g_plugin_data = nullptr;
 PF_PluginDataCB2 g_register_callback = nullptr;
-SPBasicSuite* g_basic_suite = nullptr;
 std::atomic<bool> g_late_registered{false};
 
 std::once_flag g_core_once;
 void* g_core_handle = nullptr;
 CoreEffectMainFn g_core_effect_main = nullptr;
-CoreInitBridgeFn g_core_init_bridge = nullptr;
 
 void Log(const char* message) {
     if (FILE* f = std::fopen("/tmp/ae-hot-loader.log", "a")) {
@@ -110,20 +105,12 @@ void LoadCore() {
 
         g_core_effect_main = reinterpret_cast<CoreEffectMainFn>(
             dlsym(g_core_handle, "EffectMain"));
-        auto set_register = reinterpret_cast<CoreSetRegisterFn>(
-            dlsym(g_core_handle, "AEHotLoaderCore_SetRegisterFn"));
-        g_core_init_bridge = reinterpret_cast<CoreInitBridgeFn>(
-            dlsym(g_core_handle, "AEHotLoaderCore_InitBridge"));
-
-        if (!g_core_effect_main || !set_register || !g_core_init_bridge) {
-            Log("core: required export missing");
-            g_core_effect_main = nullptr;
-            g_core_init_bridge = nullptr;
+        if (!g_core_effect_main) {
+            Log("core: EffectMain export missing");
             return;
         }
 
-        set_register(reinterpret_cast<void*>(&AEHotLoader_RegisterLateEffect));
-        Log("core: loaded and callback bridge installed");
+        Log("core: loaded");
     });
 }
 
@@ -153,7 +140,6 @@ A_Err PluginDataEntryFunction2(
 
     g_plugin_data = in_ptr;
     g_register_callback = in_callback;
-    g_basic_suite = in_basic_suite;
 
     char message[512]{};
     std::snprintf(
@@ -188,19 +174,6 @@ A_Err PluginDataEntryFunction2(
     Log(message);
 
     LoadCore();
-    if (!g_core_init_bridge) {
-        Log("startup: core bridge init export unavailable");
-        return result;
-    }
-
-    const A_Err bridge_result = g_core_init_bridge(in_basic_suite);
-    std::snprintf(
-        message,
-        sizeof(message),
-        "startup: background bridge init result=%d",
-        bridge_result);
-    Log(message);
-
     return result;
 }
 
@@ -214,7 +187,7 @@ A_Err AEHotLoader_RegisterLateEffect() {
     bool expected = false;
     if (!g_late_registered.compare_exchange_strong(expected, true)) {
         Log("late: already registered in this AE process");
-        return 1;
+        return 10001;
     }
 
     Log("late: invoking saved AE registration callback");
