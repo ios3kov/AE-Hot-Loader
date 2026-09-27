@@ -383,10 +383,19 @@ void DiagnoseLoadedBundles(const char* root) {
             image_name,
             plugin_data,
             effect_main);
+        DiagnosticReport(
+            "dyld image=%s PluginDataEntryFunction2=%p EffectMain=%p",
+            image_name,
+            plugin_data,
+            effect_main);
     }
 
     Log(
         "internal-loader: dyld root=%s matched_images=%d",
+        root,
+        matched);
+    DiagnosticReport(
+        "dyld root=%s matched_images=%d",
         root,
         matched);
 }
@@ -462,6 +471,13 @@ int LoadPluginFolder(const char* utf8_folder) {
 
     Log(
         "internal-loader: returned=%zu output=[%p,%p,%p]",
+        result,
+        output.begin,
+        output.end,
+        output.capacity_end);
+    DiagnosticReport(
+        "ML::LoadPlugins root=%s returned=%zu output=[%p,%p,%p]",
+        resolved_folder,
         result,
         output.begin,
         output.end,
