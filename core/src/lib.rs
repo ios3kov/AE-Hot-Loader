@@ -27,9 +27,8 @@ impl AdobePluginGlobal for Plugin {
     ) -> Result<(), ae::Error> {
         match cmd {
             ae::Command::About => {
-                out_data.set_return_msg(
-                    "AE Hot Loader Bridge\rInternal effect-registration bridge.",
-                );
+                out_data
+                    .set_return_msg("AE Hot Loader Bridge\rInternal effect-registration bridge.");
             }
             ae::Command::Render {
                 in_layer,
