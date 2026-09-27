@@ -163,3 +163,91 @@ Development stops and the architecture is considered viable only when all are tr
 1. macOS Apple Silicon / AE 25.6
 2. newer AE versions after the shell ABI is stable
 3. Windows only after the macOS product workflow is complete
+
+## Shell architecture implementation status — 2026-09-27
+
+Production shell architecture is implemented on `feature/internal-loader-agent`.
+
+Implemented and CI-verified:
+
+- stable control effect shell registered by AE at normal startup;
+- resident AEGP Agent servicing `Window → AE Hot Loader → Reload Plugins`;
+- dyld enumeration of loaded hot-reload shells;
+- unique runtime copies for every implementation load;
+- atomic `EffectMain` pointer swap;
+- old implementation dylibs retained until AE exit;
+- bundled-implementation fallback when a staged candidate is invalid or incompatible;
+- explicit implementation protocol ABI;
+- explicit implementation state/schema ABI;
+- per-effect implementation key validation;
+- human-readable implementation build label;
+- stale staged control candidate cleared by installer;
+- packaged runtime log collector.
+
+The control shell CI performs a real macOS `dlopen` reload smoke outside AE:
+candidate implementation loads successfully and an unchanged second reload is detected.
+
+Latest verified AE Hot Loader CI at this checkpoint: **run #142 — SUCCESS**.
+
+### ElasticGrid adapter
+
+Repository: `ios3kov/ElasticGridFX`  
+Branch: `feature/ae-hot-loader-shell`
+
+Implemented:
+
+- existing `ElasticGrid FX` PiPL identity retained;
+- match name remains `com.elasticgrid.fx.warp`;
+- stable C++ shell owns AE registration;
+- existing Rust host is packaged as `libelasticgrid_impl.dylib`;
+- implementation key: `elasticgrid`;
+- hot-reload staging script added;
+- shell ABI validation and bundled fallback enabled.
+
+Verified:
+
+- dedicated macOS Hot Loader Shell CI: **SUCCESS**;
+- real shell-reload smoke: **SUCCESS**;
+- full portable CI: GCC, Clang, ASan/UBSan, TSan and static analysis: **SUCCESS**.
+
+### Stellar Gradient adapter
+
+Repository: `ios3kov/stellar-gradient`  
+Branch: `feature/ae-hot-loader-shell`
+
+Implemented:
+
+- existing `Stellar Gradient` PiPL identity retained;
+- category remains `Stellar`;
+- match name remains `StellarLabs.StellarGradient`;
+- stable C++ shell owns AE registration;
+- existing Rust host is packaged as `libstellar_gradient_impl.dylib`;
+- implementation key: `stellar-gradient`;
+- hot-reload staging script added;
+- shell ABI validation and bundled fallback enabled;
+- original support URL metadata retained.
+
+Verified:
+
+- dedicated macOS Hot Loader Shell CI: **SUCCESS**;
+- implementation build: **SUCCESS**;
+- shell bundle/signing: **SUCCESS**;
+- real shell-reload smoke: **SUCCESS**.
+
+### Remaining live gate
+
+No further private-loader/PiPL research is required.
+
+The next required evidence must come from a real After Effects 25.6 process:
+
+1. install the current AE Hot Loader control shell + Agent package;
+2. restart AE once;
+3. confirm the control shell appears through normal native registration;
+4. stage `candidate-v2` while AE remains open;
+5. click **Reload Plugins**;
+6. confirm the Agent finds one loaded shell and reports `reloaded=1`;
+7. render/use the existing effect instance after the swap;
+8. repeat Reload without a new candidate and confirm `unchanged=1`.
+
+After that passes, run the equivalent live gate for ElasticGrid and Stellar Gradient. No merge to `main` before these runtime gates pass.
+
