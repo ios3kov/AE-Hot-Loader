@@ -315,10 +315,7 @@ fn reload_plugins() -> ReloadResult {
     }
 
     if !new_bundles.is_empty() {
-        let mut message = format!(
-            "Queued {} new bundle(s) for AE loader.",
-            new_bundles.len()
-        );
+        let mut message = format!("Queued {} new bundle(s) for AE loader.", new_bundles.len());
 
         if !changed_bundles.is_empty() {
             message.push_str(&format!(
