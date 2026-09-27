@@ -3,8 +3,8 @@ use std::ffi::c_void;
 use std::fs;
 use std::path::PathBuf;
 use std::sync::{
-    atomic::{AtomicPtr, Ordering},
     OnceLock,
+    atomic::{AtomicPtr, Ordering},
 };
 
 #[derive(Eq, PartialEq, Hash, Clone, Copy, Debug)]
@@ -49,11 +49,7 @@ fn bridge_dir() -> Option<PathBuf> {
 fn parse_value(text: &str, key: &str) -> Option<String> {
     text.lines().find_map(|line| {
         let (k, v) = line.split_once('=')?;
-        if k == key {
-            Some(v.to_string())
-        } else {
-            None
-        }
+        if k == key { Some(v.to_string()) } else { None }
     })
 }
 
@@ -175,15 +171,14 @@ impl AdobePluginGlobal for Plugin {
                     let _ = PLUGIN_ID.set(plugin_id);
 
                     let register = ae::aegp::suites::RegisterNonAegp::new()?;
-                    register
-                        .register_idle_hook(
-                            plugin_id,
-                            Box::new(|_, _min_time| {
-                                process_bridge_request();
-                                Ok(())
-                            }),
-                            (),
-                        )?;
+                    register.register_idle_hook(
+                        plugin_id,
+                        Box::new(|_, _min_time| {
+                            process_bridge_request();
+                            Ok(())
+                        }),
+                        (),
+                    )?;
                 }
             }
             ae::Command::About => {
