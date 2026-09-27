@@ -553,6 +553,10 @@ fn reload_plugins() -> ReloadResult {
         "StellarLabs.StellarGradient",
         "ElasticGrid FX",
         "Stellar Gradient",
+        "OS3KOV.AEHotLoader.RustProbe",
+        "OS3KOV.AEHotLoader.RustProbe.Permissive",
+        "AE Hot Loader Rust Probe",
+        "AE Hot Loader Rust Probe Permissive",
     ];
     let preexisting_target_effects = find_registry_matches(&registry_before, &known_matches);
     for effect in &preexisting_target_effects {
@@ -601,11 +605,15 @@ fn reload_plugins() -> ReloadResult {
     }
 
     let mut runtime_roots = Vec::new();
+    let mut staged_pairs: Vec<(PathBuf, PathBuf)> = Vec::new();
     let mut failures = Vec::new();
 
     for (ordinal, plugin) in new_bundles.iter().enumerate() {
         match stage_bundle_for_runtime(plugin, ordinal) {
-            Ok(root) => runtime_roots.push(root),
+            Ok(root) => {
+                staged_pairs.push((plugin.clone(), root.clone()));
+                runtime_roots.push(root);
+            },
             Err(error) => failures.push(error),
         }
     }
@@ -666,6 +674,69 @@ fn reload_plugins() -> ReloadResult {
             ));
         }
 
+        let permissive_trace = fs::read_to_string(
+            "/tmp/ae-hot-loader-rust-probe-permissive.log",
+        )
+        .unwrap_or_else(|_| "(no permissive entrypoint trace)".to_string());
+
+        let mut report = String::new();
+        report.push_str("AE Hot Loader unified diagnostic report\n");
+        report.push_str(&format!(
+            "registry_before={} registry_after={} added={}\n",
+            registry_before.len(),
+            registry_after.len(),
+            added_effects.len()
+        ));
+        report.push_str("\nBundles:\n");
+
+        for (index, (source, root)) in staged_pairs.iter().enumerate() {
+            let result = loader_results
+                .iter()
+                .find(|(loaded_root, _)| loaded_root == root)
+                .map(|(_, result)| *result)
+                .unwrap_or(-9999);
+            report.push_str(&format!(
+                "{}. source={} runtime_root={} ML::LoadPlugins={}\n",
+                index + 1,
+                source.display(),
+                root.display(),
+                result
+            ));
+        }
+
+        report.push_str("\nPreexisting target effects:\n");
+        if preexisting_target_effects.is_empty() {
+            report.push_str("(none)\n");
+        } else {
+            for effect in &preexisting_target_effects {
+                report.push_str(&format!(
+                    "name={:?} match={:?} category={:?}\n",
+                    effect.name, effect.match_name, effect.category
+                ));
+            }
+        }
+
+        report.push_str("\nAdded effects:\n");
+        if added_effects.is_empty() {
+            report.push_str("(none)\n");
+        } else {
+            for effect in &added_effects {
+                report.push_str(&format!(
+                    "name={:?} match={:?} category={:?}\n",
+                    effect.name, effect.match_name, effect.category
+                ));
+            }
+        }
+
+        report.push_str("\nPermissive PluginDataEntryFunction2 trace:\n");
+        report.push_str(&permissive_trace);
+        if !report.ends_with('\n') {
+            report.push('\n');
+        }
+
+        let _ = fs::write("/tmp/ae-hot-loader-diagnostic-report.log", &report);
+        log_line("diagnostic-report: /tmp/ae-hot-loader-diagnostic-report.log");
+
         let loader_codes = loader_results
             .iter()
             .map(|(_, result)| result.to_string())
@@ -673,7 +744,8 @@ fn reload_plugins() -> ReloadResult {
             .join(",");
 
         let mut message = format!(
-            "ML::LoadPlugins=[{loader_codes}]. AE registry +{} effect(s)",
+            "{} bundles: ML::LoadPlugins=[{loader_codes}], registry +{}; report: /tmp/ae-hot-loader-diagnostic-report.log",
+            new_bundles.len(),
             added_effects.len()
         );
 
