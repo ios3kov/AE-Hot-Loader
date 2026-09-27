@@ -111,10 +111,23 @@ jobs:
           mkdir -p "$PROBE/Contents/MacOS" "$PROBE/Contents/Resources"
           cp "$PROBE_ROOT/libae_hot_loader_rust_probe.dylib" "$PROBE/Contents/MacOS/AEHotLoaderRustProbe"
           cp "$PROBE_ROOT/ae_hot_loader_rust_probe.rsrc" "$PROBE/Contents/Resources/AEHotLoaderRustProbe.rsrc"
-          cp "$PROBE_ROOT/ae_hot_loader_rust_probe_PkgInfo" "$PROBE/Contents/PkgInfo"
-          cp "$PROBE_ROOT/ae_hot_loader_rust_probe_Info.plist" "$PROBE/Contents/Info.plist"
-          /usr/libexec/PlistBuddy -c 'Set :CFBundleExecutable AEHotLoaderRustProbe' "$PROBE/Contents/Info.plist" || /usr/libexec/PlistBuddy -c 'Add :CFBundleExecutable string AEHotLoaderRustProbe' "$PROBE/Contents/Info.plist"
-          /usr/libexec/PlistBuddy -c 'Set :CFBundleIdentifier com.os3kov.AEHotLoader.RustProbe' "$PROBE/Contents/Info.plist" || /usr/libexec/PlistBuddy -c 'Add :CFBundleIdentifier string com.os3kov.AEHotLoader.RustProbe' "$PROBE/Contents/Info.plist"
+          printf 'eFKTFXTC' > "$PROBE/Contents/PkgInfo"
+          cat > "$PROBE/Contents/Info.plist" <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>CFBundleDevelopmentRegion</key><string>English</string>
+            <key>CFBundleExecutable</key><string>AEHotLoaderRustProbe</string>
+            <key>CFBundleIdentifier</key><string>com.os3kov.AEHotLoader.RustProbe</string>
+            <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+            <key>CFBundleName</key><string>AE Hot Loader Rust Probe</string>
+            <key>CFBundlePackageType</key><string>eFKT</string>
+            <key>CFBundleSignature</key><string>FXTC</string>
+            <key>CFBundleVersion</key><string>1</string>
+          </dict>
+          </plist>
+          PLIST
           codesign --force --deep --sign - "$PROBE"
           codesign --verify --deep --strict "$PROBE"
           plutil -lint "$PROBE/Contents/Info.plist"
