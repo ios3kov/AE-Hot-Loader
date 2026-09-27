@@ -1,58 +1,110 @@
 # AE Hot Loader — Production Plan
 
-## Goal
+## Product definition
 
-Allow a newly installed native After Effects effect plug-in to become available in an already-running After Effects process on macOS.
+AE Hot Loader is a **tool panel**, not an Effect plug-in.
 
-## Phase 1 — Proof of concept
+User-facing surface:
+- dockable ScriptUI panel;
+- opened from `Window → AE Hot Loader`;
+- main control: **Reload Plugins**;
+- optional Auto Watch later.
 
-1. Capture the host registration callback during normal AE startup.
-2. Keep a permanent loader plug-in active.
-3. Trigger a second effect registration after AE is fully running.
-4. Confirm the late effect appears in the Effect menu.
-5. Apply it to a layer and confirm rendering works.
+A native component may exist internally, but only as a hidden technical bridge required to access After Effects' plug-in loader.
 
-### Stop criterion
+## Architecture
 
-AE is running → click **Register Late Effect** → new effect appears → applies → renders → no AE restart.
+`ScriptUI Panel → request file / bridge → native helper inside AE → loader/registry → newly installed .plugin`
 
-If the late-registration callback is rejected, stop product work on the public-callback approach and move to internal loader investigation.
+### ScriptUI panel
 
-## Phase 2 — External plug-in bundle loading
+Responsibilities:
+- provide the visible button;
+- show status: scanning / loaded / failed;
+- write reload requests to the bridge;
+- read the native helper response;
+- never require adding an effect to a layer.
+
+### Native helper
+
+Responsibilities:
+- stay loaded inside the AE process;
+- detect reload requests;
+- scan Adobe/MediaCore plug-in folders;
+- load candidate bundles;
+- invoke host registration;
+- return structured success/error results.
+
+The current effect-based helper is a **temporary feasibility PoC**, not the production UX.
+
+## Phase 1 — UX + bridge shell
+
+1. Build dockable ScriptUI panel.
+2. Define request/response protocol.
+3. Panel writes a reload request.
+4. Native helper detects request and writes a response.
+5. Validate that the UI works without applying any effect.
+
+## Phase 2 — late-registration proof
+
+1. Capture the host effect-registration callback during startup.
+2. Keep the helper resident.
+3. Trigger a second registration only through the ScriptUI request.
+4. Confirm the new effect appears without AE restart.
+5. Remove the need to press a parameter button on an Effect instance.
+
+### Stop criterion A
+
+AE is running → click **Reload Plugins** in ScriptUI → test effect appears → applies → renders → no AE restart.
+
+If this fails, stop the public-callback approach and investigate the internal loader.
+
+## Phase 3 — external plug-in loading
 
 1. Scan standard Adobe/MediaCore plug-in locations.
 2. Detect newly added `.plugin` bundles.
 3. Load bundle executable with the macOS dynamic loader.
-4. Resolve `PluginDataEntryFunction2` and `EffectMain`.
-5. Invoke registration using the proven host context.
-6. Verify AE menu visibility and application.
+4. Resolve `PluginDataEntryFunction2` / entry point.
+5. Register using the proven host context.
+6. Verify menu visibility and application.
 
-## Phase 3 — Compatibility
+## Phase 4 — production hidden helper
+
+The final native bridge must not appear as a normal user Effect.
+
+Candidate implementations:
+- background AEGP/general plug-in bridge;
+- minimal resident loader module;
+- internal AE loader hook if the public registration callback cannot support the hidden-helper design.
+
+The implementation chosen must satisfy:
+- no effect needs to be applied to a layer;
+- no visible "AE Hot Loader" effect in normal use;
+- panel works immediately after AE startup.
+
+## Phase 5 — compatibility
 
 Test:
-- CPU effects
-- SmartFX
-- Metal/GPU effects
-- custom UI
-- licensing frameworks
-- embedded dylibs/frameworks
-- signed/notarized bundles
+- CPU effects;
+- SmartFX;
+- Metal/GPU effects;
+- custom UI;
+- licensing frameworks;
+- embedded dylibs/frameworks;
+- signed/notarized bundles.
 
-## Phase 4 — Product UX
+## Phase 6 — product UX
 
-- Reload Plugins button
-- folder watcher / auto-detect
-- success/error list
-- per-plugin compatibility status
-- logs and blacklist
-- never unload an effect that may be in use
+- Reload Plugins button;
+- Auto Watch;
+- loaded/failed plug-in list;
+- compatibility status;
+- logs;
+- blacklist;
+- recovery after failed load.
 
 ## Platform order
 
 1. macOS Apple Silicon
 2. macOS Intel only if still useful
 3. Windows only after macOS feasibility is proven
-
-## Current status
-
-macOS ARM64 PoC source migrated to this standalone repository; CI validation pending.
