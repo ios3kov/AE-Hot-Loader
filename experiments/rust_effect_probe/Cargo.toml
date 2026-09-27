@@ -1,0 +1,15 @@
+[package]
+name = "ae_hot_loader_rust_probe"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+build = "build.rs"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+after-effects = "=0.4.0"
+
+[build-dependencies]
+pipl = "=0.1.1"
