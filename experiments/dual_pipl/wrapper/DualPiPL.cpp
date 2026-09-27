@@ -195,6 +195,34 @@ A_Err PluginDataEntryFunction2(
         result);
     Log(after);
 
+    if (call == 1) {
+        const char* second_name = "AE Hot Loader Dual PiPL B";
+        const char* second_match = "OS3KOV.AEHotLoader.DualPiPL.B";
+
+        const A_Err second_result = in_callback(
+            in_ptr,
+            reinterpret_cast<const std::uint8_t*>(second_name),
+            reinterpret_cast<const std::uint8_t*>(second_match),
+            reinterpret_cast<const std::uint8_t*>("AE Hot Loader Diagnostic"),
+            reinterpret_cast<const std::uint8_t*>("EffectMain"),
+            kAEEffectKind,
+            kApiMajor,
+            kApiMinor,
+            kRegistrationReservedInfo,
+            reinterpret_cast<const std::uint8_t*>("https://github.com/ios3kov/AE-Hot-Loader"));
+
+        char second[320]{};
+        std::snprintf(
+            second,
+            sizeof(second),
+            "call=%d SECOND_REGISTRATION effect=%s data=%p registration_result=%d",
+            call,
+            second_name,
+            static_cast<void*>(in_ptr),
+            second_result);
+        Log(second);
+    }
+
     return result;
 }
 
