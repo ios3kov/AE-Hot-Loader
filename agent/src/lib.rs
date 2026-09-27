@@ -539,6 +539,11 @@ enum ReloadResult {
 }
 
 fn reload_plugins() -> ReloadResult {
+    let _ = fs::write(
+        "/tmp/ae-hot-loader-diagnostic-report.log",
+        "AE Hot Loader unified diagnostic report\n\n",
+    );
+
     let registry_before = match capture_effect_registry() {
         Ok(snapshot) => snapshot,
         Err(error) => {
@@ -680,7 +685,6 @@ fn reload_plugins() -> ReloadResult {
         .unwrap_or_else(|_| "(no permissive entrypoint trace)".to_string());
 
         let mut report = String::new();
-        report.push_str("AE Hot Loader unified diagnostic report\n");
         report.push_str(&format!(
             "registry_before={} registry_after={} added={}\n",
             registry_before.len(),
@@ -734,7 +738,13 @@ fn reload_plugins() -> ReloadResult {
             report.push('\n');
         }
 
-        let _ = fs::write("/tmp/ae-hot-loader-diagnostic-report.log", &report);
+        if let Ok(mut file) = fs::OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open("/tmp/ae-hot-loader-diagnostic-report.log")
+        {
+            let _ = file.write_all(report.as_bytes());
+        }
         log_line("diagnostic-report: /tmp/ae-hot-loader-diagnostic-report.log");
 
         let loader_codes = loader_results
