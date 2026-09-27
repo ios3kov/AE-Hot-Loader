@@ -108,3 +108,24 @@ Test:
 1. macOS Apple Silicon
 2. macOS Intel only if still useful
 3. Windows only after macOS feasibility is proven
+
+
+## Verified build status — 2026-09-27
+
+The ScriptUI + idle-hook architecture compiles successfully on the macOS ARM64 CI runner.
+
+Verified:
+- Rust effect core build;
+- RegisterNonAegp idle hook compilation;
+- native wrapper build;
+- plug-in bundle assembly;
+- ad-hoc code signing;
+- ScriptUI panel validation;
+- test-kit packaging.
+
+Next validation is inside a real running After Effects process:
+1. install the package;
+2. restart AE once for the initial helper installation;
+3. open `Window → AE Hot Loader`;
+4. click **Reload Plugins**;
+5. confirm the late test effect appears without another AE restart.
