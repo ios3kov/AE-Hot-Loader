@@ -180,3 +180,29 @@ Remaining checks:
 - render path;
 - stability after application/render.
 
+
+
+## Stop Criterion A — PASSED — 2026-09-27
+
+The proof-of-concept is complete.
+
+Verified live in After Effects 25.6.0 ARM64 without restarting AE:
+
+- new native `.plugin` loaded through AE's own `ML::LoadPlugins`;
+- both test effects registered successfully;
+- both appeared in Effects & Presets;
+- both could be applied to a layer;
+- RAM Preview completed successfully;
+- normal render completed successfully;
+- AE remained stable.
+
+The test effects are intentionally diagnostic/pass-through and therefore do not produce a visible image change.
+
+Conclusion: After Effects can accept a newly introduced native effect bundle during a running session when the request is routed through the host-owned internal loader transaction.
+
+Next phase:
+1. integrate the proven `ML::LoadPlugins` path into the AEGP Agent;
+2. trigger it from the existing ScriptUI `Reload Plugins` button;
+3. scan standard plug-in locations and detect newly added bundles;
+4. add compatibility guards/version checks;
+5. remove the temporary effect bridge dependency from the production flow.
