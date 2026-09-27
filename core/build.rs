@@ -20,8 +20,8 @@ fn main() {
 
     pipl::plugin_build(vec![
         Property::Kind(PIPLType::AEEffect),
-        Property::Name("AE Hot Loader"),
-        Property::Category("AE Hot Loader"),
+        Property::Name("AE Hot Loader Bridge (Internal)"),
+        Property::Category("AE Hot Loader Internal"),
         #[cfg(target_os = "macos")]
         Property::CodeMacARM64("EffectMain"),
         Property::AE_PiPL_Version { major: 2, minor: 0 },
@@ -41,7 +41,7 @@ fn main() {
             OutFlags::PixIndependent | OutFlags::DeepColorAware
         ),
         Property::AE_Effect_Global_OutFlags_2(OutFlags2::empty()),
-        Property::AE_Effect_Match_Name("OS3KOV.AEHotLoader"),
+        Property::AE_Effect_Match_Name("OS3KOV.AEHotLoader.Bridge"),
         Property::AE_Reserved_Info(0),
         Property::AE_Effect_Support_URL("https://github.com/ios3kov/AE-Hot-Loader"),
     ]);
