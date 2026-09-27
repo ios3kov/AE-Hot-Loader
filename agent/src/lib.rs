@@ -15,7 +15,6 @@ use ae::{
         suites::{Effect as EffectSuite, Register},
     },
     define_general_plugin,
-    pf::suites::{AdvApp, AdvItem},
     sys::AEGP_PluginID,
 };
 
@@ -320,19 +319,6 @@ fn diagnose_effect_registry_if_needed() {
         "registry-diag: generation={generation} matching_effects={found}"
     ));
 
-    if found > 0 {
-        match AdvItem::new().and_then(|suite| suite.touch_active_item()) {
-            Ok(()) => log_line("ui-refresh: PF_TouchActiveItem ok"),
-            Err(error) => log_line(&format!("ui-refresh: PF_TouchActiveItem failed: {error:?}")),
-        }
-
-        match AdvApp::new().and_then(|suite| suite.refresh_all_windows()) {
-            Ok(()) => log_line("ui-refresh: PF_RefreshAllWindows ok"),
-            Err(error) => log_line(&format!(
-                "ui-refresh: PF_RefreshAllWindows failed: {error:?}"
-            )),
-        }
-    }
 
     *last = generation;
 }
