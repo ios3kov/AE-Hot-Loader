@@ -1,10 +1,10 @@
 # AE Hot Loader
 
-Dockable After Effects tool for experimentally loading/registering newly installed native effects without restarting After Effects.
+Hot-reload workflow for native Adobe After Effects effects on macOS Apple Silicon.
 
-## User-facing UX
+## Product UX
 
-The visible product is a ScriptUI panel:
+User-facing surface:
 
 `Window → AE Hot Loader`
 
@@ -12,67 +12,93 @@ Main action:
 
 **Reload Plugins**
 
-The native components are internal implementation details.
+The panel does not apply effects automatically and does not replace the native **Effects & Presets** workflow.
 
-## macOS PoC architecture
+## Production architecture
 
-`ScriptUI Panel → AEGP Agent → Effect Bridge → AE registration callback`
+```
+After Effects startup
+    ↓
+stable effect shell .plugin
+    ↓
+hot-swappable implementation .dylib
 
-### AEHotLoaderAgent.plugin
-- genuine AEGP/general plug-in;
-- starts automatically with After Effects;
-- registers an idle hook;
-- listens for requests from the ScriptUI panel;
-- calls the effect bridge inside the AE process;
-- writes a response back to the panel.
+Window → AE Hot Loader
+    ↓
+AEGP Agent
+    ↓
+loaded shell(s) → atomic implementation swap
+```
 
-### AEHotLoaderBridge.plugin
-- temporary internal effect plug-in used only to capture AE's `PF_PluginDataCB2` registration callback during startup;
-- exports `AEHotLoader_RegisterLateEffect`;
-- is not part of the intended user workflow.
+### Stable shell
 
-### ScriptUI panel
-- contains the **Reload Plugins** button;
-- never needs an effect applied to a layer;
-- communicates with the agent through the bridge request/response files.
+Each hot-reloadable effect has a small native shell plug-in.
 
-## Current research result
+The shell:
+- owns the PiPL and stable After Effects registration;
+- appears normally in native **Effects & Presets**;
+- exports the normal `EffectMain`;
+- forwards effect commands to the currently active implementation dylib;
+- can switch to a newly built implementation while AE stays open.
 
-On After Effects 25.6.0 the effect bridge loads correctly and captures the registration callback.
+A **new effect shell requires one AE restart the first time it is installed**. After that, implementation updates are hot-reloadable.
 
-A previous direct late-registration call reached AE but returned code `1`, so the public callback may reject registration after startup. The two-module AEGP build is intended to confirm this cleanly from the panel.
+### Implementation dylib
 
-## Stop criterion
+Effect logic lives in a separate dylib.
 
-AE already running → click **Reload Plugins** → late test effect appears and can be applied/rendered → no AE restart.
+Reloading uses a new uniquely staged dylib image and atomically switches the shell's function pointer. Old dylib images are intentionally kept loaded until AE exits; this avoids unloading code that may still be referenced by render threads or existing instances.
 
-If AE again returns code `1`, the public callback route is considered blocked and the next research phase is the internal AE loader/registry.
+### AEGP Agent
 
-## Platform
+`AEHotLoaderAgent.plugin` is loaded at AE startup and services requests from the ScriptUI panel.
 
-Current target: macOS Apple Silicon only.
+Production responsibility:
+- receive `Reload Plugins`;
+- discover loaded hot-reload shells;
+- ask each shell to load its latest implementation;
+- report success / unchanged / failure.
 
+## Important research conclusion
 
-## Internal-loader live gate status — 2026-09-27
+The earlier private `ML::LoadPlugins` research proved that AE can late-load some bundles, but it is not a reliable production mechanism for registering arbitrary new native effects into AE's Installed Effects Registry after startup.
 
-The isolated branch `experiment/internal-loader-probe` now has a green packaged live-test kit.
+Live diagnostics showed cases where:
+- the bundle executable was loaded;
+- `PluginDataEntryFunction2` was called;
+- the registration callback existed;
+- the callback returned `0`;
+- the Installed Effects Registry still did not gain the effect.
 
-Verified in CI:
-- private `ML::LoadPlugins` probe builds;
-- safe test effect builds;
-- bundle signing/validation pass;
-- `PREPARE_LIVE_TEST.command` is packaged;
-- workflow run #6 completed successfully.
+Therefore production development no longer depends on runtime registration of a completely new effect.
 
-Production `main` is not switched to the private loader yet.
+The private loader code remains research-only and is not the product architecture.
 
-Next gate: run the probe inside an already-open After Effects 25.6 process and verify the newly copied test effect appears, applies, and renders without restarting AE.
+## Target workflow
 
+For an already installed shell:
 
-## Proof-of-concept status
+```
+edit effect code
+→ build implementation dylib
+→ click Reload Plugins
+→ shell loads new implementation
+→ continue working without restarting AE
+```
 
-**PASSED on After Effects 25.6.0 / macOS Apple Silicon.**
+## Current target
 
-A newly introduced native effect bundle was loaded and registered in an already-running AE process through AE's internal `ML::LoadPlugins` path. The effects appeared, could be applied, and survived RAM Preview and normal rendering without restarting AE.
+- After Effects 25.6
+- macOS Apple Silicon
+- first production adapters: ElasticGrid and StellarGradient
 
-Next step: wire this proven loader path into the production AEGP Agent and ScriptUI `Reload Plugins` workflow.
+## Release gate
+
+The shell architecture is considered ready when:
+
+1. shell is visible in native Effects & Presets after normal AE startup;
+2. effect can be applied and rendered;
+3. implementation can be rebuilt while AE remains open;
+4. **Reload Plugins** switches to the new implementation;
+5. existing project/effect instances remain stable;
+6. repeated reloads do not require AE restart.
