@@ -58,8 +58,8 @@ A_Err PluginDataEntryFunction2(
 
     const A_Err result = in_callback(
         in_ptr,
-        reinterpret_cast<const std::uint8_t*>("AE Hot Loader Single PiPL C++"),
-        reinterpret_cast<const std::uint8_t*>("OS3KOV.AEHotLoader.SinglePiPLCpp"),
+        reinterpret_cast<const std::uint8_t*>("AE Hot Loader Single PiPL C++ Fresh"),
+        reinterpret_cast<const std::uint8_t*>("OS3KOV.AEHotLoader.SinglePiPLCpp.Fresh"),
         reinterpret_cast<const std::uint8_t*>("AE Hot Loader Diagnostic"),
         reinterpret_cast<const std::uint8_t*>("EffectMain"),
         FourCC('e','F','K','T'),
