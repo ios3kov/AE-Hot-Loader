@@ -105,7 +105,7 @@ jobs:
             grep -E 'PluginDataEntryFunction2|EffectMain|LateEffectMain|AEHotLoader_RegisterLateEffect'
 
           nm -gU "$BUNDLE/Contents/Frameworks/libae_hot_loader_core.dylib" | \
-            grep -E 'EffectMain|AEHotLoaderCore_SetRegisterFn'
+            grep -E 'EffectMain|AEHotLoaderCore_SetRegisterFn|AEHotLoaderCore_InitBridge'
 
       - name: Validate ScriptUI panel
         run: |
