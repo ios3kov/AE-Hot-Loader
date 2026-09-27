@@ -138,6 +138,8 @@ A_Err PluginDataEntryFunction2(
     const char* in_host_name,
     const char* in_host_version) {
 
+    (void)in_basic_suite;
+
     g_plugin_data = in_ptr;
     g_register_callback = in_callback;
 
