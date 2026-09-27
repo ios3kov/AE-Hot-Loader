@@ -4,11 +4,13 @@ set -euo pipefail
 HERE="${0:A:h}"
 STRICT="$HERE/AEHotLoaderRustProbe.plugin"
 PERMISSIVE="$HERE/AEHotLoaderRustProbePermissive.plugin"
+DUAL="$HERE/AEHotLoaderDualPiPL.plugin"
+SINGLE="$HERE/AEHotLoaderSinglePiPLCpp.plugin"
 ELASTIC="/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/FSTR FX/ElasticGrid.plugin"
 STELLAR="/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/FSTR FX/StellarGradient.plugin"
 DEST="$HOME/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/AEHotLoaderProbeTest"
 
-for required in "$STRICT" "$PERMISSIVE" "$ELASTIC" "$STELLAR"; do
+for required in "$STRICT" "$PERMISSIVE" "$DUAL" "$SINGLE" "$ELASTIC" "$STELLAR"; do
   [[ -d "$required" ]] || { echo "Missing: $required"; exit 2; }
 done
 
@@ -19,6 +21,8 @@ if ! pgrep -x "After Effects" >/dev/null 2>&1; then
 fi
 
 rm -f /tmp/ae-hot-loader-rust-probe-permissive.log
+rm -f /tmp/ae-hot-loader-dualpipl.log
+rm -f /tmp/ae-hot-loader-singlepipl-cpp.log
 rm -f /tmp/ae-hot-loader-diagnostic-report.log
 rm -rf "$DEST"
 mkdir -p "$DEST"
@@ -26,6 +30,8 @@ cp -R "$ELASTIC" "$DEST/ElasticGrid.plugin"
 cp -R "$STELLAR" "$DEST/StellarGradient.plugin"
 cp -R "$STRICT" "$DEST/AEHotLoaderRustProbe.plugin"
 cp -R "$PERMISSIVE" "$DEST/AEHotLoaderRustProbePermissive.plugin"
+cp -R "$DUAL" "$DEST/AEHotLoaderDualPiPL.plugin"
+cp -R "$SINGLE" "$DEST/AEHotLoaderSinglePiPLCpp.plugin"
 xattr -dr com.apple.quarantine "$DEST" 2>/dev/null || true
 
 echo
@@ -34,12 +40,14 @@ echo "  $DEST/ElasticGrid.plugin"
 echo "  $DEST/StellarGradient.plugin"
 echo "  $DEST/AEHotLoaderRustProbe.plugin"
 echo "  $DEST/AEHotLoaderRustProbePermissive.plugin"
+echo "  $DEST/AEHotLoaderDualPiPL.plugin"
+echo "  $DEST/AEHotLoaderSinglePiPLCpp.plugin"
 echo
 echo "Now click Reload Plugins in AE Hot Loader."
 
 echo
 echo "Verification:"
-for bundle in ElasticGrid.plugin StellarGradient.plugin AEHotLoaderRustProbe.plugin AEHotLoaderRustProbePermissive.plugin; do
+for bundle in ElasticGrid.plugin StellarGradient.plugin AEHotLoaderRustProbe.plugin AEHotLoaderRustProbePermissive.plugin AEHotLoaderDualPiPL.plugin AEHotLoaderSinglePiPLCpp.plugin; do
   if [[ -d "$DEST/$bundle" ]]; then
     echo "  OK  $bundle"
   else
@@ -49,4 +57,4 @@ for bundle in ElasticGrid.plugin StellarGradient.plugin AEHotLoaderRustProbe.plu
 done
 
 echo
-echo "All 4 bundles are staged. Now click Reload Plugins exactly once."
+echo "All 6 bundles are staged. Now click Reload Plugins exactly once."
