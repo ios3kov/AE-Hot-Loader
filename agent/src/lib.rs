@@ -1,5 +1,5 @@
 use after_effects as ae;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeMap;
 use std::ffi::CString;
 use std::fs;
 use std::io::Write;
@@ -11,11 +11,10 @@ use std::sync::{Mutex, OnceLock};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use ae::{
-    AegpPlugin, Error,
+    AegpPlugin,
     aegp::{
-        InstalledEffectKey,
+        CommandHookStatus, HookPriority, InstalledEffectKey,
         suites::{Command, Effect as EffectSuite, Register},
-        CommandHookStatus, HookPriority,
     },
     define_general_plugin,
     sys::AEGP_PluginID,
@@ -413,7 +412,6 @@ fn stage_bundle_for_runtime(bundle: &Path, ordinal: usize) -> Result<PathBuf, St
     Ok(root)
 }
 
-
 fn run_roots_via_ae_command(roots: Vec<PathBuf>) -> Result<Vec<(PathBuf, i32)>, String> {
     let command = *LOADER_COMMAND
         .get()
@@ -647,8 +645,9 @@ impl AegpPlugin for Agent {
                     command_results.push((root, result));
                 }
 
-                if let Ok(mut results) =
-                    LAST_COMMAND_RESULTS.get_or_init(|| Mutex::new(Vec::new())).lock()
+                if let Ok(mut results) = LAST_COMMAND_RESULTS
+                    .get_or_init(|| Mutex::new(Vec::new()))
+                    .lock()
                 {
                     *results = command_results;
                 }
