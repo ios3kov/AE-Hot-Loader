@@ -19,6 +19,7 @@ const BUILD_ID: &str = "shell-reload-v1";
 #[derive(Clone, Debug)]
 struct Agent;
 
+#[cfg(target_os = "macos")]
 unsafe extern "C" {
     fn AEHotLoader_ReloadShells(output: *mut c_char, output_capacity: usize) -> c_int;
 }
@@ -89,6 +90,7 @@ enum ReloadResult {
     Error(String),
 }
 
+#[cfg(target_os = "macos")]
 fn reload_shell_implementations() -> ReloadResult {
     let mut buffer = [0 as c_char; 2048];
     let result = unsafe { AEHotLoader_ReloadShells(buffer.as_mut_ptr(), buffer.len()) };
@@ -106,6 +108,11 @@ fn reload_shell_implementations() -> ReloadResult {
         1 => ReloadResult::Noop(format!("{BUILD_ID}: {message}")),
         _ => ReloadResult::Error(format!("{BUILD_ID}: {message}")),
     }
+}
+
+#[cfg(not(target_os = "macos"))]
+fn reload_shell_implementations() -> ReloadResult {
+    ReloadResult::Error(format!("{BUILD_ID}: unsupported platform"))
 }
 
 fn process_request() {
@@ -180,7 +187,7 @@ impl AegpPlugin for Agent {
             (),
         )?;
 
-        log_line("shell-reload idle hook registered");
+        log_line("idle hook registered; production path=shell reload");
         Ok(Agent)
     }
 }
