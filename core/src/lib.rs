@@ -1,6 +1,7 @@
 use after_effects as ae;
 use std::fs::OpenOptions;
 use std::io::Write;
+use std::os::raw::c_char;
 
 const IMPLEMENTATION_LABEL: &str = match option_env!("AE_HOT_LOADER_IMPL_LABEL") {
     Some(value) => value,
@@ -60,4 +61,25 @@ impl AdobePluginGlobal for Plugin {
         }
         Ok(())
     }
+}
+
+
+#[unsafe(no_mangle)]
+pub extern "C" fn AEHotLoader_ImplementationLabel(
+    output: *mut c_char,
+    output_capacity: usize,
+) -> i32 {
+    if output.is_null() || output_capacity == 0 {
+        return -1;
+    }
+
+    let bytes = IMPLEMENTATION_LABEL.as_bytes();
+    let count = bytes.len().min(output_capacity.saturating_sub(1));
+
+    unsafe {
+        std::ptr::copy_nonoverlapping(bytes.as_ptr(), output.cast::<u8>(), count);
+        *output.add(count) = 0;
+    }
+
+    0
 }
