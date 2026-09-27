@@ -136,7 +136,7 @@
                 state.startedAt = (new Date()).getTime();
                 state.waiting = true;
                 state.button.enabled = false;
-                state.status.text = "Reloading plugins…";
+                state.status.text = "Reloading implementations…";
 
                 writeRequest(state.requestId);
                 app.scheduleTask("AEHotLoader_pollResponse()", 250, false);
