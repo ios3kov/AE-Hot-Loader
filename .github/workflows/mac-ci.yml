@@ -26,6 +26,14 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: aarch64-apple-darwin
+          components: rustfmt
+
+      - name: Static checks
+        run: |
+          set -euo pipefail
+          cargo fmt --manifest-path core/Cargo.toml -- --check
+          zsh -n INSTALL.command
+          xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only wrapper/AEHotLoader.cpp
 
       - name: Build Rust effect core
         env:
