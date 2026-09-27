@@ -10,6 +10,7 @@ on:
       - "ui/**"
       - "INSTALL.command"
       - "STAGE_TEST_PROBES.command"
+      - "STAGE_IMPLEMENTATION.command"
       - ".github/workflows/mac-ci.yml"
       - "docs/**"
       - "experiments/rust_effect_probe/**"
@@ -47,12 +48,22 @@ jobs:
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only experiments/single_pipl_cpp_control/wrapper/SinglePiPL.cpp
           zsh -n INSTALL.command
           zsh -n STAGE_TEST_PROBES.command
+          zsh -n STAGE_IMPLEMENTATION.command
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only wrapper/AEHotLoader.cpp
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only agent/native/InternalLoader.cpp
+          xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only agent/native/ShellReloader.cpp
 
       - name: Build effect bridge core
         env:
           CARGO_TARGET_DIR: ${{ github.workspace }}/target-ae-hot-loader
+        run: |
+          set -euo pipefail
+          cargo build --manifest-path core/Cargo.toml --release --target aarch64-apple-darwin
+
+      - name: Build candidate implementation
+        env:
+          CARGO_TARGET_DIR: ${{ github.workspace }}/target-ae-hot-loader-candidate
+          AE_HOT_LOADER_IMPL_LABEL: candidate-v2
         run: |
           set -euo pipefail
           cargo build --manifest-path core/Cargo.toml --release --target aarch64-apple-darwin
@@ -111,17 +122,21 @@ jobs:
           TRIPLE=aarch64-apple-darwin
           ROOT="target-ae-hot-loader/$TRIPLE/release"
 
-          BRIDGE="dist/AEHotLoaderBridge.plugin"
-          mkdir -p "$BRIDGE/Contents/MacOS" "$BRIDGE/Contents/Frameworks" "$BRIDGE/Contents/Resources"
-          cp build-ae-hot-loader/AEHotLoaderBridge "$BRIDGE/Contents/MacOS/AEHotLoaderBridge"
-          cp "$ROOT/libae_hot_loader_core.dylib" "$BRIDGE/Contents/Frameworks/libae_hot_loader_core.dylib"
-          cp "$ROOT/ae_hot_loader_core.rsrc" "$BRIDGE/Contents/Resources/AEHotLoaderBridge.rsrc"
-          cp "$ROOT/ae_hot_loader_core_PkgInfo" "$BRIDGE/Contents/PkgInfo"
-          cp "$ROOT/ae_hot_loader_core_Info.plist" "$BRIDGE/Contents/Info.plist"
-          /usr/libexec/PlistBuddy -c 'Set :CFBundleExecutable AEHotLoaderBridge' "$BRIDGE/Contents/Info.plist" || /usr/libexec/PlistBuddy -c 'Add :CFBundleExecutable string AEHotLoaderBridge' "$BRIDGE/Contents/Info.plist"
-          /usr/libexec/PlistBuddy -c 'Set :CFBundleIdentifier com.os3kov.AEHotLoader.Bridge' "$BRIDGE/Contents/Info.plist" || /usr/libexec/PlistBuddy -c 'Add :CFBundleIdentifier string com.os3kov.AEHotLoader.Bridge' "$BRIDGE/Contents/Info.plist"
-          codesign --force --sign - "$BRIDGE/Contents/Frameworks/libae_hot_loader_core.dylib"
-          codesign --force --deep --sign - "$BRIDGE"
+          SHELL="dist/AEHotLoaderControlShell.plugin"
+          mkdir -p "$SHELL/Contents/MacOS" "$SHELL/Contents/Frameworks" "$SHELL/Contents/Resources"
+          cp build-ae-hot-loader/AEHotLoaderBridge "$SHELL/Contents/MacOS/AEHotLoaderControlShell"
+          cp "$ROOT/libae_hot_loader_core.dylib" "$SHELL/Contents/Frameworks/libae_hot_loader_core.dylib"
+          cp "$ROOT/ae_hot_loader_core.rsrc" "$SHELL/Contents/Resources/AEHotLoaderControlShell.rsrc"
+          cp "$ROOT/ae_hot_loader_core_PkgInfo" "$SHELL/Contents/PkgInfo"
+          cp "$ROOT/ae_hot_loader_core_Info.plist" "$SHELL/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Set :CFBundleExecutable AEHotLoaderControlShell' "$SHELL/Contents/Info.plist" || /usr/libexec/PlistBuddy -c 'Add :CFBundleExecutable string AEHotLoaderControlShell' "$SHELL/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Set :CFBundleIdentifier com.os3kov.AEHotLoader.ControlShell' "$SHELL/Contents/Info.plist" || /usr/libexec/PlistBuddy -c 'Add :CFBundleIdentifier string com.os3kov.AEHotLoader.ControlShell' "$SHELL/Contents/Info.plist"
+          codesign --force --sign - "$SHELL/Contents/Frameworks/libae_hot_loader_core.dylib"
+          codesign --force --deep --sign - "$SHELL"
+
+          CANDIDATE_ROOT="target-ae-hot-loader-candidate/$TRIPLE/release"
+          cp "$CANDIDATE_ROOT/libae_hot_loader_core.dylib" dist/AEHotLoaderControlImpl-candidate.dylib
+          codesign --force --sign - dist/AEHotLoaderControlImpl-candidate.dylib
 
           AGENT="dist/AEHotLoaderAgent.plugin"
           mkdir -p "$AGENT/Contents/MacOS" "$AGENT/Contents/Resources"
@@ -133,12 +148,13 @@ jobs:
           /usr/libexec/PlistBuddy -c 'Set :CFBundleIdentifier com.os3kov.AEHotLoader.Agent' "$AGENT/Contents/Info.plist" || /usr/libexec/PlistBuddy -c 'Add :CFBundleIdentifier string com.os3kov.AEHotLoader.Agent' "$AGENT/Contents/Info.plist"
           codesign --force --deep --sign - "$AGENT"
 
-          codesign --verify --deep --strict "$BRIDGE"
+          codesign --verify --deep --strict "$SHELL"
+          codesign --verify --strict dist/AEHotLoaderControlImpl-candidate.dylib
           codesign --verify --deep --strict "$AGENT"
-          plutil -lint "$BRIDGE/Contents/Info.plist"
+          plutil -lint "$SHELL/Contents/Info.plist"
           plutil -lint "$AGENT/Contents/Info.plist"
 
-          nm -gU "$BRIDGE/Contents/MacOS/AEHotLoaderBridge" | grep -E 'PluginDataEntryFunction2|EffectMain|LateEffectMain|AEHotLoader_RegisterLateEffect'
+          nm -gU "$SHELL/Contents/MacOS/AEHotLoaderControlShell" | grep -E 'PluginDataEntryFunction2|EffectMain|AEHotLoader_ShellReload'
           nm -gU "$AGENT/Contents/MacOS/AEHotLoaderAgent" | grep 'EntryPointFunc'
 
           PROBE_ROOT="target-rust-effect-probe/$TRIPLE/release"
@@ -252,15 +268,13 @@ jobs:
           set -euo pipefail
           mkdir -p package
           cp -R dist/AEHotLoaderAgent.plugin package/
-          cp -R dist/AEHotLoaderRustProbe.plugin package/
-          cp -R dist/AEHotLoaderRustProbePermissive.plugin package/
-          cp -R dist/AEHotLoaderDualPiPL.plugin package/
-          cp -R dist/AEHotLoaderSinglePiPLCpp.plugin package/
+          cp -R dist/AEHotLoaderControlShell.plugin package/
+          cp dist/AEHotLoaderControlImpl-candidate.dylib package/
           cp INSTALL.command package/
-          cp STAGE_TEST_PROBES.command package/
+          cp STAGE_IMPLEMENTATION.command package/
           cp "ui/AE Hot Loader.jsx" package/
           cp README.md package/
-          chmod +x package/INSTALL.command package/STAGE_TEST_PROBES.command
+          chmod +x package/INSTALL.command package/STAGE_IMPLEMENTATION.command
           ditto -c -k --sequesterRsrc --keepParent package AEHotLoader-mac-arm64-poc.zip
 
       - uses: actions/upload-artifact@v4
