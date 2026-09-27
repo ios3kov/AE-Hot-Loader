@@ -7,7 +7,10 @@ fn main() {
         Property::Category("AE Hot Loader Diagnostic"),
         Property::CodeMacARM64("EffectMain"),
         Property::AE_PiPL_Version { major: 2, minor: 0 },
-        Property::AE_Effect_Spec_Version { major: 13, minor: 29 },
+        Property::AE_Effect_Spec_Version {
+            major: 13,
+            minor: 29,
+        },
         Property::AE_Effect_Version {
             version: 0,
             subversion: 1,
@@ -21,13 +24,15 @@ fn main() {
         Property::AE_Effect_Match_Name("OS3KOV.AEHotLoader.SinglePiPLCpp"),
         Property::AE_Reserved_Info(0),
         Property::AE_Effect_Support_URL("https://github.com/ios3kov/AE-Hot-Loader"),
-    ]).expect("build single PiPL");
+    ])
+    .expect("build single PiPL");
 
     let resources = [(16000_i16, pipl.as_slice())];
     let rsrc = create_rsrc(&[(b"PiPL", &resources)]).expect("create rsrc");
 
     let out = std::path::Path::new(&std::env::var("CARGO_MANIFEST_DIR").unwrap())
-        .parent().unwrap()
+        .parent()
+        .unwrap()
         .join("SinglePiPLCpp.rsrc");
     std::fs::write(out, rsrc).expect("write rsrc");
 }
