@@ -6,6 +6,7 @@ on:
     paths:
       - "core/**"
       - "wrapper/**"
+      - "ui/**"
       - "INSTALL.command"
       - ".github/workflows/mac-ci.yml"
       - "docs/**"
@@ -31,13 +32,23 @@ jobs:
           CARGO_TARGET_DIR: ${{ github.workspace }}/target-ae-hot-loader
         run: |
           set -euo pipefail
-          cargo build             --manifest-path core/Cargo.toml             --release             --target aarch64-apple-darwin
+          cargo build \
+            --manifest-path core/Cargo.toml \
+            --release \
+            --target aarch64-apple-darwin
 
       - name: Build native wrapper
         run: |
           set -euo pipefail
           mkdir -p build-ae-hot-loader
-          xcrun clang++             -std=c++17             -O2             -arch arm64             -dynamiclib             -fvisibility=hidden             wrapper/AEHotLoader.cpp             -o build-ae-hot-loader/AEHotLoader
+          xcrun clang++ \
+            -std=c++17 \
+            -O2 \
+            -arch arm64 \
+            -dynamiclib \
+            -fvisibility=hidden \
+            wrapper/AEHotLoader.cpp \
+            -o build-ae-hot-loader/AEHotLoader
 
       - name: Assemble plugin bundle
         run: |
@@ -56,7 +67,10 @@ jobs:
             test -f "$f" || { echo "missing $f"; exit 3; }
           done
 
-          mkdir -p             "$BUNDLE/Contents/MacOS"             "$BUNDLE/Contents/Frameworks"             "$BUNDLE/Contents/Resources"
+          mkdir -p \
+            "$BUNDLE/Contents/MacOS" \
+            "$BUNDLE/Contents/Frameworks" \
+            "$BUNDLE/Contents/Resources"
 
           cp build-ae-hot-loader/AEHotLoader "$BUNDLE/Contents/MacOS/AEHotLoader"
           cp "$CORE" "$BUNDLE/Contents/Frameworks/libae_hot_loader_core.dylib"
@@ -64,9 +78,12 @@ jobs:
           cp "$PKG" "$BUNDLE/Contents/PkgInfo"
           cp "$PLIST" "$BUNDLE/Contents/Info.plist"
 
-          /usr/libexec/PlistBuddy -c 'Set :CFBundleExecutable AEHotLoader' "$BUNDLE/Contents/Info.plist"             || /usr/libexec/PlistBuddy -c 'Add :CFBundleExecutable string AEHotLoader' "$BUNDLE/Contents/Info.plist"
-          /usr/libexec/PlistBuddy -c 'Set :CFBundleIdentifier com.os3kov.AEHotLoader' "$BUNDLE/Contents/Info.plist"             || /usr/libexec/PlistBuddy -c 'Add :CFBundleIdentifier string com.os3kov.AEHotLoader' "$BUNDLE/Contents/Info.plist"
-          /usr/libexec/PlistBuddy -c 'Set :CFBundleName AE Hot Loader' "$BUNDLE/Contents/Info.plist"             || /usr/libexec/PlistBuddy -c 'Add :CFBundleName string AE Hot Loader' "$BUNDLE/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Set :CFBundleExecutable AEHotLoader' "$BUNDLE/Contents/Info.plist" \
+            || /usr/libexec/PlistBuddy -c 'Add :CFBundleExecutable string AEHotLoader' "$BUNDLE/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Set :CFBundleIdentifier com.os3kov.AEHotLoader' "$BUNDLE/Contents/Info.plist" \
+            || /usr/libexec/PlistBuddy -c 'Add :CFBundleIdentifier string com.os3kov.AEHotLoader' "$BUNDLE/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Set :CFBundleName AE Hot Loader' "$BUNDLE/Contents/Info.plist" \
+            || /usr/libexec/PlistBuddy -c 'Add :CFBundleName string AE Hot Loader' "$BUNDLE/Contents/Info.plist"
 
           codesign --force --sign - "$BUNDLE/Contents/Frameworks/libae_hot_loader_core.dylib"
           codesign --force --deep --sign - "$BUNDLE"
@@ -76,9 +93,18 @@ jobs:
           file "$BUNDLE/Contents/MacOS/AEHotLoader"
           file "$BUNDLE/Contents/Frameworks/libae_hot_loader_core.dylib"
 
-          nm -gU "$BUNDLE/Contents/MacOS/AEHotLoader" |             grep -E 'PluginDataEntryFunction2|EffectMain|LateEffectMain|AEHotLoader_RegisterLateEffect'
+          nm -gU "$BUNDLE/Contents/MacOS/AEHotLoader" | \
+            grep -E 'PluginDataEntryFunction2|EffectMain|LateEffectMain|AEHotLoader_RegisterLateEffect'
 
-          nm -gU "$BUNDLE/Contents/Frameworks/libae_hot_loader_core.dylib" |             grep -E 'EffectMain|AEHotLoaderCore_SetRegisterFn'
+          nm -gU "$BUNDLE/Contents/Frameworks/libae_hot_loader_core.dylib" | \
+            grep -E 'EffectMain|AEHotLoaderCore_SetRegisterFn'
+
+      - name: Validate ScriptUI panel
+        run: |
+          set -euo pipefail
+          test -f "ui/AE Hot Loader.jsx"
+          grep -q 'Reload Plugins' "ui/AE Hot Loader.jsx"
+          grep -q 'AEHotLoader_pollResponse' "ui/AE Hot Loader.jsx"
 
       - name: Package test kit
         run: |
@@ -86,6 +112,7 @@ jobs:
           mkdir -p package
           cp -R dist/AEHotLoader.plugin package/
           cp INSTALL.command package/
+          cp "ui/AE Hot Loader.jsx" package/
           cp README.md package/
           chmod +x package/INSTALL.command
           ditto -c -k --sequesterRsrc --keepParent package AEHotLoader-mac-arm64-poc.zip
