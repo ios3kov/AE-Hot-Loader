@@ -2,8 +2,7 @@ use after_effects as ae;
 use std::fs::OpenOptions;
 use std::io::Write;
 
-const IMPLEMENTATION_LABEL: &str =
-    option_env!("AE_HOT_LOADER_IMPL_LABEL").unwrap_or("default-v1");
+const IMPLEMENTATION_LABEL: &str = option_env!("AE_HOT_LOADER_IMPL_LABEL").unwrap_or("default-v1");
 
 fn log_impl(event: &str) {
     if let Ok(mut file) = OpenOptions::new()
