@@ -467,11 +467,7 @@ extern "C" int AEHotLoader_QueuePluginFolder(const char* utf8_folder) {
         return -3202;
     }
 
-    Log("internal-loader: queued delayed root=%s", copy);
-    dispatch_after_f(
-        dispatch_time(DISPATCH_TIME_NOW, 250 * NSEC_PER_MSEC),
-        dispatch_get_main_queue(),
-        copy,
-        QueueLoadCallback);
+    Log("internal-loader: queued root=%s", copy);
+    dispatch_async_f(dispatch_get_main_queue(), copy, QueueLoadCallback);
     return 0;
 }
