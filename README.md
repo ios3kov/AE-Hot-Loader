@@ -38,15 +38,19 @@ The native components are internal implementation details.
 
 ## Current research result
 
-On After Effects 25.6.0 the effect bridge loads correctly and captures the registration callback.
+The saved `PF_PluginDataCB2` route is considered blocked: a late call was rejected and a deferred call after `PluginDataEntryFunction2` returned crashed AE.
 
-A previous direct late-registration call reached AE but returned code `1`, so the public callback may reject registration after startup. The two-module AEGP build is intended to confirm this cleanly from the panel.
+LLDB tracing on After Effects 25.6 ARM64 identified the native loader transaction:
+
+`LoadAllPlugins → ML::LoadPlugins → LoadPluginList → AddPlugin → PluginDataEntryFunction2`
+
+The current experiment branch contains an isolated `internal_loader_probe` that resolves `ML::LoadPlugins` from the loaded `PluginSupport.framework` symbol table and calls it only for a dedicated `/tmp/AEHotLoaderProbe` folder on the AE main thread. Production Agent behavior is unchanged.
 
 ## Stop criterion
 
 AE already running → click **Reload Plugins** → late test effect appears and can be applied/rendered → no AE restart.
 
-If AE again returns code `1`, the public callback route is considered blocked and the next research phase is the internal AE loader/registry.
+The next stop criterion is narrower: while AE is already running, the internal-loader probe scans only the dedicated test folder and the newly copied native effect becomes registered and usable without restarting AE.
 
 ## Platform
 
