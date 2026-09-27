@@ -94,7 +94,7 @@
         }
 
         var elapsed = (new Date()).getTime() - state.startedAt;
-        if (elapsed > 8000) {
+        if (elapsed > 30000) {
             state.waiting = false;
             state.button.enabled = true;
             state.status.text = "Native helper did not answer.";
