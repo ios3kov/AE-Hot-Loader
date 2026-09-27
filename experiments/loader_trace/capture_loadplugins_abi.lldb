@@ -1,0 +1,28 @@
+settings set target.inline-breakpoint-strategy always
+settings set stop-disassembly-count 0
+
+# AE 25.6 ARM64 — capture ML::LoadPlugins ABI + stable image offset.
+# Run after launching After Effects under LLDB.
+
+breakpoint set -r '^ML::LoadPlugins'
+breakpoint command add 1
+echo ===== ML::LoadPlugins HIT =====
+thread backtrace -c 24
+register read x0 x1 w2 x3 x4 w5 pc
+echo ----- x0 output vector raw -----
+memory read -f x -s8 -c3 $x0
+echo ----- x1 UTF16String raw -----
+memory read -f x -s8 -c3 $x1
+echo ----- x3 filter vector raw -----
+memory read -f x -s8 -c3 $x3
+echo ----- x4 vector raw -----
+memory read -f x -s8 -c3 $x4
+echo ----- symbol / image / offset -----
+image lookup -v -a $pc
+image lookup -v -n 'ML::LoadPlugins'
+echo ----- current function disassembly -----
+disassemble --frame --mixed
+echo ===== END ML::LoadPlugins CAPTURE =====
+DONE
+
+process continue
