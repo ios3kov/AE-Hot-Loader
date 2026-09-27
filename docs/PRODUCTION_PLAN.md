@@ -188,3 +188,16 @@ ARM64 entry registers:
 - `w5 = 0`.
 
 The next gate is a stable image-relative offset for `ML::LoadPlugins` on AE 25.6.0 ARM64. Only after that is captured do we build the isolated internal-loader shim. Runtime ASLR addresses must not be embedded in production code.
+
+
+## Live-test kit status — 2026-09-27
+
+The isolated `experiment/internal-loader-probe` branch has passed CI with a packaged one-command live-test setup.
+
+Current gate:
+- keep production Agent unchanged;
+- run `PREPARE_LIVE_TEST.command`;
+- invoke `AEHotLoader_InternalLoaderProbe("/tmp/AEHotLoaderProbe")` on the AE main thread;
+- confirm the new test effect appears, can be applied, and renders without restarting AE.
+
+Only after this succeeds should the private loader path be integrated into the production Agent.
