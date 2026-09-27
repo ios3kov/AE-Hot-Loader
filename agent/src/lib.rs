@@ -262,13 +262,9 @@ fn reload_plugins() -> ReloadResult {
 
     let changed_bundles: Vec<PathBuf> = current
         .iter()
-        .filter_map(|(path, fingerprint)| {
-            match previous.get(path) {
-                Some(previous_fingerprint) if previous_fingerprint != fingerprint => {
-                    Some(path.clone())
-                }
-                _ => None,
-            }
+        .filter_map(|(path, fingerprint)| match previous.get(path) {
+            Some(previous_fingerprint) if previous_fingerprint != fingerprint => Some(path.clone()),
+            _ => None,
         })
         .collect();
 
@@ -280,7 +276,10 @@ fn reload_plugins() -> ReloadResult {
         log_line(&format!("reload: new bundle {}", plugin.display()));
     }
     for plugin in &changed_bundles {
-        log_line(&format!("reload: changed existing bundle {}", plugin.display()));
+        log_line(&format!(
+            "reload: changed existing bundle {}",
+            plugin.display()
+        ));
     }
 
     let mut folders = BTreeSet::new();
