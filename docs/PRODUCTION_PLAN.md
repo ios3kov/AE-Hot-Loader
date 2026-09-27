@@ -201,3 +201,27 @@ Current gate:
 - confirm the new test effect appears, can be applied, and renders without restarting AE.
 
 Only after this succeeds should the private loader path be integrated into the production Agent.
+
+
+## Live internal-loader proof — 2026-09-27
+
+A live test on After Effects 25.6.0 ARM64 successfully invoked AE's own `ML::LoadPlugins` after startup against a dedicated test folder.
+
+Verified:
+
+- `ML::LoadPlugins` resolved from `PluginSupport.framework`;
+- return value: `1`;
+- test bundle loaded from `/private/tmp/AEHotLoaderProbe`;
+- effect A registration result: `0`;
+- effect B registration result: `0`.
+
+This is the first successful proof that a new native effect bundle can enter AE's real loader/registration transaction while AE is already running.
+
+Remaining gate before integration into the production Agent:
+- effect menu visibility;
+- apply to layer;
+- GLOBAL_SETUP / PARAMS_SETUP;
+- render;
+- stability after resume.
+
+Production integration remains blocked until those checks pass.
