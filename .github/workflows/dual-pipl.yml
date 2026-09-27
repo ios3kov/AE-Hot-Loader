@@ -1,0 +1,134 @@
+name: Dual PiPL Diagnostic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "experiments/dual_pipl/**"
+      - "core/**"
+      - ".github/workflows/dual-pipl.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: dual-pipl-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+          components: rustfmt
+
+      - name: Static checks
+        run: |
+          set -euo pipefail
+          cargo fmt --manifest-path experiments/dual_pipl/piplgen/Cargo.toml -- --check
+          xcrun clang++ \
+            -std=c++17 -arch arm64 \
+            -Wall -Wextra -Wpedantic -Werror \
+            -fsyntax-only experiments/dual_pipl/wrapper/DualPiPL.cpp
+
+      - name: Build shared effect core
+        env:
+          CARGO_TARGET_DIR: ${{ github.workspace }}/target-dual-pipl
+        run: |
+          set -euo pipefail
+          cargo build \
+            --manifest-path core/Cargo.toml \
+            --release \
+            --target aarch64-apple-darwin
+
+      - name: Generate dual PiPL resource
+        env:
+          CARGO_TARGET_DIR: ${{ github.workspace }}/target-dual-pipl-gen
+        run: |
+          set -euo pipefail
+          cargo build \
+            --manifest-path experiments/dual_pipl/piplgen/Cargo.toml \
+            --release
+          test -f experiments/dual_pipl/DualPiPL.rsrc
+
+      - name: Build diagnostic wrapper
+        run: |
+          set -euo pipefail
+          mkdir -p build-dual-pipl
+          xcrun clang++ \
+            -std=c++17 -O2 -arch arm64 \
+            -dynamiclib -fvisibility=hidden \
+            experiments/dual_pipl/wrapper/DualPiPL.cpp \
+            -o build-dual-pipl/AEHotLoaderDualPiPL
+
+      - name: Assemble bundle
+        run: |
+          set -euo pipefail
+          ROOT="target-dual-pipl/aarch64-apple-darwin/release"
+          BUNDLE="dist/AEHotLoaderDualPiPL.plugin"
+
+          mkdir -p \
+            "$BUNDLE/Contents/MacOS" \
+            "$BUNDLE/Contents/Frameworks" \
+            "$BUNDLE/Contents/Resources"
+
+          cp build-dual-pipl/AEHotLoaderDualPiPL             "$BUNDLE/Contents/MacOS/AEHotLoaderDualPiPL"
+          cp "$ROOT/libae_hot_loader_core.dylib"             "$BUNDLE/Contents/Frameworks/libae_hot_loader_core.dylib"
+          cp experiments/dual_pipl/DualPiPL.rsrc             "$BUNDLE/Contents/Resources/AEHotLoaderDualPiPL.rsrc"
+
+          printf 'eFKTFXTC' > "$BUNDLE/Contents/PkgInfo"
+
+          cat > "$BUNDLE/Contents/Info.plist" <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>CFBundleDevelopmentRegion</key><string>English</string>
+            <key>CFBundleExecutable</key><string>AEHotLoaderDualPiPL</string>
+            <key>CFBundleIdentifier</key><string>com.os3kov.AEHotLoader.DualPiPL</string>
+            <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+            <key>CFBundleName</key><string>AE Hot Loader Dual PiPL</string>
+            <key>CFBundlePackageType</key><string>eFKT</string>
+            <key>CFBundleSignature</key><string>FXTC</string>
+            <key>CFBundleVersion</key><string>1</string>
+          </dict>
+          </plist>
+          PLIST
+
+          codesign --force --sign -             "$BUNDLE/Contents/Frameworks/libae_hot_loader_core.dylib"
+          codesign --force --deep --sign - "$BUNDLE"
+          codesign --verify --deep --strict "$BUNDLE"
+          plutil -lint "$BUNDLE/Contents/Info.plist"
+
+          nm -gU "$BUNDLE/Contents/MacOS/AEHotLoaderDualPiPL" |             grep -E 'PluginDataEntryFunction2|EffectMain'
+
+      - name: Package diagnostic
+        run: |
+          set -euo pipefail
+          mkdir -p package
+          cp -R dist/AEHotLoaderDualPiPL.plugin package/
+          cat > package/README.txt <<'TXT'
+          Dual PiPL diagnostic.
+
+          1. Quit After Effects.
+          2. Remove any previous AEHotLoaderDualPiPL.plugin.
+          3. Copy AEHotLoaderDualPiPL.plugin to:
+             ~/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/
+          4. Delete old log:
+             rm -f /tmp/ae-hot-loader-dualpipl.log
+          5. Start After Effects.
+          6. Run:
+             cat /tmp/ae-hot-loader-dualpipl.log
+
+          Expected: two PluginDataEntryFunction2 calls. Compare data= pointers.
+          TXT
+          ditto -c -k --sequesterRsrc --keepParent package             AEHotLoaderDualPiPL-mac-arm64.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AEHotLoaderDualPiPL-mac-arm64
+          path: AEHotLoaderDualPiPL-mac-arm64.zip
+          if-no-files-found: error
