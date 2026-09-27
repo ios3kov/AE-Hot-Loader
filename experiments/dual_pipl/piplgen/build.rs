@@ -32,14 +32,14 @@ fn effect_props(name: &'static str, match_name: &'static str) -> Vec<Property> {
 
 fn main() {
     let pipl_a = build_pipl(effect_props(
-        "AE Hot Loader Dual PiPL A",
-        "OS3KOV.AEHotLoader.DualPiPL.A",
+        "AE Hot Loader Dual PiPL Fresh A",
+        "OS3KOV.AEHotLoader.DualPiPL.Fresh.A",
     ))
     .expect("build PiPL A");
 
     let pipl_b = build_pipl(effect_props(
-        "AE Hot Loader Dual PiPL B",
-        "OS3KOV.AEHotLoader.DualPiPL.B",
+        "AE Hot Loader Dual PiPL Fresh B",
+        "OS3KOV.AEHotLoader.DualPiPL.Fresh.B",
     ))
     .expect("build PiPL B");
 
