@@ -290,3 +290,20 @@ CI run #46 passed fully on macOS ARM64.
 5. verify the new effect appears and renders without another restart.
 
 Do not merge to `main` until this live button-driven flow passes.
+
+
+## Live finding — changed existing plug-ins — 2026-09-27
+
+A live button-driven test detected two changed bundles under `FSTR FX` and called AE's real `ML::LoadPlugins`, which returned `2`. However, no new UI entries were observed.
+
+Conclusion:
+- `ML::LoadPlugins` return value is not sufficient proof of new effect registration;
+- newly added bundles and changed already-loaded bundles must be treated differently;
+- hot replacement of an already-loaded plug-in is not yet verified.
+
+Agent behavior was updated:
+- new bundle path → attempt hot-load through `ML::LoadPlugins`;
+- existing bundle with changed fingerprint → report as changed existing bundle, without claiming successful hot replacement;
+- UI wording no longer says `Loaded N modules` based only on the loader return value.
+
+Next live gate: copy a truly new `.plugin` after AE startup, click `Reload Plugins`, and verify it appears in Effects & Presets.
