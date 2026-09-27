@@ -294,6 +294,22 @@ fn capture_effect_registry() -> Result<BTreeMap<String, RegistryEffectInfo>, Str
     Ok(effects)
 }
 
+fn find_registry_matches(
+    snapshot: &BTreeMap<String, RegistryEffectInfo>,
+    needles: &[&str],
+) -> Vec<RegistryEffectInfo> {
+    snapshot
+        .values()
+        .filter(|info| {
+            needles.iter().any(|needle| {
+                info.match_name.eq_ignore_ascii_case(needle)
+                    || info.name.eq_ignore_ascii_case(needle)
+            })
+        })
+        .cloned()
+        .collect()
+}
+
 fn registry_diff(
     before: &BTreeMap<String, RegistryEffectInfo>,
     after: &BTreeMap<String, RegistryEffectInfo>,
@@ -532,6 +548,20 @@ fn reload_plugins() -> ReloadResult {
         }
     };
 
+    let known_matches = [
+        "com.elasticgrid.fx.warp",
+        "StellarLabs.StellarGradient",
+        "ElasticGrid FX",
+        "Stellar Gradient",
+    ];
+    let preexisting_target_effects = find_registry_matches(&registry_before, &known_matches);
+    for effect in &preexisting_target_effects {
+        log_line(&format!(
+            "registry-pre: TARGET already present name={:?} match={:?} category={:?}",
+            effect.name, effect.match_name, effect.category
+        ));
+    }
+
     let current = scan_plugins();
     let snapshot = PLUGIN_SNAPSHOT.get_or_init(|| Mutex::new(current.clone()));
 
@@ -646,6 +676,15 @@ fn reload_plugins() -> ReloadResult {
             "ML::LoadPlugins=[{loader_codes}]. AE registry +{} effect(s)",
             added_effects.len()
         );
+
+        if !preexisting_target_effects.is_empty() {
+            let existing = preexisting_target_effects
+                .iter()
+                .map(|effect| format!("{} [{}]", effect.name, effect.match_name))
+                .collect::<Vec<_>>()
+                .join(", ");
+            message.push_str(&format!("; target already in registry: {existing}"));
+        }
 
         if !added_effects.is_empty() {
             let names = added_effects
