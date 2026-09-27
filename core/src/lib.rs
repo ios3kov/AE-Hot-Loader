@@ -82,7 +82,6 @@ pub extern "C" fn AEHotLoader_ImplementationLabel(
     0
 }
 
-
 #[unsafe(no_mangle)]
 pub extern "C" fn AEHotLoader_ImplementationABI() -> u32 {
     1
