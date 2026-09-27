@@ -689,6 +689,10 @@ fn reload_plugins() -> ReloadResult {
 
         let permissive_trace = fs::read_to_string("/tmp/ae-hot-loader-rust-probe-permissive.log")
             .unwrap_or_else(|_| "(no permissive entrypoint trace)".to_string());
+        let dual_trace = fs::read_to_string("/tmp/ae-hot-loader-dualpipl.log")
+            .unwrap_or_else(|_| "(no DualPiPL trace)".to_string());
+        let single_cpp_trace = fs::read_to_string("/tmp/ae-hot-loader-singlepipl-cpp.log")
+            .unwrap_or_else(|_| "(no SinglePiPL C++ trace)".to_string());
 
         let mut report = String::new();
         report.push_str(&format!(
