@@ -158,7 +158,7 @@ fn bundle_fingerprint(bundle: &Path) -> Fingerprint {
     };
 
     update_fingerprint(bundle, &mut fingerprint);
-    update_fingerprint(&bundle.join("Contents").join("Info.plist"), &mut fingerprint);
+    update_fingerprint(\n        &bundle.join("Contents").join("Info.plist"),\n        &mut fingerprint,\n    );
 
     let macos = bundle.join("Contents").join("MacOS");
     update_fingerprint(&macos, &mut fingerprint);
@@ -214,7 +214,7 @@ fn initialize_snapshot() {
     let snapshot = scan_plugins();
     let count = snapshot.len();
     let _ = PLUGIN_SNAPSHOT.set(Mutex::new(snapshot));
-    log_line(&format!("plugin snapshot initialized with {count} bundle(s)"));
+    log_line(&format!(\n        "plugin snapshot initialized with {count} bundle(s)"\n    ));
 }
 
 #[cfg(target_os = "macos")]
