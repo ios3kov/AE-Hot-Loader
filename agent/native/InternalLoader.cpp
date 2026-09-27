@@ -450,7 +450,14 @@ void QueueLoadCallback(void* context) {
 }  // namespace
 
 extern "C" int AEHotLoader_LoadPluginFolder(const char* utf8_folder) {
-    return LoadPluginFolder(utf8_folder);
+    const int result = LoadPluginFolder(utf8_folder);
+    const auto generation =
+        gLoadGeneration.fetch_add(1, std::memory_order_release) + 1;
+    Log(
+        "internal-loader: sync generation=%llu result=%d",
+        static_cast<unsigned long long>(generation),
+        result);
+    return result;
 }
 
 extern "C" unsigned long long AEHotLoader_GetLoadGeneration() {
