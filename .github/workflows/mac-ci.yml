@@ -10,6 +10,7 @@ on:
       - "ui/**"
       - "INSTALL.command"
       - "STAGE_IMPLEMENTATION.command"
+      - "COLLECT_LOGS.command"
       - ".github/workflows/mac-ci.yml"
       - "docs/**"
       - "README.md"
@@ -38,6 +39,7 @@ jobs:
           cargo fmt --manifest-path agent/Cargo.toml -- --check
           zsh -n INSTALL.command
           zsh -n STAGE_IMPLEMENTATION.command
+          zsh -n COLLECT_LOGS.command
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only wrapper/AEHotLoader.cpp
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only agent/native/ShellReloader.cpp
 
@@ -174,9 +176,10 @@ jobs:
           cp dist/AEHotLoaderControlImpl-candidate.dylib package/
           cp INSTALL.command package/
           cp STAGE_IMPLEMENTATION.command package/
+          cp COLLECT_LOGS.command package/
           cp "ui/AE Hot Loader.jsx" package/
           cp README.md package/
-          chmod +x package/INSTALL.command package/STAGE_IMPLEMENTATION.command
+          chmod +x package/INSTALL.command package/STAGE_IMPLEMENTATION.command package/COLLECT_LOGS.command
           ditto -c -k --sequesterRsrc --keepParent package AEHotLoader-mac-arm64-shell-reload-v1.zip
 
       - uses: actions/upload-artifact@v4
