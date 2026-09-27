@@ -6,6 +6,7 @@ fn build_internal_loader() {
         cc::Build::new()
             .cpp(true)
             .file("native/InternalLoader.cpp")
+            .file("native/ShellReloader.cpp")
             .flag("-std=c++17")
             .flag("-Wall")
             .flag("-Wextra")
