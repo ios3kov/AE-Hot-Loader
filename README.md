@@ -67,3 +67,12 @@ Verified in CI:
 Production `main` is not switched to the private loader yet.
 
 Next gate: run the probe inside an already-open After Effects 25.6 process and verify the newly copied test effect appears, applies, and renders without restarting AE.
+
+
+## Proof-of-concept status
+
+**PASSED on After Effects 25.6.0 / macOS Apple Silicon.**
+
+A newly introduced native effect bundle was loaded and registered in an already-running AE process through AE's internal `ML::LoadPlugins` path. The effects appeared, could be applied, and survived RAM Preview and normal rendering without restarting AE.
+
+Next step: wire this proven loader path into the production AEGP Agent and ScriptUI `Reload Plugins` workflow.
