@@ -64,8 +64,19 @@ rm -rf \
   "$PLUGIN_DEST/AEHotLoaderControlShell.plugin" \
   "$PLUGIN_DEST/AEHotLoaderProbeTest"
 
+codesign --verify --deep --strict "$AGENT"
+codesign --verify --deep --strict "$SHELL"
+
 cp -R "$AGENT" "$PLUGIN_DEST/AEHotLoaderAgent.plugin"
 cp -R "$SHELL" "$PLUGIN_DEST/AEHotLoaderControlShell.plugin"
+
+codesign --verify --deep --strict "$PLUGIN_DEST/AEHotLoaderAgent.plugin"
+codesign --verify --deep --strict "$PLUGIN_DEST/AEHotLoaderControlShell.plugin"
+
+agent_archs="$(lipo -archs "$PLUGIN_DEST/AEHotLoaderAgent.plugin/Contents/MacOS/AEHotLoaderAgent" 2>/dev/null || true)"
+shell_archs="$(lipo -archs "$PLUGIN_DEST/AEHotLoaderControlShell.plugin/Contents/MacOS/AEHotLoaderControlShell" 2>/dev/null || true)"
+[[ "$agent_archs" == *arm64* ]] || { echo "ERROR: Agent is not arm64."; exit 5; }
+[[ "$shell_archs" == *arm64* ]] || { echo "ERROR: Control Shell is not arm64."; exit 5; }
 
 # Start each shell install from the bundled implementation. This prevents an
 # older staged candidate from silently becoming active on the first AE launch.
