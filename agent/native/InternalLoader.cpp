@@ -11,6 +11,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <atomic>
 #include <climits>
 #include <cstdarg>
 #include <cstdint>
@@ -24,6 +25,7 @@ namespace {
 constexpr const char* kLogPath = "/tmp/ae-hot-loader-agent.log";
 constexpr const char* kPluginSupportMarker = "/PluginSupport.framework/";
 constexpr const char* kLoadPluginsPrefix = "ML::LoadPlugins(";
+std::atomic<std::uint64_t> gLoadGeneration{0};
 
 struct RawString {
     void* data;
@@ -440,6 +442,8 @@ void QueueLoadCallback(void* context) {
     Log("internal-loader: async begin root=%s", folder);
     const int result = LoadPluginFolder(folder);
     Log("internal-loader: async end root=%s result=%d", folder, result);
+    const auto generation = gLoadGeneration.fetch_add(1, std::memory_order_release) + 1;
+    Log("internal-loader: generation=%llu", static_cast<unsigned long long>(generation));
     std::free(folder);
 }
 
@@ -447,6 +451,10 @@ void QueueLoadCallback(void* context) {
 
 extern "C" int AEHotLoader_LoadPluginFolder(const char* utf8_folder) {
     return LoadPluginFolder(utf8_folder);
+}
+
+extern "C" unsigned long long AEHotLoader_GetLoadGeneration() {
+    return static_cast<unsigned long long>(gLoadGeneration.load(std::memory_order_acquire));
 }
 
 extern "C" int AEHotLoader_QueuePluginFolder(const char* utf8_folder) {
