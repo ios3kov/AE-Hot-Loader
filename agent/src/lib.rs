@@ -319,7 +319,6 @@ fn diagnose_effect_registry_if_needed() {
         "registry-diag: generation={generation} matching_effects={found}"
     ));
 
-
     *last = generation;
 }
 
