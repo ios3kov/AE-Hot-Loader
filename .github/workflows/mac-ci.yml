@@ -119,6 +119,12 @@ jobs:
           nm -gU "$AGENT/Contents/MacOS/AEHotLoaderAgent" | grep 'EntryPointFunc'
           nm -gU dist/AEHotLoaderControlImpl-candidate.dylib | grep -E 'EffectMain|AEHotLoader_ImplementationABI|AEHotLoader_ImplementationStateABI|AEHotLoader_ImplementationKey|AEHotLoader_ImplementationLabel'
           strings dist/AEHotLoaderControlImpl-candidate.dylib | grep 'candidate-v2'
+          for impl in "$SHELL/Contents/Frameworks/libae_hot_loader_core.dylib" dist/AEHotLoaderControlImpl-candidate.dylib; do
+            if otool -L "$impl" | tail -n +2 | grep -E '@(rpath|loader_path|executable_path)'; then
+              echo "ERROR: hot-reload implementation has relative/private dylib dependencies: $impl"
+              exit 6
+            fi
+          done
 
       - name: Smoke test shell reload ABI
         shell: bash
