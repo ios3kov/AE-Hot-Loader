@@ -136,14 +136,14 @@ fn call_effect_bridge() -> i32 {
                 }
             };
 
-            let register =
-                match library.get::<RegisterLateFn>(b"AEHotLoader_RegisterLateEffect\0") {
-                    Ok(symbol) => symbol,
-                    Err(error) => {
-                        log_line(&format!("bridge dlsym failed: {error}"));
-                        return -2004;
-                    }
-                };
+            let register = match library.get::<RegisterLateFn>(b"AEHotLoader_RegisterLateEffect\0")
+            {
+                Ok(symbol) => symbol,
+                Err(error) => {
+                    log_line(&format!("bridge dlsym failed: {error}"));
+                    return -2004;
+                }
+            };
 
             let result = register();
             log_line(&format!("bridge returned {result}"));
