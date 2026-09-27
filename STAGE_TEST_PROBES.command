@@ -16,6 +16,7 @@ if ! pgrep -x "Adobe After Effects" >/dev/null 2>&1; then
   exit 3
 fi
 
+rm -f /tmp/ae-hot-loader-rust-probe-permissive.log
 rm -rf "$DEST"
 mkdir -p "$DEST"
 cp -R "$STRICT" "$DEST/AEHotLoaderRustProbe.plugin"
