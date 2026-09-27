@@ -2,7 +2,7 @@ name: AE Hot Loader macOS PoC
 
 on:
   push:
-    branches: [main]
+    branches: [main, "feature/**"]
     paths:
       - "core/**"
       - "agent/**"
@@ -35,7 +35,7 @@ jobs:
           cargo fmt --manifest-path core/Cargo.toml -- --check
           cargo fmt --manifest-path agent/Cargo.toml -- --check
           zsh -n INSTALL.command
-          xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only wrapper/AEHotLoader.cpp
+          xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only wrapper/AEHotLoader.cpp\n          xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only agent/native/InternalLoader.cpp
 
       - name: Build effect bridge core
         env:
