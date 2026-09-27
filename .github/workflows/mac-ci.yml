@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "core/**"
+      - "agent/**"
       - "wrapper/**"
       - "ui/**"
       - "INSTALL.command"
@@ -32,93 +33,81 @@ jobs:
         run: |
           set -euo pipefail
           cargo fmt --manifest-path core/Cargo.toml -- --check
+          cargo fmt --manifest-path agent/Cargo.toml -- --check
           zsh -n INSTALL.command
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only wrapper/AEHotLoader.cpp
 
-      - name: Build Rust effect core
+      - name: Build effect bridge core
         env:
           CARGO_TARGET_DIR: ${{ github.workspace }}/target-ae-hot-loader
         run: |
           set -euo pipefail
-          cargo build \
-            --manifest-path core/Cargo.toml \
-            --release \
-            --target aarch64-apple-darwin
+          cargo build --manifest-path core/Cargo.toml --release --target aarch64-apple-darwin
 
-      - name: Build native wrapper
+      - name: Build AEGP agent
+        env:
+          CARGO_TARGET_DIR: ${{ github.workspace }}/target-ae-hot-loader
+        run: |
+          set -euo pipefail
+          cargo build --manifest-path agent/Cargo.toml --release --target aarch64-apple-darwin
+
+      - name: Build effect wrapper
         run: |
           set -euo pipefail
           mkdir -p build-ae-hot-loader
           xcrun clang++ \
-            -std=c++17 \
-            -O2 \
-            -arch arm64 \
-            -dynamiclib \
-            -fvisibility=hidden \
+            -std=c++17 -O2 -arch arm64 -dynamiclib -fvisibility=hidden \
             wrapper/AEHotLoader.cpp \
-            -o build-ae-hot-loader/AEHotLoader
+            -o build-ae-hot-loader/AEHotLoaderBridge
 
-      - name: Assemble plugin bundle
+      - name: Assemble and sign bundles
         run: |
           set -euo pipefail
-
           TRIPLE=aarch64-apple-darwin
           ROOT="target-ae-hot-loader/$TRIPLE/release"
-          BUNDLE="dist/AEHotLoader.plugin"
 
-          CORE="$ROOT/libae_hot_loader_core.dylib"
-          RSRC="$ROOT/ae_hot_loader_core.rsrc"
-          PKG="$ROOT/ae_hot_loader_core_PkgInfo"
-          PLIST="$ROOT/ae_hot_loader_core_Info.plist"
+          BRIDGE="dist/AEHotLoaderBridge.plugin"
+          mkdir -p "$BRIDGE/Contents/MacOS" "$BRIDGE/Contents/Frameworks" "$BRIDGE/Contents/Resources"
+          cp build-ae-hot-loader/AEHotLoaderBridge "$BRIDGE/Contents/MacOS/AEHotLoaderBridge"
+          cp "$ROOT/libae_hot_loader_core.dylib" "$BRIDGE/Contents/Frameworks/libae_hot_loader_core.dylib"
+          cp "$ROOT/ae_hot_loader_core.rsrc" "$BRIDGE/Contents/Resources/AEHotLoaderBridge.rsrc"
+          cp "$ROOT/ae_hot_loader_core_PkgInfo" "$BRIDGE/Contents/PkgInfo"
+          cp "$ROOT/ae_hot_loader_core_Info.plist" "$BRIDGE/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Set :CFBundleExecutable AEHotLoaderBridge' "$BRIDGE/Contents/Info.plist" || /usr/libexec/PlistBuddy -c 'Add :CFBundleExecutable string AEHotLoaderBridge' "$BRIDGE/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Set :CFBundleIdentifier com.os3kov.AEHotLoader.Bridge' "$BRIDGE/Contents/Info.plist" || /usr/libexec/PlistBuddy -c 'Add :CFBundleIdentifier string com.os3kov.AEHotLoader.Bridge' "$BRIDGE/Contents/Info.plist"
+          codesign --force --sign - "$BRIDGE/Contents/Frameworks/libae_hot_loader_core.dylib"
+          codesign --force --deep --sign - "$BRIDGE"
 
-          for f in "$CORE" "$RSRC" "$PKG" "$PLIST" build-ae-hot-loader/AEHotLoader; do
-            test -f "$f" || { echo "missing $f"; exit 3; }
-          done
+          AGENT="dist/AEHotLoaderAgent.plugin"
+          mkdir -p "$AGENT/Contents/MacOS" "$AGENT/Contents/Resources"
+          cp "$ROOT/libae_hot_loader_agent.dylib" "$AGENT/Contents/MacOS/AEHotLoaderAgent"
+          cp "$ROOT/ae_hot_loader_agent.rsrc" "$AGENT/Contents/Resources/AEHotLoaderAgent.rsrc"
+          cp "$ROOT/ae_hot_loader_agent_PkgInfo" "$AGENT/Contents/PkgInfo"
+          cp "$ROOT/ae_hot_loader_agent_Info.plist" "$AGENT/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Set :CFBundleExecutable AEHotLoaderAgent' "$AGENT/Contents/Info.plist" || /usr/libexec/PlistBuddy -c 'Add :CFBundleExecutable string AEHotLoaderAgent' "$AGENT/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Set :CFBundleIdentifier com.os3kov.AEHotLoader.Agent' "$AGENT/Contents/Info.plist" || /usr/libexec/PlistBuddy -c 'Add :CFBundleIdentifier string com.os3kov.AEHotLoader.Agent' "$AGENT/Contents/Info.plist"
+          codesign --force --deep --sign - "$AGENT"
 
-          mkdir -p \
-            "$BUNDLE/Contents/MacOS" \
-            "$BUNDLE/Contents/Frameworks" \
-            "$BUNDLE/Contents/Resources"
+          codesign --verify --deep --strict "$BRIDGE"
+          codesign --verify --deep --strict "$AGENT"
+          plutil -lint "$BRIDGE/Contents/Info.plist"
+          plutil -lint "$AGENT/Contents/Info.plist"
 
-          cp build-ae-hot-loader/AEHotLoader "$BUNDLE/Contents/MacOS/AEHotLoader"
-          cp "$CORE" "$BUNDLE/Contents/Frameworks/libae_hot_loader_core.dylib"
-          cp "$RSRC" "$BUNDLE/Contents/Resources/AEHotLoader.rsrc"
-          cp "$PKG" "$BUNDLE/Contents/PkgInfo"
-          cp "$PLIST" "$BUNDLE/Contents/Info.plist"
-
-          /usr/libexec/PlistBuddy -c 'Set :CFBundleExecutable AEHotLoader' "$BUNDLE/Contents/Info.plist" \
-            || /usr/libexec/PlistBuddy -c 'Add :CFBundleExecutable string AEHotLoader' "$BUNDLE/Contents/Info.plist"
-          /usr/libexec/PlistBuddy -c 'Set :CFBundleIdentifier com.os3kov.AEHotLoader' "$BUNDLE/Contents/Info.plist" \
-            || /usr/libexec/PlistBuddy -c 'Add :CFBundleIdentifier string com.os3kov.AEHotLoader' "$BUNDLE/Contents/Info.plist"
-          /usr/libexec/PlistBuddy -c 'Set :CFBundleName AE Hot Loader' "$BUNDLE/Contents/Info.plist" \
-            || /usr/libexec/PlistBuddy -c 'Add :CFBundleName string AE Hot Loader' "$BUNDLE/Contents/Info.plist"
-
-          codesign --force --sign - "$BUNDLE/Contents/Frameworks/libae_hot_loader_core.dylib"
-          codesign --force --deep --sign - "$BUNDLE"
-
-          codesign --verify --deep --strict "$BUNDLE"
-          plutil -lint "$BUNDLE/Contents/Info.plist"
-          file "$BUNDLE/Contents/MacOS/AEHotLoader"
-          file "$BUNDLE/Contents/Frameworks/libae_hot_loader_core.dylib"
-
-          nm -gU "$BUNDLE/Contents/MacOS/AEHotLoader" | \
-            grep -E 'PluginDataEntryFunction2|EffectMain|LateEffectMain|AEHotLoader_RegisterLateEffect'
-
-          nm -gU "$BUNDLE/Contents/Frameworks/libae_hot_loader_core.dylib" | \
-            grep -E 'EffectMain|AEHotLoaderCore_SetRegisterFn|AEHotLoaderCore_InitBridge'
+          nm -gU "$BRIDGE/Contents/MacOS/AEHotLoaderBridge" | grep -E 'PluginDataEntryFunction2|EffectMain|LateEffectMain|AEHotLoader_RegisterLateEffect'
+          nm -gU "$AGENT/Contents/MacOS/AEHotLoaderAgent" | grep 'EntryPointFunc'
 
       - name: Validate ScriptUI panel
         run: |
           set -euo pipefail
           test -f "ui/AE Hot Loader.jsx"
           grep -q 'Reload Plugins' "ui/AE Hot Loader.jsx"
-          grep -q 'AEHotLoader_pollResponse' "ui/AE Hot Loader.jsx"
 
       - name: Package test kit
         run: |
           set -euo pipefail
           mkdir -p package
-          cp -R dist/AEHotLoader.plugin package/
+          cp -R dist/AEHotLoaderBridge.plugin package/
+          cp -R dist/AEHotLoaderAgent.plugin package/
           cp INSTALL.command package/
           cp "ui/AE Hot Loader.jsx" package/
           cp README.md package/
