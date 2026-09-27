@@ -225,3 +225,14 @@ Remaining gate before integration into the production Agent:
 - stability after resume.
 
 Production integration remains blocked until those checks pass.
+
+
+## Live menu/apply verification — 2026-09-27
+
+The live internal-loader test progressed beyond registration:
+
+- both late-loaded effects appeared in the running AE Effects & Presets panel;
+- both effects were successfully applied to a layer;
+- AE was not restarted.
+
+The remaining stop-criterion checks are render-path verification and stability.
