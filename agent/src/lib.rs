@@ -22,7 +22,7 @@ use ae::{
 
 define_general_plugin!(Agent);
 
-const BUILD_ID: &str = "unified-6bundle-v2";
+const BUILD_ID: &str = "unified-6bundle-v3-fresh";
 
 #[derive(Clone, Debug)]
 struct Agent;
@@ -564,12 +564,12 @@ fn reload_plugins() -> ReloadResult {
         "OS3KOV.AEHotLoader.RustProbe.Permissive",
         "AE Hot Loader Rust Probe",
         "AE Hot Loader Rust Probe Permissive",
-        "OS3KOV.AEHotLoader.DualPiPL.A",
-        "OS3KOV.AEHotLoader.DualPiPL.B",
-        "OS3KOV.AEHotLoader.SinglePiPLCpp",
-        "AE Hot Loader Dual PiPL A",
-        "AE Hot Loader Dual PiPL B",
-        "AE Hot Loader Single PiPL C++",
+        "OS3KOV.AEHotLoader.DualPiPL.Fresh.A",
+        "OS3KOV.AEHotLoader.DualPiPL.Fresh.B",
+        "OS3KOV.AEHotLoader.SinglePiPLCpp.Fresh",
+        "AE Hot Loader Dual PiPL Fresh A",
+        "AE Hot Loader Dual PiPL Fresh B",
+        "AE Hot Loader Single PiPL C++ Fresh",
     ];
     let preexisting_target_effects = find_registry_matches(&registry_before, &known_matches);
     for effect in &preexisting_target_effects {
@@ -589,11 +589,26 @@ fn reload_plugins() -> ReloadResult {
         }
     };
 
-    let new_bundles: Vec<PathBuf> = current
+    let mut new_bundles: Vec<PathBuf> = current
         .keys()
         .filter(|path| !previous.contains_key(*path))
         .cloned()
         .collect();
+
+    // Diagnostic matrix may intentionally stage copies of real plugins.
+    // Keep only one bundle per file name, preferring the original non-probe path.
+    new_bundles.sort_by(|a, b| {
+        let a_probe = a.to_string_lossy().contains("AEHotLoaderProbeTest");
+        let b_probe = b.to_string_lossy().contains("AEHotLoaderProbeTest");
+        a_probe.cmp(&b_probe).then_with(|| a.cmp(b))
+    });
+    let mut unique_names = std::collections::BTreeSet::new();
+    new_bundles.retain(|path| {
+        let Some(name) = path.file_name().and_then(|name| name.to_str()) else {
+            return true;
+        };
+        unique_names.insert(name.to_string())
+    });
 
     let changed_bundles: Vec<PathBuf> = current
         .iter()
