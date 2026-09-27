@@ -36,3 +36,17 @@ echo "  $DEST/AEHotLoaderRustProbe.plugin"
 echo "  $DEST/AEHotLoaderRustProbePermissive.plugin"
 echo
 echo "Now click Reload Plugins in AE Hot Loader."
+
+echo
+echo "Verification:"
+for bundle in ElasticGrid.plugin StellarGradient.plugin AEHotLoaderRustProbe.plugin AEHotLoaderRustProbePermissive.plugin; do
+  if [[ -d "$DEST/$bundle" ]]; then
+    echo "  OK  $bundle"
+  else
+    echo "  MISSING  $bundle"
+    exit 4
+  fi
+done
+
+echo
+echo "All 4 bundles are staged. Now click Reload Plugins exactly once."
