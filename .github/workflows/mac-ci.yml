@@ -38,6 +38,7 @@ jobs:
         run: |
           set -euo pipefail
           cargo fmt --manifest-path core/Cargo.toml -- --check
+          python3 tools/verify_shell_metadata.py core/build.rs wrapper/AEHotLoader.cpp
           cargo fmt --manifest-path agent/Cargo.toml -- --check
           zsh -n INSTALL.command
           zsh -n STAGE_IMPLEMENTATION.command
