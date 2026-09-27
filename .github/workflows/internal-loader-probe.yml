@@ -1,0 +1,134 @@
+name: Internal Loader Probe
+
+on:
+  push:
+    branches:
+      - "experiment/internal-loader-probe"
+    paths:
+      - "experiments/internal_loader_probe/**"
+      - "experiments/dual_pipl/**"
+      - "core/**"
+      - ".github/workflows/internal-loader-probe.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: internal-loader-probe-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+
+      - name: Static check private-loader probe
+        run: |
+          set -euo pipefail
+          xcrun clang++ \
+            -std=c++17 -arch arm64 \
+            -Wall -Wextra -Wpedantic -Werror \
+            -fsyntax-only experiments/internal_loader_probe/InternalLoaderProbe.cpp
+
+      - name: Build private-loader probe dylib
+        run: |
+          set -euo pipefail
+          mkdir -p build-internal-loader
+          xcrun clang++ \
+            -std=c++17 -O2 -arch arm64 \
+            -dynamiclib -fvisibility=hidden \
+            experiments/internal_loader_probe/InternalLoaderProbe.cpp \
+            -framework CoreFoundation \
+            -o build-internal-loader/libAEHotLoaderInternalProbe.dylib
+          codesign --force --sign - build-internal-loader/libAEHotLoaderInternalProbe.dylib
+          nm -gU build-internal-loader/libAEHotLoaderInternalProbe.dylib | \
+            grep AEHotLoader_InternalLoaderProbe
+
+      - name: Build shared effect core
+        env:
+          CARGO_TARGET_DIR: ${{ github.workspace }}/target-internal-probe
+        run: |
+          set -euo pipefail
+          cargo build \
+            --manifest-path core/Cargo.toml \
+            --release \
+            --target aarch64-apple-darwin
+
+      - name: Generate safe test PiPL resource
+        env:
+          CARGO_TARGET_DIR: ${{ github.workspace }}/target-internal-probe-gen
+        run: |
+          set -euo pipefail
+          cargo run \
+            --manifest-path experiments/dual_pipl/piplgen/Cargo.toml \
+            --release
+          test -f experiments/dual_pipl/DualPiPL.rsrc
+
+      - name: Build safe test effect
+        run: |
+          set -euo pipefail
+          mkdir -p build-internal-loader
+          xcrun clang++ \
+            -std=c++17 -O2 -arch arm64 \
+            -dynamiclib -fvisibility=hidden \
+            experiments/dual_pipl/wrapper/DualPiPL.cpp \
+            -o build-internal-loader/AEHotLoaderDualPiPL
+
+      - name: Assemble test bundle
+        run: |
+          set -euo pipefail
+          ROOT="target-internal-probe/aarch64-apple-darwin/release"
+          BUNDLE="package/AEHotLoaderDualPiPL.plugin"
+          mkdir -p \
+            "$BUNDLE/Contents/MacOS" \
+            "$BUNDLE/Contents/Frameworks" \
+            "$BUNDLE/Contents/Resources"
+
+          cp build-internal-loader/AEHotLoaderDualPiPL \
+            "$BUNDLE/Contents/MacOS/AEHotLoaderDualPiPL"
+          cp "$ROOT/libae_hot_loader_core.dylib" \
+            "$BUNDLE/Contents/Frameworks/libae_hot_loader_core.dylib"
+          cp experiments/dual_pipl/DualPiPL.rsrc \
+            "$BUNDLE/Contents/Resources/AEHotLoaderDualPiPL.rsrc"
+
+          printf 'eFKTFXTC' > "$BUNDLE/Contents/PkgInfo"
+
+          cat > "$BUNDLE/Contents/Info.plist" <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>CFBundleDevelopmentRegion</key><string>English</string>
+            <key>CFBundleExecutable</key><string>AEHotLoaderDualPiPL</string>
+            <key>CFBundleIdentifier</key><string>com.os3kov.AEHotLoader.DualPiPL</string>
+            <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+            <key>CFBundleName</key><string>AE Hot Loader Dual PiPL</string>
+            <key>CFBundlePackageType</key><string>eFKT</string>
+            <key>CFBundleSignature</key><string>FXTC</string>
+            <key>CFBundleVersion</key><string>1</string>
+          </dict>
+          </plist>
+          PLIST
+
+          codesign --force --sign - \
+            "$BUNDLE/Contents/Frameworks/libae_hot_loader_core.dylib"
+          codesign --force --deep --sign - "$BUNDLE"
+          codesign --verify --deep --strict "$BUNDLE"
+
+      - name: Package
+        run: |
+          set -euo pipefail
+          cp build-internal-loader/libAEHotLoaderInternalProbe.dylib package/
+          cp experiments/internal_loader_probe/README.md package/README.md
+          ditto -c -k --sequesterRsrc --keepParent package \
+            AEHotLoaderInternalProbe-mac-arm64.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AEHotLoaderInternalProbe-mac-arm64
+          path: AEHotLoaderInternalProbe-mac-arm64.zip
+          if-no-files-found: error
