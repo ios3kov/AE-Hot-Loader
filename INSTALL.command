@@ -23,6 +23,11 @@ rm -rf \
 cp -R "$AGENT" "$PLUGIN_DEST/AEHotLoaderAgent.plugin"
 cp -R "$SHELL" "$PLUGIN_DEST/AEHotLoaderControlShell.plugin"
 
+# Start each shell install from the bundled implementation. This prevents an
+# older staged candidate from silently becoming active on the first AE launch.
+CONTROL_IMPL_DIR="$HOME/Library/Application Support/AE Hot Loader/implementations/control"
+rm -f "$CONTROL_IMPL_DIR/current.dylib" "$CONTROL_IMPL_DIR/current.tmp.dylib"
+
 xattr -dr com.apple.quarantine "$PLUGIN_DEST/AEHotLoaderAgent.plugin" 2>/dev/null || true
 xattr -dr com.apple.quarantine "$PLUGIN_DEST/AEHotLoaderControlShell.plugin" 2>/dev/null || true
 
