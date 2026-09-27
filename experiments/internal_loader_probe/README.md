@@ -165,3 +165,18 @@ Remaining live checks before declaring Stop Criterion A complete:
 5. confirm AE remains stable.
 
 Do not merge into the production Agent until those remaining checks pass.
+
+
+## Live UI verification — 2026-09-27
+
+After resuming the same AE 25.6.0 process, both newly registered effects were visible in **Effects & Presets** under `AE Hot Loader Diagnostic`:
+
+- `AE Hot Loader Dual PiPL A`
+- `AE Hot Loader Dual PiPL B`
+
+Both effects were then applied successfully to an existing layer in **Effect Controls**, still without restarting After Effects.
+
+Remaining checks:
+- render path;
+- stability after application/render.
+
