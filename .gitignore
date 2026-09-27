@@ -1,0 +1,7 @@
+target/
+target-ae-hot-loader/
+build-ae-hot-loader/
+dist/
+package/
+*.zip
+.DS_Store
