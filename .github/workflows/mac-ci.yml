@@ -9,6 +9,7 @@ on:
       - "wrapper/**"
       - "ui/**"
       - "INSTALL.command"
+      - "STAGE_TEST_PROBES.command"
       - ".github/workflows/mac-ci.yml"
       - "docs/**"
       - "experiments/rust_effect_probe/**"
@@ -39,6 +40,7 @@ jobs:
           cargo fmt --manifest-path experiments/rust_effect_probe/Cargo.toml -- --check
           cargo fmt --manifest-path experiments/rust_effect_probe_permissive/Cargo.toml -- --check
           zsh -n INSTALL.command
+          zsh -n STAGE_TEST_PROBES.command
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only wrapper/AEHotLoader.cpp
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only agent/native/InternalLoader.cpp
 
@@ -183,9 +185,10 @@ jobs:
           cp -R dist/AEHotLoaderRustProbe.plugin package/
           cp -R dist/AEHotLoaderRustProbePermissive.plugin package/
           cp INSTALL.command package/
+          cp STAGE_TEST_PROBES.command package/
           cp "ui/AE Hot Loader.jsx" package/
           cp README.md package/
-          chmod +x package/INSTALL.command
+          chmod +x package/INSTALL.command package/STAGE_TEST_PROBES.command
           ditto -c -k --sequesterRsrc --keepParent package AEHotLoader-mac-arm64-poc.zip
 
       - uses: actions/upload-artifact@v4
