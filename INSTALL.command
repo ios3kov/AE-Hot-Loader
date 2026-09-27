@@ -15,7 +15,8 @@ mkdir -p "$PLUGIN_DEST"
 rm -rf \
   "$PLUGIN_DEST/AEHotLoader.plugin" \
   "$PLUGIN_DEST/AEHotLoaderBridge.plugin" \
-  "$PLUGIN_DEST/AEHotLoaderAgent.plugin"
+  "$PLUGIN_DEST/AEHotLoaderAgent.plugin" \
+  "$PLUGIN_DEST/AEHotLoaderProbeTest"
 
 cp -R "$AGENT" "$PLUGIN_DEST/AEHotLoaderAgent.plugin"
 
@@ -36,3 +37,4 @@ echo "  $PLUGIN_DEST/AEHotLoaderAgent.plugin"
 echo
 echo "Installed ScriptUI panel into $installed_panels After Effects preference folder(s)."
 echo "Restart After Effects once for the Agent update, then open Window → AE Hot Loader."
+echo "For the strict-vs-permissive diagnostic, run STAGE_TEST_PROBES.command only AFTER AE is fully open."
