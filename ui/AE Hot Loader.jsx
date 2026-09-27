@@ -42,18 +42,32 @@
         }
 
         var request = new File(folder.fsName + "/" + REQUEST_FILE_NAME);
-        if (!request.open("w")) {
+        if (request.exists) {
+            try { request.remove(); } catch (e) {}
+        }
+
+        var temp = new File(folder.fsName + "/request.tmp");
+        if (temp.exists) {
+            try { temp.remove(); } catch (e) {}
+        }
+
+        if (!temp.open("w")) {
             throw new Error("Cannot open bridge request file.");
         }
 
-        request.lineFeed = "Unix";
-        request.write(
+        temp.lineFeed = "Unix";
+        temp.write(
             "version=1\n" +
             "command=reload_plugins\n" +
             "request_id=" + requestId + "\n" +
             "timestamp=" + (new Date()).getTime() + "\n"
         );
-        request.close();
+        temp.close();
+
+        if (!temp.rename(REQUEST_FILE_NAME)) {
+            try { temp.remove(); } catch (e) {}
+            throw new Error("Cannot publish bridge request.");
+        }
     }
 
     $.global.AEHotLoader_pollResponse = function () {
