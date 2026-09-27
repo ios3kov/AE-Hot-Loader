@@ -109,11 +109,13 @@ Changes that normally require a shell rebuild + AE restart:
 
 Effect calls may run concurrently under MFR, but old and new implementation code must not overlap on the same shell generation.
 
-The shell uses a shared call gate:
-- concurrent EffectMain calls remain concurrent;
-- Reload tries to take the exclusive gate only for the final pointer publication;
-- if an EffectMain call is still in flight, Reload returns a **busy / retry** error instead of blocking AE's main thread;
-- once the exclusive gate is acquired, the pointer swap is atomic and later calls enter the new implementation.
+The shell uses a reentrant-safe generation gate built from atomics:
+- concurrent and nested/reentrant EffectMain calls remain allowed;
+- every active call increments an in-flight counter;
+- Reload marks a swap as pending only for the final pointer publication;
+- if any EffectMain call is still in flight, Reload returns a **busy / retry** error instead of blocking AE's main thread;
+- while the tiny publication window is active, new calls wait briefly and then enter the published generation;
+- the pointer is published only when the in-flight count is zero.
 
 Old implementation dylibs are still never unloaded during the AE process lifetime.
 
