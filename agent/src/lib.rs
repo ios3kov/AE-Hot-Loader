@@ -4,6 +4,8 @@ use std::ffi::CString;
 use std::fs;
 use std::io::Write;
 use std::os::raw::{c_char, c_int};
+#[cfg(target_family = "unix")]
+use std::os::unix::fs as unix_fs;
 use std::path::{Path, PathBuf};
 use std::sync::{Mutex, OnceLock};
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -325,6 +327,84 @@ fn diagnose_effect_registry_if_needed() {
 #[cfg(not(target_os = "macos"))]
 fn diagnose_effect_registry_if_needed() {}
 
+
+fn copy_tree(source: &Path, destination: &Path) -> Result<(), String> {
+    let metadata = fs::symlink_metadata(source)
+        .map_err(|error| format!("metadata {}: {error}", source.display()))?;
+
+    if metadata.file_type().is_symlink() {
+        #[cfg(target_family = "unix")]
+        {
+            let target = fs::read_link(source)
+                .map_err(|error| format!("readlink {}: {error}", source.display()))?;
+            unix_fs::symlink(&target, destination)
+                .map_err(|error| format!("symlink {}: {error}", destination.display()))?;
+            return Ok(());
+        }
+
+        #[cfg(not(target_family = "unix"))]
+        {
+            return Err(format!("symlink staging unsupported: {}", source.display()));
+        }
+    }
+
+    if metadata.is_dir() {
+        fs::create_dir_all(destination)
+            .map_err(|error| format!("mkdir {}: {error}", destination.display()))?;
+
+        let entries = fs::read_dir(source)
+            .map_err(|error| format!("readdir {}: {error}", source.display()))?;
+        for entry in entries {
+            let entry = entry.map_err(|error| format!("readdir entry: {error}"))?;
+            copy_tree(&entry.path(), &destination.join(entry.file_name()))?;
+        }
+        return Ok(());
+    }
+
+    if metadata.is_file() {
+        if let Some(parent) = destination.parent() {
+            fs::create_dir_all(parent)
+                .map_err(|error| format!("mkdir {}: {error}", parent.display()))?;
+        }
+        fs::copy(source, destination)
+            .map_err(|error| format!("copy {} -> {}: {error}", source.display(), destination.display()))?;
+
+        let permissions = metadata.permissions();
+        let _ = fs::set_permissions(destination, permissions);
+        return Ok(());
+    }
+
+    Err(format!("unsupported file type: {}", source.display()))
+}
+
+fn stage_bundle_for_runtime(bundle: &Path, ordinal: usize) -> Result<PathBuf, String> {
+    let stamp = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|duration| duration.as_nanos())
+        .unwrap_or(0);
+    let pid = std::process::id();
+    let root = PathBuf::from("/private/tmp/AEHotLoaderRuntime")
+        .join(format!("{pid}-{stamp}-{ordinal}"));
+
+    fs::create_dir_all(&root)
+        .map_err(|error| format!("create runtime root {}: {error}", root.display()))?;
+
+    let name = bundle
+        .file_name()
+        .ok_or_else(|| format!("bundle has no file name: {}", bundle.display()))?;
+    let staged_bundle = root.join(name);
+
+    copy_tree(bundle, &staged_bundle)?;
+
+    log_line(&format!(
+        "reload: staged {} -> {}",
+        bundle.display(),
+        staged_bundle.display()
+    ));
+
+    Ok(root)
+}
+
 enum ReloadResult {
     Success(String),
     Noop(String),
@@ -370,25 +450,26 @@ fn reload_plugins() -> ReloadResult {
         ));
     }
 
-    let mut folders = BTreeSet::new();
-    for plugin in &new_bundles {
-        if let Some(parent) = plugin.parent() {
-            folders.insert(parent.to_path_buf());
+    let mut runtime_roots = Vec::new();
+    let mut failures = Vec::new();
+
+    for (ordinal, plugin) in new_bundles.iter().enumerate() {
+        match stage_bundle_for_runtime(plugin, ordinal) {
+            Ok(root) => runtime_roots.push(root),
+            Err(error) => failures.push(error),
         }
     }
 
-    let mut failures = Vec::new();
-
-    for folder in &folders {
-        log_line(&format!("reload: queueing {}", folder.display()));
-        let result = queue_folder(folder);
+    for root in &runtime_roots {
+        log_line(&format!("reload: queueing runtime root {}", root.display()));
+        let result = queue_folder(root);
         log_line(&format!(
-            "reload: queue folder={} result={result}",
-            folder.display()
+            "reload: queue runtime root={} result={result}",
+            root.display()
         ));
 
         if result < 0 {
-            failures.push(format!("{} ({result})", folder.display()));
+            failures.push(format!("{} ({result})", root.display()));
         }
     }
 
@@ -403,7 +484,10 @@ fn reload_plugins() -> ReloadResult {
     }
 
     if !new_bundles.is_empty() {
-        let mut message = format!("Queued {} new bundle(s) for AE loader.", new_bundles.len());
+        let mut message = format!(
+            "Staged and queued {} new bundle(s) through isolated runtime root(s).",
+            new_bundles.len()
+        );
 
         if !changed_bundles.is_empty() {
             message.push_str(&format!(
