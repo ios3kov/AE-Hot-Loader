@@ -75,8 +75,8 @@ Human-readable build identifier used for diagnostics, for example `candidate-v2`
 ## Reload transaction
 
 1. Locate the candidate implementation.
-2. Fingerprint it.
-3. Copy it to a unique runtime path.
+2. Copy it to a unique runtime path.
+3. Fingerprint the staged bytes.
 4. `dlopen` the unique copy.
 5. Resolve all required exports.
 6. Validate protocol ABI, state ABI and implementation key.
@@ -92,7 +92,8 @@ Typical safe changes:
 - rendering algorithms;
 - math/quality fixes;
 - performance changes;
-- GPU/CPU implementation internals;
+- CPU implementation internals that preserve the persistent AE-facing state contract;
+- GPU shader/renderer changes **only when** the existing GPU context remains fully binary/semantic compatible;
 - behavior that preserves the persistent AE-facing state contract.
 
 Changes that normally require a shell rebuild + AE restart:
@@ -101,8 +102,21 @@ Changes that normally require a shell rebuild + AE restart:
 - match name/category;
 - parameter schema/IDs;
 - incompatible global/sequence data;
+- GPU context, pipeline, cache or opaque native-state changes that make an existing `gpu_data` pointer unsafe for new code;
 - supported command/capability flags that must be advertised during host registration.
 
 ## Threading rule
 
-The pointer swap is atomic. Already executing calls may finish in an older implementation while later calls enter the new implementation. This is why old implementation dylibs are never unloaded during the AE process lifetime.
+Effect calls may run concurrently under MFR, but old and new implementation code must not overlap on the same shell generation.
+
+The shell uses a shared call gate:
+- concurrent EffectMain calls remain concurrent;
+- Reload tries to take the exclusive gate only for the final pointer publication;
+- if an EffectMain call is still in flight, Reload returns a **busy / retry** error instead of blocking AE's main thread;
+- once the exclusive gate is acquired, the pointer swap is atomic and later calls enter the new implementation.
+
+Old implementation dylibs are still never unloaded during the AE process lifetime.
+
+## Multi-shell transaction rule
+
+`Reload Plugins` is intentionally per-shell, not all-or-nothing across every loaded effect. If one shell reloads and a later shell fails validation, the earlier shell remains updated. The Agent reports the mixed result; it does not roll back already successful shells.
