@@ -161,6 +161,60 @@ jobs:
           xcrun clang++ -std=c++17 -arch arm64 "$RUNNER_TEMP/shell_reload_smoke.cpp" -o "$RUNNER_TEMP/shell_reload_smoke"
           HOME="$FAKE_HOME" "$RUNNER_TEMP/shell_reload_smoke" "$(pwd)/dist/AEHotLoaderControlShell.plugin/Contents/MacOS/AEHotLoaderControlShell"
 
+      - name: Smoke test Agent shell discovery path
+        shell: bash
+        run: |
+          set -euo pipefail
+          FAKE_HOME="$RUNNER_TEMP/ae-hot-loader-agent-home"
+          IMPL_DIR="$FAKE_HOME/Library/Application Support/AE Hot Loader/implementations/control"
+          mkdir -p "$IMPL_DIR"
+          cp dist/AEHotLoaderControlImpl-candidate.dylib "$IMPL_DIR/current.dylib"
+
+          cat > "$RUNNER_TEMP/agent_discovery_smoke.cpp" <<'CPP'
+          #include <cstdio>
+          #include <cstring>
+          #include <dlfcn.h>
+
+          extern "C" int AEHotLoader_ReloadShells(char*, std::size_t);
+
+          int main(int argc, char** argv) {
+              if (argc != 2) return 20;
+
+              void* shell = dlopen(argv[1], RTLD_NOW | RTLD_LOCAL);
+              if (!shell) {
+                  std::fprintf(stderr, "dlopen shell failed: %s\n", dlerror());
+                  return 21;
+              }
+
+              char first[2048]{};
+              const int first_result = AEHotLoader_ReloadShells(first, sizeof(first));
+              std::printf("first=%d %s\n", first_result, first);
+              if (first_result != 0 ||
+                  std::strstr(first, "shells=1") == nullptr ||
+                  std::strstr(first, "reloaded=1") == nullptr) {
+                  return 22;
+              }
+
+              char second[2048]{};
+              const int second_result = AEHotLoader_ReloadShells(second, sizeof(second));
+              std::printf("second=%d %s\n", second_result, second);
+              if (second_result != 1 ||
+                  std::strstr(second, "unchanged=1") == nullptr) {
+                  return 23;
+              }
+
+              return 0;
+          }
+          CPP
+
+          xcrun clang++ -std=c++17 -arch arm64 \
+            "$RUNNER_TEMP/agent_discovery_smoke.cpp" \
+            agent/native/ShellReloader.cpp \
+            -o "$RUNNER_TEMP/agent_discovery_smoke"
+
+          HOME="$FAKE_HOME" "$RUNNER_TEMP/agent_discovery_smoke" \
+            "$(pwd)/dist/AEHotLoaderControlShell.plugin/Contents/MacOS/AEHotLoaderControlShell"
+
       - name: Validate ScriptUI panel
         run: |
           set -euo pipefail
