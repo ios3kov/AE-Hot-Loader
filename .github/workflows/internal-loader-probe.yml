@@ -63,7 +63,7 @@ jobs:
           CARGO_TARGET_DIR: ${{ github.workspace }}/target-internal-probe-gen
         run: |
           set -euo pipefail
-          cargo run \
+          cargo build \
             --manifest-path experiments/dual_pipl/piplgen/Cargo.toml \
             --release
           test -f experiments/dual_pipl/DualPiPL.rsrc
