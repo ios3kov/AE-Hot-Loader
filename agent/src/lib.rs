@@ -269,6 +269,10 @@ fn reload_plugins() -> ReloadResult {
         return ReloadResult::Noop("No new or changed .plugin bundles found.".to_string());
     }
 
+    for plugin in &changed {
+        log_line(&format!("reload: changed bundle {}", plugin.display()));
+    }
+
     let mut folders = BTreeSet::new();
     for plugin in &changed {
         if let Some(parent) = plugin.parent() {
@@ -306,12 +310,12 @@ fn reload_plugins() -> ReloadResult {
 
     if loaded_total > 0 {
         ReloadResult::Success(format!(
-            "Loaded {loaded_total} module(s) from {} new/changed bundle(s).",
+            "Scanned {} new/changed bundle(s); AE loader returned {loaded_total}.",
             changed.len()
         ))
     } else {
         ReloadResult::Noop(format!(
-            "Scanned {} new/changed bundle(s); AE registered no new modules.",
+            "Scanned {} new/changed bundle(s); AE loader returned 0.",
             changed.len()
         ))
     }
