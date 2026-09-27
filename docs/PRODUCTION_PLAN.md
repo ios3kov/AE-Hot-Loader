@@ -263,3 +263,30 @@ Target flow:
 `ScriptUI Reload Plugins → AEGP Agent → detect new bundles → ML::LoadPlugins → AE registry/menu`
 
 The temporary saved-callback Effect Bridge path is no longer the preferred production route.
+
+
+## Production Agent integration — 2026-09-27
+
+The proven private loader path is now integrated into `AEHotLoaderAgent.plugin` on branch `feature/internal-loader-agent`.
+
+Implemented:
+- native `ML::LoadPlugins` shim linked directly into the AEGP Agent;
+- startup snapshot of existing `.plugin` bundles;
+- recursive scan of standard Adobe / MediaCore locations;
+- detection of newly added or changed `.plugin` bundles;
+- grouped folder reload through AE's own internal loader;
+- ScriptUI `Reload Plugins` request routed directly to the Agent;
+- 30-second UI timeout for real folder rescans;
+- Effect Bridge removed from the production install/package path.
+
+CI run #46 passed fully on macOS ARM64.
+
+### Next live gate
+
+1. install the Agent-only package;
+2. restart AE once to load the updated Agent;
+3. copy a new test `.plugin` into a scanned plug-in folder while AE stays open;
+4. click `Reload Plugins`;
+5. verify the new effect appears and renders without another restart.
+
+Do not merge to `main` until this live button-driven flow passes.
