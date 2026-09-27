@@ -3,7 +3,7 @@ use pipl::*;
 fn main() {
     let pipl = build_pipl(vec![
         Property::Kind(PIPLType::AEEffect),
-        Property::Name("AE Hot Loader Single PiPL C++"),
+        Property::Name("AE Hot Loader Single PiPL C++ Fresh"),
         Property::Category("AE Hot Loader Diagnostic"),
         Property::CodeMacARM64("EffectMain"),
         Property::AE_PiPL_Version { major: 2, minor: 0 },
@@ -21,7 +21,7 @@ fn main() {
         Property::AE_Effect_Info_Flags(0),
         Property::AE_Effect_Global_OutFlags(OutFlags::PixIndependent),
         Property::AE_Effect_Global_OutFlags_2(OutFlags2::empty()),
-        Property::AE_Effect_Match_Name("OS3KOV.AEHotLoader.SinglePiPLCpp"),
+        Property::AE_Effect_Match_Name("OS3KOV.AEHotLoader.SinglePiPLCpp.Fresh"),
         Property::AE_Reserved_Info(0),
         Property::AE_Effect_Support_URL("https://github.com/ios3kov/AE-Hot-Loader"),
     ])
