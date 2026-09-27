@@ -1,11 +1,14 @@
 use after_effects as ae;
 use std::ffi::c_void;
-use std::sync::atomic::{AtomicPtr, Ordering};
+use std::fs;
+use std::path::PathBuf;
+use std::sync::{
+    atomic::{AtomicPtr, Ordering},
+    OnceLock,
+};
 
 #[derive(Eq, PartialEq, Hash, Clone, Copy, Debug)]
-enum Params {
-    RegisterLate,
-}
+enum Params {}
 
 #[derive(Default)]
 struct Plugin;
@@ -13,7 +16,9 @@ struct Plugin;
 ae::define_effect!(Plugin, (), Params);
 
 type RegisterLateFn = unsafe extern "C" fn() -> i32;
+
 static REGISTER_LATE_FN: AtomicPtr<c_void> = AtomicPtr::new(std::ptr::null_mut());
+static PLUGIN_ID: OnceLock<i32> = OnceLock::new();
 
 #[unsafe(no_mangle)]
 pub extern "C" fn AEHotLoaderCore_SetRegisterFn(ptr: *mut c_void) {
@@ -30,20 +35,102 @@ fn register_late_effect() -> i32 {
     unsafe { callback() }
 }
 
+fn bridge_dir() -> Option<PathBuf> {
+    let home = std::env::var_os("HOME")?;
+    Some(
+        PathBuf::from(home)
+            .join("Library")
+            .join("Application Support")
+            .join("AE Hot Loader")
+            .join("bridge"),
+    )
+}
+
+fn parse_value(text: &str, key: &str) -> Option<String> {
+    text.lines().find_map(|line| {
+        let (k, v) = line.split_once('=')?;
+        if k == key {
+            Some(v.to_string())
+        } else {
+            None
+        }
+    })
+}
+
+fn sanitize_message(message: &str) -> String {
+    message
+        .replace('\r', " ")
+        .replace('\n', " ")
+        .replace('=', ":")
+}
+
+fn write_response(request_id: &str, status: &str, message: &str) {
+    let Some(dir) = bridge_dir() else {
+        return;
+    };
+
+    if fs::create_dir_all(&dir).is_err() {
+        return;
+    }
+
+    let body = format!(
+        "version=1\nrequest_id={}\nstatus={}\nmessage={}\n",
+        request_id,
+        status,
+        sanitize_message(message)
+    );
+
+    let _ = fs::write(dir.join("response.txt"), body);
+}
+
+fn process_bridge_request() {
+    let Some(dir) = bridge_dir() else {
+        return;
+    };
+
+    let request_path = dir.join("request.txt");
+    if !request_path.exists() {
+        return;
+    }
+
+    let text = match fs::read_to_string(&request_path) {
+        Ok(text) => text,
+        Err(_) => return,
+    };
+
+    let _ = fs::remove_file(&request_path);
+
+    let request_id = parse_value(&text, "request_id").unwrap_or_else(|| "unknown".to_string());
+    let command = parse_value(&text, "command").unwrap_or_default();
+
+    if command != "reload_plugins" {
+        write_response(&request_id, "error", "Unknown bridge command");
+        return;
+    }
+
+    let rc = register_late_effect();
+    if rc == 0 {
+        write_response(
+            &request_id,
+            "success",
+            "Registration callback returned success. Check Effect > AE Hot Loader.",
+        );
+    } else {
+        write_response(
+            &request_id,
+            "error",
+            &format!("Registration callback failed with code {rc}"),
+        );
+    }
+}
+
 impl AdobePluginGlobal for Plugin {
     fn params_setup(
         &self,
-        params: &mut ae::Parameters<Params>,
+        _: &mut ae::Parameters<Params>,
         _: ae::InData,
         _: ae::OutData,
     ) -> Result<(), Error> {
-        params.add(
-            Params::RegisterLate,
-            "Hot Load",
-            ae::ButtonDef::setup(|button| {
-                button.set_label("Register Late Effect");
-            }),
-        )?;
         Ok(())
     }
 
@@ -52,28 +139,32 @@ impl AdobePluginGlobal for Plugin {
         cmd: ae::Command,
         _: ae::InData,
         mut out_data: ae::OutData,
-        params: &mut ae::Parameters<Params>,
+        _: &mut ae::Parameters<Params>,
     ) -> Result<(), ae::Error> {
         match cmd {
+            ae::Command::GlobalSetup => {
+                if PLUGIN_ID.get().is_none() {
+                    let utility = ae::aegp::suites::Utility::new()?;
+                    let plugin_id = utility.register_with_aegp("AEHotLoaderBridge")?;
+                    let _ = PLUGIN_ID.set(plugin_id);
+
+                    let register = ae::aegp::suites::RegisterNonAegp::new()?;
+                    register
+                        .register_idle_hook(
+                            plugin_id,
+                            Box::new(|_, _min_time| {
+                                process_bridge_request();
+                                Ok(())
+                            }),
+                            (),
+                        )
+                        .unwrap();
+                }
+            }
             ae::Command::About => {
                 out_data.set_return_msg(
-                    "AE Hot Loader macOS PoC\rTests late effect registration without restarting After Effects.",
+                    "AE Hot Loader bridge\rBackground helper for the dockable ScriptUI panel.",
                 );
-            }
-            ae::Command::UserChangedParam { param_index }
-                if params.type_at(param_index) == Params::RegisterLate =>
-            {
-                let rc = register_late_effect();
-                if rc == 0 {
-                    out_data.set_return_msg(
-                        "Late registration callback returned SUCCESS.\rCheck Effect > AE Hot Loader.",
-                    );
-                } else {
-                    out_data.set_return_msg(&format!(
-                        "Late registration callback failed. code={rc}\rSee /tmp/ae-hot-loader.log"
-                    ));
-                }
-                out_data.set_out_flag(ae::OutFlags::DisplayErrorMessage, true);
             }
             ae::Command::Render {
                 in_layer,
@@ -83,6 +174,7 @@ impl AdobePluginGlobal for Plugin {
             }
             _ => {}
         }
+
         Ok(())
     }
 }
