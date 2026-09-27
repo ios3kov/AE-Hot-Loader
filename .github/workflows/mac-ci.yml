@@ -11,6 +11,7 @@ on:
       - "INSTALL.command"
       - ".github/workflows/mac-ci.yml"
       - "docs/**"
+      - "experiments/rust_effect_probe/**"
   workflow_dispatch:
 
 concurrency:
@@ -34,6 +35,7 @@ jobs:
           set -euo pipefail
           cargo fmt --manifest-path core/Cargo.toml -- --check
           cargo fmt --manifest-path agent/Cargo.toml -- --check
+          cargo fmt --manifest-path experiments/rust_effect_probe/Cargo.toml -- --check
           zsh -n INSTALL.command
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only wrapper/AEHotLoader.cpp
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only agent/native/InternalLoader.cpp
@@ -51,6 +53,13 @@ jobs:
         run: |
           set -euo pipefail
           cargo build --manifest-path agent/Cargo.toml --release --target aarch64-apple-darwin
+
+      - name: Build Rust effect probe
+        env:
+          CARGO_TARGET_DIR: ${{ github.workspace }}/target-rust-effect-probe
+        run: |
+          set -euo pipefail
+          cargo build --manifest-path experiments/rust_effect_probe/Cargo.toml --release --target aarch64-apple-darwin
 
       - name: Build effect wrapper
         run: |
@@ -97,6 +106,20 @@ jobs:
           nm -gU "$BRIDGE/Contents/MacOS/AEHotLoaderBridge" | grep -E 'PluginDataEntryFunction2|EffectMain|LateEffectMain|AEHotLoader_RegisterLateEffect'
           nm -gU "$AGENT/Contents/MacOS/AEHotLoaderAgent" | grep 'EntryPointFunc'
 
+          PROBE_ROOT="target-rust-effect-probe/$TRIPLE/release"
+          PROBE="dist/AEHotLoaderRustProbe.plugin"
+          mkdir -p "$PROBE/Contents/MacOS" "$PROBE/Contents/Resources"
+          cp "$PROBE_ROOT/libae_hot_loader_rust_probe.dylib" "$PROBE/Contents/MacOS/AEHotLoaderRustProbe"
+          cp "$PROBE_ROOT/ae_hot_loader_rust_probe.rsrc" "$PROBE/Contents/Resources/AEHotLoaderRustProbe.rsrc"
+          cp "$PROBE_ROOT/ae_hot_loader_rust_probe_PkgInfo" "$PROBE/Contents/PkgInfo"
+          cp "$PROBE_ROOT/ae_hot_loader_rust_probe_Info.plist" "$PROBE/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Set :CFBundleExecutable AEHotLoaderRustProbe' "$PROBE/Contents/Info.plist" || /usr/libexec/PlistBuddy -c 'Add :CFBundleExecutable string AEHotLoaderRustProbe' "$PROBE/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Set :CFBundleIdentifier com.os3kov.AEHotLoader.RustProbe' "$PROBE/Contents/Info.plist" || /usr/libexec/PlistBuddy -c 'Add :CFBundleIdentifier string com.os3kov.AEHotLoader.RustProbe' "$PROBE/Contents/Info.plist"
+          codesign --force --deep --sign - "$PROBE"
+          codesign --verify --deep --strict "$PROBE"
+          plutil -lint "$PROBE/Contents/Info.plist"
+          nm -gU "$PROBE/Contents/MacOS/AEHotLoaderRustProbe" | grep -E 'PluginDataEntryFunction2|EffectMain'
+
       - name: Validate ScriptUI panel
         run: |
           set -euo pipefail
@@ -108,6 +131,7 @@ jobs:
           set -euo pipefail
           mkdir -p package
           cp -R dist/AEHotLoaderAgent.plugin package/
+          cp -R dist/AEHotLoaderRustProbe.plugin package/
           cp INSTALL.command package/
           cp "ui/AE Hot Loader.jsx" package/
           cp README.md package/
