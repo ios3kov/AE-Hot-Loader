@@ -138,11 +138,11 @@ A_Err PluginDataEntryFunction2(
     const char* match_name = nullptr;
 
     if (call == 1) {
-        name = "AE Hot Loader Dual PiPL A";
-        match_name = "OS3KOV.AEHotLoader.DualPiPL.A";
+        name = "AE Hot Loader Dual PiPL Fresh A";
+        match_name = "OS3KOV.AEHotLoader.DualPiPL.Fresh.A";
     } else if (call == 2) {
-        name = "AE Hot Loader Dual PiPL B";
-        match_name = "OS3KOV.AEHotLoader.DualPiPL.B";
+        name = "AE Hot Loader Dual PiPL Fresh B";
+        match_name = "OS3KOV.AEHotLoader.DualPiPL.Fresh.B";
     } else {
         char unexpected[256]{};
         std::snprintf(
@@ -202,8 +202,8 @@ A_Err PluginDataEntryFunction2(
     Log(after);
 
     if (call == 1) {
-        const char* second_name = "AE Hot Loader Dual PiPL B";
-        const char* second_match = "OS3KOV.AEHotLoader.DualPiPL.B";
+        const char* second_name = "AE Hot Loader Dual PiPL Fresh B";
+        const char* second_match = "OS3KOV.AEHotLoader.DualPiPL.Fresh.B";
 
         const A_Err second_result = in_callback(
             in_ptr,
