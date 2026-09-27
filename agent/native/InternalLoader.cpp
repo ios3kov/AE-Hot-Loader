@@ -19,6 +19,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <dispatch/dispatch.h>
+#include <dlfcn.h>
 
 namespace {
 
@@ -347,6 +348,49 @@ void* ResolveLoadPlugins() {
     return nullptr;
 }
 
+
+void DiagnoseLoadedBundles(const char* root) {
+    if (!root || !*root) {
+        return;
+    }
+
+    const std::size_t root_len = std::strlen(root);
+    const std::uint32_t count = _dyld_image_count();
+    int matched = 0;
+
+    for (std::uint32_t i = 0; i < count; ++i) {
+        const char* image_name = _dyld_get_image_name(i);
+        if (!image_name) {
+            continue;
+        }
+
+        if (std::strncmp(image_name, root, root_len) != 0) {
+            continue;
+        }
+
+        ++matched;
+        void* handle = dlopen(image_name, RTLD_NOW | RTLD_NOLOAD);
+        void* plugin_data = nullptr;
+        void* effect_main = nullptr;
+        if (handle) {
+            plugin_data = dlsym(handle, "PluginDataEntryFunction2");
+            effect_main = dlsym(handle, "EffectMain");
+            dlclose(handle);
+        }
+
+        Log(
+            "internal-loader: dyld image=%s PluginDataEntryFunction2=%p EffectMain=%p",
+            image_name,
+            plugin_data,
+            effect_main);
+    }
+
+    Log(
+        "internal-loader: dyld root=%s matched_images=%d",
+        root,
+        matched);
+}
+
 int LoadPluginFolder(const char* utf8_folder) {
 #if !defined(__aarch64__)
     Log("internal-loader: refusing non-arm64 build");
@@ -422,6 +466,8 @@ int LoadPluginFolder(const char* utf8_folder) {
         output.begin,
         output.end,
         output.capacity_end);
+
+    DiagnoseLoadedBundles(resolved_folder);
 
     // Intentionally keep the private-ABI string storage alive after ML::LoadPlugins.
     // The successful isolated LLDB probe does the same. AE may retain references
