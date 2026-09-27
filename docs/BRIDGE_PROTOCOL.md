@@ -1,18 +1,16 @@
-# ScriptUI ↔ Native Bridge Protocol
+# ScriptUI ↔ Native Agent Protocol
 
-The user-facing ScriptUI panel and the resident native helper communicate through two small text files.
+The ScriptUI panel and resident `AEHotLoaderAgent.plugin` communicate through two small text files.
 
 ## Location
 
 `Folder.userData/AE Hot Loader/bridge/`
 
-On macOS this resolves under the user's Application Support area.
+On macOS this resolves under the user's Application Support directory.
 
 ## Request
 
 File: `request.txt`
-
-Example:
 
 ```
 version=1
@@ -21,28 +19,32 @@ request_id=1720000000000-123456
 timestamp=1720000000000
 ```
 
-The panel replaces the previous request atomically enough for the PoC and waits for a matching response.
+For production, `reload_plugins` means:
+
+**reload the implementation dylib of every loaded AE Hot Loader shell.**
+
+It no longer means “register arbitrary new effect bundles through the private AE loader”.
 
 ## Response
 
 File: `response.txt`
 
-Example:
-
 ```
 version=1
 request_id=1720000000000-123456
 status=success
-message=Late registration callback returned success
+message=Reloaded 2 shell implementation(s); 1 unchanged
 ```
 
-Possible status values:
+Status values:
 - `success`
 - `error`
 - `noop`
 
-## Threading rule
+## Threading
 
-The ScriptUI panel only writes files. It never calls native AE APIs.
+ScriptUI only reads/writes files.
 
-The native helper reads the request from an AE idle hook, so host registration happens on the AE main thread.
+The native Agent receives the request from AE's resident AEGP path and invokes shell reload entry points from inside the AE process.
+
+Each shell performs an atomic implementation-pointer swap. Old implementation dylibs remain loaded until AE exits.
