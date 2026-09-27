@@ -28,7 +28,7 @@ impl AdobePluginGlobal for Plugin {
         match cmd {
             ae::Command::About => {
                 out_data
-                    .set_return_msg("AE Hot Loader Bridge\rInternal effect-registration bridge.");
+                    .set_return_msg("AE Hot Loader Control Implementation\rHot-swappable implementation dylib.");
             }
             ae::Command::Render {
                 in_layer,
