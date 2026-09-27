@@ -101,3 +101,30 @@ cat /tmp/ae-hot-loader-dualpipl.log
 Success means the new test effect becomes registered and usable **without restarting After Effects**.
 
 If AE crashes, hangs, or the private call returns without registering the test effect, stop. Do not retry with direct or deferred registration callbacks.
+
+
+## Current status — 2026-09-27
+
+GitHub Actions run #6 passed successfully.
+
+The packaged live-test kit now contains:
+- `libAEHotLoaderInternalProbe.dylib`;
+- `AEHotLoaderDualPiPL.plugin`;
+- `PREPARE_LIVE_TEST.command`;
+- this README.
+
+The probe build, test effect build, bundle signing, static checks, and packaging are all green.
+
+### Next live gate
+
+Run the kit inside an already-running After Effects 25.6 process.
+
+Success criterion:
+1. AE is already open;
+2. the test plug-in exists only under `/tmp/AEHotLoaderProbe`;
+3. `AEHotLoader_InternalLoaderProbe` invokes AE's own `ML::LoadPlugins`;
+4. the new effect appears in the Effect menu;
+5. the effect can be applied and rendered;
+6. no AE restart occurs.
+
+Do not merge this experiment into the production Agent until this live gate passes.
