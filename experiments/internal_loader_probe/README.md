@@ -128,3 +128,40 @@ Success criterion:
 6. no AE restart occurs.
 
 Do not merge this experiment into the production Agent until this live gate passes.
+
+
+## Live result — 2026-09-27
+
+The internal-loader probe succeeded inside a running After Effects 25.6.0 ARM64 process.
+
+Observed:
+
+- `ML::LoadPlugins` resolved successfully from `PluginSupport.framework`;
+- probe called `ML::LoadPlugins` for `/private/tmp/AEHotLoaderProbe`;
+- `ML::LoadPlugins returned=1`;
+- `AEHotLoaderDualPiPL.plugin` was loaded by AE;
+- first effect registration returned `0`;
+- second registration from the same `PluginDataEntryFunction2` transaction also returned `0`.
+
+Live log:
+
+```text
+host version=25.6.0
+calling ML::LoadPlugins root=/private/tmp/AEHotLoaderProbe
+ML::LoadPlugins returned=1
+
+AE Hot Loader Dual PiPL A registration_result=0
+AE Hot Loader Dual PiPL B registration_result=0
+```
+
+This proves the host-owned loader transaction can be invoked after AE startup and can successfully register new effect entries without restarting AE.
+
+Remaining live checks before declaring Stop Criterion A complete:
+
+1. resume AE;
+2. confirm both effects appear in the Effect menu;
+3. apply at least one effect to a layer;
+4. verify GLOBAL_SETUP / PARAMS_SETUP / render path;
+5. confirm AE remains stable.
+
+Do not merge into the production Agent until those remaining checks pass.
