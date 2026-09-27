@@ -1,9 +1,15 @@
 #include <atomic>
 #include <cstdint>
 #include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <dlfcn.h>
+#include <filesystem>
 #include <mutex>
 #include <string>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <vector>
 
 using A_Err = std::int32_t;
 using A_long = std::int32_t;
@@ -30,15 +36,13 @@ using PF_PluginDataCB2 = A_Err (*)(
     A_long,
     const std::uint8_t*);
 
-using CoreEffectMainFn = PF_Err (*)(
+using ImplEffectMainFn = PF_Err (*)(
     PF_Cmd,
     PF_InData*,
     PF_OutData*,
     PF_ParamDef**,
     PF_LayerDef*,
     void*);
-
-extern "C" A_Err AEHotLoader_RegisterLateEffect();
 
 namespace {
 
@@ -54,24 +58,23 @@ constexpr A_long kApiMajor = 13;
 constexpr A_long kApiMinor = 29;
 constexpr A_long kRegistrationReservedInfo = 8;
 
-PF_PluginDataPtr g_plugin_data = nullptr;
-PF_PluginDataCB2 g_register_callback = nullptr;
-std::atomic<bool> g_late_registered{false};
+std::atomic<ImplEffectMainFn> g_effect_main{nullptr};
+std::mutex g_reload_mutex;
+std::vector<void*> g_loaded_handles;
+std::string g_loaded_source;
+std::uint64_t g_loaded_stamp = 0;
+std::uint64_t g_reload_ordinal = 0;
 
-std::once_flag g_core_once;
-void* g_core_handle = nullptr;
-CoreEffectMainFn g_core_effect_main = nullptr;
-
-void Log(const char* message) {
-    if (FILE* f = std::fopen("/tmp/ae-hot-loader.log", "a")) {
-        std::fprintf(f, "%s\n", message);
+void Log(const std::string& message) {
+    if (FILE* f = std::fopen("/tmp/ae-hot-loader-shell.log", "a")) {
+        std::fprintf(f, "%s\n", message.c_str());
         std::fclose(f);
     }
 }
 
-std::string CorePath() {
+std::string BundleRoot() {
     Dl_info info{};
-    if (dladdr(reinterpret_cast<const void*>(&CorePath), &info) == 0 || !info.dli_fname) {
+    if (dladdr(reinterpret_cast<const void*>(&BundleRoot), &info) == 0 || !info.dli_fname) {
         return {};
     }
 
@@ -81,37 +84,134 @@ std::string CorePath() {
     if (pos == std::string::npos) {
         return {};
     }
-
-    return binary_path.substr(0, pos) +
-           "/Contents/Frameworks/libae_hot_loader_core.dylib";
+    return binary_path.substr(0, pos);
 }
 
-void LoadCore() {
-    std::call_once(g_core_once, [] {
-        const std::string path = CorePath();
-        if (path.empty()) {
-            Log("core: unable to resolve bundle path");
-            return;
-        }
+std::string DefaultImplementationPath() {
+    const std::string bundle = BundleRoot();
+    if (bundle.empty()) {
+        return {};
+    }
+    return bundle + "/Contents/Frameworks/libae_hot_loader_core.dylib";
+}
 
-        g_core_handle = dlopen(path.c_str(), RTLD_NOW | RTLD_LOCAL);
-        if (!g_core_handle) {
-            const char* error = dlerror();
-            std::string msg = "core: dlopen failed: ";
-            msg += error ? error : "unknown error";
-            Log(msg.c_str());
-            return;
-        }
+std::string ExternalImplementationPath() {
+    const char* home = std::getenv("HOME");
+    if (!home || !*home) {
+        return {};
+    }
+    return std::string(home) +
+           "/Library/Application Support/AE Hot Loader/implementations/control/current.dylib";
+}
 
-        g_core_effect_main = reinterpret_cast<CoreEffectMainFn>(
-            dlsym(g_core_handle, "EffectMain"));
-        if (!g_core_effect_main) {
-            Log("core: EffectMain export missing");
-            return;
-        }
+bool FileStamp(const std::string& path, std::uint64_t* stamp) {
+    struct stat st {};
+    if (stat(path.c_str(), &st) != 0 || !S_ISREG(st.st_mode)) {
+        return false;
+    }
+#if defined(__APPLE__)
+    const auto sec = static_cast<std::uint64_t>(st.st_mtimespec.tv_sec);
+    const auto nsec = static_cast<std::uint64_t>(st.st_mtimespec.tv_nsec);
+#else
+    const auto sec = static_cast<std::uint64_t>(st.st_mtim.tv_sec);
+    const auto nsec = static_cast<std::uint64_t>(st.st_mtim.tv_nsec);
+#endif
+    *stamp = (sec * 1000000000ULL) ^ nsec ^ static_cast<std::uint64_t>(st.st_size);
+    return true;
+}
 
-        Log("core: loaded");
-    });
+std::string SelectSource() {
+    const std::string external = ExternalImplementationPath();
+    std::uint64_t ignored = 0;
+    if (!external.empty() && FileStamp(external, &ignored)) {
+        return external;
+    }
+    return DefaultImplementationPath();
+}
+
+std::string RuntimeCopyPath(const std::string& source) {
+    const auto pid = static_cast<unsigned long long>(getpid());
+    const auto ordinal = ++g_reload_ordinal;
+    std::filesystem::path root =
+        std::filesystem::path("/private/tmp/AEHotLoaderShell") /
+        std::to_string(pid);
+    std::error_code ec;
+    std::filesystem::create_directories(root, ec);
+    if (ec) {
+        return {};
+    }
+
+    const std::filesystem::path destination =
+        root / ("control-" + std::to_string(ordinal) + ".dylib");
+
+    std::filesystem::copy_file(
+        source,
+        destination,
+        std::filesystem::copy_options::overwrite_existing,
+        ec);
+    if (ec) {
+        return {};
+    }
+    return destination.string();
+}
+
+int LoadImplementation(bool force, std::string* detail) {
+    std::lock_guard<std::mutex> lock(g_reload_mutex);
+
+    const std::string source = SelectSource();
+    if (source.empty()) {
+        if (detail) *detail = "No implementation dylib found.";
+        return -4101;
+    }
+
+    std::uint64_t stamp = 0;
+    if (!FileStamp(source, &stamp)) {
+        if (detail) *detail = "Implementation file is unavailable: " + source;
+        return -4102;
+    }
+
+    if (!force && source == g_loaded_source && stamp == g_loaded_stamp &&
+        g_effect_main.load(std::memory_order_acquire) != nullptr) {
+        if (detail) *detail = "Control shell implementation unchanged.";
+        return 1;
+    }
+
+    const std::string runtime_path = RuntimeCopyPath(source);
+    if (runtime_path.empty()) {
+        if (detail) *detail = "Could not stage implementation dylib.";
+        return -4103;
+    }
+
+    void* handle = dlopen(runtime_path.c_str(), RTLD_NOW | RTLD_LOCAL);
+    if (!handle) {
+        const char* error = dlerror();
+        if (detail) {
+            *detail = std::string("dlopen failed: ") + (error ? error : "unknown");
+        }
+        return -4104;
+    }
+
+    auto effect_main = reinterpret_cast<ImplEffectMainFn>(dlsym(handle, "EffectMain"));
+    if (!effect_main) {
+        const char* error = dlerror();
+        if (detail) {
+            *detail = std::string("EffectMain missing: ") + (error ? error : "unknown");
+        }
+        // Keep even a failed handle loaded rather than risk unloading code after partial init.
+        g_loaded_handles.push_back(handle);
+        return -4105;
+    }
+
+    g_loaded_handles.push_back(handle);
+    g_loaded_source = source;
+    g_loaded_stamp = stamp;
+    g_effect_main.store(effect_main, std::memory_order_release);
+
+    if (detail) {
+        *detail = "Reloaded control implementation from " + source;
+    }
+    Log("active implementation: " + runtime_path + " source=" + source);
+    return 0;
 }
 
 PF_Err ForwardEffectMain(
@@ -121,11 +221,26 @@ PF_Err ForwardEffectMain(
     PF_ParamDef** params,
     PF_LayerDef* output,
     void* extra) {
-    LoadCore();
-    if (!g_core_effect_main) {
-        return -1002;
+
+    ImplEffectMainFn fn = g_effect_main.load(std::memory_order_acquire);
+    if (!fn) {
+        std::string detail;
+        const int load_result = LoadImplementation(true, &detail);
+        Log("initial implementation load result=" + std::to_string(load_result) + " " + detail);
+        fn = g_effect_main.load(std::memory_order_acquire);
     }
-    return g_core_effect_main(cmd, in_data, out_data, params, output, extra);
+
+    if (!fn) {
+        return -4106;
+    }
+    return fn(cmd, in_data, out_data, params, output, extra);
+}
+
+void CopyMessage(char* output, std::size_t capacity, const std::string& message) {
+    if (!output || capacity == 0) {
+        return;
+    }
+    std::snprintf(output, capacity, "%s", message.c_str());
 }
 
 }  // namespace
@@ -140,31 +255,15 @@ A_Err PluginDataEntryFunction2(
 
     (void)in_basic_suite;
 
-    g_plugin_data = in_ptr;
-    g_register_callback = in_callback;
-
-    char message[512]{};
-    std::snprintf(
-        message,
-        sizeof(message),
-        "startup: host=%s version=%s data=%p callback=%p suite=%p",
-        in_host_name ? in_host_name : "(null)",
-        in_host_version ? in_host_version : "(null)",
-        static_cast<void*>(in_ptr),
-        reinterpret_cast<void*>(in_callback),
-        static_cast<void*>(in_basic_suite));
-    Log(message);
-
     if (!in_callback) {
-        Log("startup: registration callback is null");
-        return -1003;
+        return -4107;
     }
 
     const A_Err result = in_callback(
         in_ptr,
-        reinterpret_cast<const std::uint8_t*>("AE Hot Loader Bridge (Internal)"),
-        reinterpret_cast<const std::uint8_t*>("OS3KOV.AEHotLoader.Bridge"),
-        reinterpret_cast<const std::uint8_t*>("AE Hot Loader Internal"),
+        reinterpret_cast<const std::uint8_t*>("AE Hot Loader Control Shell"),
+        reinterpret_cast<const std::uint8_t*>("OS3KOV.AEHotLoader.ControlShell"),
+        reinterpret_cast<const std::uint8_t*>("AE Hot Loader"),
         reinterpret_cast<const std::uint8_t*>("EffectMain"),
         kAEEffectKind,
         kApiMajor,
@@ -172,47 +271,16 @@ A_Err PluginDataEntryFunction2(
         kRegistrationReservedInfo,
         reinterpret_cast<const std::uint8_t*>("https://github.com/ios3kov/AE-Hot-Loader"));
 
-    std::snprintf(message, sizeof(message), "startup: primary registration result=%d", result);
+    char message[512]{};
+    std::snprintf(
+        message,
+        sizeof(message),
+        "shell startup host=%s version=%s registration=%d",
+        in_host_name ? in_host_name : "(null)",
+        in_host_version ? in_host_version : "(null)",
+        result);
     Log(message);
 
-    LoadCore();
-    return result;
-}
-
-extern "C" __attribute__((visibility("default")))
-A_Err AEHotLoader_RegisterLateEffect() {
-    if (!g_register_callback || !g_plugin_data) {
-        Log("late: registration state unavailable");
-        return -1004;
-    }
-
-    bool expected = false;
-    if (!g_late_registered.compare_exchange_strong(expected, true)) {
-        Log("late: already registered in this AE process");
-        return 10001;
-    }
-
-    Log("late: invoking saved AE registration callback");
-
-    const A_Err result = g_register_callback(
-        g_plugin_data,
-        reinterpret_cast<const std::uint8_t*>("AE Hot Loader Late Effect"),
-        reinterpret_cast<const std::uint8_t*>("OS3KOV.AEHotLoader.Late"),
-        reinterpret_cast<const std::uint8_t*>("AE Hot Loader"),
-        reinterpret_cast<const std::uint8_t*>("LateEffectMain"),
-        kAEEffectKind,
-        kApiMajor,
-        kApiMinor,
-        kRegistrationReservedInfo,
-        reinterpret_cast<const std::uint8_t*>("https://github.com/ios3kov/AE-Hot-Loader"));
-
-    char message[256]{};
-    std::snprintf(message, sizeof(message), "late: callback result=%d", result);
-    Log(message);
-
-    if (result != 0) {
-        g_late_registered.store(false);
-    }
     return result;
 }
 
@@ -228,12 +296,10 @@ PF_Err EffectMain(
 }
 
 extern "C" __attribute__((visibility("default")))
-PF_Err LateEffectMain(
-    PF_Cmd cmd,
-    PF_InData* in_data,
-    PF_OutData* out_data,
-    PF_ParamDef** params,
-    PF_LayerDef* output,
-    void* extra) {
-    return ForwardEffectMain(cmd, in_data, out_data, params, output, extra);
+int AEHotLoader_ShellReload(char* output, std::size_t output_capacity) {
+    std::string detail;
+    const int result = LoadImplementation(false, &detail);
+    CopyMessage(output, output_capacity, detail);
+    Log("reload result=" + std::to_string(result) + " " + detail);
+    return result;
 }
