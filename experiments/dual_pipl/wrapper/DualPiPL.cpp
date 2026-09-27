@@ -2,7 +2,6 @@
 #include <cstdint>
 #include <cstdio>
 #include <dlfcn.h>
-#include <dispatch/dispatch.h>
 #include <mutex>
 #include <string>
 
@@ -57,8 +56,6 @@ std::atomic<int> g_plugin_data_calls{0};
 std::once_flag g_core_once;
 void* g_core_handle = nullptr;
 CoreEffectMainFn g_core_effect_main = nullptr;
-PF_PluginDataPtr g_saved_plugin_data = nullptr;
-PF_PluginDataCB2 g_saved_callback = nullptr;
 
 void Log(const char* message) {
     if (FILE* f = std::fopen("/tmp/ae-hot-loader-dualpipl.log", "a")) {
@@ -176,9 +173,6 @@ A_Err PluginDataEntryFunction2(
         return 1;
     }
 
-    g_saved_plugin_data = in_ptr;
-    g_saved_callback = in_callback;
-
     const A_Err result = in_callback(
         in_ptr,
         reinterpret_cast<const std::uint8_t*>(name),
@@ -227,40 +221,6 @@ A_Err PluginDataEntryFunction2(
             static_cast<void*>(in_ptr),
             second_result);
         Log(second);
-
-        dispatch_async(dispatch_get_main_queue(), ^{
-            Log("DEFERRED_REGISTRATION begin");
-
-            if (!g_saved_callback || !g_saved_plugin_data) {
-                Log("DEFERRED_REGISTRATION missing saved state");
-                return;
-            }
-
-            const char* deferred_name = "AE Hot Loader Deferred C";
-            const char* deferred_match = "OS3KOV.AEHotLoader.Deferred.C";
-
-            const A_Err deferred_result = g_saved_callback(
-                g_saved_plugin_data,
-                reinterpret_cast<const std::uint8_t*>(deferred_name),
-                reinterpret_cast<const std::uint8_t*>(deferred_match),
-                reinterpret_cast<const std::uint8_t*>("AE Hot Loader Diagnostic"),
-                reinterpret_cast<const std::uint8_t*>("EffectMain"),
-                kAEEffectKind,
-                kApiMajor,
-                kApiMinor,
-                kRegistrationReservedInfo,
-                reinterpret_cast<const std::uint8_t*>("https://github.com/ios3kov/AE-Hot-Loader"));
-
-            char deferred[384]{};
-            std::snprintf(
-                deferred,
-                sizeof(deferred),
-                "DEFERRED_REGISTRATION effect=%s data=%p registration_result=%d",
-                deferred_name,
-                static_cast<void*>(g_saved_plugin_data),
-                deferred_result);
-            Log(deferred);
-        });
     }
 
     return result;
