@@ -12,6 +12,7 @@ on:
       - ".github/workflows/mac-ci.yml"
       - "docs/**"
       - "experiments/rust_effect_probe/**"
+      - "experiments/rust_effect_probe_permissive/**"
   workflow_dispatch:
 
 concurrency:
@@ -36,6 +37,7 @@ jobs:
           cargo fmt --manifest-path core/Cargo.toml -- --check
           cargo fmt --manifest-path agent/Cargo.toml -- --check
           cargo fmt --manifest-path experiments/rust_effect_probe/Cargo.toml -- --check
+          cargo fmt --manifest-path experiments/rust_effect_probe_permissive/Cargo.toml -- --check
           zsh -n INSTALL.command
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only wrapper/AEHotLoader.cpp
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only agent/native/InternalLoader.cpp
@@ -60,6 +62,13 @@ jobs:
         run: |
           set -euo pipefail
           cargo build --manifest-path experiments/rust_effect_probe/Cargo.toml --release --target aarch64-apple-darwin
+
+      - name: Build permissive Rust effect probe
+        env:
+          CARGO_TARGET_DIR: ${{ github.workspace }}/target-rust-effect-probe-permissive
+        run: |
+          set -euo pipefail
+          cargo build --manifest-path experiments/rust_effect_probe_permissive/Cargo.toml --release --target aarch64-apple-darwin
 
       - name: Build effect wrapper
         run: |
@@ -133,6 +142,33 @@ jobs:
           plutil -lint "$PROBE/Contents/Info.plist"
           nm -gU "$PROBE/Contents/MacOS/AEHotLoaderRustProbe" | grep -E 'PluginDataEntryFunction2|EffectMain'
 
+          PERMISSIVE_ROOT="target-rust-effect-probe-permissive/$TRIPLE/release"
+          PERMISSIVE="dist/AEHotLoaderRustProbePermissive.plugin"
+          mkdir -p "$PERMISSIVE/Contents/MacOS" "$PERMISSIVE/Contents/Resources"
+          cp "$PERMISSIVE_ROOT/libae_hot_loader_rust_probe_permissive.dylib" "$PERMISSIVE/Contents/MacOS/AEHotLoaderRustProbePermissive"
+          cp "$PERMISSIVE_ROOT/ae_hot_loader_rust_probe_permissive.rsrc" "$PERMISSIVE/Contents/Resources/AEHotLoaderRustProbePermissive.rsrc"
+          printf 'eFKTFXTC' > "$PERMISSIVE/Contents/PkgInfo"
+          cat > "$PERMISSIVE/Contents/Info.plist" <<'PLIST2'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>CFBundleDevelopmentRegion</key><string>English</string>
+            <key>CFBundleExecutable</key><string>AEHotLoaderRustProbePermissive</string>
+            <key>CFBundleIdentifier</key><string>com.os3kov.AEHotLoader.RustProbe.Permissive</string>
+            <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+            <key>CFBundleName</key><string>AE Hot Loader Rust Probe Permissive</string>
+            <key>CFBundlePackageType</key><string>eFKT</string>
+            <key>CFBundleSignature</key><string>FXTC</string>
+            <key>CFBundleVersion</key><string>1</string>
+          </dict>
+          </plist>
+          PLIST2
+          codesign --force --deep --sign - "$PERMISSIVE"
+          codesign --verify --deep --strict "$PERMISSIVE"
+          plutil -lint "$PERMISSIVE/Contents/Info.plist"
+          nm -gU "$PERMISSIVE/Contents/MacOS/AEHotLoaderRustProbePermissive" | grep -E 'PluginDataEntryFunction2|EffectMain'
+
       - name: Validate ScriptUI panel
         run: |
           set -euo pipefail
@@ -145,6 +181,7 @@ jobs:
           mkdir -p package
           cp -R dist/AEHotLoaderAgent.plugin package/
           cp -R dist/AEHotLoaderRustProbe.plugin package/
+          cp -R dist/AEHotLoaderRustProbePermissive.plugin package/
           cp INSTALL.command package/
           cp "ui/AE Hot Loader.jsx" package/
           cp README.md package/
