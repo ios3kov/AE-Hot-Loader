@@ -22,7 +22,7 @@ use ae::{
 
 define_general_plugin!(Agent);
 
-const BUILD_ID: &str = "unified-4bundle-v1";
+const BUILD_ID: &str = "unified-6bundle-v2";
 
 #[derive(Clone, Debug)]
 struct Agent;
@@ -564,6 +564,12 @@ fn reload_plugins() -> ReloadResult {
         "OS3KOV.AEHotLoader.RustProbe.Permissive",
         "AE Hot Loader Rust Probe",
         "AE Hot Loader Rust Probe Permissive",
+        "OS3KOV.AEHotLoader.DualPiPL.A",
+        "OS3KOV.AEHotLoader.DualPiPL.B",
+        "OS3KOV.AEHotLoader.SinglePiPLCpp",
+        "AE Hot Loader Dual PiPL A",
+        "AE Hot Loader Dual PiPL B",
+        "AE Hot Loader Single PiPL C++",
     ];
     let preexisting_target_effects = find_registry_matches(&registry_before, &known_matches);
     for effect in &preexisting_target_effects {
@@ -734,6 +740,16 @@ fn reload_plugins() -> ReloadResult {
 
         report.push_str("\nPermissive PluginDataEntryFunction2 trace:\n");
         report.push_str(&permissive_trace);
+        if !report.ends_with('\n') {
+            report.push('\n');
+        }
+        report.push_str("\nDualPiPL C++ trace:\n");
+        report.push_str(&dual_trace);
+        if !report.ends_with('\n') {
+            report.push('\n');
+        }
+        report.push_str("\nSinglePiPL C++ trace:\n");
+        report.push_str(&single_cpp_trace);
         if !report.ends_with('\n') {
             report.push('\n');
         }
