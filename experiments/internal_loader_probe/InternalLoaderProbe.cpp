@@ -84,7 +84,11 @@ RawString MakeRawUTF16(const char* utf8) {
     if (!str) return out;
 
     const CFIndex len = CFStringGetLength(str);
-    auto* buffer = static_cast<std::uint16_t*>(std::calloc(static_cast<std::size_t>(len) + 1, sizeof(std::uint16_t)));
+    const std::uint64_t capacity_flags = CapacityFlags(static_cast<std::size_t>(len));
+    const std::size_t capacity = static_cast<std::size_t>(
+        capacity_flags & ~0x8000000000000000ULL);
+    auto* buffer = static_cast<std::uint16_t*>(
+        std::calloc(capacity, sizeof(std::uint16_t)));
     if (!buffer) {
         CFRelease(str);
         return out;
@@ -95,7 +99,7 @@ RawString MakeRawUTF16(const char* utf8) {
 
     out.data = buffer;
     out.size = static_cast<std::uint64_t>(len);
-    out.capacity_flags = CapacityFlags(static_cast<std::size_t>(len));
+    out.capacity_flags = capacity_flags;
     return out;
 }
 
@@ -282,13 +286,36 @@ int RunProbe(const char* utf8_folder) {
         return -103;
     }
 
+    char resolved_folder[PATH_MAX]{};
+    if (!realpath(utf8_folder, resolved_folder)) {
+        Log("refusing: folder does not exist: %s", utf8_folder);
+        return -106;
+    }
+
+    constexpr const char* kProbeRoot = "/private/tmp/AEHotLoaderProbe";
+    const std::size_t probe_root_len = std::strlen(kProbeRoot);
+    const bool allowed_probe_path =
+        std::strcmp(resolved_folder, kProbeRoot) == 0 ||
+        (std::strncmp(resolved_folder, kProbeRoot, probe_root_len) == 0 &&
+         resolved_folder[probe_root_len] == '/');
+    if (!allowed_probe_path) {
+        Log("refusing: path outside probe root: %s", resolved_folder);
+        return -107;
+    }
+
+    struct stat folder_stat {};
+    if (stat(resolved_folder, &folder_stat) != 0 || !S_ISDIR(folder_stat.st_mode)) {
+        Log("refusing: probe path is not a directory: %s", resolved_folder);
+        return -108;
+    }
+
     void* raw_fn = ResolveLoadPlugins();
     if (!raw_fn) return -104;
 
     const auto fn = reinterpret_cast<LoadPluginsFn>(raw_fn);
 
     RawVector output{};
-    RawString root = MakeRawUTF16(utf8_folder);
+    RawString root = MakeRawUTF16(resolved_folder);
     RawString player_media_core = MakeRawUTF16("PlayerMediaCore");
     if (!root.data || !player_media_core.data) {
         Log("failed to build ABI strings");
@@ -302,7 +329,7 @@ int RunProbe(const char* utf8_folder) {
     };
     RawVector x4{};
 
-    Log("calling ML::LoadPlugins root=%s fn=%p", utf8_folder, raw_fn);
+    Log("calling ML::LoadPlugins root=%s fn=%p", resolved_folder, raw_fn);
     const std::size_t result = fn(&output, &root, 1u, &x3, &x4, false);
     Log("ML::LoadPlugins returned=%zu output=[%p,%p,%p]",
         result, output.begin, output.end, output.capacity_end);
