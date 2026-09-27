@@ -4,12 +4,7 @@ use std::fs;
 use std::io::Write;
 use std::path::PathBuf;
 
-use ae::{
-    AegpPlugin,
-    aegp::suites::Register,
-    define_general_plugin,
-    sys::AEGP_PluginID,
-};
+use ae::{AegpPlugin, aegp::suites::Register, define_general_plugin, sys::AEGP_PluginID};
 
 define_general_plugin!(Agent);
 
@@ -60,11 +55,7 @@ fn bridge_binary() -> Option<PathBuf> {
 fn parse_value(text: &str, key: &str) -> Option<String> {
     text.lines().find_map(|line| {
         let (k, v) = line.split_once('=')?;
-        if k == key {
-            Some(v.to_string())
-        } else {
-            None
-        }
+        if k == key { Some(v.to_string()) } else { None }
     })
 }
 
