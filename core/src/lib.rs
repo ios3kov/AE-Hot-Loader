@@ -63,7 +63,6 @@ impl AdobePluginGlobal for Plugin {
     }
 }
 
-
 #[unsafe(no_mangle)]
 pub extern "C" fn AEHotLoader_ImplementationLabel(
     output: *mut c_char,
