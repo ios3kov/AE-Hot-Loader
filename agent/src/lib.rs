@@ -22,6 +22,8 @@ use ae::{
 
 define_general_plugin!(Agent);
 
+const BUILD_ID: &str = "unified-4bundle-v1";
+
 #[derive(Clone, Debug)]
 struct Agent;
 
@@ -752,7 +754,7 @@ fn reload_plugins() -> ReloadResult {
             .join(",");
 
         let mut message = format!(
-            "{} bundles: ML::LoadPlugins=[{loader_codes}], registry +{}; report: /tmp/ae-hot-loader-diagnostic-report.log",
+            "{BUILD_ID}: {} bundles, ML::LoadPlugins=[{loader_codes}], registry +{}; report: /tmp/ae-hot-loader-diagnostic-report.log",
             new_bundles.len(),
             added_effects.len()
         );
@@ -853,7 +855,7 @@ impl AegpPlugin for Agent {
         aegp_plugin_id: AEGP_PluginID,
     ) -> Result<Self, ae::Error> {
         log_line(&format!(
-            "agent start AE API {major_version}.{minor_version}, plugin_id={aegp_plugin_id}"
+            "agent start build={BUILD_ID} AE API {major_version}.{minor_version}, plugin_id={aegp_plugin_id}"
         ));
 
         initialize_snapshot();
