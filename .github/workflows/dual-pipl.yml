@@ -54,6 +54,52 @@ jobs:
             --release
           test -f experiments/dual_pipl/DualPiPL.rsrc
 
+      - name: Verify two PiPL resources
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import struct
+          from pathlib import Path
+
+          path = Path("experiments/dual_pipl/DualPiPL.rsrc")
+          data = path.read_bytes()
+
+          data_offset, map_offset, _, _ = struct.unpack(">4I", data[:16])
+          type_list_offset, _ = struct.unpack(">HH", data[map_offset + 24:map_offset + 28])
+          type_base = map_offset + type_list_offset
+
+          num_types_minus_one = struct.unpack(">H", data[type_base:type_base + 2])[0]
+          assert num_types_minus_one == 0
+
+          type_code = data[type_base + 2:type_base + 6]
+          num_resources_minus_one, ref_offset = struct.unpack(
+              ">HH", data[type_base + 6:type_base + 10]
+          )
+
+          assert type_code == b"PiPL", type_code
+          assert num_resources_minus_one + 1 == 2
+
+          ref_base = type_base + ref_offset
+          ids = []
+          payloads = []
+
+          for i in range(2):
+              rid, _, attrs_offset, _ = struct.unpack(
+                  ">hHII", data[ref_base + i * 12:ref_base + (i + 1) * 12]
+              )
+              ids.append(rid)
+              offset = attrs_offset & 0x00FFFFFF
+              pos = data_offset + offset
+              size = struct.unpack(">I", data[pos:pos + 4])[0]
+              payloads.append(data[pos + 4:pos + 4 + size])
+
+          assert ids == [16000, 16001], ids
+          assert b"AE Hot Loader Dual PiPL A" in payloads[0]
+          assert b"AE Hot Loader Dual PiPL B" in payloads[1]
+
+          print("Verified PiPL resources:", ids)
+          PY
+
       - name: Build diagnostic wrapper
         run: |
           set -euo pipefail
