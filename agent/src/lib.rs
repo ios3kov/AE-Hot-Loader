@@ -14,7 +14,8 @@ use ae::{
     AegpPlugin, Error,
     aegp::{
         InstalledEffectKey,
-        suites::{Effect as EffectSuite, Register},
+        suites::{Command, Effect as EffectSuite, Register},
+        CommandHookStatus, HookPriority,
     },
     define_general_plugin,
     sys::AEGP_PluginID,
@@ -33,10 +34,13 @@ struct Fingerprint {
 
 static PLUGIN_SNAPSHOT: OnceLock<Mutex<BTreeMap<PathBuf, Fingerprint>>> = OnceLock::new();
 static LAST_DIAG_GENERATION: OnceLock<Mutex<u64>> = OnceLock::new();
+static LOADER_COMMAND: OnceLock<ae::sys::AEGP_Command> = OnceLock::new();
+static PENDING_RUNTIME_ROOTS: OnceLock<Mutex<Vec<PathBuf>>> = OnceLock::new();
+static LAST_COMMAND_RESULTS: OnceLock<Mutex<Vec<(PathBuf, i32)>>> = OnceLock::new();
 
 #[cfg(target_os = "macos")]
 unsafe extern "C" {
-    fn AEHotLoader_QueuePluginFolder(utf8_folder: *const c_char) -> c_int;
+    fn AEHotLoader_LoadPluginFolder(utf8_folder: *const c_char) -> c_int;
     fn AEHotLoader_GetLoadGeneration() -> u64;
 }
 
@@ -235,17 +239,17 @@ fn initialize_snapshot() {
 }
 
 #[cfg(target_os = "macos")]
-fn queue_folder(folder: &Path) -> i32 {
+fn load_folder_sync(folder: &Path) -> i32 {
     let path = folder.to_string_lossy();
     let Ok(c_path) = CString::new(path.as_bytes()) else {
         return -3101;
     };
 
-    unsafe { AEHotLoader_QueuePluginFolder(c_path.as_ptr()) }
+    unsafe { AEHotLoader_LoadPluginFolder(c_path.as_ptr()) }
 }
 
 #[cfg(not(target_os = "macos"))]
-fn queue_folder(_folder: &Path) -> i32 {
+fn load_folder_sync(_folder: &Path) -> i32 {
     -3199
 }
 
@@ -409,6 +413,42 @@ fn stage_bundle_for_runtime(bundle: &Path, ordinal: usize) -> Result<PathBuf, St
     Ok(root)
 }
 
+
+fn run_roots_via_ae_command(roots: Vec<PathBuf>) -> Result<Vec<(PathBuf, i32)>, String> {
+    let command = *LOADER_COMMAND
+        .get()
+        .ok_or_else(|| "Loader command is not initialized.".to_string())?;
+
+    let pending = PENDING_RUNTIME_ROOTS.get_or_init(|| Mutex::new(Vec::new()));
+    {
+        let mut pending = pending
+            .lock()
+            .map_err(|_| "Pending runtime roots lock failed.".to_string())?;
+        *pending = roots;
+    }
+
+    let results = LAST_COMMAND_RESULTS.get_or_init(|| Mutex::new(Vec::new()));
+    {
+        let mut results = results
+            .lock()
+            .map_err(|_| "Command results lock failed.".to_string())?;
+        results.clear();
+    }
+
+    log_line(&format!(
+        "reload: dispatching AEGP_DoCommand command={command}"
+    ));
+
+    Command::new()
+        .and_then(|suite| suite.do_command(command))
+        .map_err(|error| format!("AEGP_DoCommand failed: {error:?}"))?;
+
+    results
+        .lock()
+        .map(|results| results.clone())
+        .map_err(|_| "Command results lock failed after dispatch.".to_string())
+}
+
 enum ReloadResult {
     Success(String),
     Noop(String),
@@ -464,16 +504,20 @@ fn reload_plugins() -> ReloadResult {
         }
     }
 
-    for root in &runtime_roots {
-        log_line(&format!("reload: queueing runtime root {}", root.display()));
-        let result = queue_folder(root);
-        log_line(&format!(
-            "reload: queue runtime root={} result={result}",
-            root.display()
-        ));
-
-        if result < 0 {
-            failures.push(format!("{} ({result})", root.display()));
+    if failures.is_empty() && !runtime_roots.is_empty() {
+        match run_roots_via_ae_command(runtime_roots.clone()) {
+            Ok(results) => {
+                for (root, result) in results {
+                    log_line(&format!(
+                        "reload: command root={} result={result}",
+                        root.display()
+                    ));
+                    if result < 0 {
+                        failures.push(format!("{} ({result})", root.display()));
+                    }
+                }
+            }
+            Err(error) => failures.push(error),
         }
     }
 
@@ -570,7 +614,55 @@ impl AegpPlugin for Agent {
 
         initialize_snapshot();
 
+        let command_suite = Command::new()?;
+        let loader_command = command_suite.unique_command()?;
+        let _ = LOADER_COMMAND.set(loader_command);
+
         let register = Register::new()?;
+        register.register_command_hook::<Agent, _>(
+            aegp_plugin_id,
+            HookPriority::BeforeAE,
+            loader_command,
+            Box::new(move |_, _, command, _, _| {
+                log_line(&format!(
+                    "command-hook: begin command={command} main_thread_dispatch"
+                ));
+
+                let pending = PENDING_RUNTIME_ROOTS.get_or_init(|| Mutex::new(Vec::new()));
+                let roots = match pending.lock() {
+                    Ok(mut pending) => std::mem::take(&mut *pending),
+                    Err(_) => {
+                        log_line("command-hook: pending roots lock failed");
+                        return Ok(CommandHookStatus::Handled);
+                    }
+                };
+
+                let mut command_results = Vec::new();
+                for root in roots {
+                    let result = load_folder_sync(&root);
+                    log_line(&format!(
+                        "command-hook: load root={} result={result}",
+                        root.display()
+                    ));
+                    command_results.push((root, result));
+                }
+
+                if let Ok(mut results) =
+                    LAST_COMMAND_RESULTS.get_or_init(|| Mutex::new(Vec::new())).lock()
+                {
+                    *results = command_results;
+                }
+
+                log_line("command-hook: end");
+                Ok(CommandHookStatus::Handled)
+            }),
+            (),
+        )?;
+
+        log_line(&format!(
+            "loader command hook registered command={loader_command}"
+        ));
+
         register.register_idle_hook::<Agent, _>(
             aegp_plugin_id,
             Box::new(|_, _, max_sleep| {
