@@ -71,37 +71,6 @@
     }
 
 
-    $.global.AEHotLoader_refreshEffectsPresets = function () {
-        try {
-            var commandId = app.findMenuCommandId("Effects & Presets");
-            if (!commandId) {
-                return;
-            }
-
-            app.executeCommand(commandId);
-            $.global.AEHotLoader_effectsPresetsCommandId = commandId;
-            app.scheduleTask("AEHotLoader_reopenEffectsPresets()", 200, false);
-        } catch (e) {}
-    };
-
-    $.global.AEHotLoader_reopenEffectsPresets = function () {
-        try {
-            var commandId = $.global.AEHotLoader_effectsPresetsCommandId;
-            if (commandId) {
-                app.executeCommand(commandId);
-            }
-        } catch (e) {}
-    };
-
-    $.global.AEHotLoader_refreshEffectsList = function () {
-        try {
-            var refreshId = app.findMenuCommandId("Refresh List");
-            if (refreshId) {
-                app.executeCommand(refreshId);
-            }
-        } catch (e) {}
-    };
-
     $.global.AEHotLoader_pollResponse = function () {
         var state = $.global.AEHotLoader_state;
         if (!state || !state.waiting) {
@@ -120,11 +89,6 @@
                     state.button.enabled = true;
                     state.status.text = data.message || data.status || "Done";
                     try { response.remove(); } catch (e) {}
-
-                    if (data.status === "success") {
-                        app.scheduleTask("AEHotLoader_refreshEffectsPresets()", 900, false);
-                        app.scheduleTask("AEHotLoader_refreshEffectsList()", 1400, false);
-                    }
                     return;
                 }
             }
