@@ -327,7 +327,6 @@ fn diagnose_effect_registry_if_needed() {
 #[cfg(not(target_os = "macos"))]
 fn diagnose_effect_registry_if_needed() {}
 
-
 fn copy_tree(source: &Path, destination: &Path) -> Result<(), String> {
     let metadata = fs::symlink_metadata(source)
         .map_err(|error| format!("metadata {}: {error}", source.display()))?;
@@ -366,8 +365,13 @@ fn copy_tree(source: &Path, destination: &Path) -> Result<(), String> {
             fs::create_dir_all(parent)
                 .map_err(|error| format!("mkdir {}: {error}", parent.display()))?;
         }
-        fs::copy(source, destination)
-            .map_err(|error| format!("copy {} -> {}: {error}", source.display(), destination.display()))?;
+        fs::copy(source, destination).map_err(|error| {
+            format!(
+                "copy {} -> {}: {error}",
+                source.display(),
+                destination.display()
+            )
+        })?;
 
         let permissions = metadata.permissions();
         let _ = fs::set_permissions(destination, permissions);
@@ -383,8 +387,8 @@ fn stage_bundle_for_runtime(bundle: &Path, ordinal: usize) -> Result<PathBuf, St
         .map(|duration| duration.as_nanos())
         .unwrap_or(0);
     let pid = std::process::id();
-    let root = PathBuf::from("/private/tmp/AEHotLoaderRuntime")
-        .join(format!("{pid}-{stamp}-{ordinal}"));
+    let root =
+        PathBuf::from("/private/tmp/AEHotLoaderRuntime").join(format!("{pid}-{stamp}-{ordinal}"));
 
     fs::create_dir_all(&root)
         .map_err(|error| format!("create runtime root {}: {error}", root.display()))?;
