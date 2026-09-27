@@ -384,6 +384,7 @@ jobs:
           cat > "$RUNNER_TEMP/rollback_smoke.cpp" <<'CPP'
           #include <cstdio>
           #include <cstring>
+          #include <cstdlib>
           #include <dlfcn.h>
           #include <filesystem>
 
@@ -470,12 +471,23 @@ jobs:
           #include <chrono>
           #include <cstdio>
           #include <cstring>
+          #include <cstdlib>
           #include <dlfcn.h>
           #include <filesystem>
           #include <thread>
 
+          struct PF_InData;
+          struct PF_OutData;
+          struct PF_ParamDef;
+          struct PF_LayerDef;
           using ReloadFn = int (*)(char*, std::size_t);
-          using EffectFn = int (*)(int, void*, void*, void*, void*, void*);
+          using EffectFn = int (*)(
+              int,
+              PF_InData*,
+              PF_OutData*,
+              PF_ParamDef**,
+              PF_LayerDef*,
+              void*);
 
           int main(int argc, char** argv) {
               if (argc != 4) return 40;
