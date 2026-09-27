@@ -1,6 +1,6 @@
 use after_effects as ae;
 use std::collections::BTreeMap;
-use std::ffi::CString;
+use std::ffi::{CStr, CString};
 use std::fs;
 use std::io::Write;
 use std::os::raw::{c_char, c_int};
@@ -22,7 +22,7 @@ use ae::{
 
 define_general_plugin!(Agent);
 
-const BUILD_ID: &str = "unified-6bundle-v3-fresh";
+const BUILD_ID: &str = "shell-reload-v1";
 
 #[derive(Clone, Debug)]
 struct Agent;
@@ -43,6 +43,7 @@ static LAST_COMMAND_RESULTS: OnceLock<Mutex<Vec<(PathBuf, i32)>>> = OnceLock::ne
 unsafe extern "C" {
     fn AEHotLoader_LoadPluginFolder(utf8_folder: *const c_char) -> c_int;
     fn AEHotLoader_GetLoadGeneration() -> u64;
+    fn AEHotLoader_ReloadShells(output: *mut c_char, output_capacity: usize) -> c_int;
 }
 
 fn log_line(message: &str) {
@@ -834,6 +835,25 @@ fn reload_plugins() -> ReloadResult {
     }
 }
 
+fn reload_shell_implementations() -> ReloadResult {
+    let mut buffer = [0 as c_char; 2048];
+    let result = unsafe { AEHotLoader_ReloadShells(buffer.as_mut_ptr(), buffer.len()) };
+
+    let message = unsafe { CStr::from_ptr(buffer.as_ptr()) }
+        .to_string_lossy()
+        .into_owned();
+
+    log_line(&format!(
+        "shell-reload: result={result} message={message:?}"
+    ));
+
+    match result {
+        0 => ReloadResult::Success(format!("{BUILD_ID}: {message}")),
+        1 => ReloadResult::Noop(format!("{BUILD_ID}: {message}")),
+        _ => ReloadResult::Error(format!("{BUILD_ID}: {message}")),
+    }
+}
+
 fn process_request() {
     let Some(dir) = bridge_dir() else {
         return;
@@ -876,7 +896,7 @@ fn process_request() {
         return;
     }
 
-    match reload_plugins() {
+    match reload_shell_implementations() {
         ReloadResult::Success(message) => write_response(&request_id, "success", &message),
         ReloadResult::Noop(message) => write_response(&request_id, "noop", &message),
         ReloadResult::Error(message) => write_response(&request_id, "error", &message),
