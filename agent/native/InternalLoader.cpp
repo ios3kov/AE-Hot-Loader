@@ -423,9 +423,9 @@ int LoadPluginFolder(const char* utf8_folder) {
         output.end,
         output.capacity_end);
 
-    std::free(root.data);
-    std::free(player_media_core.data);
-
+    // Intentionally keep the private-ABI string storage alive after ML::LoadPlugins.
+    // The successful isolated LLDB probe does the same. AE may retain references
+    // to this dvacore-compatible storage beyond the immediate call.
     if (result > static_cast<std::size_t>(INT_MAX)) {
         return -3009;
     }
