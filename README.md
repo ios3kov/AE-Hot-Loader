@@ -51,3 +51,19 @@ If AE again returns code `1`, the public callback route is considered blocked an
 ## Platform
 
 Current target: macOS Apple Silicon only.
+
+
+## Internal-loader live gate status — 2026-09-27
+
+The isolated branch `experiment/internal-loader-probe` now has a green packaged live-test kit.
+
+Verified in CI:
+- private `ML::LoadPlugins` probe builds;
+- safe test effect builds;
+- bundle signing/validation pass;
+- `PREPARE_LIVE_TEST.command` is packaged;
+- workflow run #6 completed successfully.
+
+Production `main` is not switched to the private loader yet.
+
+Next gate: run the probe inside an already-open After Effects 25.6 process and verify the newly copied test effect appears, applies, and renders without restarting AE.
