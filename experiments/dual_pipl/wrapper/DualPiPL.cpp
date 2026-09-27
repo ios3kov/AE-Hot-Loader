@@ -228,39 +228,7 @@ A_Err PluginDataEntryFunction2(
             second_result);
         Log(second);
 
-        dispatch_async(dispatch_get_main_queue(), ^{
-            Log("DEFERRED_REGISTRATION begin");
 
-            if (!g_saved_callback || !g_saved_plugin_data) {
-                Log("DEFERRED_REGISTRATION missing saved state");
-                return;
-            }
-
-            const char* deferred_name = "AE Hot Loader Deferred C";
-            const char* deferred_match = "OS3KOV.AEHotLoader.Deferred.C";
-
-            const A_Err deferred_result = g_saved_callback(
-                g_saved_plugin_data,
-                reinterpret_cast<const std::uint8_t*>(deferred_name),
-                reinterpret_cast<const std::uint8_t*>(deferred_match),
-                reinterpret_cast<const std::uint8_t*>("AE Hot Loader Diagnostic"),
-                reinterpret_cast<const std::uint8_t*>("EffectMain"),
-                kAEEffectKind,
-                kApiMajor,
-                kApiMinor,
-                kRegistrationReservedInfo,
-                reinterpret_cast<const std::uint8_t*>("https://github.com/ios3kov/AE-Hot-Loader"));
-
-            char deferred[384]{};
-            std::snprintf(
-                deferred,
-                sizeof(deferred),
-                "DEFERRED_REGISTRATION effect=%s data=%p registration_result=%d",
-                deferred_name,
-                static_cast<void*>(g_saved_plugin_data),
-                deferred_result);
-            Log(deferred);
-        });
     }
 
     return result;
