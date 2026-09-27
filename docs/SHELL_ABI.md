@@ -122,3 +122,10 @@ Old implementation dylibs are still never unloaded during the AE process lifetim
 ## Multi-shell transaction rule
 
 `Reload Plugins` is intentionally per-shell, not all-or-nothing across every loaded effect. If one shell reloads and a later shell fails validation, the earlier shell remains updated. The Agent reports the mixed result; it does not roll back already successful shells.
+
+
+## Session generation limit
+
+Old implementation images are intentionally retained because AE can keep persistent state whose destructor or opaque native state still belongs to an older implementation generation.
+
+To keep this safety rule from becoming unbounded memory growth, each shell allows at most **64 loaded generations per AE process**. Unchanged reloads do not consume a generation. When the limit is reached, Reload returns an error asking for one AE restart.
