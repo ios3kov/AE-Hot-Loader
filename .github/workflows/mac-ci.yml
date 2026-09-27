@@ -12,6 +12,7 @@ on:
       - "STAGE_IMPLEMENTATION.command"
       - ".github/workflows/mac-ci.yml"
       - "docs/**"
+      - "README.md"
   workflow_dispatch:
 
 concurrency:
@@ -43,6 +44,7 @@ jobs:
       - name: Build default implementation
         env:
           CARGO_TARGET_DIR: ${{ github.workspace }}/target-ae-hot-loader
+          AE_HOT_LOADER_IMPL_LABEL: default-v1
         run: |
           set -euo pipefail
           cargo build --manifest-path core/Cargo.toml --release --target aarch64-apple-darwin
@@ -69,17 +71,18 @@ jobs:
           xcrun clang++ \
             -std=c++17 -O2 -arch arm64 -dynamiclib -fvisibility=hidden \
             wrapper/AEHotLoader.cpp \
-            -o build-ae-hot-loader/AEHotLoaderBridge
+            -o build-ae-hot-loader/AEHotLoaderControlShell
 
-      - name: Assemble and sign bundles
+      - name: Assemble and sign
         run: |
           set -euo pipefail
           TRIPLE=aarch64-apple-darwin
           ROOT="target-ae-hot-loader/$TRIPLE/release"
+          CANDIDATE_ROOT="target-ae-hot-loader-candidate/$TRIPLE/release"
 
           SHELL="dist/AEHotLoaderControlShell.plugin"
           mkdir -p "$SHELL/Contents/MacOS" "$SHELL/Contents/Frameworks" "$SHELL/Contents/Resources"
-          cp build-ae-hot-loader/AEHotLoaderBridge "$SHELL/Contents/MacOS/AEHotLoaderControlShell"
+          cp build-ae-hot-loader/AEHotLoaderControlShell "$SHELL/Contents/MacOS/AEHotLoaderControlShell"
           cp "$ROOT/libae_hot_loader_core.dylib" "$SHELL/Contents/Frameworks/libae_hot_loader_core.dylib"
           cp "$ROOT/ae_hot_loader_core.rsrc" "$SHELL/Contents/Resources/AEHotLoaderControlShell.rsrc"
           cp "$ROOT/ae_hot_loader_core_PkgInfo" "$SHELL/Contents/PkgInfo"
@@ -88,10 +91,6 @@ jobs:
           /usr/libexec/PlistBuddy -c 'Set :CFBundleIdentifier com.os3kov.AEHotLoader.ControlShell' "$SHELL/Contents/Info.plist" || /usr/libexec/PlistBuddy -c 'Add :CFBundleIdentifier string com.os3kov.AEHotLoader.ControlShell' "$SHELL/Contents/Info.plist"
           codesign --force --sign - "$SHELL/Contents/Frameworks/libae_hot_loader_core.dylib"
           codesign --force --deep --sign - "$SHELL"
-
-          CANDIDATE_ROOT="target-ae-hot-loader-candidate/$TRIPLE/release"
-          cp "$CANDIDATE_ROOT/libae_hot_loader_core.dylib" dist/AEHotLoaderControlImpl-candidate.dylib
-          codesign --force --sign - dist/AEHotLoaderControlImpl-candidate.dylib
 
           AGENT="dist/AEHotLoaderAgent.plugin"
           mkdir -p "$AGENT/Contents/MacOS" "$AGENT/Contents/Resources"
@@ -103,16 +102,19 @@ jobs:
           /usr/libexec/PlistBuddy -c 'Set :CFBundleIdentifier com.os3kov.AEHotLoader.Agent' "$AGENT/Contents/Info.plist" || /usr/libexec/PlistBuddy -c 'Add :CFBundleIdentifier string com.os3kov.AEHotLoader.Agent' "$AGENT/Contents/Info.plist"
           codesign --force --deep --sign - "$AGENT"
 
+          cp "$CANDIDATE_ROOT/libae_hot_loader_core.dylib" dist/AEHotLoaderControlImpl-candidate.dylib
+          codesign --force --sign - dist/AEHotLoaderControlImpl-candidate.dylib
+
           codesign --verify --deep --strict "$SHELL"
-          codesign --verify --strict dist/AEHotLoaderControlImpl-candidate.dylib
           codesign --verify --deep --strict "$AGENT"
+          codesign --verify --strict dist/AEHotLoaderControlImpl-candidate.dylib
           plutil -lint "$SHELL/Contents/Info.plist"
           plutil -lint "$AGENT/Contents/Info.plist"
 
           nm -gU "$SHELL/Contents/MacOS/AEHotLoaderControlShell" | grep -E 'PluginDataEntryFunction2|EffectMain|AEHotLoader_ShellReload'
-          nm -gU "$SHELL/Contents/Frameworks/libae_hot_loader_core.dylib" | grep -E 'EffectMain|AEHotLoader_ImplementationLabel'
-          nm -gU dist/AEHotLoaderControlImpl-candidate.dylib | grep -E 'EffectMain|AEHotLoader_ImplementationLabel'
           nm -gU "$AGENT/Contents/MacOS/AEHotLoaderAgent" | grep 'EntryPointFunc'
+          nm -gU dist/AEHotLoaderControlImpl-candidate.dylib | grep 'EffectMain'
+          strings dist/AEHotLoaderControlImpl-candidate.dylib | grep 'candidate-v2'
 
       - name: Validate ScriptUI panel
         run: |
@@ -120,7 +122,7 @@ jobs:
           test -f "ui/AE Hot Loader.jsx"
           grep -q 'Reload Plugins' "ui/AE Hot Loader.jsx"
 
-      - name: Package test kit
+      - name: Package
         run: |
           set -euo pipefail
           mkdir -p package
@@ -132,10 +134,10 @@ jobs:
           cp "ui/AE Hot Loader.jsx" package/
           cp README.md package/
           chmod +x package/INSTALL.command package/STAGE_IMPLEMENTATION.command
-          ditto -c -k --sequesterRsrc --keepParent package AEHotLoader-mac-arm64-shell.zip
+          ditto -c -k --sequesterRsrc --keepParent package AEHotLoader-mac-arm64-shell-reload-v1.zip
 
       - uses: actions/upload-artifact@v4
         with:
-          name: AEHotLoader-mac-arm64-shell
-          path: AEHotLoader-mac-arm64-shell.zip
+          name: AEHotLoader-mac-arm64-shell-reload-v1
+          path: AEHotLoader-mac-arm64-shell-reload-v1.zip
           if-no-files-found: error
