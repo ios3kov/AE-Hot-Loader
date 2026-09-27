@@ -50,6 +50,20 @@ using LoadPluginsFn = std::size_t (*)(
     const RawVector*,
     bool);
 
+void DiagnosticReport(const char* fmt, ...) {
+    FILE* f = std::fopen("/tmp/ae-hot-loader-diagnostic-report.log", "a");
+    if (!f) {
+        return;
+    }
+
+    va_list args;
+    va_start(args, fmt);
+    std::vfprintf(f, fmt, args);
+    std::fprintf(f, "\n");
+    va_end(args);
+    std::fclose(f);
+}
+
 void Log(const char* fmt, ...) {
     FILE* f = std::fopen(kLogPath, "a");
     if (!f) {
