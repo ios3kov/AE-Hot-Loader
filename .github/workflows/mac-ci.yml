@@ -71,7 +71,7 @@ jobs:
           set -euo pipefail
           mkdir -p build-ae-hot-loader
           xcrun clang++ \
-            -std=c++17 -O2 -arch arm64 -dynamiclib -fvisibility=hidden \
+            -std=c++17 -O2 -arch arm64 -mmacosx-version-min=11.0 -dynamiclib -fvisibility=hidden \
             wrapper/AEHotLoader.cpp \
             -o build-ae-hot-loader/AEHotLoaderControlShell
 
