@@ -254,27 +254,37 @@ fn reload_plugins() -> ReloadResult {
         }
     };
 
-    let changed: Vec<PathBuf> = current
+    let new_bundles: Vec<PathBuf> = current
+        .keys()
+        .filter(|path| !previous.contains_key(*path))
+        .cloned()
+        .collect();
+
+    let changed_bundles: Vec<PathBuf> = current
         .iter()
         .filter_map(|(path, fingerprint)| {
-            if previous.get(path) != Some(fingerprint) {
-                Some(path.clone())
-            } else {
-                None
+            match previous.get(path) {
+                Some(previous_fingerprint) if previous_fingerprint != fingerprint => {
+                    Some(path.clone())
+                }
+                _ => None,
             }
         })
         .collect();
 
-    if changed.is_empty() {
+    if new_bundles.is_empty() && changed_bundles.is_empty() {
         return ReloadResult::Noop("No new or changed .plugin bundles found.".to_string());
     }
 
-    for plugin in &changed {
-        log_line(&format!("reload: changed bundle {}", plugin.display()));
+    for plugin in &new_bundles {
+        log_line(&format!("reload: new bundle {}", plugin.display()));
+    }
+    for plugin in &changed_bundles {
+        log_line(&format!("reload: changed existing bundle {}", plugin.display()));
     }
 
     let mut folders = BTreeSet::new();
-    for plugin in &changed {
+    for plugin in &new_bundles {
         if let Some(parent) = plugin.parent() {
             folders.insert(parent.to_path_buf());
         }
@@ -298,7 +308,7 @@ fn reload_plugins() -> ReloadResult {
         }
     }
 
-    for plugin in &changed {
+    for plugin in new_bundles.iter().chain(changed_bundles.iter()) {
         if let Some(fingerprint) = current.get(plugin) {
             previous.insert(plugin.clone(), *fingerprint);
         }
@@ -308,15 +318,24 @@ fn reload_plugins() -> ReloadResult {
         return ReloadResult::Error(format!("Internal loader failed: {}", failures.join(", ")));
     }
 
-    if loaded_total > 0 {
-        ReloadResult::Success(format!(
-            "Scanned {} new/changed bundle(s); AE loader returned {loaded_total}.",
-            changed.len()
-        ))
+    if !new_bundles.is_empty() {
+        let mut message = format!(
+            "Scanned {} new bundle(s); AE loader returned {loaded_total}.",
+            new_bundles.len()
+        );
+
+        if !changed_bundles.is_empty() {
+            message.push_str(&format!(
+                " Also detected {} changed existing bundle(s); hot replacement is not verified.",
+                changed_bundles.len()
+            ));
+        }
+
+        ReloadResult::Success(message)
     } else {
         ReloadResult::Noop(format!(
-            "Scanned {} new/changed bundle(s); AE loader returned 0.",
-            changed.len()
+            "Detected {} changed existing bundle(s). Hot replacement of already-loaded plug-ins is not verified; restart AE to guarantee update.",
+            changed_bundles.len()
         ))
     }
 }
