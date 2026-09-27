@@ -8,7 +8,12 @@ use std::path::{Path, PathBuf};
 use std::sync::{Mutex, OnceLock};
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use ae::{AegpPlugin, Error, aegp::suites::Register, define_general_plugin, sys::AEGP_PluginID};
+use ae::{
+    AegpPlugin, Error,
+    aegp::{InstalledEffectKey, suites::{Effect as EffectSuite, Register}},
+    define_general_plugin,
+    sys::AEGP_PluginID,
+};
 
 define_general_plugin!(Agent);
 
@@ -22,10 +27,12 @@ struct Fingerprint {
 }
 
 static PLUGIN_SNAPSHOT: OnceLock<Mutex<BTreeMap<PathBuf, Fingerprint>>> = OnceLock::new();
+static LAST_DIAG_GENERATION: OnceLock<Mutex<u64>> = OnceLock::new();
 
 #[cfg(target_os = "macos")]
 unsafe extern "C" {
     fn AEHotLoader_QueuePluginFolder(utf8_folder: *const c_char) -> c_int;
+    fn AEHotLoader_GetLoadGeneration() -> u64;
 }
 
 fn log_line(message: &str) {
@@ -237,6 +244,82 @@ fn queue_folder(_folder: &Path) -> i32 {
     -3199
 }
 
+
+#[cfg(target_os = "macos")]
+fn diagnose_effect_registry_if_needed() {
+    let generation = unsafe { AEHotLoader_GetLoadGeneration() };
+    if generation == 0 {
+        return;
+    }
+
+    let last = LAST_DIAG_GENERATION.get_or_init(|| Mutex::new(0));
+    let mut last = match last.lock() {
+        Ok(last) => last,
+        Err(_) => return,
+    };
+    if *last == generation {
+        return;
+    }
+
+    let suite = match EffectSuite::new() {
+        Ok(suite) => suite,
+        Err(error) => {
+            log_line(&format!("registry-diag: EffectSuite unavailable: {error:?}"));
+            *last = generation;
+            return;
+        }
+    };
+
+    let count = match suite.num_installed_effects() {
+        Ok(count) => count,
+        Err(error) => {
+            log_line(&format!("registry-diag: count failed: {error:?}"));
+            *last = generation;
+            return;
+        }
+    };
+
+    log_line(&format!(
+        "registry-diag: generation={generation} installed_effects={count}"
+    ));
+
+    let mut key = InstalledEffectKey::None;
+    let mut found = 0usize;
+
+    for _ in 0..count.max(0) {
+        key = match suite.next_installed_effect(key) {
+            Ok(InstalledEffectKey::None) => break,
+            Ok(key) => key,
+            Err(error) => {
+                log_line(&format!("registry-diag: next failed: {error:?}"));
+                break;
+            }
+        };
+
+        let name = suite.effect_name(key).unwrap_or_default();
+        let match_name = suite.effect_match_name(key).unwrap_or_default();
+        let category = suite.effect_category(key).unwrap_or_default();
+
+        if name.contains("AE Hot Loader")
+            || match_name.contains("AEHotLoader")
+            || category.contains("AE Hot Loader")
+        {
+            found += 1;
+            log_line(&format!(
+                "registry-diag: FOUND key={key:?} name={name:?} match={match_name:?} category={category:?}"
+            ));
+        }
+    }
+
+    log_line(&format!(
+        "registry-diag: generation={generation} matching_effects={found}"
+    ));
+    *last = generation;
+}
+
+#[cfg(not(target_os = "macos"))]
+fn diagnose_effect_registry_if_needed() {}
+
 enum ReloadResult {
     Success(String),
     Noop(String),
@@ -399,6 +482,7 @@ impl AegpPlugin for Agent {
             aegp_plugin_id,
             Box::new(|_, _, max_sleep| {
                 process_request();
+                diagnose_effect_registry_if_needed();
                 if *max_sleep > 100 {
                     *max_sleep = 100;
                 }
