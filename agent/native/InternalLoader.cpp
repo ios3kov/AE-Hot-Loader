@@ -17,6 +17,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <dispatch/dispatch.h>
 
 namespace {
 
@@ -430,8 +431,35 @@ int LoadPluginFolder(const char* utf8_folder) {
     return static_cast<int>(result);
 }
 
+void QueueLoadCallback(void* context) {
+    auto* folder = static_cast<char*>(context);
+    if (!folder) {
+        return;
+    }
+
+    Log("internal-loader: async begin root=%s", folder);
+    const int result = LoadPluginFolder(folder);
+    Log("internal-loader: async end root=%s result=%d", folder, result);
+    std::free(folder);
+}
+
 }  // namespace
 
 extern "C" int AEHotLoader_LoadPluginFolder(const char* utf8_folder) {
     return LoadPluginFolder(utf8_folder);
+}
+
+extern "C" int AEHotLoader_QueuePluginFolder(const char* utf8_folder) {
+    if (!utf8_folder || !*utf8_folder) {
+        return -3201;
+    }
+
+    char* copy = ::strdup(utf8_folder);
+    if (!copy) {
+        return -3202;
+    }
+
+    Log("internal-loader: queued root=%s", copy);
+    dispatch_async_f(dispatch_get_main_queue(), copy, QueueLoadCallback);
+    return 0;
 }
