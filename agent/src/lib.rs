@@ -25,7 +25,7 @@ static PLUGIN_SNAPSHOT: OnceLock<Mutex<BTreeMap<PathBuf, Fingerprint>>> = OnceLo
 
 #[cfg(target_os = "macos")]
 unsafe extern "C" {
-    fn AEHotLoader_LoadPluginFolder(utf8_folder: *const c_char) -> c_int;
+    fn AEHotLoader_QueuePluginFolder(utf8_folder: *const c_char) -> c_int;
 }
 
 fn log_line(message: &str) {
@@ -223,17 +223,17 @@ fn initialize_snapshot() {
 }
 
 #[cfg(target_os = "macos")]
-fn load_folder(folder: &Path) -> i32 {
+fn queue_folder(folder: &Path) -> i32 {
     let path = folder.to_string_lossy();
     let Ok(c_path) = CString::new(path.as_bytes()) else {
         return -3101;
     };
 
-    unsafe { AEHotLoader_LoadPluginFolder(c_path.as_ptr()) }
+    unsafe { AEHotLoader_QueuePluginFolder(c_path.as_ptr()) }
 }
 
 #[cfg(not(target_os = "macos"))]
-fn load_folder(_folder: &Path) -> i32 {
+fn queue_folder(_folder: &Path) -> i32 {
     -3199
 }
 
@@ -289,21 +289,18 @@ fn reload_plugins() -> ReloadResult {
         }
     }
 
-    let mut loaded_total = 0_i32;
     let mut failures = Vec::new();
 
     for folder in &folders {
-        log_line(&format!("reload: scanning {}", folder.display()));
-        let result = load_folder(folder);
+        log_line(&format!("reload: queueing {}", folder.display()));
+        let result = queue_folder(folder);
         log_line(&format!(
-            "reload: ML::LoadPlugins folder={} result={result}",
+            "reload: queue folder={} result={result}",
             folder.display()
         ));
 
         if result < 0 {
             failures.push(format!("{} ({result})", folder.display()));
-        } else {
-            loaded_total = loaded_total.saturating_add(result);
         }
     }
 
@@ -319,7 +316,7 @@ fn reload_plugins() -> ReloadResult {
 
     if !new_bundles.is_empty() {
         let mut message = format!(
-            "Scanned {} new bundle(s); AE loader returned {loaded_total}.",
+            "Queued {} new bundle(s) for AE loader.",
             new_bundles.len()
         );
 
