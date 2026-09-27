@@ -2,13 +2,16 @@
 #include <cxxabi.h>
 #include <fcntl.h>
 #include <mach-o/dyld.h>
+#include <mach-o/fat.h>
 #include <mach-o/loader.h>
 #include <mach-o/nlist.h>
 #include <pthread.h>
+#include <libkern/OSByteOrder.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <cstdarg>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -117,6 +120,44 @@ bool ReadWholeFile(const char* path, void** mapped, std::size_t* size) {
     return true;
 }
 
+const mach_header_64* FindArm64Slice(const void* mapped, std::size_t mapped_size) {
+    if (mapped_size < sizeof(std::uint32_t)) return nullptr;
+
+    const auto* bytes = static_cast<const std::uint8_t*>(mapped);
+    const std::uint32_t magic = *reinterpret_cast<const std::uint32_t*>(bytes);
+
+    if (magic == MH_MAGIC_64) {
+        if (mapped_size < sizeof(mach_header_64)) return nullptr;
+        return reinterpret_cast<const mach_header_64*>(bytes);
+    }
+
+    if (magic != FAT_CIGAM && magic != FAT_MAGIC) return nullptr;
+    if (mapped_size < sizeof(fat_header)) return nullptr;
+
+    const auto* fh = reinterpret_cast<const fat_header*>(bytes);
+    const bool swapped = (magic == FAT_CIGAM);
+    const std::uint32_t nfat = swapped ? OSSwapInt32(fh->nfat_arch) : fh->nfat_arch;
+
+    const std::size_t table_bytes =
+        sizeof(fat_header) + static_cast<std::size_t>(nfat) * sizeof(fat_arch);
+    if (table_bytes > mapped_size) return nullptr;
+
+    const auto* arch = reinterpret_cast<const fat_arch*>(bytes + sizeof(fat_header));
+    for (std::uint32_t i = 0; i < nfat; ++i) {
+        const std::uint32_t raw_cpu = static_cast<std::uint32_t>(arch[i].cputype);
+        const cpu_type_t cpu = static_cast<cpu_type_t>(swapped ? OSSwapInt32(raw_cpu) : raw_cpu);
+        if (cpu != CPU_TYPE_ARM64) continue;
+
+        const std::uint32_t off = swapped ? OSSwapInt32(arch[i].offset) : arch[i].offset;
+        if (off > mapped_size || mapped_size - off < sizeof(mach_header_64)) return nullptr;
+
+        const auto* slice = reinterpret_cast<const mach_header_64*>(bytes + off);
+        return slice->magic == MH_MAGIC_64 ? slice : nullptr;
+    }
+
+    return nullptr;
+}
+
 void* ResolveLoadPlugins() {
     const std::uint32_t count = _dyld_image_count();
 
@@ -137,7 +178,14 @@ void* ResolveLoadPlugins() {
             return nullptr;
         }
 
-        const auto* file_header = static_cast<const mach_header_64*>(mapped);
+        const auto* file_header = FindArm64Slice(mapped, mapped_size);
+        if (!file_header) {
+            Log("could not locate arm64 Mach-O slice in PluginSupport");
+            munmap(mapped, mapped_size);
+            return nullptr;
+        }
+
+        const auto* file_bytes = reinterpret_cast<const std::uint8_t*>(file_header);
         const auto* cmd = reinterpret_cast<const load_command*>(file_header + 1);
         const symtab_command* symtab = nullptr;
 
@@ -167,10 +215,8 @@ void* ResolveLoadPlugins() {
             return nullptr;
         }
 
-        const auto* symbols = reinterpret_cast<const nlist_64*>(
-            static_cast<const std::uint8_t*>(mapped) + symtab->symoff);
-        const char* strings = reinterpret_cast<const char*>(
-            static_cast<const std::uint8_t*>(mapped) + symtab->stroff);
+        const auto* symbols = reinterpret_cast<const nlist_64*>(file_bytes + symtab->symoff);
+        const char* strings = reinterpret_cast<const char*>(file_bytes + symtab->stroff);
 
         const std::intptr_t slide = _dyld_get_image_vmaddr_slide(i);
 
