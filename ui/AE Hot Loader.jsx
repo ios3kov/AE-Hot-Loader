@@ -6,8 +6,11 @@
 
     function bridgeFolder() {
         var folder = new Folder(Folder.userData.fsName + "/" + BRIDGE_FOLDER_NAME + "/bridge");
-        if (!folder.exists) {
-            folder.create();
+        if (!folder.exists && !folder.create()) {
+            throw new Error(
+                "Cannot create AE Hot Loader bridge folder. " +
+                "Enable scripting file access in After Effects preferences."
+            );
         }
         return folder;
     }
@@ -52,7 +55,10 @@
         }
 
         if (!temp.open("w")) {
-            throw new Error("Cannot open bridge request file.");
+            throw new Error(
+                "Cannot write AE Hot Loader request. " +
+                "Enable scripting file access in After Effects preferences."
+            );
         }
 
         temp.lineFeed = "Unix";
@@ -118,8 +124,9 @@
         var reloadButton = panel.add("button", undefined, "Reload Plugins");
         reloadButton.preferredSize.height = 30;
 
-        var status = panel.add("statictext", undefined, "Ready");
+        var status = panel.add("statictext", undefined, "Ready", { multiline: true });
         status.alignment = ["fill", "top"];
+        status.preferredSize.height = 64;
 
         $.global.AEHotLoader_state = {
             button: reloadButton,
