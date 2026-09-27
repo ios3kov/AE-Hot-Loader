@@ -169,9 +169,9 @@ A_Err PluginDataEntryFunction2(
 
     const A_Err result = in_callback(
         in_ptr,
-        reinterpret_cast<const std::uint8_t*>("AE Hot Loader"),
-        reinterpret_cast<const std::uint8_t*>("OS3KOV.AEHotLoader"),
-        reinterpret_cast<const std::uint8_t*>("AE Hot Loader"),
+        reinterpret_cast<const std::uint8_t*>("AE Hot Loader Bridge (Internal)"),
+        reinterpret_cast<const std::uint8_t*>("OS3KOV.AEHotLoader.Bridge"),
+        reinterpret_cast<const std::uint8_t*>("AE Hot Loader Internal"),
         reinterpret_cast<const std::uint8_t*>("EffectMain"),
         kAEEffectKind,
         kApiMajor,
