@@ -36,6 +36,8 @@ using PF_PluginDataCB2 = A_Err (*)(
     A_long,
     const std::uint8_t*);
 
+using ImplLabelFn = int (*)(char*, std::size_t);
+
 using ImplEffectMainFn = PF_Err (*)(
     PF_Cmd,
     PF_InData*,
@@ -202,13 +204,24 @@ int LoadImplementation(bool force, std::string* detail) {
         return -4105;
     }
 
+    std::string implementation_label = "(unknown)";
+    auto label_fn = reinterpret_cast<ImplLabelFn>(
+        dlsym(handle, "AEHotLoader_ImplementationLabel"));
+    if (label_fn) {
+        char label_buffer[256]{};
+        if (label_fn(label_buffer, sizeof(label_buffer)) == 0 && label_buffer[0] != '\0') {
+            implementation_label = label_buffer;
+        }
+    }
+
     g_loaded_handles.push_back(handle);
     g_loaded_source = source;
     g_loaded_stamp = stamp;
     g_effect_main.store(effect_main, std::memory_order_release);
 
     if (detail) {
-        *detail = "Reloaded control implementation from " + source;
+        *detail = "Reloaded control implementation " + implementation_label +
+                  " from " + source;
     }
     Log("active implementation: " + runtime_path + " source=" + source);
     return 0;
