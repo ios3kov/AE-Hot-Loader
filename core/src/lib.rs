@@ -1,4 +1,19 @@
 use after_effects as ae;
+use std::fs::OpenOptions;
+use std::io::Write;
+
+const IMPLEMENTATION_LABEL: &str =
+    option_env!("AE_HOT_LOADER_IMPL_LABEL").unwrap_or("default-v1");
+
+fn log_impl(event: &str) {
+    if let Ok(mut file) = OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open("/tmp/ae-hot-loader-implementation.log")
+    {
+        let _ = writeln!(file, "{IMPLEMENTATION_LABEL}: {event}");
+    }
+}
 
 #[derive(Eq, PartialEq, Hash, Clone, Copy, Debug)]
 enum Params {}
@@ -27,13 +42,16 @@ impl AdobePluginGlobal for Plugin {
     ) -> Result<(), ae::Error> {
         match cmd {
             ae::Command::About => {
-                out_data
-                    .set_return_msg("AE Hot Loader Control Implementation\rHot-swappable implementation dylib.");
+                log_impl("About");
+                out_data.set_return_msg(&format!(
+                    "AE Hot Loader Control Implementation\rBuild: {IMPLEMENTATION_LABEL}"
+                ));
             }
             ae::Command::Render {
                 in_layer,
                 mut out_layer,
             } => {
+                log_impl("Render");
                 out_layer.copy_from(&in_layer, None, None)?;
             }
             _ => {}
