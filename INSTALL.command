@@ -8,6 +8,33 @@ SHELL="$HERE/AEHotLoaderControlShell.plugin"
 PANEL="$HERE/AE Hot Loader.jsx"
 PLUGIN_DEST="$HOME/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore"
 
+
+if pgrep -x "After Effects" >/dev/null 2>&1; then
+  echo "ERROR: After Effects is running."
+  echo "Fully quit AE before installing/updating AE Hot Loader."
+  exit 3
+fi
+
+SYSTEM_MEDIA_CORE="/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore"
+duplicate_system_plugins=()
+if [[ -d "$SYSTEM_MEDIA_CORE" ]]; then
+  while IFS= read -r found; do
+    duplicate_system_plugins+=("$found")
+  done < <(
+    find "$SYSTEM_MEDIA_CORE" -type d \(       -name "AEHotLoader.plugin" -o       -name "AEHotLoaderBridge.plugin" -o       -name "AEHotLoaderAgent.plugin" -o       -name "AEHotLoaderControlShell.plugin"     \) -prune -print 2>/dev/null
+  )
+fi
+
+if (( ${#duplicate_system_plugins[@]} > 0 )); then
+  echo "ERROR: duplicate/system AE Hot Loader plug-in(s) found:"
+  for found in "${duplicate_system_plugins[@]}"; do
+    echo "  $found"
+  done
+  echo
+  echo "Remove those old system-wide copies first, then run INSTALL.command again."
+  exit 4
+fi
+
 for required in "$AGENT" "$SHELL" "$PANEL"; do
   [[ -e "$required" ]] || { echo "Missing: $required"; exit 2; }
 done
@@ -26,7 +53,9 @@ cp -R "$SHELL" "$PLUGIN_DEST/AEHotLoaderControlShell.plugin"
 # Start each shell install from the bundled implementation. This prevents an
 # older staged candidate from silently becoming active on the first AE launch.
 CONTROL_IMPL_DIR="$HOME/Library/Application Support/AE Hot Loader/implementations/control"
+BRIDGE_DIR="$HOME/Library/Application Support/AE Hot Loader/bridge"
 rm -f "$CONTROL_IMPL_DIR/current.dylib" "$CONTROL_IMPL_DIR/current.tmp.dylib"
+rm -f "$BRIDGE_DIR/request.txt" "$BRIDGE_DIR/request.tmp" "$BRIDGE_DIR/response.txt" "$BRIDGE_DIR/response.tmp" 2>/dev/null || true
 
 xattr -dr com.apple.quarantine "$PLUGIN_DEST/AEHotLoaderAgent.plugin" 2>/dev/null || true
 xattr -dr com.apple.quarantine "$PLUGIN_DEST/AEHotLoaderControlShell.plugin" 2>/dev/null || true
