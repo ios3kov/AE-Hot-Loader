@@ -39,6 +39,7 @@ using CoreEffectMainFn = PF_Err (*)(
     void*);
 
 using CoreSetRegisterFn = void (*)(void*);
+using CoreInitBridgeFn = std::int32_t (*)(const SPBasicSuite*);
 
 extern "C" A_Err AEHotLoader_RegisterLateEffect();
 
@@ -64,6 +65,7 @@ std::atomic<bool> g_late_registered{false};
 std::once_flag g_core_once;
 void* g_core_handle = nullptr;
 CoreEffectMainFn g_core_effect_main = nullptr;
+CoreInitBridgeFn g_core_init_bridge = nullptr;
 
 void Log(const char* message) {
     if (FILE* f = std::fopen("/tmp/ae-hot-loader.log", "a")) {
@@ -110,10 +112,13 @@ void LoadCore() {
             dlsym(g_core_handle, "EffectMain"));
         auto set_register = reinterpret_cast<CoreSetRegisterFn>(
             dlsym(g_core_handle, "AEHotLoaderCore_SetRegisterFn"));
+        g_core_init_bridge = reinterpret_cast<CoreInitBridgeFn>(
+            dlsym(g_core_handle, "AEHotLoaderCore_InitBridge"));
 
-        if (!g_core_effect_main || !set_register) {
+        if (!g_core_effect_main || !set_register || !g_core_init_bridge) {
             Log("core: required export missing");
             g_core_effect_main = nullptr;
+            g_core_init_bridge = nullptr;
             return;
         }
 
@@ -181,6 +186,21 @@ A_Err PluginDataEntryFunction2(
 
     std::snprintf(message, sizeof(message), "startup: primary registration result=%d", result);
     Log(message);
+
+    LoadCore();
+    if (!g_core_init_bridge) {
+        Log("startup: core bridge init export unavailable");
+        return result;
+    }
+
+    const A_Err bridge_result = g_core_init_bridge(in_basic_suite);
+    std::snprintf(
+        message,
+        sizeof(message),
+        "startup: background bridge init result=%d",
+        bridge_result);
+    Log(message);
+
     return result;
 }
 
