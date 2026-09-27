@@ -37,9 +37,7 @@ fn main() {
             build: 1,
         },
         Property::AE_Effect_Info_Flags(0),
-        Property::AE_Effect_Global_OutFlags(
-            OutFlags::PixIndependent | OutFlags::DeepColorAware
-        ),
+        Property::AE_Effect_Global_OutFlags(OutFlags::PixIndependent | OutFlags::DeepColorAware),
         Property::AE_Effect_Global_OutFlags_2(OutFlags2::empty()),
         Property::AE_Effect_Match_Name("OS3KOV.AEHotLoader.Bridge"),
         Property::AE_Reserved_Info(0),
