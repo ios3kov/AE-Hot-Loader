@@ -15,23 +15,40 @@ if pgrep -x "After Effects" >/dev/null 2>&1; then
   exit 3
 fi
 
-SYSTEM_MEDIA_CORE="/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore"
-duplicate_system_plugins=()
-if [[ -d "$SYSTEM_MEDIA_CORE" ]]; then
-  while IFS= read -r found; do
-    duplicate_system_plugins+=("$found")
-  done < <(
-    find "$SYSTEM_MEDIA_CORE" -type d \(       -name "AEHotLoader.plugin" -o       -name "AEHotLoaderBridge.plugin" -o       -name "AEHotLoaderAgent.plugin" -o       -name "AEHotLoaderControlShell.plugin"     \) -prune -print 2>/dev/null
-  )
-fi
+typeset -a duplicate_roots
+duplicate_roots=(
+  "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore"
+  "$HOME/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore"
+  "/Library/Application Support/Adobe/Plug-Ins/CC"
+  "$HOME/Library/Application Support/Adobe/Plug-Ins/CC"
+)
+for app_plugins in /Applications/Adobe\ After\ Effects*.app/Contents/Plug-ins; do
+  [[ -d "$app_plugins" ]] && duplicate_roots+=("$app_plugins")
+done
 
-if (( ${#duplicate_system_plugins[@]} > 0 )); then
-  echo "ERROR: duplicate/system AE Hot Loader plug-in(s) found:"
-  for found in "${duplicate_system_plugins[@]}"; do
+typeset -a duplicate_plugins
+for root in "${duplicate_roots[@]}"; do
+  [[ -d "$root" ]] || continue
+  while IFS= read -r found; do
+    case "$found" in
+      "$PLUGIN_DEST/AEHotLoader.plugin"|      "$PLUGIN_DEST/AEHotLoaderBridge.plugin"|      "$PLUGIN_DEST/AEHotLoaderAgent.plugin"|      "$PLUGIN_DEST/AEHotLoaderControlShell.plugin")
+        ;;
+      *)
+        duplicate_plugins+=("$found")
+        ;;
+    esac
+  done < <(
+    find "$root" -type d \(       -name "AEHotLoader.plugin" -o       -name "AEHotLoaderBridge.plugin" -o       -name "AEHotLoaderAgent.plugin" -o       -name "AEHotLoaderControlShell.plugin"     \) -prune -print 2>/dev/null
+  )
+done
+
+if (( ${#duplicate_plugins[@]} > 0 )); then
+  echo "ERROR: duplicate AE Hot Loader plug-in(s) found outside the managed user path:"
+  for found in "${duplicate_plugins[@]}"; do
     echo "  $found"
   done
   echo
-  echo "Remove those old system-wide copies first, then run INSTALL.command again."
+  echo "Remove those old copies first, then run INSTALL.command again."
   exit 4
 fi
 
