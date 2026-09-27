@@ -128,13 +128,19 @@ fn process_request() {
         }
     };
 
-    if !text.ends_with('\n') {
+    if text.len() > 4096 || !text.ends_with('\n') {
+        log_line("discarding malformed/incomplete bridge request");
+        let _ = fs::remove_file(&request);
         return;
     }
 
     let request_id = match parse_value(&text, "request_id") {
-        Some(id) if !id.is_empty() => id,
-        _ => return,
+        Some(id) if !id.is_empty() && id.len() <= 128 => id,
+        _ => {
+            log_line("discarding bridge request without a valid request_id");
+            let _ = fs::remove_file(&request);
+            return;
+        }
     };
 
     let version = parse_value(&text, "version").unwrap_or_default();
@@ -174,8 +180,8 @@ impl AegpPlugin for Agent {
             aegp_plugin_id,
             Box::new(|_, _, max_sleep| {
                 process_request();
-                if *max_sleep > 100 {
-                    *max_sleep = 100;
+                if *max_sleep > 250 {
+                    *max_sleep = 250;
                 }
                 Ok(())
             }),
