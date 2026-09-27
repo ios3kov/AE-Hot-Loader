@@ -4,7 +4,7 @@ use std::fs;
 use std::io::Write;
 use std::path::PathBuf;
 
-use ae::{AegpPlugin, aegp::suites::Register, define_general_plugin, sys::AEGP_PluginID};
+use ae::{AegpPlugin, Error, aegp::suites::Register, define_general_plugin, sys::AEGP_PluginID};
 
 define_general_plugin!(Agent);
 
