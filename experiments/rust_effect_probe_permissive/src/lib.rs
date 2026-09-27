@@ -1,7 +1,6 @@
-use std::ffi::{c_char, c_void, CStr};
+use std::ffi::{CStr, c_char, c_void};
 use std::fs::OpenOptions;
 use std::io::Write;
-
 
 fn log_line(line: &str) {
     if let Ok(mut file) = OpenOptions::new()
