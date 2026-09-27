@@ -52,3 +52,7 @@ Test:
 1. macOS Apple Silicon
 2. macOS Intel only if still useful
 3. Windows only after macOS feasibility is proven
+
+## Current status
+
+macOS ARM64 PoC source migrated to this standalone repository; CI validation pending.
