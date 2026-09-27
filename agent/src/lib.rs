@@ -252,6 +252,64 @@ fn load_folder_sync(_folder: &Path) -> i32 {
     -3199
 }
 
+#[derive(Clone, Debug)]
+struct RegistryEffectInfo {
+    name: String,
+    match_name: String,
+    category: String,
+}
+
+fn capture_effect_registry() -> Result<BTreeMap<String, RegistryEffectInfo>, String> {
+    let suite = EffectSuite::new()
+        .map_err(|error| format!("EffectSuite unavailable: {error:?}"))?;
+    let count = suite
+        .num_installed_effects()
+        .map_err(|error| format!("installed effect count failed: {error:?}"))?;
+
+    let mut key = InstalledEffectKey::None;
+    let mut effects = BTreeMap::new();
+
+    for _ in 0..count.max(0) {
+        key = match suite.next_installed_effect(key) {
+            Ok(InstalledEffectKey::None) => break,
+            Ok(key) => key,
+            Err(error) => return Err(format!("next installed effect failed: {error:?}")),
+        };
+
+        let name = suite.effect_name(key).unwrap_or_default();
+        let match_name = suite.effect_match_name(key).unwrap_or_default();
+        let category = suite.effect_category(key).unwrap_or_default();
+
+        let identity = format!("{match_name}\u{1f}{name}\u{1f}{category}");
+        effects.insert(
+            identity,
+            RegistryEffectInfo {
+                name,
+                match_name,
+                category,
+            },
+        );
+    }
+
+    Ok(effects)
+}
+
+fn registry_diff(
+    before: &BTreeMap<String, RegistryEffectInfo>,
+    after: &BTreeMap<String, RegistryEffectInfo>,
+) -> Vec<RegistryEffectInfo> {
+    after
+        .iter()
+        .filter_map(|(identity, info)| {
+            if before.contains_key(identity) {
+                None
+            } else {
+                Some(info.clone())
+            }
+        })
+        .collect()
+}
+
 #[cfg(target_os = "macos")]
 fn diagnose_effect_registry_if_needed() {
     let generation = unsafe { AEHotLoader_GetLoadGeneration() };
@@ -465,6 +523,15 @@ enum ReloadResult {
 }
 
 fn reload_plugins() -> ReloadResult {
+    let registry_before = match capture_effect_registry() {
+        Ok(snapshot) => snapshot,
+        Err(error) => {
+            return ReloadResult::Error(format!(
+                "Could not snapshot AE effect registry before load: {error}"
+            ));
+        }
+    };
+
     let current = scan_plugins();
     let snapshot = PLUGIN_SNAPSHOT.get_or_init(|| Mutex::new(current.clone()));
 
@@ -513,6 +580,8 @@ fn reload_plugins() -> ReloadResult {
         }
     }
 
+    let mut loader_results = Vec::new();
+
     if failures.is_empty() && !runtime_roots.is_empty() {
         match run_roots_via_ae_command(runtime_roots.clone()) {
             Ok(results) => {
@@ -521,6 +590,7 @@ fn reload_plugins() -> ReloadResult {
                         "reload: command root={} result={result}",
                         root.display()
                     ));
+                    loader_results.push((root.clone(), result));
                     if result <= 0 {
                         failures.push(format!("{} ({result})", root.display()));
                     }
@@ -541,10 +611,56 @@ fn reload_plugins() -> ReloadResult {
     }
 
     if !new_bundles.is_empty() {
+        let registry_after = match capture_effect_registry() {
+            Ok(snapshot) => snapshot,
+            Err(error) => {
+                return ReloadResult::Error(format!(
+                    "Loader executed, but AE effect registry snapshot after load failed: {error}"
+                ));
+            }
+        };
+
+        let added_effects = registry_diff(&registry_before, &registry_after);
+
+        log_line(&format!(
+            "registry-diff: before={} after={} added={}",
+            registry_before.len(),
+            registry_after.len(),
+            added_effects.len()
+        ));
+
+        for effect in &added_effects {
+            log_line(&format!(
+                "registry-diff: ADDED name={:?} match={:?} category={:?}",
+                effect.name, effect.match_name, effect.category
+            ));
+        }
+
+        let loader_codes = loader_results
+            .iter()
+            .map(|(_, result)| result.to_string())
+            .collect::<Vec<_>>()
+            .join(",");
+
         let mut message = format!(
-            "Loader command executed for {} new bundle(s) through isolated runtime root(s).",
-            new_bundles.len()
+            "ML::LoadPlugins=[{loader_codes}]. AE registry +{} effect(s)",
+            added_effects.len()
         );
+
+        if !added_effects.is_empty() {
+            let names = added_effects
+                .iter()
+                .take(4)
+                .map(|effect| effect.name.as_str())
+                .collect::<Vec<_>>()
+                .join(", ");
+            message.push_str(&format!(": {names}"));
+            if added_effects.len() > 4 {
+                message.push_str(", ...");
+            }
+        } else {
+            message.push_str(".");
+        }
 
         if !changed_bundles.is_empty() {
             message.push_str(&format!(
