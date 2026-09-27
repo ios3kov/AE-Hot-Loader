@@ -14,6 +14,8 @@ on:
       - "docs/**"
       - "experiments/rust_effect_probe/**"
       - "experiments/rust_effect_probe_permissive/**"
+      - "experiments/dual_pipl/**"
+      - "experiments/single_pipl_cpp_control/**"
   workflow_dispatch:
 
 concurrency:
@@ -39,6 +41,10 @@ jobs:
           cargo fmt --manifest-path agent/Cargo.toml -- --check
           cargo fmt --manifest-path experiments/rust_effect_probe/Cargo.toml -- --check
           cargo fmt --manifest-path experiments/rust_effect_probe_permissive/Cargo.toml -- --check
+          cargo fmt --manifest-path experiments/dual_pipl/piplgen/Cargo.toml -- --check
+          cargo fmt --manifest-path experiments/single_pipl_cpp_control/piplgen/Cargo.toml -- --check
+          xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only experiments/dual_pipl/wrapper/DualPiPL.cpp
+          xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only experiments/single_pipl_cpp_control/wrapper/SinglePiPL.cpp
           zsh -n INSTALL.command
           zsh -n STAGE_TEST_PROBES.command
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only wrapper/AEHotLoader.cpp
@@ -71,6 +77,24 @@ jobs:
         run: |
           set -euo pipefail
           cargo build --manifest-path experiments/rust_effect_probe_permissive/Cargo.toml --release --target aarch64-apple-darwin
+
+      - name: Build DualPiPL control
+        run: |
+          set -euo pipefail
+          cargo build --manifest-path experiments/dual_pipl/piplgen/Cargo.toml --release
+          mkdir -p build-controls
+          xcrun clang++ -std=c++17 -O2 -arch arm64 -dynamiclib -fvisibility=hidden \
+            experiments/dual_pipl/wrapper/DualPiPL.cpp \
+            -o build-controls/AEHotLoaderDualPiPL
+
+      - name: Build SinglePiPL C++ control
+        run: |
+          set -euo pipefail
+          cargo build --manifest-path experiments/single_pipl_cpp_control/piplgen/Cargo.toml --release
+          mkdir -p build-controls
+          xcrun clang++ -std=c++17 -O2 -arch arm64 -dynamiclib -fvisibility=hidden \
+            experiments/single_pipl_cpp_control/wrapper/SinglePiPL.cpp \
+            -o build-controls/AEHotLoaderSinglePiPLCpp
 
       - name: Build effect wrapper
         run: |
@@ -171,6 +195,52 @@ jobs:
           plutil -lint "$PERMISSIVE/Contents/Info.plist"
           nm -gU "$PERMISSIVE/Contents/MacOS/AEHotLoaderRustProbePermissive" | grep -E 'PluginDataEntryFunction2|EffectMain'
 
+          DUAL="dist/AEHotLoaderDualPiPL.plugin"
+          mkdir -p "$DUAL/Contents/MacOS" "$DUAL/Contents/Resources" "$DUAL/Contents/Frameworks"
+          cp build-controls/AEHotLoaderDualPiPL "$DUAL/Contents/MacOS/AEHotLoaderDualPiPL"
+          cp experiments/dual_pipl/DualPiPL.rsrc "$DUAL/Contents/Resources/AEHotLoaderDualPiPL.rsrc"
+          cp "$ROOT/libae_hot_loader_core.dylib" "$DUAL/Contents/Frameworks/libae_hot_loader_core.dylib"
+          printf 'eFKTFXTC' > "$DUAL/Contents/PkgInfo"
+          cat > "$DUAL/Contents/Info.plist" <<'PLIST3'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>CFBundleExecutable</key><string>AEHotLoaderDualPiPL</string>
+            <key>CFBundleIdentifier</key><string>com.os3kov.AEHotLoader.DualPiPL</string>
+            <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+            <key>CFBundleName</key><string>AE Hot Loader Dual PiPL</string>
+            <key>CFBundlePackageType</key><string>eFKT</string>
+            <key>CFBundleSignature</key><string>FXTC</string>
+            <key>CFBundleVersion</key><string>1</string>
+          </dict></plist>
+          PLIST3
+          codesign --force --sign - "$DUAL/Contents/Frameworks/libae_hot_loader_core.dylib"
+          codesign --force --deep --sign - "$DUAL"
+          codesign --verify --deep --strict "$DUAL"
+          nm -gU "$DUAL/Contents/MacOS/AEHotLoaderDualPiPL" | grep -E 'PluginDataEntryFunction2|EffectMain'
+
+          SINGLE="dist/AEHotLoaderSinglePiPLCpp.plugin"
+          mkdir -p "$SINGLE/Contents/MacOS" "$SINGLE/Contents/Resources"
+          cp build-controls/AEHotLoaderSinglePiPLCpp "$SINGLE/Contents/MacOS/AEHotLoaderSinglePiPLCpp"
+          cp experiments/single_pipl_cpp_control/SinglePiPLCpp.rsrc "$SINGLE/Contents/Resources/AEHotLoaderSinglePiPLCpp.rsrc"
+          printf 'eFKTFXTC' > "$SINGLE/Contents/PkgInfo"
+          cat > "$SINGLE/Contents/Info.plist" <<'PLIST4'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>CFBundleExecutable</key><string>AEHotLoaderSinglePiPLCpp</string>
+            <key>CFBundleIdentifier</key><string>com.os3kov.AEHotLoader.SinglePiPLCpp</string>
+            <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+            <key>CFBundleName</key><string>AE Hot Loader Single PiPL C++</string>
+            <key>CFBundlePackageType</key><string>eFKT</string>
+            <key>CFBundleSignature</key><string>FXTC</string>
+            <key>CFBundleVersion</key><string>1</string>
+          </dict></plist>
+          PLIST4
+          codesign --force --deep --sign - "$SINGLE"
+          codesign --verify --deep --strict "$SINGLE"
+          nm -gU "$SINGLE/Contents/MacOS/AEHotLoaderSinglePiPLCpp" | grep -E 'PluginDataEntryFunction2|EffectMain'
+
       - name: Validate ScriptUI panel
         run: |
           set -euo pipefail
@@ -184,6 +254,8 @@ jobs:
           cp -R dist/AEHotLoaderAgent.plugin package/
           cp -R dist/AEHotLoaderRustProbe.plugin package/
           cp -R dist/AEHotLoaderRustProbePermissive.plugin package/
+          cp -R dist/AEHotLoaderDualPiPL.plugin package/
+          cp -R dist/AEHotLoaderSinglePiPLCpp.plugin package/
           cp INSTALL.command package/
           cp STAGE_TEST_PROBES.command package/
           cp "ui/AE Hot Loader.jsx" package/
