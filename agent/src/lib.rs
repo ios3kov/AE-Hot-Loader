@@ -260,8 +260,8 @@ struct RegistryEffectInfo {
 }
 
 fn capture_effect_registry() -> Result<BTreeMap<String, RegistryEffectInfo>, String> {
-    let suite = EffectSuite::new()
-        .map_err(|error| format!("EffectSuite unavailable: {error:?}"))?;
+    let suite =
+        EffectSuite::new().map_err(|error| format!("EffectSuite unavailable: {error:?}"))?;
     let count = suite
         .num_installed_effects()
         .map_err(|error| format!("installed effect count failed: {error:?}"))?;
