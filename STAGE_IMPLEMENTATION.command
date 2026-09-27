@@ -22,6 +22,7 @@ rm -f "$tmp"
 cp "$SOURCE" "$tmp"
 mv -f "$tmp" "$DEST"
 xattr -d com.apple.quarantine "$DEST" 2>/dev/null || true
+codesign --verify --strict "$DEST"
 
 echo "Staged implementation:"
 echo "  $DEST"
