@@ -12,6 +12,7 @@ on:
       - "STAGE_IMPLEMENTATION.command"
       - "COLLECT_LOGS.command"
       - ".github/workflows/mac-ci.yml"
+      - "tools/verify_shell_metadata.py"
       - "docs/**"
       - "README.md"
   workflow_dispatch:
