@@ -328,7 +328,9 @@ fn diagnose_effect_registry_if_needed() {
 
         match AdvApp::new().and_then(|suite| suite.refresh_all_windows()) {
             Ok(()) => log_line("ui-refresh: PF_RefreshAllWindows ok"),
-            Err(error) => log_line(&format!("ui-refresh: PF_RefreshAllWindows failed: {error:?}")),
+            Err(error) => log_line(&format!(
+                "ui-refresh: PF_RefreshAllWindows failed: {error:?}"
+            )),
         }
     }
 
