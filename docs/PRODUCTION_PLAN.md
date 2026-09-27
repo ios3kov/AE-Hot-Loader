@@ -167,3 +167,24 @@ The Agent was updated to:
 4. open that already-loaded image and call the exported registration bridge.
 
 This removes dependence on a fixed MediaCore path.
+
+
+## Internal loader ABI finding — 2026-09-27
+
+LLDB on After Effects 25.6.0 ARM64 confirmed the host-owned registration transaction:
+
+`ML::LoadPlugins → LoadPluginList → AddPlugin → PluginImpl::GetPiPLs → GetPFPluginData → GetEntryPoint → dlsym("PluginDataEntryFunction2")`.
+
+Observed `ML::LoadPlugins` ABI:
+
+`ML::LoadPlugins(vector<UTF16String>&, UTF16String const&, ModuleOwnership, vector<UTF16String> const&, vector<UTF16String> const&, bool)`
+
+ARM64 entry registers:
+- `x0` output vector;
+- `x1` root UTF16String;
+- `w2 = 1`;
+- `x3` filter vector;
+- `x4` additional vector;
+- `w5 = 0`.
+
+The next gate is a stable image-relative offset for `ML::LoadPlugins` on AE 25.6.0 ARM64. Only after that is captured do we build the isolated internal-loader shim. Runtime ASLR addresses must not be embedded in production code.
