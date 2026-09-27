@@ -10,7 +10,10 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use ae::{
     AegpPlugin, Error,
-    aegp::{InstalledEffectKey, suites::{Effect as EffectSuite, Register}},
+    aegp::{
+        InstalledEffectKey,
+        suites::{Effect as EffectSuite, Register},
+    },
     define_general_plugin,
     sys::AEGP_PluginID,
 };
@@ -244,7 +247,6 @@ fn queue_folder(_folder: &Path) -> i32 {
     -3199
 }
 
-
 #[cfg(target_os = "macos")]
 fn diagnose_effect_registry_if_needed() {
     let generation = unsafe { AEHotLoader_GetLoadGeneration() };
@@ -264,7 +266,9 @@ fn diagnose_effect_registry_if_needed() {
     let suite = match EffectSuite::new() {
         Ok(suite) => suite,
         Err(error) => {
-            log_line(&format!("registry-diag: EffectSuite unavailable: {error:?}"));
+            log_line(&format!(
+                "registry-diag: EffectSuite unavailable: {error:?}"
+            ));
             *last = generation;
             return;
         }
