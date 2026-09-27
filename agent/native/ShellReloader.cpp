@@ -103,7 +103,7 @@ extern "C" int AEHotLoader_ReloadShells(char* output, std::size_t output_capacit
         CopyMessage(output, output_capacity, summary);
 
         if (discovered == 0) {
-            return 1;
+            return -4202;
         }
         if (failed > 0) {
             return -4201;
