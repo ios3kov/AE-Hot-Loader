@@ -11,7 +11,7 @@ use std::sync::{Mutex, OnceLock};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use ae::{
-    AegpPlugin,
+    AegpPlugin, Error,
     aegp::{
         CommandHookStatus, HookPriority, InstalledEffectKey,
         suites::{Command, Effect as EffectSuite, Register},
