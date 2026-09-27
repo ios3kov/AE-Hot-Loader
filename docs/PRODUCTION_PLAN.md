@@ -129,3 +129,25 @@ Next validation is inside a real running After Effects process:
 3. open `Window → AE Hot Loader`;
 4. click **Reload Plugins**;
 5. confirm the late test effect appears without another AE restart.
+
+
+## Architecture revision — AEGP Agent + Effect Bridge
+
+Live testing showed that registering an AEGP idle hook from the effect plug-in startup context fails with internal result `-1102`.
+
+The PoC is therefore split into two native modules:
+
+1. `AEHotLoaderAgent.plugin` — genuine AEGP loaded by AE at application startup. It owns the idle hook and handles ScriptUI requests.
+2. `AEHotLoaderBridge.plugin` — internal effect bridge that captures `PF_PluginDataCB2` and exposes the experimental late-registration call.
+
+Flow:
+
+`ScriptUI → request.txt → AEGP Agent idle hook → dlopen Effect Bridge → AEHotLoader_RegisterLateEffect → response.txt → ScriptUI`
+
+Observed on AE 25.6.0:
+- primary effect registration: `0` (success);
+- effect bridge/core load: success;
+- direct late registration callback: `1` (rejected/non-success);
+- AEGP-from-effect startup attempt: `-1102` (unsupported context).
+
+The standalone AEGP Agent + Effect Bridge build passes macOS ARM64 CI, static checks, code signing, bundle validation, and ScriptUI packaging.
