@@ -151,3 +151,19 @@ Observed on AE 25.6.0:
 - AEGP-from-effect startup attempt: `-1102` (unsupported context).
 
 The standalone AEGP Agent + Effect Bridge build passes macOS ARM64 CI, static checks, code signing, bundle validation, and ScriptUI packaging.
+
+
+## Live test finding — bridge path lookup
+
+Panel result `Native bridge failed with code -2002` confirmed that:
+- the ScriptUI panel worked;
+- the AEGP Agent was alive and processing requests;
+- failure was only the Agent's hard-coded filesystem lookup for `AEHotLoaderBridge.plugin`.
+
+The Agent was updated to:
+1. resolve `AEHotLoader_RegisterLateEffect` from the current AE process;
+2. if not found globally, inspect loaded dyld images;
+3. locate the actual loaded `AEHotLoaderBridge` image regardless of install path;
+4. open that already-loaded image and call the exported registration bridge.
+
+This removes dependence on a fixed MediaCore path.
