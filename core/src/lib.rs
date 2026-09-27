@@ -80,7 +80,12 @@ fn write_response(request_id: &str, status: &str, message: &str) {
         sanitize_message(message)
     );
 
-    let _ = fs::write(dir.join("response.txt"), body);
+    let response_path = dir.join("response.txt");
+    let temp_path = dir.join("response.tmp");
+    if fs::write(&temp_path, body).is_ok() {
+        let _ = fs::remove_file(&response_path);
+        let _ = fs::rename(temp_path, response_path);
+    }
 }
 
 fn process_bridge_request() {
@@ -98,29 +103,50 @@ fn process_bridge_request() {
         Err(_) => return,
     };
 
+    // ScriptUI writes through a temp file, but keep the native side tolerant
+    // of a partially visible request as well.
+    if !text.ends_with('\n') {
+        return;
+    }
+
+    let version = parse_value(&text, "version").unwrap_or_default();
+    let request_id = match parse_value(&text, "request_id") {
+        Some(id) if !id.is_empty() => id,
+        _ => return,
+    };
+    let command = match parse_value(&text, "command") {
+        Some(command) if !command.is_empty() => command,
+        _ => return,
+    };
+
     let _ = fs::remove_file(&request_path);
 
-    let request_id = parse_value(&text, "request_id").unwrap_or_else(|| "unknown".to_string());
-    let command = parse_value(&text, "command").unwrap_or_default();
+    if version != "1" {
+        write_response(&request_id, "error", "Unsupported bridge protocol version");
+        return;
+    }
 
     if command != "reload_plugins" {
         write_response(&request_id, "error", "Unknown bridge command");
         return;
     }
 
-    let rc = register_late_effect();
-    if rc == 0 {
-        write_response(
+    match register_late_effect() {
+        0 => write_response(
             &request_id,
             "success",
             "Registration callback returned success. Check Effect > AE Hot Loader.",
-        );
-    } else {
-        write_response(
+        ),
+        1 => write_response(
+            &request_id,
+            "noop",
+            "Late test effect is already registered in this AE process.",
+        ),
+        rc => write_response(
             &request_id,
             "error",
             &format!("Registration callback failed with code {rc}"),
-        );
+        ),
     }
 }
 
@@ -157,8 +183,7 @@ impl AdobePluginGlobal for Plugin {
                                 Ok(())
                             }),
                             (),
-                        )
-                        .unwrap();
+                        )?;
                 }
             }
             ae::Command::About => {
