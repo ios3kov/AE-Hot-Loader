@@ -124,6 +124,8 @@ jobs:
           set -euo pipefail
           cp build-internal-loader/libAEHotLoaderInternalProbe.dylib package/
           cp experiments/internal_loader_probe/README.md package/README.md
+          cp experiments/internal_loader_probe/PREPARE_LIVE_TEST.command package/
+          chmod +x package/PREPARE_LIVE_TEST.command
           ditto -c -k --sequesterRsrc --keepParent package \
             AEHotLoaderInternalProbe-mac-arm64.zip
 
