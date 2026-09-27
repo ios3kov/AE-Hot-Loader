@@ -236,3 +236,30 @@ The live internal-loader test progressed beyond registration:
 - AE was not restarted.
 
 The remaining stop-criterion checks are render-path verification and stability.
+
+
+## Stop Criterion A — PASSED — 2026-09-27
+
+Live verification on After Effects 25.6.0 ARM64 is complete.
+
+Without restarting AE:
+
+- a new native effect bundle was loaded through `ML::LoadPlugins`;
+- both test effects registered;
+- both appeared in Effects & Presets;
+- both applied successfully;
+- RAM Preview succeeded;
+- normal render succeeded;
+- AE remained stable.
+
+The diagnostic effects are pass-through and intentionally produce no visible image change.
+
+### Production direction
+
+Proceed with integration of the proven private loader path into `AEHotLoaderAgent.plugin`.
+
+Target flow:
+
+`ScriptUI Reload Plugins → AEGP Agent → detect new bundles → ML::LoadPlugins → AE registry/menu`
+
+The temporary saved-callback Effect Bridge path is no longer the preferred production route.
