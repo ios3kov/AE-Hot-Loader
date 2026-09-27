@@ -8,7 +8,7 @@ use std::path::{Path, PathBuf};
 use std::sync::{Mutex, OnceLock};
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use ae::{AegpPlugin, aegp::suites::Register, define_general_plugin, sys::AEGP_PluginID};
+use ae::{AegpPlugin, Error, aegp::suites::Register, define_general_plugin, sys::AEGP_PluginID};
 
 define_general_plugin!(Agent);
 
