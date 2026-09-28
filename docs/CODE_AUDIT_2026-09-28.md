@@ -166,7 +166,7 @@ This allows:
 - destruction by code belonging to the generation that created the native resource;
 - old implementation dylibs remain loaded until AE exits.
 
-Adapter StateABI is now **3** for both ElasticGrid and Stellar Gradient.
+Adapter StateABI is now **4** for both ElasticGrid and Stellar Gradient.
 
 ### 7. HIGH — parameter / persistent-state schema drift was manual-only
 
