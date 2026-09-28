@@ -64,11 +64,19 @@ source_shell_archs="$(lipo -archs "$SHELL/Contents/MacOS/AEHotLoaderControlShell
 [[ "$source_agent_archs" == *arm64* ]] || { echo "ERROR: packaged Agent is not arm64."; exit 5; }
 [[ "$source_shell_archs" == *arm64* ]] || { echo "ERROR: packaged Control Shell is not arm64."; exit 5; }
 
+codesign --verify --deep --strict "$AGENT"
+codesign --verify --deep --strict "$SHELL"
+
+source_agent_archs="$(lipo -archs "$AGENT/Contents/MacOS/AEHotLoaderAgent" 2>/dev/null || true)"
+source_shell_archs="$(lipo -archs "$SHELL/Contents/MacOS/AEHotLoaderControlShell" 2>/dev/null || true)"
+[[ "$source_agent_archs" == *arm64* ]] || { echo "ERROR: packaged Agent is not arm64."; exit 5; }
+[[ "$source_shell_archs" == *arm64* ]] || { echo "ERROR: packaged Control Shell is not arm64."; exit 5; }
+
 mkdir -p "$PLUGIN_DEST"
 
 BACKUP_ROOT="$HOME/Library/Application Support/AE Hot Loader/backups/loader"
 mkdir -p "$BACKUP_ROOT"
-STAMP="$(date +%Y%m%dT%H%M%S)-$"
+STAMP="$(date +%Y%m%dT%H%M%S)-$$"
 AGENT_BACKUP="$BACKUP_ROOT/AEHotLoaderAgent-$STAMP.plugin"
 SHELL_BACKUP="$BACKUP_ROOT/AEHotLoaderControlShell-$STAMP.plugin"
 AGENT_HAD_OLD=0
@@ -95,7 +103,6 @@ restore_loader_on_error() {
       cp -R "$SHELL_BACKUP" "$PLUGIN_DEST/AEHotLoaderControlShell.plugin"
     fi
   fi
-  exit $rc
 }
 trap restore_loader_on_error EXIT
 
