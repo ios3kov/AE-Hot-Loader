@@ -56,16 +56,55 @@ for required in "$AGENT" "$SHELL" "$PANEL"; do
   [[ -e "$required" ]] || { echo "Missing: $required"; exit 2; }
 done
 
+codesign --verify --deep --strict "$AGENT"
+codesign --verify --deep --strict "$SHELL"
+
+source_agent_archs="$(lipo -archs "$AGENT/Contents/MacOS/AEHotLoaderAgent" 2>/dev/null || true)"
+source_shell_archs="$(lipo -archs "$SHELL/Contents/MacOS/AEHotLoaderControlShell" 2>/dev/null || true)"
+[[ "$source_agent_archs" == *arm64* ]] || { echo "ERROR: packaged Agent is not arm64."; exit 5; }
+[[ "$source_shell_archs" == *arm64* ]] || { echo "ERROR: packaged Control Shell is not arm64."; exit 5; }
+
 mkdir -p "$PLUGIN_DEST"
+
+BACKUP_ROOT="$HOME/Library/Application Support/AE Hot Loader/backups/loader"
+mkdir -p "$BACKUP_ROOT"
+STAMP="$(date +%Y%m%dT%H%M%S)-$"
+AGENT_BACKUP="$BACKUP_ROOT/AEHotLoaderAgent-$STAMP.plugin"
+SHELL_BACKUP="$BACKUP_ROOT/AEHotLoaderControlShell-$STAMP.plugin"
+AGENT_HAD_OLD=0
+SHELL_HAD_OLD=0
+
+if [[ -d "$PLUGIN_DEST/AEHotLoaderAgent.plugin" ]]; then
+  cp -R "$PLUGIN_DEST/AEHotLoaderAgent.plugin" "$AGENT_BACKUP"
+  AGENT_HAD_OLD=1
+fi
+if [[ -d "$PLUGIN_DEST/AEHotLoaderControlShell.plugin" ]]; then
+  cp -R "$PLUGIN_DEST/AEHotLoaderControlShell.plugin" "$SHELL_BACKUP"
+  SHELL_HAD_OLD=1
+fi
+
+restore_loader_on_error() {
+  local rc=$?
+  if (( rc != 0 )); then
+    echo "Install failed; restoring previous managed AE Hot Loader plug-ins..."
+    rm -rf "$PLUGIN_DEST/AEHotLoaderAgent.plugin" "$PLUGIN_DEST/AEHotLoaderControlShell.plugin"
+    if (( AGENT_HAD_OLD == 1 )); then
+      cp -R "$AGENT_BACKUP" "$PLUGIN_DEST/AEHotLoaderAgent.plugin"
+    fi
+    if (( SHELL_HAD_OLD == 1 )); then
+      cp -R "$SHELL_BACKUP" "$PLUGIN_DEST/AEHotLoaderControlShell.plugin"
+    fi
+  fi
+  exit $rc
+}
+trap restore_loader_on_error EXIT
+
 rm -rf \
   "$PLUGIN_DEST/AEHotLoader.plugin" \
   "$PLUGIN_DEST/AEHotLoaderBridge.plugin" \
   "$PLUGIN_DEST/AEHotLoaderAgent.plugin" \
   "$PLUGIN_DEST/AEHotLoaderControlShell.plugin" \
   "$PLUGIN_DEST/AEHotLoaderProbeTest"
-
-codesign --verify --deep --strict "$AGENT"
-codesign --verify --deep --strict "$SHELL"
 
 cp -R "$AGENT" "$PLUGIN_DEST/AEHotLoaderAgent.plugin"
 cp -R "$SHELL" "$PLUGIN_DEST/AEHotLoaderControlShell.plugin"
@@ -96,6 +135,8 @@ for ae_pref in "$HOME"/Library/Preferences/Adobe/After\ Effects/*; do
   cp "$PANEL" "$panel_dir/AE Hot Loader.jsx"
   installed_panels=$((installed_panels + 1))
 done
+
+trap - EXIT
 
 echo
 echo "Installed native modules:"
