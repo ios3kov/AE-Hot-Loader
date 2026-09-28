@@ -14,6 +14,7 @@ on:
       - ".github/workflows/mac-ci.yml"
       - "tools/verify_shell_metadata.py"
       - "docs/**"
+      - "tools/**"
       - "README.md"
   workflow_dispatch:
 
@@ -44,6 +45,7 @@ jobs:
           zsh -n INSTALL.command
           zsh -n STAGE_IMPLEMENTATION.command
           zsh -n COLLECT_LOGS.command
+          python3 tools/verify_shell_contract.py core/build.rs core/src/lib.rs wrapper/AEHotLoader.cpp agent/native/ShellReloader.cpp
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only wrapper/AEHotLoader.cpp
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only agent/native/ShellReloader.cpp
 
