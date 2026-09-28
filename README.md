@@ -99,15 +99,18 @@ ordinary-plugin workflow in AE 25.6 arm64.
 
 ## Target workflow
 
-For an already installed shell:
+For a newly installed ordinary effect:
 
 ```
-edit effect code
-→ build implementation dylib
+AE remains open
+→ install ordinary .plugin
 → click Reload Plugins
-→ shell loads new implementation
-→ continue working without restarting AE
+→ ordinary effect is registered
+→ apply and render without restarting AE
 ```
+
+For an already registered shell, the separate implementation hot-reload
+workflow remains available.
 
 ## Current target
 

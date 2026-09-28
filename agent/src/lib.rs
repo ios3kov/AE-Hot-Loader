@@ -243,7 +243,7 @@ impl AegpPlugin for Agent {
             (),
         )?;
 
-        log_line("idle hook registered; production path=shell reload");
+        log_line("idle hook registered; production path=ordinary discovery");
         Ok(Agent)
     }
 }
