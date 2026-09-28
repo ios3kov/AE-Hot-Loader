@@ -93,7 +93,7 @@ edit effect code
 - After Effects 25.6
 - macOS Apple Silicon
 - shell protocol ABI: **2**
-- adapter StateABI: **3** for ElasticGrid and Stellar Gradient
+- adapter StateABI: **4** for ElasticGrid and Stellar Gradient
 - pinned hot-reload Rust toolchain: **1.98.1**
 - first production adapters: ElasticGrid and StellarGradient
 
