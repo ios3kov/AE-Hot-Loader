@@ -119,7 +119,7 @@ jobs:
 
           nm -gU "$SHELL/Contents/MacOS/AEHotLoaderControlShell" | grep -E 'PluginDataEntryFunction2|EffectMain|AEHotLoader_ShellReload'
           nm -gU "$AGENT/Contents/MacOS/AEHotLoaderAgent" | grep 'EntryPointFunc'
-          nm -gU dist/AEHotLoaderControlImpl-candidate.dylib | grep -E 'EffectMain|AEHotLoader_ImplementationABI|AEHotLoader_ImplementationStateABI|AEHotLoader_ImplementationKey|AEHotLoader_ImplementationLabel'
+          nm -gU dist/AEHotLoaderControlImpl-candidate.dylib | grep -E 'EffectMain|AEHotLoader_ImplementationABI|AEHotLoader_ImplementationStateABI|AEHotLoader_ImplementationKey|AEHotLoader_ImplementationLabel|AEHotLoader_ImplementationRuntimeABI'
           strings dist/AEHotLoaderControlImpl-candidate.dylib | grep 'candidate-v2'
           for impl in "$SHELL/Contents/Frameworks/libae_hot_loader_core.dylib" dist/AEHotLoaderControlImpl-candidate.dylib; do
             if otool -L "$impl" | tail -n +2 | grep -E '@(rpath|loader_path|executable_path)'; then
@@ -285,6 +285,11 @@ jobs:
           int AEHotLoader_ImplementationLabel(char* output, std::size_t capacity) {
               return Write(IMPL_LABEL, output, capacity);
           }
+
+          extern "C" __attribute__((visibility("default")))
+          int AEHotLoader_ImplementationRuntimeABI(char* output, std::size_t capacity) {
+              return Write("test-runtime-abi", output, capacity);
+          }
           CPP
 
           xcrun clang++ -std=c++17 -arch arm64 -mmacosx-version-min=11.0 -dynamiclib \
@@ -394,6 +399,11 @@ jobs:
               std::snprintf(out, cap, "%s", "bad-key");
               return 0;
           }
+          extern "C" int AEHotLoader_ImplementationRuntimeABI(char* out, std::size_t cap) {
+              if (!out || cap == 0) return -1;
+              std::snprintf(out, cap, "%s", "test-runtime-abi");
+              return 0;
+          }
           CPP
 
           xcrun clang++ -std=c++17 -arch arm64 -dynamiclib "$RUNNER_TEMP/bad_impl.cpp" -o "$RUNNER_TEMP/bad_impl.dylib"
@@ -475,6 +485,11 @@ jobs:
           extern "C" int AEHotLoader_ImplementationLabel(char* out, std::size_t cap) {
               if (!out || cap == 0) return -1;
               std::memset(out, 'X', cap);
+              return 0;
+          }
+          extern "C" int AEHotLoader_ImplementationRuntimeABI(char* out, std::size_t cap) {
+              if (!out || cap == 0) return -1;
+              std::snprintf(out, cap, "%s", "test-runtime-abi");
               return 0;
           }
           CPP
