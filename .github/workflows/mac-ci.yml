@@ -53,6 +53,8 @@ jobs:
           grep -q "AEHotLoaderLiveTest" INSTALL.command
           grep -q "AEHotLoaderProbeTest" INSTALL.command
           grep -q "CLEAN INSTALL COMPLETE" INSTALL.command
+          grep -q "BusySelfTest result=" core/src/lib.rs
+          grep -q "AEHotLoader_SetBusyTestReloadCallback" wrapper/AEHotLoader.cpp
           python3 tools/verify_shell_contract.py core/build.rs core/src/lib.rs wrapper/AEHotLoader.cpp agent/native/ShellReloader.cpp
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only wrapper/AEHotLoader.cpp
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only agent/native/ShellReloader.cpp
@@ -141,7 +143,7 @@ jobs:
 
           nm -gU "$SHELL/Contents/MacOS/AEHotLoaderControlShell" | grep -E 'PluginDataEntryFunction2|EffectMain|AEHotLoader_ShellReload|AEHotLoader_ShellABI|AEHotLoader_ShellKey'
           nm -gU "$AGENT/Contents/MacOS/AEHotLoaderAgent" | grep 'EntryPointFunc'
-          nm -gU dist/AEHotLoaderControlImpl-candidate.dylib | grep -E 'EffectMain|AEHotLoader_ImplementationABI|AEHotLoader_ImplementationStateABI|AEHotLoader_ImplementationKey|AEHotLoader_ImplementationLabel|AEHotLoader_ImplementationRuntimeABI|AEHotLoader_SetGeneration'
+          nm -gU dist/AEHotLoaderControlImpl-candidate.dylib | grep -E 'EffectMain|AEHotLoader_ImplementationABI|AEHotLoader_ImplementationStateABI|AEHotLoader_ImplementationKey|AEHotLoader_ImplementationLabel|AEHotLoader_ImplementationRuntimeABI|AEHotLoader_SetGeneration|AEHotLoader_SetBusyTestReloadCallback'
           strings dist/AEHotLoaderControlImpl-candidate.dylib | grep 'candidate-v2'
           nm -gU dist/AEHotLoaderControlImpl-candidate-v3.dylib | grep -E 'EffectMain|AEHotLoader_ImplementationABI|AEHotLoader_ImplementationStateABI|AEHotLoader_ImplementationKey|AEHotLoader_ImplementationLabel|AEHotLoader_ImplementationRuntimeABI|AEHotLoader_SetGeneration'
           strings dist/AEHotLoaderControlImpl-candidate-v3.dylib | grep 'candidate-v3'

@@ -12,7 +12,7 @@ Base control-shell gate is **PASSED** in real AE 25.6:
 - the existing effect instance rendered through `candidate-v2`;
 - repeated Reload reported `unchanged=1`, `failed=0`.
 
-Remaining control-shell live gates are busy-render rejection and bundled rollback. Adapter-specific ElasticGrid/Stellar Gradient gates remain open.
+The earlier manual busy-render attempt was inconclusive because AE processed the panel reload only after the held render ended. The current kit replaces that timing-sensitive step with an in-process deterministic busy self-test. Bundled rollback has passed; busy-render rejection remains to be re-run with the deterministic harness. Adapter-specific ElasticGrid/Stellar Gradient gates remain open.
 
 ## Clean-install prerequisite
 
@@ -88,13 +88,14 @@ Deterministic live procedure:
 
 1. From the newest test kit, run `STAGE_IMPLEMENTATION.command`, click Reload, and confirm `candidate-v2` is active.
 2. Run `STAGE_BUSY_TEST.command`.
-3. Start Preview/render of the Control Shell.
-4. Immediately click **Reload Plugins** during the one-shot ~8 second held render.
-5. Expected: the panel reports the shell failed with a busy/retry message; AE does not hang or crash.
-6. After the held render completes, click **Reload Plugins** again.
-7. Expected: `candidate-v3` becomes active and renders.
+3. Purge cache if needed and start a fresh Preview/render of the Control Shell.
+4. Do **not** click Reload during the one-shot ~8 second held render. A test-only helper thread calls the shell reload entry point automatically while the current `EffectMain` call is still active.
+5. After render completes, inspect `/tmp/ae-hot-loader-implementation.log`.
+6. Expected: `BusySelfTest result=-4112` with the busy/in-flight retry message; AE remains stable.
+7. Click **Reload Plugins** once after the render ends.
+8. Expected: `candidate-v3` becomes active and renders.
 
-The slow-render hook is test-only and activates only when `/tmp/ae-hot-loader-slow-render-once` exists. The first render consumes that sentinel.
+The slow-render hook is test-only and activates only when `/tmp/ae-hot-loader-slow-render-once` exists. The first render consumes that sentinel. The callback wiring is optional and is not part of the production shell protocol contract.
 
 ## Bundled rollback live gate
 

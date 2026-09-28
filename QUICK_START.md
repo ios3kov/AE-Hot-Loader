@@ -40,12 +40,22 @@ Old diagnostic builds covered include LiveTest, ProbeTest, DualPiPL, RustProbe, 
 
 ## 4. Busy-render safety test
 
-1. Double-click `STAGE_BUSY_TEST.command`.
-2. Start Preview/render of the Control Shell.
-3. Immediately click **Reload Plugins** while the one-shot ~8 second test render is active.
-4. Expected: busy/retry failure, but AE stays responsive and does not crash.
-5. After the render finishes, click **Reload Plugins** again.
-6. Expected: `candidate-v3` reloads successfully.
+1. Confirm `candidate-v2` is already active from step 3.
+2. Double-click `STAGE_BUSY_TEST.command`. It stages `candidate-v3` and arms a one-shot real-render self-test.
+3. In AE, purge cache if needed and start a fresh Preview/render of the Control Shell.
+4. Do **not** click Reload during the ~8 second held render. The active implementation now calls the shell reload gate itself from a helper thread while its own `EffectMain` is still in flight.
+5. After the render finishes, run:
+
+   `cat /tmp/ae-hot-loader-implementation.log`
+
+   Expected lines include:
+   `SlowRenderTest begin`
+   and
+   `BusySelfTest result=-4112 message=Effect is busy with an in-flight call; retry Reload Plugins.`
+
+6. AE must remain stable.
+7. Now click **Reload Plugins** once.
+8. Expected: `candidate-v3` reloads successfully.
 
 ## 5. Rollback test
 

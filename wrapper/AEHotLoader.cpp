@@ -44,6 +44,11 @@ using ImplStateAbiFn = std::uint64_t (*)();
 using ImplKeyFn = int (*)(char*, std::size_t);
 using ImplRuntimeAbiFn = int (*)(char*, std::size_t);
 using ImplSetGenerationFn = void (*)(std::uint64_t);
+using BusyTestReloadFn = int (*)(char*, std::size_t);
+using ImplSetBusyTestReloadCallbackFn = void (*)(BusyTestReloadFn);
+
+extern "C" __attribute__((visibility("default")))
+int AEHotLoader_ShellReload(char* output, std::size_t output_capacity);
 
 using ImplEffectMainFn = PF_Err (*)(
     PF_Cmd,
@@ -341,6 +346,9 @@ int LoadImplementationFromSourceLocked(
         dlsym(handle, "AEHotLoader_ImplementationRuntimeABI"));
     auto set_generation_fn = reinterpret_cast<ImplSetGenerationFn>(
         dlsym(handle, "AEHotLoader_SetGeneration"));
+    auto set_busy_test_reload_callback_fn =
+        reinterpret_cast<ImplSetBusyTestReloadCallbackFn>(
+            dlsym(handle, "AEHotLoader_SetBusyTestReloadCallback"));
 
     if (!abi_fn || !state_abi_fn || !key_fn || !label_fn || !runtime_abi_fn ||
         !set_generation_fn) {
@@ -451,6 +459,13 @@ int LoadImplementationFromSourceLocked(
                 *detail = "Effect is busy with an in-flight call; retry Reload Plugins.";
             }
             return -4112;
+        }
+
+        // Optional live-test hook. Production behavior does not depend on it;
+        // when present, it lets the implementation prove the busy gate from
+        // inside a real in-flight EffectMain call without relying on AE UI timing.
+        if (set_busy_test_reload_callback_fn) {
+            set_busy_test_reload_callback_fn(&AEHotLoader_ShellReload);
         }
 
         // Generation is assigned by the shell from the exact staged dylib
