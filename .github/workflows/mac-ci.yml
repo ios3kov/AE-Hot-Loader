@@ -117,7 +117,7 @@ jobs:
           plutil -lint "$SHELL/Contents/Info.plist"
           plutil -lint "$AGENT/Contents/Info.plist"
 
-          nm -gU "$SHELL/Contents/MacOS/AEHotLoaderControlShell" | grep -E 'PluginDataEntryFunction2|EffectMain|AEHotLoader_ShellReload'
+          nm -gU "$SHELL/Contents/MacOS/AEHotLoaderControlShell" | grep -E 'PluginDataEntryFunction2|EffectMain|AEHotLoader_ShellReload|AEHotLoader_ShellABI|AEHotLoader_ShellKey'
           nm -gU "$AGENT/Contents/MacOS/AEHotLoaderAgent" | grep 'EntryPointFunc'
           nm -gU dist/AEHotLoaderControlImpl-candidate.dylib | grep -E 'EffectMain|AEHotLoader_ImplementationABI|AEHotLoader_ImplementationStateABI|AEHotLoader_ImplementationKey|AEHotLoader_ImplementationLabel|AEHotLoader_ImplementationRuntimeABI'
           strings dist/AEHotLoaderControlImpl-candidate.dylib | grep 'candidate-v2'
@@ -253,6 +253,51 @@ jobs:
 
           HOME="$FAKE_HOME" "$RUNNER_TEMP/agent_discovery_smoke" \
             "$(pwd)/dist/AEHotLoaderControlShell.plugin/Contents/MacOS/AEHotLoaderControlShell"
+
+      - name: Negative test duplicate shell key blocks all reloads
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$RUNNER_TEMP/duplicate-shells"
+          A="$ROOT/A.plugin/Contents/MacOS"
+          B="$ROOT/B.plugin/Contents/MacOS"
+          mkdir -p "$A" "$B"
+          cp dist/AEHotLoaderControlShell.plugin/Contents/MacOS/AEHotLoaderControlShell "$A/ShellA"
+          cp dist/AEHotLoaderControlShell.plugin/Contents/MacOS/AEHotLoaderControlShell "$B/ShellB"
+
+          cat > "$RUNNER_TEMP/duplicate_shell_smoke.cpp" <<'CPP'
+          #include <cstdio>
+          #include <cstring>
+          #include <dlfcn.h>
+
+          extern "C" int AEHotLoader_ReloadShells(char*, std::size_t);
+
+          int main(int argc, char** argv) {
+              if (argc != 3) return 70;
+              void* a = dlopen(argv[1], RTLD_NOW | RTLD_LOCAL);
+              void* b = dlopen(argv[2], RTLD_NOW | RTLD_LOCAL);
+              if (!a || !b) return 71;
+
+              char message[2048]{};
+              const int result =
+                  AEHotLoader_ReloadShells(message, sizeof(message));
+              std::printf("result=%d %s\n", result, message);
+
+              if (result != -4203) return 72;
+              if (std::strstr(message, "duplicate AE Hot Loader shell key") == nullptr) {
+                  return 73;
+              }
+              if (std::strstr(message, "reloaded=0") == nullptr) return 74;
+              return 0;
+          }
+          CPP
+
+          xcrun clang++ -std=c++17 -arch arm64 \
+            "$RUNNER_TEMP/duplicate_shell_smoke.cpp" \
+            agent/native/ShellReloader.cpp \
+            -o "$RUNNER_TEMP/duplicate_shell_smoke"
+
+          "$RUNNER_TEMP/duplicate_shell_smoke" "$A/ShellA" "$B/ShellB"
 
       - name: Stress smoke MFR busy-swap gate
         shell: bash
