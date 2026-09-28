@@ -2,7 +2,7 @@ name: AE Hot Loader macOS
 
 on:
   push:
-    branches: [main, "feature/**"]
+    branches: [main, "feature/**", "research/**"]
     paths:
       - "core/**"
       - "agent/**"
@@ -15,11 +15,14 @@ on:
       - "COLLECT_LOGS.command"
       - "QUICK_START.md"
       - ".github/workflows/mac-ci.yml"
-      - "tools/verify_shell_metadata.py"
       - "docs/**"
       - "tools/**"
+      - "tests/**"
       - "README.md"
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 concurrency:
   group: ae-hot-loader-mac-${{ github.ref }}
@@ -28,16 +31,47 @@ concurrency:
 jobs:
   build:
     runs-on: macos-15
+    timeout-minutes: 25
     env:
       MACOSX_DEPLOYMENT_TARGET: "11.0"
+      PACKAGE_BUILD_ID: native-${{ github.run_id }}-${{ github.run_attempt }}
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
 
       - uses: dtolnay/rust-toolchain@1.98.1
         with:
           targets: aarch64-apple-darwin
           components: rustfmt
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22.23.2'
+          package-manager-cache: false
+
+      - name: Record clean source and build environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          test "$(uname -m)" = arm64
+          mkdir -p "$RUNNER_TEMP/native-evidence"
+          {
+            printf 'commit=%s\nbuild_id=%s\nsource_clean=true\n' "$GITHUB_SHA" "$PACKAGE_BUILD_ID"
+            printf 'target=aarch64-apple-darwin\nscope=internal-build-not-release-approved\n'
+            printf 'runtime_identity_verified=false\n'
+            rustc -vV
+            cargo --version
+            xcodebuild -version
+            xcrun --sdk macosx --show-sdk-version
+            xcrun clang++ --version
+            node --version
+            python3 --version
+          } > "$RUNNER_TEMP/native-evidence/build-environment.txt"
+          git archive --format=tar HEAD | gzip > "$RUNNER_TEMP/native-evidence/source.tar.gz"
 
       - name: Static checks
         run: |
@@ -61,6 +95,13 @@ jobs:
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only agent/native/InternalLoader.cpp
           grep -q "AEHotLoader_LoadPluginFolder" agent/native/InternalLoader.cpp
           grep -q "FLT_NotifyFilterLoadingDone" agent/native/InternalLoader.cpp
+
+      - name: Panel and package manifest regression (not live AE)
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tests/panel.test.cjs | tee "$RUNNER_TEMP/native-evidence/panel.tap"
+          python3 -m unittest discover -s tests -p 'test_artifact_manifest.py' -v 2>&1 | tee "$RUNNER_TEMP/native-evidence/manifest-tests.txt"
 
       - name: Build default implementation
         env:
@@ -267,7 +308,6 @@ jobs:
 
           int main(int argc, char** argv) {
               if (argc != 2) return 20;
-
               void* shell = dlopen(argv[1], RTLD_NOW | RTLD_LOCAL);
               if (!shell) {
                   std::fprintf(stderr, "dlopen shell failed: %s\n", dlerror());
@@ -760,6 +800,7 @@ jobs:
       - name: Package
         run: |
           set -euo pipefail
+          test ! -e package
           mkdir -p package
           cp -R dist/AEHotLoaderAgent.plugin package/
           cp -R dist/AEHotLoaderControlShell.plugin package/
@@ -775,11 +816,43 @@ jobs:
           cp QUICK_START.md package/
           cp core/Cargo.lock package/core-Cargo.lock.generated
           cp agent/Cargo.lock package/agent-Cargo.lock.generated
+          cp "$RUNNER_TEMP/native-evidence/build-environment.txt" package/
           chmod +x package/INSTALL.command package/STAGE_IMPLEMENTATION.command package/STAGE_BUSY_TEST.command package/ROLLBACK_TO_BUNDLED.command package/COLLECT_LOGS.command
+          python3 tools/artifact_manifest.py create package --commit "$GITHUB_SHA" --build-id "$PACKAGE_BUILD_ID"
+          python3 tools/artifact_manifest.py verify package --commit "$GITHUB_SHA" --build-id "$PACKAGE_BUILD_ID"
           ditto -c -k --sequesterRsrc --keepParent package AEHotLoader-mac-arm64-shell-reload-v1.zip
+          shasum -a 256 AEHotLoader-mac-arm64-shell-reload-v1.zip > "$RUNNER_TEMP/native-evidence/package.sha256"
+          cp package/artifact-manifest.json "$RUNNER_TEMP/native-evidence/"
+          cp core/Cargo.lock "$RUNNER_TEMP/native-evidence/core-Cargo.lock.generated"
+          cp agent/Cargo.lock "$RUNNER_TEMP/native-evidence/agent-Cargo.lock.generated"
 
-      - uses: actions/upload-artifact@v4
+      - name: Verify final archive roundtrip (no installation)
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROUNDTRIP="$(mktemp -d "$RUNNER_TEMP/package-roundtrip.XXXXXX")"
+          ditto -x -k AEHotLoader-mac-arm64-shell-reload-v1.zip "$ROUNDTRIP"
+          python3 tools/artifact_manifest.py verify "$ROUNDTRIP/package" --commit "$GITHUB_SHA" --build-id "$PACKAGE_BUILD_ID"
+          codesign --verify --deep --strict "$ROUNDTRIP/package/AEHotLoaderAgent.plugin"
+          codesign --verify --deep --strict "$ROUNDTRIP/package/AEHotLoaderControlShell.plugin"
+          codesign --verify --strict "$ROUNDTRIP/package/AEHotLoaderControlImpl-candidate.dylib"
+          codesign --verify --strict "$ROUNDTRIP/package/AEHotLoaderControlImpl-candidate-v3.dylib"
+          shasum -a 256 -c "$RUNNER_TEMP/native-evidence/package.sha256"
+          git diff --exit-code
+          git diff --cached --exit-code
+          printf 'Native build and synthetic regression passed. Live AE and release approval: NOT RUN.\n' >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: AEHotLoader-mac-arm64-shell-reload-v1
+          name: AEHotLoader-internal-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: AEHotLoader-mac-arm64-shell-reload-v1.zip
           if-no-files-found: error
+          retention-days: 30
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: native-evidence-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/native-evidence/
+          if-no-files-found: warn
+          retention-days: 30
