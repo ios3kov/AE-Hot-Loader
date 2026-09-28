@@ -10,19 +10,30 @@ DEST="$DEST_DIR/current.dylib"
 
 if ! pgrep -x "After Effects" >/dev/null 2>&1; then
   echo "ERROR: After Effects must already be running."
-  echo "Open AE first; this command stages a live hot-reload candidate."
   exit 3
 fi
 
 codesign --verify --strict "$SOURCE"
 
+archs="$(lipo -archs "$SOURCE" 2>/dev/null || true)"
+[[ "$archs" == *arm64* ]] || {
+  echo "ERROR: candidate implementation is not arm64."
+  exit 4
+}
+
+xcrun vtool -show-build "$SOURCE" | grep -Eq 'minos[[:space:]]+11\.0' || {
+  echo "ERROR: candidate implementation has an unexpected macOS deployment target."
+  xcrun vtool -show-build "$SOURCE"
+  exit 5
+}
+
 mkdir -p "$DEST_DIR"
 tmp="$DEST_DIR/current.tmp.dylib"
 rm -f "$tmp"
 cp "$SOURCE" "$tmp"
+xattr -d com.apple.quarantine "$tmp" 2>/dev/null || true
+codesign --verify --strict "$tmp"
 mv -f "$tmp" "$DEST"
-xattr -d com.apple.quarantine "$DEST" 2>/dev/null || true
-codesign --verify --strict "$DEST"
 
 echo "Staged implementation:"
 echo "  $DEST"
