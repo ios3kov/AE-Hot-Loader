@@ -97,6 +97,11 @@ if (impl_protocol, impl_state, impl_key) != (
         f"  shell={(shell_protocol, shell_state, shell_key)!r}"
     )
 
+if impl_protocol != "2":
+    raise SystemExit(
+        f"expected implementation protocol ABI 2, got {impl_protocol}"
+    )
+
 # Shell discovery ABI must match the Agent before Agent calls the function.
 shell_discovery = required(r'kShellAbi\s*=\s*(\d+)', shell, "shell discovery ABI")
 agent_discovery = required(
@@ -113,6 +118,7 @@ for symbol in [
     "AEHotLoader_ImplementationStateABI",
     "AEHotLoader_ImplementationKey",
     "AEHotLoader_ImplementationLabel",
+    "AEHotLoader_SetGeneration",
 ]:
     if symbol not in lib:
         raise SystemExit(f"missing implementation export source: {symbol}")
