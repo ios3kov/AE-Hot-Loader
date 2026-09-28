@@ -2,6 +2,18 @@
 
 Target: After Effects 25.6 / macOS Apple Silicon.
 
+## Live status — 2026-09-28
+
+Base control-shell gate is **PASSED** in real AE 25.6:
+
+- shell startup registration returned `0`;
+- bundled `default-v1` rendered;
+- `candidate-v2` reloaded through the panel without restarting AE;
+- the existing effect instance rendered through `candidate-v2`;
+- repeated Reload reported `unchanged=1`, `failed=0`.
+
+Remaining control-shell live gates are busy-render rejection and bundled rollback. Adapter-specific ElasticGrid/Stellar Gradient gates remain open.
+
 ## What this validates
 
 This test no longer attempts to register a brand-new effect while AE is running.
@@ -63,6 +75,26 @@ Old implementation handles remain loaded until AE exits.
 ## Busy-render safety
 
 A reload attempted while an EffectMain call is active must return a retry/busy error. It must not block AE waiting for render completion and must not publish the new generation.
+
+Deterministic live procedure:
+
+1. From the newest test kit, run `STAGE_IMPLEMENTATION.command`, click Reload, and confirm `candidate-v2` is active.
+2. Run `STAGE_BUSY_TEST.command`.
+3. Start Preview/render of the Control Shell.
+4. Immediately click **Reload Plugins** during the one-shot ~8 second held render.
+5. Expected: the panel reports the shell failed with a busy/retry message; AE does not hang or crash.
+6. After the held render completes, click **Reload Plugins** again.
+7. Expected: `candidate-v3` becomes active and renders.
+
+The slow-render hook is test-only and activates only when `/tmp/ae-hot-loader-slow-render-once` exists. The first render consumes that sentinel.
+
+## Bundled rollback live gate
+
+1. With `candidate-v2` or `candidate-v3` active, run `ROLLBACK_TO_BUNDLED.command`.
+2. Keep AE open and click **Reload Plugins**.
+3. Expected: `reloaded=1` and `default-v1` becomes active.
+4. Force a fresh render/preview and confirm the implementation log contains a new `default-v1: Render`.
+5. Click **Reload Plugins** once more; expected: `unchanged=1`.
 
 ## Pass criterion
 

@@ -1,9 +1,0 @@
-thread backtrace -c 80
-register read
-image list -o -f
-frame select 1
-disassemble --frame --mixed
-frame select 2
-disassemble --frame --mixed
-frame select 3
-disassemble --frame --mixed

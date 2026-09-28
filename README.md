@@ -99,6 +99,18 @@ edit effect code
 
 The detailed pre-AE code audit is in `docs/CODE_AUDIT_2026-09-28.md`.
 
+### Live validation status — 2026-09-28
+
+Passed in real After Effects 25.6:
+
+- stable Control Shell registration;
+- bundled `default-v1` render;
+- `candidate-v2` hot reload without AE restart;
+- post-swap render through the existing effect instance;
+- unchanged/no-op reload detection.
+
+Next live gates: busy-render rejection, bundled rollback, then ElasticGrid and Stellar Gradient.
+
 ## Release gate
 
 The shell architecture is considered ready when:

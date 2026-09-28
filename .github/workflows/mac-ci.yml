@@ -44,6 +44,8 @@ jobs:
           cargo fmt --manifest-path agent/Cargo.toml -- --check
           zsh -n INSTALL.command
           zsh -n STAGE_IMPLEMENTATION.command
+          zsh -n STAGE_BUSY_TEST.command
+          zsh -n ROLLBACK_TO_BUNDLED.command
           zsh -n COLLECT_LOGS.command
           python3 tools/verify_shell_contract.py core/build.rs core/src/lib.rs wrapper/AEHotLoader.cpp agent/native/ShellReloader.cpp
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only wrapper/AEHotLoader.cpp
@@ -61,6 +63,14 @@ jobs:
         env:
           CARGO_TARGET_DIR: ${{ github.workspace }}/target-ae-hot-loader-candidate
           AE_HOT_LOADER_IMPL_LABEL: candidate-v2
+        run: |
+          set -euo pipefail
+          cargo build --manifest-path core/Cargo.toml --release --target aarch64-apple-darwin
+
+      - name: Build busy-test candidate implementation
+        env:
+          CARGO_TARGET_DIR: ${{ github.workspace }}/target-ae-hot-loader-candidate-v3
+          AE_HOT_LOADER_IMPL_LABEL: candidate-v3
         run: |
           set -euo pipefail
           cargo build --manifest-path core/Cargo.toml --release --target aarch64-apple-darwin
@@ -87,6 +97,7 @@ jobs:
           TRIPLE=aarch64-apple-darwin
           ROOT="target-ae-hot-loader/$TRIPLE/release"
           CANDIDATE_ROOT="target-ae-hot-loader-candidate/$TRIPLE/release"
+          CANDIDATE_V3_ROOT="target-ae-hot-loader-candidate-v3/$TRIPLE/release"
 
           SHELL="dist/AEHotLoaderControlShell.plugin"
           mkdir -p "$SHELL/Contents/MacOS" "$SHELL/Contents/Frameworks" "$SHELL/Contents/Resources"
@@ -112,10 +123,13 @@ jobs:
 
           cp "$CANDIDATE_ROOT/libae_hot_loader_core.dylib" dist/AEHotLoaderControlImpl-candidate.dylib
           codesign --force --sign - dist/AEHotLoaderControlImpl-candidate.dylib
+          cp "$CANDIDATE_V3_ROOT/libae_hot_loader_core.dylib" dist/AEHotLoaderControlImpl-candidate-v3.dylib
+          codesign --force --sign - dist/AEHotLoaderControlImpl-candidate-v3.dylib
 
           codesign --verify --deep --strict "$SHELL"
           codesign --verify --deep --strict "$AGENT"
           codesign --verify --strict dist/AEHotLoaderControlImpl-candidate.dylib
+          codesign --verify --strict dist/AEHotLoaderControlImpl-candidate-v3.dylib
           plutil -lint "$SHELL/Contents/Info.plist"
           plutil -lint "$AGENT/Contents/Info.plist"
 
@@ -123,13 +137,16 @@ jobs:
           nm -gU "$AGENT/Contents/MacOS/AEHotLoaderAgent" | grep 'EntryPointFunc'
           nm -gU dist/AEHotLoaderControlImpl-candidate.dylib | grep -E 'EffectMain|AEHotLoader_ImplementationABI|AEHotLoader_ImplementationStateABI|AEHotLoader_ImplementationKey|AEHotLoader_ImplementationLabel|AEHotLoader_ImplementationRuntimeABI|AEHotLoader_SetGeneration'
           strings dist/AEHotLoaderControlImpl-candidate.dylib | grep 'candidate-v2'
-          for impl in "$SHELL/Contents/Frameworks/libae_hot_loader_core.dylib" dist/AEHotLoaderControlImpl-candidate.dylib; do
+          nm -gU dist/AEHotLoaderControlImpl-candidate-v3.dylib | grep -E 'EffectMain|AEHotLoader_ImplementationABI|AEHotLoader_ImplementationStateABI|AEHotLoader_ImplementationKey|AEHotLoader_ImplementationLabel|AEHotLoader_ImplementationRuntimeABI|AEHotLoader_SetGeneration'
+          strings dist/AEHotLoaderControlImpl-candidate-v3.dylib | grep 'candidate-v3'
+          for impl in "$SHELL/Contents/Frameworks/libae_hot_loader_core.dylib" dist/AEHotLoaderControlImpl-candidate.dylib dist/AEHotLoaderControlImpl-candidate-v3.dylib; do
             if otool -L "$impl" | tail -n +2 | grep -E '@(rpath|loader_path|executable_path)'; then
               echo "ERROR: hot-reload implementation has relative/private dylib dependencies: $impl"
               exit 6
             fi
           done
-          for bin in             "$SHELL/Contents/MacOS/AEHotLoaderControlShell"             "$SHELL/Contents/Frameworks/libae_hot_loader_core.dylib"             "$AGENT/Contents/MacOS/AEHotLoaderAgent"             dist/AEHotLoaderControlImpl-candidate.dylib; do
+          for bin in             "$SHELL/Contents/MacOS/AEHotLoaderControlShell"             "$SHELL/Contents/Frameworks/libae_hot_loader_core.dylib"             "$AGENT/Contents/MacOS/AEHotLoaderAgent"             dist/AEHotLoaderControlImpl-candidate.dylib \
+            dist/AEHotLoaderControlImpl-candidate-v3.dylib; do
             xcrun vtool -show-build "$bin" | grep -Eq 'minos[[:space:]]+11\.0' || {
               echo "ERROR: unexpected macOS deployment target: $bin"
               xcrun vtool -show-build "$bin"
@@ -736,14 +753,17 @@ jobs:
           cp -R dist/AEHotLoaderAgent.plugin package/
           cp -R dist/AEHotLoaderControlShell.plugin package/
           cp dist/AEHotLoaderControlImpl-candidate.dylib package/
+          cp dist/AEHotLoaderControlImpl-candidate-v3.dylib package/
           cp INSTALL.command package/
           cp STAGE_IMPLEMENTATION.command package/
+          cp STAGE_BUSY_TEST.command package/
+          cp ROLLBACK_TO_BUNDLED.command package/
           cp COLLECT_LOGS.command package/
           cp "ui/AE Hot Loader.jsx" package/
           cp README.md package/
           cp core/Cargo.lock package/core-Cargo.lock.generated
           cp agent/Cargo.lock package/agent-Cargo.lock.generated
-          chmod +x package/INSTALL.command package/STAGE_IMPLEMENTATION.command package/COLLECT_LOGS.command
+          chmod +x package/INSTALL.command package/STAGE_IMPLEMENTATION.command package/STAGE_BUSY_TEST.command package/ROLLBACK_TO_BUNDLED.command package/COLLECT_LOGS.command
           ditto -c -k --sequesterRsrc --keepParent package AEHotLoader-mac-arm64-shell-reload-v1.zip
 
       - uses: actions/upload-artifact@v4

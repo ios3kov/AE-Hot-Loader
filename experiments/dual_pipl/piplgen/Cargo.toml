@@ -1,8 +1,0 @@
-[package]
-name = "dual_pipl_gen"
-version = "0.1.0"
-edition = "2024"
-build = "build.rs"
-
-[build-dependencies]
-pipl = { git = "https://github.com/virtualritz/after-effects", rev = "83dcc93734fd5db1335b6ec83cba7a6505a39dcc", package = "pipl" }

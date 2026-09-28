@@ -284,7 +284,7 @@ Current hardened production CI covers:
 - candidate removal → bundled rollback.
 
 Latest known green checkpoint:
-**AE Hot Loader run #218 — SUCCESS**.
+**AE Hot Loader run #223 — SUCCESS**.
 
 ### ElasticGrid
 
@@ -319,6 +319,18 @@ Adapter CI covers the same shell/runtime gates plus:
 - exact numeric parameter ID freeze;
 - SmartFX `RenderStateC` pre-render layout freeze;
 - GPU context generation/destructor layout.
+
+## Live runtime status — 2026-09-28
+
+The first real AE 25.6 control-shell gate has now passed:
+
+- startup registration succeeded;
+- bundled default rendered;
+- A→B implementation reload succeeded without AE restart;
+- the existing instance rendered through the candidate implementation;
+- repeated Reload correctly reported unchanged.
+
+Still open: deterministic busy-render rejection, bundled rollback, repeated A→B→C stress, and the full ElasticGrid/Stellar Gradient adapter gates below.
 
 ## Remaining live-only risks
 

@@ -3,6 +3,8 @@ use std::fs::OpenOptions;
 use std::io::Write;
 use std::os::raw::c_char;
 use std::sync::atomic::{AtomicU64, Ordering};
+use std::thread;
+use std::time::Duration;
 
 const HOT_RELOAD_IMPLEMENTATION_ABI: u32 = 2;
 const HOT_RELOAD_STATE_ABI: u64 = 1;
@@ -61,6 +63,14 @@ impl AdobePluginGlobal for Plugin {
                 in_layer,
                 mut out_layer,
             } => {
+                // Live-gate hook: when armed by STAGE_BUSY_TEST.command, exactly
+                // one render call is held long enough to attempt a concurrent reload.
+                // The sentinel is consumed atomically by the first render that sees it.
+                if std::fs::remove_file("/tmp/ae-hot-loader-slow-render-once").is_ok() {
+                    log_impl("SlowRenderTest begin");
+                    thread::sleep(Duration::from_secs(8));
+                    log_impl("SlowRenderTest end");
+                }
                 log_impl("Render");
                 out_layer.copy_from(&in_layer, None, None)?;
             }
