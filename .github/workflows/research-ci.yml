@@ -37,7 +37,7 @@ jobs:
             printf 'run_id=%s\nattempt=%s\n' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
             printf 'node='; node --version
             printf 'scope=Node host mocks; not a live AE test\n'
-            sha256sum 'ui/AE Hot Loader.jsx' tests/panel.test.cjs
+            sha256sum 'ui/AE Hot Loader.jsx' tests/panel.test.cjs tools/collect_ae_host.py tests/test_ae_host_probe.py tests/ae-host-snapshot.cjs
           } > reports/source-identity.txt
       - name: Panel contract regression (host mocks)
         shell: bash
@@ -67,4 +67,4 @@ jobs:
           for source in wrapper/AEHotLoader.cpp agent/native/ShellReloader.cpp agent/native/InternalLoader.cpp; do
             xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only "$source"
           done
-          for script in ./*.command; do zsh -n "$script"; done
+          for script in ./*.command experiments/host_preflight/*.command; do zsh -n "$script"; done
