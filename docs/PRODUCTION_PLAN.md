@@ -204,7 +204,7 @@ Rules:
 
 ### Persistent state hardening
 
-ElasticGrid and Stellar Gradient adapter StateABI is currently **3**.
+ElasticGrid and Stellar Gradient adapter StateABI is currently **4**.
 
 Their state-contract gates freeze:
 - parameter IDs/order;
@@ -254,7 +254,7 @@ AE Hot Loader:
 - candidate removal → bundled rollback.
 
 Latest known green checkpoint:
-**AE Hot Loader run #215 — SUCCESS**.
+**AE Hot Loader run #218 — SUCCESS**.
 
 ElasticGrid adapter:
 - dedicated shell CI;
@@ -281,7 +281,7 @@ Stellar Gradient adapter:
 - bundled default → candidate → unchanged → bundled rollback.
 
 Latest stable green checkpoint before the current params/PiPL contract extension:
-**Hot Loader Shell CI #57 — SUCCESS**.
+**Hot Loader Shell CI #66 — SUCCESS**.
 The newest verifier run must also be green before live AE installation.
 
 ### Remaining live gate
