@@ -283,8 +283,8 @@ Current hardened production CI covers:
 - bundled default → candidate transition;
 - candidate removal → bundled rollback.
 
-Latest known green checkpoint before this documentation update:
-**AE Hot Loader run #215 — SUCCESS**.
+Latest known green checkpoint:
+**AE Hot Loader run #218 — SUCCESS**.
 
 ### ElasticGrid
 
@@ -306,6 +306,11 @@ Full project CI additionally covers:
 - ASan/UBSan;
 - TSan;
 - static analysis.
+
+Latest hardened adapter checkpoints:
+- ElasticGrid Hot Loader Shell CI **#57 — SUCCESS**
+- ElasticGrid full CI **#135 — SUCCESS**
+- Stellar Gradient Hot Loader Shell CI **#66 — SUCCESS**
 
 ### Stellar Gradient
 
