@@ -153,8 +153,9 @@ fn discover_ordinary_plugins() -> ReloadResult {
         }
     }
 
-    let mut summary =
-        format!("{LOADER_PATH_ID}: build={BUILD_ID} scanned={scanned} loaded={loaded} post_load_modules={added_modules}");
+    let mut summary = format!(
+        "{LOADER_PATH_ID}: build={BUILD_ID} scanned={scanned} loaded={loaded} post_load_modules={added_modules}"
+    );
     if !failures.is_empty() {
         summary.push_str(&format!("; failures={}", failures.join(" | ")));
     }

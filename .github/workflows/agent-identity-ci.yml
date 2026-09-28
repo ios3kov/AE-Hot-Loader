@@ -28,7 +28,7 @@ jobs:
     env:
       MACOSX_DEPLOYMENT_TARGET: "11.0"
       PACKAGE_BUILD_ID: identity-${{ github.run_id }}-${{ github.run_attempt }}
-      CARGO_TARGET_DIR: ${{ runner.temp }}/identity-target
+      CARGO_TARGET_DIR: target-ae-hot-loader
       PYTHONDONTWRITEBYTECODE: "1"
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09

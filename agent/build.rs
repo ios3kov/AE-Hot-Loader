@@ -11,7 +11,10 @@ fn emit_identity() {
         "{}",
         String::from_utf8_lossy(&output.stderr)
     );
-    print!("{}", String::from_utf8(output.stdout).expect("UTF-8 metadata"));
+    print!(
+        "{}",
+        String::from_utf8(output.stdout).expect("UTF-8 metadata")
+    );
 }
 
 fn build_native_helpers() {
