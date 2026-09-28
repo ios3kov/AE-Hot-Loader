@@ -34,13 +34,15 @@ ScriptUI panel → AEGP Agent → ML::LoadPlugins
 | Historical paired registration test | Dynamic-entrypoint fixture registered; PiPL-only fixture did not; no apply/render test in that pair |
 | RSMB | Late registration FAIL; controlled cold-start and subsequent apply/render NOT RUN |
 | Current panel | 22/22 automated host-mock tests PASS; updated JSX not yet tested inside AE |
-| Native checks | C++ arm64 syntax and root zsh script parsing PASS; not a full build or runtime gate |
+| Native build checkpoint | Full build/sign/package, 14 manifest tests and seven standalone native gates PASS at `2e27203`; not AE runtime validation |
 | Compatibility | Only AE 25.6.0/macOS Apple Silicon is the research target; other configurations unverified |
 
 Historical native results are recorded in
 [the original status snapshot](docs/DEVELOPMENT_STATUS_2026-09-28.md) and
 [the paired test](docs/TEST_REGISTRATION_PAIR_2026-09-28.md).
-The new panel evidence is [recorded separately](docs/CI_CHECKPOINT_f274961.md).
+The [native build checkpoint](docs/CI_CHECKPOINT_2e27203.md) records the latest
+compiled source and exact internal package. Earlier panel evidence is
+[recorded separately](docs/CI_CHECKPOINT_f274961.md).
 Old AE results must not be presented as verification of the updated panel.
 
 ## Separate Control Shell work
@@ -60,18 +62,21 @@ claims.
 
 ```sh
 node --test tests/panel.test.cjs
+python3 -m unittest discover -s tests -p 'test_artifact_manifest.py' -v
 ```
 
-This runs the shipped JSX under mocked host/file APIs, not under ExtendScript
-or After Effects. GitHub research checks also run arm64 C++ syntax checks and
-parse the root command scripts on macOS. The workflow records source hashes
-and uploads test reports. It does not install anything or publish a release.
+The panel tests run JSX under mocked host/file APIs, not under ExtendScript
+or After Effects. Manifest tests check package integrity. Research pushes also
+run the full macOS build/sign/package pipeline and standalone shell tests,
+recording source/build identities and verifying the extracted archive. These
+checks do not install anything or publish a release.
 
 The latest checked source is identified in
-[the CI checkpoint](docs/CI_CHECKPOINT_f274961.md). Full native build/signing,
-clean-install verification and applicable real-AE regression remain required
-before distributing a new package. Existing installation helpers are not
-proof that a new package has passed that gate.
+[the CI checkpoint](docs/CI_CHECKPOINT_2e27203.md). The retained internal
+package belongs to that exact commit, not newer documentation. Dependency
+freezing, runtime identity, clean-install verification and real-AE regression
+remain required before handoff. Existing installation helpers do not prove
+that the package has passed those gates.
 
 ## Historical documentation
 

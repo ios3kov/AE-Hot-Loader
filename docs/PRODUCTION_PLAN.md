@@ -27,15 +27,17 @@ process as a side effect of these development checks.
 1. The panel compares registry identities rather than trusting loaded module
    counts, preserves partial failures, rejects malformed protocol fields and
    restores the UI after tested I/O failures.
-2. Research pushes run 22 panel host-mock tests plus macOS native syntax and
-   script parsing checks. Actions and test Node are pinned; reports identify
-   the tested source and run.
+2. Research pushes run the full macOS build/sign/package pipeline, 22 panel
+   host-mock tests, 14 manifest tests and seven standalone native gates.
+   Source/toolchain records, payload hashes and final archive roundtrip checks
+   passed for `2e27203`; none of these jobs executes AE.
 3. Current product documentation distinguishes historical AE results, new
    automated checks and remaining release gates. Original documents remain
    available unchanged.
 
 These are implementation/limited-regression results, not a release milestone.
-See [CI evidence](CI_CHECKPOINT_f274961.md).
+See [full native CI evidence](CI_CHECKPOINT_2e27203.md). The previous
+[panel checkpoint](CI_CHECKPOINT_f274961.md) remains historical evidence.
 
 ## Next stages and predeclared acceptance
 
@@ -44,10 +46,12 @@ See [CI evidence](CI_CHECKPOINT_f274961.md).
 - Inventory adapter-only references, fixtures, commands and packaging entries.
 - Remove only those outside the retained scope; preserve generic shell tests
   and historical evidence. Full repository-wide cleanup is still NOT RUN.
-- Add the full native build/sign/package gate for the research source; the
-  current syntax-only job is not a substitute.
-- Record generated component Build IDs, exact source state, toolchain/SDK,
-  final package SHA-256 and loaded runtime identity where available.
+- Full native build/sign/package gate: PASS for `2e27203`; preserve it on
+  subsequent code/build changes. Package and source identities are recorded.
+- Commit verified dependency lockfiles and enforce locked builds; generated
+  evidence lockfiles alone do not freeze future dependency selection.
+- Generate component runtime Build IDs and verify loaded identities in AE.
+  The package Build ID and payload hashes do not prove runtime identity.
 
 Gate: scoped checks pass, package identity is complete, generic shell/Agent
 coverage is retained and no removed item is silently needed by packaging.

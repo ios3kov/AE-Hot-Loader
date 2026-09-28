@@ -1,65 +1,63 @@
 # AE Hot Loader — current development status
 
 Updated: 2026-09-28. Working branch: `research/ordinary-plugin-discovery`.
-The Git branch head is the source of truth for the latest documentation.
+The branch head identifies current development; verified builds have separate
+commit/artifact/evidence identities.
 
-## Development versus verified checkpoint
+## Latest verified build
 
-- Panel implementation commit: `721794e2601f134018b04ccceeeb531cb72cb4a8`.
-- Latest checked code/CI configuration: `f274961b14c28696b96e151d335924c76162f9c6`.
-- Verified run: [36472758795 / attempt 1](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/36472758795).
-- This status is added by a documentation-only successor. It does not change
-  the tested panel, Agent, native loader, tests or CI configuration.
-- New installable artifact: none distributed. Release approval: NOT GRANTED.
-- `main` was not changed by this iteration.
+- Source: `2e272035802dfbc5b1b9a285e69339786c64944d`.
+- Build ID: `native-36474593472-1`.
+- Full macOS [run #238](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/36474593472): SUCCESS.
+- Research [run #4](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/36474593395): SUCCESS.
+- Internal package built, signed and verified; not approved for installation/release.
+- This status is a documentation-only successor. The retained package still
+  belongs to `2e27203`, not to a later documentation commit.
+- `main` unchanged; no Release or user installation performed.
 
-The previous [dated status](DEVELOPMENT_STATUS_2026-09-28.md) is a preserved
-historical snapshot, not the current head status.
+Full identities, hashes, logs and limitations:
+[CI_CHECKPOINT_2e27203](CI_CHECKPOINT_2e27203.md).
+The previous [dated status](DEVELOPMENT_STATUS_2026-09-28.md) and
+[panel checkpoint](CI_CHECKPOINT_f274961.md) remain historical evidence.
 
-## Implemented now
+## Implemented
 
-The panel copies `app.effects` match names before a request and after its
-matching response. It reports observed additions/removals, unchanged registry
-or errors. Loaded module counts no longer substitute for the panel's registry
-check. Apply/render is explicitly unverified by that check.
+The panel compares `app.effects` match names before dispatch and after the
+matching reply, instead of treating loaded-module counts as registration.
+It preserves partial errors and checks protocol/I/O failure paths. A timeout
+means an unknown result, not cancellation. Apply/render is not checked by the
+panel. Direct bridge consumers must still verify registration separately from
+the unchanged Agent's `success` response.
 
-Added protocol validation, duplicate-field rejection, pending-click guard,
-file-close cleanup, failed-write protection and UI recovery for the tested
-error paths. Timeout means unknown result; it does not cancel a native scan.
-The Agent protocol and native loader were not changed. Direct bridge consumers
-still must verify registration separately from the Agent's `success` status.
+The existing full macOS build pipeline now runs for research branches. It
+retains native shell tests and adds 14 manifest tests, clean-source/toolchain
+records, per-file package SHA-256, final ZIP checksum and extraction/signature
+verification. The source export was independently matched to its Git tree.
+The host registration code and private ABI were not changed.
 
-Research pushes now run automated panel regression and macOS syntax checks.
-CI action SHAs and test Node are pinned, with read-only repository permissions
-and no persisted checkout credentials. The first run's action-deprecation
-warnings were investigated and absent from the reviewed replacement run.
+Current docs separate build evidence from live-AE and historical shell claims.
+Historical evidence under `docs/archive/` is unchanged.
 
-README, production plan and audit entry point now distinguish current source
-from historical shell/adapter claims. Original documents were retained with
-identical Git blobs under `docs/archive/`.
+## Verification matrix for source 2e27203
 
-## Verification matrix
-
-| Check | Status | Evidence / limit |
+| Check | Status | Scope / limitation |
 |---|---|---|
-| Updated JSX host-mock regression | PASS: 22/22 | Actual JSX under Node; not ExtendScript/AE |
-| arm64 C++ syntax, warnings as errors | PASS | macOS job, not native linking/runtime |
-| Root command script zsh parsing | PASS | Syntax only; scripts not installed/executed |
-| CI source identities and report upload | PASS | Commit/run/hash evidence retained |
-| New panel in real AE | BLOCKED | No accessible AE runtime in this development session |
-| Full native build/sign/package on current research source | NOT RUN | Existing historical build is not this gate |
+| Panel host-mock regression | PASS: 22/22 | Actual JSX under Node, not AE |
+| Manifest unit tests | PASS: 14/14 | Integrity, inventory, identity and path rejection |
+| Rust/C++ static checks and command parsing | PASS | No user installation |
+| Full native build, ad-hoc signing and packaging | PASS | macOS arm64 CI, not release approval |
+| Standalone native smoke/negative gates | PASS: 7/7 | Shell tests outside AE; not ordinary discovery or AE MFR |
+| Final ZIP and 24 payload hashes | PASS | CI roundtrip and independent download verification |
+| Updated panel/Agent in real AE | BLOCKED | No accessible AE runtime in this session |
 | RSMB controlled cold-start/apply/render | NOT RUN | Historical late-registration FAIL unchanged |
-| Full adapter-specific reference/fixture cleanup | NOT RUN | Current-scope documentation corrected only |
-| Production release / install / merge | NOT RUN | No new candidate approved or distributed |
-
-Historical modern-probe and generic Control Shell results remain as recorded
-in the dated status. They are not new tests of the current source.
-Detailed identities: [CI_CHECKPOINT_f274961](CI_CHECKPOINT_f274961.md).
+| Full adapter-specific reference/fixture cleanup | NOT RUN | Generic shell and research preserved |
+| Release / installation / merge to main | NOT RUN | No candidate approved for handoff |
 
 ## Remaining work
 
-Follow [PRODUCTION_PLAN](PRODUCTION_PLAN.md): complete scoped cleanup and full
-native checks; establish controlled RSMB startup/apply/render evidence; isolate
-legacy late registration; run real panel/Agent, repeat/timeout/ownership and
-project-safety gates. Do not call unsafe private teardown/reinit functions or
-turn an unavailable AE test into a mock-test PASS.
+Freeze dependency lockfiles; generate verifiable runtime identities; complete
+scope cleanup. Establish controlled RSMB startup/apply/render evidence and
+isolate missing legacy late registration. Run real panel/Agent, repeated-scan,
+timeout/ownership and project-safety gates before handoff. Follow
+[PRODUCTION_PLAN](PRODUCTION_PLAN.md); do not invoke unverified private
+teardown/reinitialization functions or turn mock tests into live-AE PASS.
