@@ -1,4 +1,18 @@
 use pipl::*;
+use std::process::Command;
+
+fn emit_identity() {
+    let output = Command::new("python3")
+        .arg("../tools/agent_build_identity.py")
+        .output()
+        .expect("python3 is required for Agent build identity");
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    print!("{}", String::from_utf8(output.stdout).expect("UTF-8 metadata"));
+}
 
 fn build_native_helpers() {
     #[cfg(target_os = "macos")]
@@ -16,6 +30,7 @@ fn build_native_helpers() {
         cc::Build::new()
             .cpp(true)
             .file("native/InternalLoader.cpp")
+            .file("native/AgentIdentity.cpp")
             .flag("-std=c++17")
             .flag("-Wall")
             .flag("-Wextra")
@@ -30,6 +45,7 @@ fn build_native_helpers() {
 
 #[rustfmt::skip]
 fn main() {
+    emit_identity();
     build_native_helpers();
 
     pipl::plugin_build(vec![

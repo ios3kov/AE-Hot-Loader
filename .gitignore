@@ -7,3 +7,9 @@ package/
 .DS_Store
 build-ae-hot-loader-baseline.txt
 build-ae-hot-loader/
+
+# Generated development outputs; locks remain tracked.
+/target-ae-hot-loader-candidate/
+/target-ae-hot-loader-candidate-v3/
+__pycache__/
+*.pyc

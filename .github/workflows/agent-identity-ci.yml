@@ -1,0 +1,76 @@
+name: AE Hot Loader Agent identity
+
+on:
+  push:
+    branches: ["research/**"]
+    paths:
+      - "agent/**"
+      - "core/Cargo.lock"
+      - "rust-toolchain.toml"
+      - ".gitignore"
+      - "tools/agent_build_identity.py"
+      - "tools/verify_agent_identity.py"
+      - "tests/test_agent_build_identity.py"
+      - ".github/workflows/agent-identity-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: agent-identity-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  locked-native-identity:
+    runs-on: macos-15
+    timeout-minutes: 15
+    env:
+      MACOSX_DEPLOYMENT_TARGET: "11.0"
+      PACKAGE_BUILD_ID: identity-${{ github.run_id }}-${{ github.run_attempt }}
+      CARGO_TARGET_DIR: ${{ runner.temp }}/identity-target
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@ce678459e9fc7500d337468f904b95f1b5c10b5e
+        with:
+          toolchain: 1.98.1
+          targets: aarch64-apple-darwin
+          components: rustfmt
+      - name: Source and generator regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          test "$(uname -m)" = arm64
+          mkdir -p "$RUNNER_TEMP/identity-evidence"
+          cargo fmt --manifest-path agent/Cargo.toml -- --check
+          python3 -m unittest discover -s tests -p 'test_agent_build_identity.py' -v 2>&1 | tee "$RUNNER_TEMP/identity-evidence/generator-tests.txt"
+          xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only agent/native/AgentIdentity.cpp
+      - name: Locked core and Agent builds
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo build --locked --manifest-path core/Cargo.toml --release --target aarch64-apple-darwin
+          cargo build --locked --manifest-path agent/Cargo.toml --release --target aarch64-apple-darwin
+          git diff --exit-code -- core/Cargo.lock agent/Cargo.lock
+      - name: Execute actual Agent identity exports without AE
+        shell: bash
+        run: |
+          set -euo pipefail
+          BINARY="$CARGO_TARGET_DIR/aarch64-apple-darwin/release/libae_hot_loader_agent.dylib"
+          codesign --force --sign - "$BINARY"
+          codesign --verify --strict "$BINARY"
+          python3 tools/verify_agent_identity.py "$BINARY" --commit "$GITHUB_SHA" --build-id "$PACKAGE_BUILD_ID" --lock agent/Cargo.lock --output "$RUNNER_TEMP/identity-evidence/runtime.json"
+          cp "$BINARY" "$RUNNER_TEMP/identity-evidence/"
+          git diff --exit-code
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: agent-identity-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/identity-evidence/
+          retention-days: 30
+          if-no-files-found: error

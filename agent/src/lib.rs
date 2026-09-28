@@ -6,9 +6,12 @@ use std::path::PathBuf;
 
 use ae::{AegpPlugin, Error, aegp::suites::Register, define_general_plugin, sys::AEGP_PluginID};
 
+mod identity;
+
 define_general_plugin!(Agent);
 
-const BUILD_ID: &str = "ordinary-discovery-v1";
+const BUILD_ID: &str = identity::BUILD_ID;
+const LOADER_PATH_ID: &str = "ordinary-discovery-v1";
 
 #[derive(Clone, Debug)]
 struct Agent;
@@ -64,10 +67,15 @@ fn write_response(request_id: &str, status: &str, message: &str) {
     }
 
     let body = format!(
-        "version=1\nrequest_id={}\nstatus={}\nmessage={}\n",
+        "version=1\nrequest_id={}\nstatus={}\nmessage={}\nagent_build_id={}\nagent_git_commit={}\nagent_source_clean={}\nagent_target={}\nagent_version={}\n",
         request_id,
         status,
-        sanitize_message(message)
+        sanitize_message(message),
+        identity::BUILD_ID,
+        identity::COMMIT,
+        identity::SOURCE_CLEAN,
+        identity::TARGET,
+        identity::VERSION
     );
 
     let response = dir.join("response.txt");
@@ -146,7 +154,7 @@ fn discover_ordinary_plugins() -> ReloadResult {
     }
 
     let mut summary =
-        format!("{BUILD_ID}: scanned={scanned} loaded={loaded} post_load_modules={added_modules}");
+        format!("{LOADER_PATH_ID}: build={BUILD_ID} scanned={scanned} loaded={loaded} post_load_modules={added_modules}");
     if !failures.is_empty() {
         summary.push_str(&format!("; failures={}", failures.join(" | ")));
     }
@@ -208,6 +216,12 @@ fn process_request() {
         return;
     }
 
+    // Read-only diagnostics: intentionally before the native discovery path.
+    if command == "get_build_identity" {
+        write_response(&request_id, "success", identity::JSON);
+        return;
+    }
+
     if command != "reload_plugins" {
         write_response(&request_id, "error", "Unknown bridge command");
         return;
@@ -229,6 +243,8 @@ impl AegpPlugin for Agent {
         log_line(&format!(
             "agent start build={BUILD_ID} AE API {major_version}.{minor_version}, plugin_id={aegp_plugin_id}"
         ));
+
+        log_line(identity::JSON);
 
         let register = Register::new()?;
         register.register_idle_hook::<Agent, _>(
