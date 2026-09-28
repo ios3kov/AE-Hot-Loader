@@ -49,11 +49,20 @@ Expected result:
 A bad candidate must not replace the current implementation.
 
 The shell only publishes the new `EffectMain` pointer after:
-1. runtime copy succeeds;
+1. runtime copy and content fingerprint succeed;
 2. `dlopen` succeeds;
-3. `EffectMain` resolves.
+3. required Protocol ABI v2 exports resolve;
+4. StateABI matches;
+5. Rust Runtime ABI matches the bundled baseline;
+6. implementation key/label are valid;
+7. generation is assigned;
+8. no EffectMain call is active.
 
 Old implementation handles remain loaded until AE exits.
+
+## Busy-render safety
+
+A reload attempted while an EffectMain call is active must return a retry/busy error. It must not block AE waiting for render completion and must not publish the new generation.
 
 ## Pass criterion
 
