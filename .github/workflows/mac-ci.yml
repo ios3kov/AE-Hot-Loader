@@ -121,7 +121,7 @@ jobs:
 
           nm -gU "$SHELL/Contents/MacOS/AEHotLoaderControlShell" | grep -E 'PluginDataEntryFunction2|EffectMain|AEHotLoader_ShellReload|AEHotLoader_ShellABI|AEHotLoader_ShellKey'
           nm -gU "$AGENT/Contents/MacOS/AEHotLoaderAgent" | grep 'EntryPointFunc'
-          nm -gU dist/AEHotLoaderControlImpl-candidate.dylib | grep -E 'EffectMain|AEHotLoader_ImplementationABI|AEHotLoader_ImplementationStateABI|AEHotLoader_ImplementationKey|AEHotLoader_ImplementationLabel|AEHotLoader_ImplementationRuntimeABI'
+          nm -gU dist/AEHotLoaderControlImpl-candidate.dylib | grep -E 'EffectMain|AEHotLoader_ImplementationABI|AEHotLoader_ImplementationStateABI|AEHotLoader_ImplementationKey|AEHotLoader_ImplementationLabel|AEHotLoader_ImplementationRuntimeABI|AEHotLoader_SetGeneration'
           strings dist/AEHotLoaderControlImpl-candidate.dylib | grep 'candidate-v2'
           for impl in "$SHELL/Contents/Frameworks/libae_hot_loader_core.dylib" dist/AEHotLoaderControlImpl-candidate.dylib; do
             if otool -L "$impl" | tail -n +2 | grep -E '@(rpath|loader_path|executable_path)'; then
@@ -334,7 +334,7 @@ jobs:
           }
 
           extern "C" __attribute__((visibility("default")))
-          std::uint32_t AEHotLoader_ImplementationABI() { return 1; }
+          std::uint32_t AEHotLoader_ImplementationABI() { return 2; }
 
           extern "C" __attribute__((visibility("default")))
           std::uint64_t AEHotLoader_ImplementationStateABI() { return 1; }
@@ -359,6 +359,10 @@ jobs:
           int AEHotLoader_ImplementationRuntimeABI(char* output, std::size_t capacity) {
               return Write("test-runtime-abi", output, capacity);
           }
+
+          extern "C" __attribute__((visibility("default")))
+          void AEHotLoader_SetGeneration(std::uint64_t) {}
+
           CPP
 
           xcrun clang++ -std=c++17 -arch arm64 -mmacosx-version-min=11.0 -dynamiclib \
@@ -456,7 +460,7 @@ jobs:
           #include <cstdio>
           #include <cstring>
           extern "C" int EffectMain(...) { return 0; }
-          extern "C" std::uint32_t AEHotLoader_ImplementationABI() { return 1; }
+          extern "C" std::uint32_t AEHotLoader_ImplementationABI() { return 2; }
           extern "C" std::uint64_t AEHotLoader_ImplementationStateABI() { return 1; }
           extern "C" int AEHotLoader_ImplementationKey(char* out, std::size_t cap) {
               if (!out || cap == 0) return -1;
@@ -472,7 +476,9 @@ jobs:
               if (!out || cap == 0) return -1;
               std::snprintf(out, cap, "%s", "test-runtime-abi");
               return 0;
-          }
+          
+          extern "C" void AEHotLoader_SetGeneration(std::uint64_t) {}
+}
           CPP
 
           xcrun clang++ -std=c++17 -arch arm64 -dynamiclib "$RUNNER_TEMP/bad_impl.cpp" -o "$RUNNER_TEMP/bad_impl.dylib"
@@ -543,7 +549,7 @@ jobs:
           #include <cstdio>
 
           extern "C" int EffectMain(...) { return 0; }
-          extern "C" std::uint32_t AEHotLoader_ImplementationABI() { return 1; }
+          extern "C" std::uint32_t AEHotLoader_ImplementationABI() { return 2; }
           extern "C" std::uint64_t AEHotLoader_ImplementationStateABI() { return 1; }
 
           static int Write(const char* value, char* out, std::size_t cap) {
@@ -560,7 +566,9 @@ jobs:
           }
           extern "C" int AEHotLoader_ImplementationRuntimeABI(char* out, std::size_t cap) {
               return Write("rustc-incompatible|aarch64-apple-darwin|after-effects=incompatible", out, cap);
-          }
+          
+          extern "C" void AEHotLoader_SetGeneration(std::uint64_t) {}
+}
           CPP
 
           xcrun clang++ -std=c++17 -arch arm64 -mmacosx-version-min=11.0 -dynamiclib \
@@ -642,7 +650,7 @@ jobs:
           #include <cstdio>
           #include <cstring>
           extern "C" int EffectMain(...) { return 0; }
-          extern "C" std::uint32_t AEHotLoader_ImplementationABI() { return 1; }
+          extern "C" std::uint32_t AEHotLoader_ImplementationABI() { return 2; }
           extern "C" std::uint64_t AEHotLoader_ImplementationStateABI() { return 1; }
           extern "C" int AEHotLoader_ImplementationKey(char* out, std::size_t cap) {
               if (!out || cap == 0) return -1;
@@ -660,7 +668,9 @@ jobs:
               if (!out || cap == 0) return -1;
               std::snprintf(out, cap, "%s", "test-runtime-abi");
               return 0;
-          }
+          
+          extern "C" void AEHotLoader_SetGeneration(std::uint64_t) {}
+}
           CPP
 
           xcrun clang++ -std=c++17 -arch arm64 -dynamiclib             "$RUNNER_TEMP/unterminated_impl.cpp"             -o "$IMPL_DIR/current.dylib"
