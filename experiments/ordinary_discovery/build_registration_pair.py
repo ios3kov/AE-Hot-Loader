@@ -53,7 +53,7 @@ def main():
     }
     for dynamic, label in [(0, "PiPL"), (1, "Dynamic")]:
         name = "AEHL " + label + " " + run_id
-        match = "OS3KOV.Pair." + label + "." + run_id
+        match = "AEHL." + label + "." + run_id
         stem = "AEHLPair" + label + run_id
         bundle = output / (stem + ".plugin")
         contents = bundle / "Contents"
