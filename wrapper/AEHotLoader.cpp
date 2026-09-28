@@ -65,6 +65,7 @@ constexpr A_long kAEEffectKind = FourCC('e', 'F', 'K', 'T');
 constexpr A_long kApiMajor = 13;
 constexpr A_long kApiMinor = 29;
 constexpr A_long kRegistrationReservedInfo = 8;
+constexpr std::uint32_t kShellAbi = 1;
 constexpr std::uint32_t kImplementationAbi = 1;
 constexpr std::uint64_t kImplementationStateAbi = 1;
 constexpr const char* kImplementationKey = "control";
@@ -643,7 +644,7 @@ int AEHotLoader_ShellReload(char* output, std::size_t output_capacity) {
 
 extern "C" __attribute__((visibility("default")))
 std::uint32_t AEHotLoader_ShellABI() {
-    return 1;
+    return kShellAbi;
 }
 
 extern "C" __attribute__((visibility("default")))
