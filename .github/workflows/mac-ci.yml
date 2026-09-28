@@ -741,6 +741,8 @@ jobs:
           cp COLLECT_LOGS.command package/
           cp "ui/AE Hot Loader.jsx" package/
           cp README.md package/
+          cp core/Cargo.lock package/core-Cargo.lock.generated
+          cp agent/Cargo.lock package/agent-Cargo.lock.generated
           chmod +x package/INSTALL.command package/STAGE_IMPLEMENTATION.command package/COLLECT_LOGS.command
           ditto -c -k --sequesterRsrc --keepParent package AEHotLoader-mac-arm64-shell-reload-v1.zip
 
