@@ -14,6 +14,14 @@ Base control-shell gate is **PASSED** in real AE 25.6:
 
 Remaining control-shell live gates are busy-render rejection and bundled rollback. Adapter-specific ElasticGrid/Stellar Gradient gates remain open.
 
+## Clean-install prerequisite
+
+Use the current package's `INSTALL.command` with After Effects fully closed.
+
+The installer validates the new package first, backs up the managed user copy, then moves known old Loader diagnostics/legacy copies out of Adobe plug-in roots. It may ask for the macOS administrator password only when old system-wide copies exist. It also clears stale `current.dylib`, bridge requests, runtime copies, and Loader logs.
+
+After the installer prints **CLEAN INSTALL COMPLETE**, start AE and continue with the test below.
+
 ## What this validates
 
 This test no longer attempts to register a brand-new effect while AE is running.
