@@ -41,8 +41,9 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: dtolnay/rust-toolchain@1.98.1
+      - uses: dtolnay/rust-toolchain@ce678459e9fc7500d337468f904b95f1b5c10b5e
         with:
+          toolchain: 1.98.1
           targets: aarch64-apple-darwin
           components: rustfmt
 
@@ -62,7 +63,7 @@ jobs:
           {
             printf 'commit=%s\nbuild_id=%s\nsource_clean=true\n' "$GITHUB_SHA" "$PACKAGE_BUILD_ID"
             printf 'target=aarch64-apple-darwin\nscope=internal-build-not-release-approved\n'
-            printf 'runtime_identity_verified=false\n'
+            printf 'live_ae_identity_verified=false\n'
             rustc -vV
             cargo --version
             xcodebuild -version
@@ -101,7 +102,7 @@ jobs:
         run: |
           set -euo pipefail
           node --test tests/panel.test.cjs | tee "$RUNNER_TEMP/native-evidence/panel.tap"
-          python3 -m unittest discover -s tests -p 'test_artifact_manifest.py' -v 2>&1 | tee "$RUNNER_TEMP/native-evidence/manifest-tests.txt"
+          python3 -m unittest discover -s tests -p 'test_*.py' -v 2>&1 | tee "$RUNNER_TEMP/native-evidence/python-tests.txt"
 
       - name: Build default implementation
         env:
@@ -109,7 +110,7 @@ jobs:
           AE_HOT_LOADER_IMPL_LABEL: default-v1
         run: |
           set -euo pipefail
-          cargo build --manifest-path core/Cargo.toml --release --target aarch64-apple-darwin
+          cargo build --locked --manifest-path core/Cargo.toml --release --target aarch64-apple-darwin
 
       - name: Build candidate implementation
         env:
@@ -117,7 +118,7 @@ jobs:
           AE_HOT_LOADER_IMPL_LABEL: candidate-v2
         run: |
           set -euo pipefail
-          cargo build --manifest-path core/Cargo.toml --release --target aarch64-apple-darwin
+          cargo build --locked --manifest-path core/Cargo.toml --release --target aarch64-apple-darwin
 
       - name: Build busy-test candidate implementation
         env:
@@ -125,14 +126,14 @@ jobs:
           AE_HOT_LOADER_IMPL_LABEL: candidate-v3
         run: |
           set -euo pipefail
-          cargo build --manifest-path core/Cargo.toml --release --target aarch64-apple-darwin
+          cargo build --locked --manifest-path core/Cargo.toml --release --target aarch64-apple-darwin
 
       - name: Build AEGP agent
         env:
           CARGO_TARGET_DIR: ${{ github.workspace }}/target-ae-hot-loader
         run: |
           set -euo pipefail
-          cargo build --manifest-path agent/Cargo.toml --release --target aarch64-apple-darwin
+          cargo build --locked --manifest-path agent/Cargo.toml --release --target aarch64-apple-darwin
 
       - name: Build control shell
         run: |
@@ -811,7 +812,7 @@ jobs:
           cp STAGE_BUSY_TEST.command package/
           cp ROLLBACK_TO_BUNDLED.command package/
           cp COLLECT_LOGS.command package/
-          cp "ui/AE Hot Loader.jsx" package/
+          python3 tools/build_panel.py "package/AE Hot Loader.jsx"
           cp README.md package/
           cp QUICK_START.md package/
           cp core/Cargo.lock package/core-Cargo.lock.generated
@@ -838,6 +839,13 @@ jobs:
           codesign --verify --strict "$ROUNDTRIP/package/AEHotLoaderControlImpl-candidate.dylib"
           codesign --verify --strict "$ROUNDTRIP/package/AEHotLoaderControlImpl-candidate-v3.dylib"
           shasum -a 256 -c "$RUNNER_TEMP/native-evidence/package.sha256"
+          PANEL_SOURCE="$ROUNDTRIP/package/AE Hot Loader.jsx" \
+          PANEL_COMMIT_EXPECTED="$GITHUB_SHA" PANEL_BUILD_EXPECTED="$PACKAGE_BUILD_ID" \
+            node --test tests/panel.test.cjs | tee "$RUNNER_TEMP/native-evidence/packaged-panel.tap"
+          python3 tools/verify_agent_identity.py \
+            "$ROUNDTRIP/package/AEHotLoaderAgent.plugin/Contents/MacOS/AEHotLoaderAgent" \
+            --commit "$GITHUB_SHA" --build-id "$PACKAGE_BUILD_ID" --lock agent/Cargo.lock \
+            --output "$RUNNER_TEMP/native-evidence/packaged-agent-runtime.json"
           git diff --exit-code
           git diff --cached --exit-code
           printf 'Native build and synthetic regression passed. Live AE and release approval: NOT RUN.\n' >> "$GITHUB_STEP_SUMMARY"
