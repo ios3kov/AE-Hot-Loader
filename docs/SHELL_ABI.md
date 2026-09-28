@@ -26,6 +26,7 @@ AEHotLoader_ImplementationABI
 AEHotLoader_ImplementationStateABI
 AEHotLoader_ImplementationKey
 AEHotLoader_ImplementationLabel
+AEHotLoader_ImplementationRuntimeABI
 ```
 
 ### Protocol ABI
@@ -54,6 +55,22 @@ For an AE effect, increment the state ABI whenever an in-session reload could re
 
 A state-ABI change requires rebuilding/installing the shell and restarting AE once.
 
+### Runtime ABI
+
+`AEHotLoader_ImplementationRuntimeABI(char* output, size_t capacity) -> int`
+
+This identifies the Rust/compiler runtime contract of the implementation. The current implementation embeds at least:
+
+- exact `rustc` version;
+- target triple;
+- the pinned `after-effects` crate/revision family.
+
+The shell records the Runtime ABI of the first active implementation in the AE process and rejects later candidates whose Runtime ABI differs.
+
+This matters because the Rust host keeps opaque `global_data` / sequence / GPU-facing state across EffectMain calls. Rust does not promise a stable layout for such internal types across compiler/library versions.
+
+A candidate built with another Rust toolchain must therefore not be hot-swapped into an already-running session. Rebuild it with the pinned toolchain, or restart AE with a shell/default implementation built for the same runtime ABI.
+
 ### Implementation key
 
 `AEHotLoader_ImplementationKey(char* output, size_t capacity) -> int`
@@ -79,7 +96,7 @@ Human-readable build identifier used for diagnostics, for example `candidate-v2`
 3. Fingerprint the staged bytes.
 4. `dlopen` the unique copy.
 5. Resolve all required exports.
-6. Validate protocol ABI, state ABI and implementation key.
+6. Validate protocol ABI, state ABI, implementation key and Runtime ABI.
 7. Only after all validation succeeds, atomically publish the new `EffectMain` pointer.
 8. Keep every old dylib handle loaded until AE exits.
 
