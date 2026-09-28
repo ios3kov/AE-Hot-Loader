@@ -1,0 +1,64 @@
+name: AE Hot Loader research checks
+
+on:
+  push:
+    branches: ["research/**"]
+  pull_request:
+    branches: [main, "research/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: research-checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  panel-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Record source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          test -z "$(git status --porcelain --untracked-files=no)"
+          {
+            printf 'commit='; git rev-parse HEAD
+            printf 'run_id=%s\nattempt=%s\n' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
+            printf 'node='; node --version
+            printf 'scope=Node host mocks; not a live AE test\n'
+            sha256sum 'ui/AE Hot Loader.jsx' tests/panel.test.cjs
+          } > reports/source-identity.txt
+      - name: Panel contract regression (host mocks)
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tests/panel.test.cjs | tee reports/panel.tap
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: research-evidence-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: reports/
+          if-no-files-found: error
+          retention-days: 30
+
+  native-syntax:
+    runs-on: macos-15
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - name: Native syntax and installer parsing (not runtime tests)
+        shell: bash
+        run: |
+          set -euo pipefail
+          for source in wrapper/AEHotLoader.cpp agent/native/ShellReloader.cpp agent/native/InternalLoader.cpp; do
+            xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only "$source"
+          done
+          for script in ./*.command; do zsh -n "$script"; done

@@ -17,12 +17,21 @@
 
     function parseKeyValue(text) {
         var out = {};
+        var seen = {};
         var lines = text.split(/\r?\n/);
         for (var i = 0; i < lines.length; i++) {
             var line = lines[i];
             var p = line.indexOf("=");
             if (p > 0) {
-                out[line.substring(0, p)] = line.substring(p + 1);
+                var key = line.substring(0, p);
+                if (key !== "version" && key !== "request_id" && key !== "status" && key !== "message") {
+                    continue;
+                }
+                if (seen["$" + key]) {
+                    throw new Error("Duplicate bridge field: " + key);
+                }
+                seen["$" + key] = true;
+                out[key] = line.substring(p + 1);
             }
         }
         return out;
@@ -32,9 +41,62 @@
         if (!file.exists || !file.open("r")) {
             return null;
         }
-        var text = file.read();
-        file.close();
-        return text;
+        try {
+            return file.read();
+        } finally {
+            file.close();
+        }
+    }
+
+    // app.effects is read-only. Copy identities, not native module counts.
+    // This checks registry presence only; it never applies or renders an effect.
+    function snapshotRegistry() {
+        var effects = app.effects;
+        if (!effects || typeof effects.length !== "number") {
+            throw new Error("Installed Effects Registry is unavailable");
+        }
+        var names = {};
+        for (var i = 0; i < effects.length; i++) {
+            var name = effects[i].matchName;
+            if (typeof name !== "string" || name.length === 0) {
+                throw new Error("Invalid effect match name in registry");
+            }
+            var key = "$" + name;
+            if (names[key]) {
+                throw new Error("Duplicate effect match name in registry");
+            }
+            names[key] = true;
+        }
+        return names;
+    }
+
+    function responseSummary(before, data) {
+        if (data.version !== "1" ||
+            (data.status !== "success" && data.status !== "noop" && data.status !== "error")) {
+            throw new Error("Unsupported bridge response");
+        }
+        var after = snapshotRegistry();
+        var added = 0;
+        var removed = 0;
+        var key;
+        for (key in after) {
+            if (after.hasOwnProperty(key) && !before[key]) { added++; }
+        }
+        for (key in before) {
+            if (before.hasOwnProperty(key) && !after[key]) { removed++; }
+        }
+        var summary;
+        if (removed > 0) {
+            summary = "Registry changed unexpectedly: " + removed + " removed; " + added + " added.";
+        } else if (added > 0) {
+            summary = "Registry: " + added + " added. Apply/render not checked.";
+        } else {
+            summary = "Registry unchanged. No new effects confirmed.";
+        }
+        if (data.status === "error") {
+            return "Scan incomplete: " + (data.message || "Agent error") + "\n" + summary;
+        }
+        return summary;
     }
 
     function writeRequest(requestId) {
@@ -62,13 +124,21 @@
         }
 
         temp.lineFeed = "Unix";
-        temp.write(
-            "version=1\n" +
-            "command=reload_plugins\n" +
-            "request_id=" + requestId + "\n" +
-            "timestamp=" + (new Date()).getTime() + "\n"
-        );
-        temp.close();
+        var wrote = false;
+        try {
+            wrote = temp.write(
+                "version=1\n" +
+                "command=reload_plugins\n" +
+                "request_id=" + requestId + "\n" +
+                "timestamp=" + (new Date()).getTime() + "\n"
+            );
+        } finally {
+            temp.close();
+        }
+        if (!wrote) {
+            try { temp.remove(); } catch (e) {}
+            throw new Error("Cannot write bridge request.");
+        }
 
         if (!temp.rename(REQUEST_FILE_NAME)) {
             try { temp.remove(); } catch (e) {}
@@ -83,32 +153,39 @@
             return;
         }
 
-        var folder = bridgeFolder();
-        var response = new File(folder.fsName + "/" + RESPONSE_FILE_NAME);
+        try {
+            var folder = bridgeFolder();
+            var response = new File(folder.fsName + "/" + RESPONSE_FILE_NAME);
 
-        if (response.exists) {
-            var text = readText(response);
-            if (text !== null) {
-                var data = parseKeyValue(text);
-                if (data.request_id === state.requestId) {
-                    state.waiting = false;
-                    state.button.enabled = true;
-                    state.status.text = data.message || data.status || "Done";
-                    try { response.remove(); } catch (e) {}
-                    return;
+            if (response.exists) {
+                var text = readText(response);
+                if (text !== null) {
+                    var data = parseKeyValue(text);
+                    if (data.request_id === state.requestId) {
+                        var summary = responseSummary(state.beforeRegistry, data);
+                        state.waiting = false;
+                        state.button.enabled = true;
+                        state.status.text = summary;
+                        try { response.remove(); } catch (e) {}
+                        return;
+                    }
                 }
             }
-        }
 
-        var elapsed = (new Date()).getTime() - state.startedAt;
-        if (elapsed > 30000) {
+            var elapsed = (new Date()).getTime() - state.startedAt;
+            if (elapsed > 30000) {
+                state.waiting = false;
+                state.button.enabled = true;
+                state.status.text = "Native helper timed out; result unknown. Scan may still be running.";
+                return;
+            }
+
+            app.scheduleTask("AEHotLoader_pollResponse()", 250, false);
+        } catch (e) {
             state.waiting = false;
             state.button.enabled = true;
-            state.status.text = "Native helper did not answer.";
-            return;
+            state.status.text = "Error: " + e.toString();
         }
-
-        app.scheduleTask("AEHotLoader_pollResponse()", 250, false);
     };
 
     function buildUI(thisObj) {
@@ -133,17 +210,20 @@
             status: status,
             requestId: "",
             startedAt: 0,
-            waiting: false
+            waiting: false,
+            beforeRegistry: null
         };
 
         reloadButton.onClick = function () {
             try {
                 var state = $.global.AEHotLoader_state;
+                if (state.waiting) { return; }
+                state.beforeRegistry = snapshotRegistry();
                 state.requestId = String((new Date()).getTime()) + "-" + String(Math.floor(Math.random() * 1000000));
                 state.startedAt = (new Date()).getTime();
                 state.waiting = true;
                 state.button.enabled = false;
-                state.status.text = "Reloading implementations…";
+                state.status.text = "Scanning for new effects…";
 
                 writeRequest(state.requestId);
                 app.scheduleTask("AEHotLoader_pollResponse()", 250, false);
