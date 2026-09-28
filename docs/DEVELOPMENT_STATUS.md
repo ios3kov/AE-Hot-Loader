@@ -1,63 +1,70 @@
 # AE Hot Loader — current development status
 
-Updated: 2026-09-28. Working branch: `research/ordinary-plugin-discovery`.
+Updated: 2026-09-28. Branch: `research/ordinary-plugin-discovery`.
 The branch head identifies current development; verified builds have separate
-commit/artifact/evidence identities.
+source, Build ID, artifact hash and evidence identities.
 
-## Latest verified build
+## Latest verified source
 
-- Source: `2e272035802dfbc5b1b9a285e69339786c64944d`.
-- Build ID: `native-36474593472-1`.
-- Full macOS [run #238](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/36474593472): SUCCESS.
-- Research [run #4](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/36474593395): SUCCESS.
-- Internal package built, signed and verified; not approved for installation/release.
-- This status is a documentation-only successor. The retained package still
-  belongs to `2e27203`, not to a later documentation commit.
-- `main` unchanged; no Release or user installation performed.
+Source: `4357e36732f106233020fccd110c0e9f19a03a76`.
 
-Full identities, hashes, logs and limitations:
-[CI_CHECKPOINT_2e27203](CI_CHECKPOINT_2e27203.md).
-The previous [dated status](DEVELOPMENT_STATUS_2026-09-28.md) and
-[panel checkpoint](CI_CHECKPOINT_f274961.md) remain historical evidence.
+- Full macOS build **#240**, run 36478417321: SUCCESS;
+  package Build ID `native-36478417321-1`.
+- Agent identity **#2**, run 36478417282: SUCCESS;
+  standalone library Build ID `identity-36478417282-1`.
+- Research checks **#6**, run 36478417347: SUCCESS.
 
-## Implemented
+The two builds are different artifacts. The identity test library is not the
+Agent binary from the full package. Exact identities and checks are recorded
+in [CI_CHECKPOINT_4357e36](CI_CHECKPOINT_4357e36.md).
+This status is a documentation-only successor; no tested artifact was modified.
+No release approval, installation or merge to `main` was performed.
 
-The panel compares `app.effects` match names before dispatch and after the
-matching reply, instead of treating loaded-module counts as registration.
-It preserves partial errors and checks protocol/I/O failure paths. A timeout
-means an unknown result, not cancellation. Apply/render is not checked by the
-panel. Direct bridge consumers must still verify registration separately from
-the unchanged Agent's `success` response.
+## Changes in this iteration
 
-The existing full macOS build pipeline now runs for research branches. It
-retains native shell tests and adds 14 manifest tests, clean-source/toolchain
-records, per-file package SHA-256, final ZIP checksum and extraction/signature
-verification. The source export was independently matched to its Git tree.
-The host registration code and private ABI were not changed.
+Both Cargo lockfiles are tracked, copied byte-for-byte from the previous
+verified build; dependency versions and Rust 1.98.1 were not upgraded. A new
+CI job builds both crates with `--locked` and verifies the locks stay unchanged.
+The existing full-package job also passed its tracked-source diff checks.
 
-Current docs separate build evidence from live-AE and historical shell claims.
-Historical evidence under `docs/archive/` is unchanged.
+Agent metadata is generated from actual Git HEAD, clean/dirty state, build ID,
+target, version and the dependency-lock hash. Unknown source is rejected;
+dirty experiments are explicitly marked and prohibited in CI. The loaded
+Agent exposes bounded metadata and image-path getters. A read-only
+`get_build_identity` bridge command returns before native discovery; every
+reply includes Agent identity fields, and startup logging includes metadata.
+See [BRIDGE_PROTOCOL](BRIDGE_PROTOCOL.md).
 
-## Verification matrix for source 2e27203
+The current panel does not yet display or compare these new identity fields.
+Its existing registry comparison remains unchanged. The native registration
+path, private ABI, Control Shell and rendering code were not changed.
 
-| Check | Status | Scope / limitation |
+## Verification for source 4357e36
+
+| Check | Status | Exact scope |
 |---|---|---|
-| Panel host-mock regression | PASS: 22/22 | Actual JSX under Node, not AE |
-| Manifest unit tests | PASS: 14/14 | Integrity, inventory, identity and path rejection |
-| Rust/C++ static checks and command parsing | PASS | No user installation |
-| Full native build, ad-hoc signing and packaging | PASS | macOS arm64 CI, not release approval |
-| Standalone native smoke/negative gates | PASS: 7/7 | Shell tests outside AE; not ordinary discovery or AE MFR |
-| Final ZIP and 24 payload hashes | PASS | CI roundtrip and independent download verification |
-| Updated panel/Agent in real AE | BLOCKED | No accessible AE runtime in this session |
-| RSMB controlled cold-start/apply/render | NOT RUN | Historical late-registration FAIL unchanged |
-| Full adapter-specific reference/fixture cleanup | NOT RUN | Generic shell and research preserved |
-| Release / installation / merge to main | NOT RUN | No candidate approved for handoff |
+| Panel regression | PASS: 22/22 | Shipped JSX under Node host mocks, not AE |
+| Package manifest tests | PASS: 14/14 | Inventory, hashes, identity and path rejection |
+| Identity generator tests | PASS: 14/14 | Owned temporary Git repositories |
+| Locked core and Agent builds | PASS | macOS arm64, unchanged tracked locks |
+| Loaded Agent identity and image-path getters | PASS | 2 getters, 16 calls in standalone macOS process |
+| Full native build, ad-hoc signing and packaging | PASS | Internal package, not release approval |
+| Existing native shell gates | PASS: 7/7 | Standalone synthetic tests, not real AE/MFR |
+| Downloaded archives and 24 package payload files | PASS | Independent hashes/inventory check |
+| New bridge diagnostics and startup inside AE | BLOCKED | No accessible AE process in this session |
+| Packaged Agent identity read-back inside AE | NOT RUN | Static embedded metadata is not runtime evidence |
+| RSMB controlled cold-start/apply/render | NOT RUN | Historical late-registration FAIL remains |
+| Full adapter-specific scope cleanup | NOT RUN | Generic shell and historical research preserved |
 
-## Remaining work
+The first implementation had formatting/workflow failures, fixed before these
+passing checks; their history is retained in
+[CI_FIX_AGENT_IDENTITY](CI_FIX_AGENT_IDENTITY_2026-09-28.md).
+Older AE results remain historical, not tests of this new Agent.
 
-Freeze dependency lockfiles; generate verifiable runtime identities; complete
-scope cleanup. Establish controlled RSMB startup/apply/render evidence and
-isolate missing legacy late registration. Run real panel/Agent, repeated-scan,
-timeout/ownership and project-safety gates before handoff. Follow
-[PRODUCTION_PLAN](PRODUCTION_PLAN.md); do not invoke unverified private
-teardown/reinitialization functions or turn mock tests into live-AE PASS.
+## Next gates
+
+Integrate identity checks into the exact packaged Agent and diagnostic UI;
+complete remaining component identities and scope cleanup. Prepare controlled
+RSMB startup/apply/render tests, then isolate legacy late registration. Real
+panel/Agent, repeat/timeout/IPC ownership and project-safety checks remain
+required before handoff. No unverified private teardown or reinitialization.
