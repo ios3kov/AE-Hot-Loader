@@ -27,19 +27,41 @@ for app_plugins in /Applications/Adobe\ After\ Effects*.app/Contents/Plug-ins; d
 done
 
 typeset -a duplicate_plugins
+typeset -A duplicate_seen
+
+record_duplicate() {
+  local found="$1"
+  case "$found" in
+    "$PLUGIN_DEST/AEHotLoader.plugin"|"$PLUGIN_DEST/AEHotLoaderBridge.plugin"|"$PLUGIN_DEST/AEHotLoaderAgent.plugin"|"$PLUGIN_DEST/AEHotLoaderControlShell.plugin")
+      return
+      ;;
+  esac
+
+  if [[ -z "${duplicate_seen[$found]-}" ]]; then
+    duplicate_seen[$found]=1
+    duplicate_plugins+=("$found")
+  fi
+}
+
 for root in "${duplicate_roots[@]}"; do
   [[ -d "$root" ]] || continue
+
   while IFS= read -r found; do
-    case "$found" in
-      "$PLUGIN_DEST/AEHotLoader.plugin"|      "$PLUGIN_DEST/AEHotLoaderBridge.plugin"|      "$PLUGIN_DEST/AEHotLoaderAgent.plugin"|      "$PLUGIN_DEST/AEHotLoaderControlShell.plugin")
-        ;;
-      *)
-        duplicate_plugins+=("$found")
-        ;;
-    esac
+    record_duplicate "$found"
   done < <(
     find "$root" -type d \(       -name "AEHotLoader.plugin" -o       -name "AEHotLoaderBridge.plugin" -o       -name "AEHotLoaderAgent.plugin" -o       -name "AEHotLoaderControlShell.plugin"     \) -prune -print 2>/dev/null
   )
+
+  while IFS= read -r found; do
+    plist="$found/Contents/Info.plist"
+    [[ -f "$plist" ]] || continue
+    bundle_id="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$plist" 2>/dev/null || true)"
+    case "$bundle_id" in
+      com.os3kov.AEHotLoader.*)
+        record_duplicate "$found"
+        ;;
+    esac
+  done < <(find "$root" -type d -name "*.plugin" -prune -print 2>/dev/null)
 done
 
 if (( ${#duplicate_plugins[@]} > 0 )); then
