@@ -58,6 +58,9 @@ jobs:
           python3 tools/verify_shell_contract.py core/build.rs core/src/lib.rs wrapper/AEHotLoader.cpp agent/native/ShellReloader.cpp
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only wrapper/AEHotLoader.cpp
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only agent/native/ShellReloader.cpp
+          xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only agent/native/InternalLoader.cpp
+          grep -q "AEHotLoader_LoadPluginFolder" agent/native/InternalLoader.cpp
+          grep -q "FLT_NotifyFilterLoadingDone" agent/native/InternalLoader.cpp
 
       - name: Build default implementation
         env:
