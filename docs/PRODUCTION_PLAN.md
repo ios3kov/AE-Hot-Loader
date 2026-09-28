@@ -15,7 +15,9 @@ The original workflow is now proven on After Effects 25.6.0 ARM64:
    PNG in the same process.
 
 The production Agent now scans the standard Adobe plug-in roots and reports
-the number of newly registered filter modules. The private ABI is currently
+the post-load module count for each pass. Effects Registry identity is checked
+separately because AE may recreate private module objects on a repeat scan.
+The private ABI is currently
 gated to AE 25.6 arm64 and must be revalidated for other host versions.
 
 Evidence is retained under the local ordinary-discovery test workspace. The
@@ -85,7 +87,7 @@ Responsibilities:
 - receive ScriptUI commands on AE's main-thread/idle path;
 - scan standard Adobe plug-in roots;
 - invoke ordinary discovery and post-load registration;
-- collect loaded and newly registered module counts;
+- collect loaded and post-load module counts;
 - return concise status to the panel;
 - keep diagnostics/logging.
 
@@ -260,7 +262,7 @@ The production Agent:
 - links the version-gated ordinary discovery helper;
 - scans system/user/app plug-in roots;
 - calls `ML::LoadPlugins` followed by `FLT_NotifyFilterLoadingDone`;
-- reports loaded and newly registered module counts.
+- reports loaded and post-load module counts.
 
 Installer:
 - refuses updates while AE is running;

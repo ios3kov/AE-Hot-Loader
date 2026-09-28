@@ -146,7 +146,7 @@ fn discover_ordinary_plugins() -> ReloadResult {
     }
 
     let mut summary =
-        format!("{BUILD_ID}: scanned={scanned} loaded={loaded} new_effect_modules={added_modules}");
+        format!("{BUILD_ID}: scanned={scanned} loaded={loaded} post_load_modules={added_modules}");
     if !failures.is_empty() {
         summary.push_str(&format!("; failures={}", failures.join(" | ")));
     }

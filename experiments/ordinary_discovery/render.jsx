@@ -23,7 +23,11 @@
         outputModule.file = frame;
         log.writeln("render_begin=" + frame.fsName);
         app.project.renderQueue.render();
-        var rendered = output.getFiles("stellar-" + id + "*");
+        var rendered = [];
+        for (var wait = 0; wait < 40 && rendered.length === 0; ++wait) {
+            rendered = output.getFiles("stellar-" + id + "*");
+            if (rendered.length === 0) $.sleep(250);
+        }
         if (!rendered || rendered.length === 0) throw Error("Missing render output");
         var renderedBytes = 0;
         if (rendered[0].open("r")) {

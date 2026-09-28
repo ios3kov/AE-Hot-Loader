@@ -18,7 +18,11 @@
         log.writeln("applied=" + effect.matchName + " params=" + effect.numProperties);
         var frame = new File(output.fsName + "/rust-probe-" + id + ".png");
         comp.saveFrameToPng(0, frame);
-        var rendered = output.getFiles("rust-probe-" + id + "*");
+        var rendered = [];
+        for (var wait = 0; wait < 40 && rendered.length === 0; ++wait) {
+            rendered = output.getFiles("rust-probe-" + id + "*");
+            if (rendered.length === 0) $.sleep(250);
+        }
         if (!rendered || rendered.length === 0) throw Error("Missing render output");
         var renderedBytes = 0;
         if (rendered[0].open("r")) {

@@ -35,7 +35,7 @@ File: `response.txt`
 version=1
 request_id=1720000000000-123456
 status=success
-message=ordinary-discovery-v1: scanned=2 loaded=1 new_effect_modules=1
+message=ordinary-discovery-v1: scanned=2 loaded=1 post_load_modules=1
 ```
 
 Status values:

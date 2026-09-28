@@ -80,7 +80,7 @@ Production responsibility:
 - scan the standard Adobe plug-in roots;
 - late-register ordinary native effects through AE's loader and filter
   notification path;
-- report loaded and newly registered module counts.
+- report loaded and post-load module counts.
 
 ## Important research conclusion
 
