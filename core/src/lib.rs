@@ -139,7 +139,6 @@ pub extern "C" fn AEHotLoader_ImplementationRuntimeABI(
     0
 }
 
-
 #[unsafe(no_mangle)]
 pub extern "C" fn AEHotLoader_SetGeneration(generation: u64) {
     HOT_RELOAD_GENERATION.store(generation, Ordering::Release);
