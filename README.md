@@ -109,15 +109,28 @@ The detailed pre-AE code audit is in `docs/CODE_AUDIT_2026-09-28.md`.
 
 ### Live validation status — 2026-09-28
 
-Passed in real After Effects 25.6:
+The **Control Shell live gate is fully passed** in real After Effects 25.6:
 
 - stable Control Shell registration;
 - bundled `default-v1` render;
 - `candidate-v2` hot reload without AE restart;
-- post-swap render through the existing effect instance;
-- unchanged/no-op reload detection.
+- real post-swap render through the existing instance;
+- unchanged/no-op reload detection;
+- deterministic busy-render rejection with `-4112`;
+- `candidate-v2 → candidate-v3` reload and real `candidate-v3` render;
+- rollback to bundled `default-v1`;
+- real render after rollback;
+- all of the above in one AE process.
 
-Next live gates: busy-render rejection, bundled rollback, then ElasticGrid and Stellar Gradient.
+### Cache / refresh UX requirement
+
+Manual **Edit → Purge → All Memory & Disk Cache** was used only during validation to force AE to call the newly loaded `EffectMain` instead of showing an already cached frame.
+
+Manual Purge is **not** acceptable as normal product UX. After a successful implementation reload, AE Hot Loader must automatically invalidate the affected effect/render cache and trigger or request a fresh evaluation so the updated result becomes visible without user cleanup.
+
+This is now a release requirement, not part of the shell ABI proof.
+
+Next live stage: real ElasticGrid, then Stellar Gradient.
 
 ## Release gate
 
@@ -131,4 +144,5 @@ The shell architecture is considered ready when:
 6. candidate removal rolls back to bundled default;
 7. ElasticGrid passes CPU/UI/MFR/GPU smoke;
 8. Stellar Gradient passes CPU/SmartFX/MFR/GPU smoke;
-9. repeated A→B→C reloads do not require AE restart.
+9. repeated A→B→C reloads do not require AE restart;
+10. successful reload invalidates stale cached output automatically — no manual Purge required in normal use.

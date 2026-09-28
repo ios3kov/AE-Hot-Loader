@@ -284,7 +284,7 @@ Current hardened production CI covers:
 - candidate removal → bundled rollback.
 
 Latest known green checkpoint:
-**AE Hot Loader run #227 — SUCCESS**.
+**AE Hot Loader run #236 — SUCCESS**.
 
 ### ElasticGrid
 
@@ -307,10 +307,10 @@ Full project CI additionally covers:
 - TSan;
 - static analysis.
 
-Latest hardened adapter checkpoints:
-- ElasticGrid Hot Loader Shell CI **#57 — SUCCESS**
-- ElasticGrid full CI **#135 — SUCCESS**
-- Stellar Gradient Hot Loader Shell CI **#66 — SUCCESS**
+Latest adapter checkpoints:
+- ElasticGrid Hot Loader Shell CI **#60 — SUCCESS**
+- ElasticGrid full CI **#139 — SUCCESS**
+- Stellar Gradient Hot Loader Shell CI **#70 — SUCCESS** is the latest fully green build; later lock-hardening run #73 exposed a malformed committed checksum and is being repaired before live use.
 
 ### Stellar Gradient
 
@@ -322,15 +322,22 @@ Adapter CI covers the same shell/runtime gates plus:
 
 ## Live runtime status — 2026-09-28
 
-The first real AE 25.6 control-shell gate has now passed:
+The real AE 25.6 **Control Shell gate is fully passed**:
 
 - startup registration succeeded;
-- bundled default rendered;
-- A→B implementation reload succeeded without AE restart;
-- the existing instance rendered through the candidate implementation;
-- repeated Reload correctly reported unchanged.
+- bundled `default-v1` rendered;
+- A→B reload to `candidate-v2` succeeded without AE restart;
+- the existing instance rendered through `candidate-v2`;
+- unchanged/no-op detection succeeded;
+- deterministic busy-render reload was rejected with `-4112` and the expected retry message;
+- B→C reload to `candidate-v3` succeeded after the render ended;
+- `candidate-v3` rendered;
+- rollback to bundled `default-v1` succeeded;
+- bundled `default-v1` rendered after rollback.
 
-Still open: deterministic busy-render rejection, bundled rollback, repeated A→B→C stress, and the full ElasticGrid/Stellar Gradient adapter gates below.
+Manual cache Purge was used only to force AE to execute a fresh render during validation. It is **not** a product workflow requirement. Automatic invalidation/fresh evaluation after a successful reload is now an explicit release requirement.
+
+Still open: real ElasticGrid and Stellar Gradient adapter gates plus automatic cache refresh UX.
 
 ## Remaining live-only risks
 
@@ -349,18 +356,21 @@ These cannot be proven by synthetic CI and require After Effects 25.6:
 
 ## Live release gate
 
-Do not merge to `main` until all are true:
+Control Shell items 1–7 below are now passed in real AE 25.6:
 
-1. Control shell registers normally after one AE restart.
-2. Bundled default renders.
-3. Candidate reload reports success.
-4. Existing instance renders after swap.
-5. Unchanged reload reports unchanged.
-6. Busy render produces retry rather than hang/crash.
-7. Candidate removal rolls back to bundled default.
-8. ElasticGrid passes CPU + UI + MFR + GPU smoke.
-9. Stellar Gradient passes CPU + SmartFX + MFR + GPU smoke.
-10. Repeated A→B→C reloads remain stable.
+1. Control shell registers normally after one AE restart. ✅
+2. Bundled default renders. ✅
+3. Candidate reload reports success. ✅
+4. Existing instance renders after swap. ✅
+5. Unchanged reload reports unchanged. ✅
+6. Busy render produces retry rather than hang/crash. ✅
+7. Candidate removal rolls back to bundled default and renders. ✅
+
+Still required before merge to `main`:
+
+8. ElasticGrid passes CPU + UI + Smart Render/MFR + GPU + A→B→C + rollback + save/reopen.
+9. Stellar Gradient passes CPU + SmartFX + MFR + GPU + A→B→C + rollback + save/reopen.
+10. Successful reload automatically invalidates stale cached output; normal use requires no manual Purge.
 11. Logs contain no duplicate shell/Agent discovery.
 12. No duplicate match-name copies remain installed.
 

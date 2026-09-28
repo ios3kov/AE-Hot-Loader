@@ -2,6 +2,8 @@
 
 Target: After Effects 25.6 on Apple Silicon Mac.
 
+> Validation note: cache Purge steps in this document are test-only ways to force a cache miss. The finished product must refresh affected output automatically after a successful reload.
+
 ## 1. Clean install
 
 1. Fully quit After Effects.
@@ -42,7 +44,7 @@ Old diagnostic builds covered include LiveTest, ProbeTest, DualPiPL, RustProbe, 
 
 1. Confirm `candidate-v2` is already active from step 3.
 2. Double-click `STAGE_BUSY_TEST.command`. It stages `candidate-v3` and arms a one-shot real-render self-test.
-3. In AE, purge cache if needed and start a fresh Preview/render of the Control Shell.
+3. In AE, force a fresh Preview/render of the Control Shell. For validation only, Purge cache if AE would otherwise reuse an old cached frame.
 4. Do **not** click Reload during the ~8 second held render. The active implementation now calls the shell reload gate itself from a helper thread while its own `EffectMain` is still in flight.
 5. After the render finishes, run:
 
@@ -72,3 +74,8 @@ Double-click `COLLECT_LOGS.command` or use:
 `cat /tmp/ae-hot-loader-implementation.log`
 
 If anything differs from the expected result, send the AE Hot Loader panel result or the collected logs.
+
+
+## Product cache behavior
+
+The live gate used manual cache Purge only to prove that the new implementation really receives a render call. Normal AE Hot Loader usage must not require Purge. Automatic cache invalidation / fresh evaluation after a successful reload is tracked as a release requirement.

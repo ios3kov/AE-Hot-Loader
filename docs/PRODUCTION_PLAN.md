@@ -139,6 +139,8 @@ Same architecture and validation as ElasticGrid.
 ### Phase 6 — UX
 
 - clear per-effect reload status;
+- **automatic cache invalidation / fresh evaluation after successful reload**;
+- no manual Edit → Purge step in normal use;
 - Auto Watch;
 - compatibility indicators;
 - compact log view;
@@ -254,7 +256,7 @@ AE Hot Loader:
 - candidate removal → bundled rollback.
 
 Latest known green checkpoint:
-**AE Hot Loader run #218 — SUCCESS**.
+**AE Hot Loader run #236 — SUCCESS**.
 
 ElasticGrid adapter:
 - dedicated shell CI;
@@ -266,9 +268,8 @@ ElasticGrid adapter:
 - bundled default → candidate → unchanged → bundled rollback;
 - full project GCC / Clang / ASan+UBSan / TSan / static-analysis gates.
 
-Latest stable green checkpoint before the current state-contract extension:
-**Hot Loader Shell CI #48 — SUCCESS** and full project CI #126 — SUCCESS.
-The newest verifier run must also be green before live AE installation.
+Latest green checkpoints:
+**Hot Loader Shell CI #60 — SUCCESS** and full project CI **#139 — SUCCESS**.
 
 Stellar Gradient adapter:
 - dedicated shell CI;
@@ -280,29 +281,24 @@ Stellar Gradient adapter:
 - deployment target and dylib dependency checks;
 - bundled default → candidate → unchanged → bundled rollback.
 
-Latest stable green checkpoint before the current params/PiPL contract extension:
-**Hot Loader Shell CI #66 — SUCCESS**.
-The newest verifier run must also be green before live AE installation.
+Latest fully green shell checkpoint: **Hot Loader Shell CI #70 — SUCCESS**.
+A later dependency-lock hardening run (#73) failed because of a malformed committed Cargo checksum and must be repaired before the Stellar live package is used.
 
-### Remaining live gate
+### Current live status and remaining gate
 
 No further private-loader/PiPL reverse-engineering is required.
 
-Before merge to `main`, real After Effects 25.6 must prove:
+**Control Shell: PASSED in real AE 25.6.** Registration, A→B→C, real rendering, unchanged/no-op, deterministic busy rejection, rollback, and post-rollback render are all proven without restarting AE.
 
-1. Control shell registers through normal AE startup.
-2. Bundled default applies and renders.
-3. Candidate reload reports success through the Agent/panel path.
-4. Existing instance renders after swap.
-5. Unchanged reload reports unchanged.
-6. Busy render returns retry instead of hanging AE.
-7. Removing the candidate rolls back to bundled default.
-8. ElasticGrid passes CPU, custom UI, MFR, GPU smoke.
-9. Stellar Gradient passes CPU, SmartFX, MFR, GPU smoke.
-10. Existing GPU/native state survives/reinitializes safely across generation changes.
-11. Repeated A→B→C reloads remain stable.
-12. Project save/reopen remains compatible.
-13. No duplicate Agent/shell copies are discovered.
+Manual cache Purge was used only to force cache misses during proof. Normal product usage must automatically invalidate stale cached output after a successful reload.
+
+Before merge to `main`, the remaining real-AE work is:
+
+1. ElasticGrid passes CPU, custom UI, Smart Render/MFR, GPU, A→B→C, rollback, save/reopen.
+2. Stellar Gradient passes CPU, SmartFX, MFR, GPU, A→B→C, rollback, save/reopen.
+3. Existing GPU/native state survives/reinitializes safely across generation changes.
+4. Successful reload automatically invalidates stale cached output; no manual Purge is needed.
+5. No duplicate Agent/shell copies or duplicate match-name installations remain.
 
 See `docs/CODE_AUDIT_2026-09-28.md` for the full audit and rationale.
 

@@ -4,15 +4,20 @@ Target: After Effects 25.6 / macOS Apple Silicon.
 
 ## Live status — 2026-09-28
 
-Base control-shell gate is **PASSED** in real AE 25.6:
+The Control Shell gate is **FULLY PASSED** in real AE 25.6:
 
 - shell startup registration returned `0`;
 - bundled `default-v1` rendered;
 - `candidate-v2` reloaded through the panel without restarting AE;
 - the existing effect instance rendered through `candidate-v2`;
-- repeated Reload reported `unchanged=1`, `failed=0`.
+- repeated Reload reported `unchanged=1`, `failed=0`;
+- deterministic in-flight render self-test returned `-4112` with the expected busy/retry message;
+- `candidate-v3` loaded after the busy render ended and rendered successfully;
+- removing the staged candidate rolled back to bundled `default-v1`;
+- bundled `default-v1` rendered successfully after rollback;
+- the entire A→B→C→bundled sequence ran in one AE process.
 
-The earlier manual busy-render attempt was inconclusive because AE processed the panel reload only after the held render ended. The current kit replaces that timing-sensitive step with an in-process deterministic busy self-test. Bundled rollback has passed; busy-render rejection remains to be re-run with the deterministic harness. Adapter-specific ElasticGrid/Stellar Gradient gates remain open.
+The Control Shell architecture is therefore proven. Adapter-specific ElasticGrid/Stellar Gradient live gates remain open.
 
 ## Clean-install prerequisite
 
@@ -105,11 +110,20 @@ The slow-render hook is test-only and activates only when `/tmp/ae-hot-loader-sl
 4. Force a fresh render/preview and confirm the implementation log contains a new `default-v1: Render`.
 5. Click **Reload Plugins** once more; expected: `unchanged=1`.
 
+## Cache note
+
+Manual cache Purge was used only as a validation aid to force AE to execute the active implementation instead of reusing a cached frame. It is not required by the shell architecture itself and must not become part of the user workflow.
+
+Production requirement: after a successful reload, AE Hot Loader must invalidate stale cached output for affected instances and request/trigger fresh evaluation automatically.
+
 ## Pass criterion
 
-The control shell is considered proven when:
+The Control Shell criterion is now **passed**:
 - initial effect works after one normal AE startup;
-- candidate-v2 becomes active after one panel click;
-- no AE restart occurs between staging and reload;
-- render continues to work;
+- A→B→C swaps work without restarting AE;
+- real renders execute in each accepted generation;
+- busy reload is rejected with retry instead of hanging/crashing;
+- rollback to bundled implementation works and renders;
 - repeated reload/noop is stable.
+
+The next gate is the same workflow on real ElasticGrid and Stellar Gradient adapters.
