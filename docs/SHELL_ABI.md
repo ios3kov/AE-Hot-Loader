@@ -27,13 +27,14 @@ AEHotLoader_ImplementationStateABI
 AEHotLoader_ImplementationKey
 AEHotLoader_ImplementationLabel
 AEHotLoader_ImplementationRuntimeABI
+AEHotLoader_SetGeneration
 ```
 
 ### Protocol ABI
 
 `AEHotLoader_ImplementationABI() -> u32`
 
-Current value: **1**.
+Current value: **2**.
 
 Change this only when the shell/implementation calling convention changes.
 
@@ -65,11 +66,21 @@ This identifies the Rust/compiler runtime contract of the implementation. The cu
 - target triple;
 - the pinned `after-effects` crate/revision family.
 
-The shell records the Runtime ABI of the first active implementation in the AE process and rejects later candidates whose Runtime ABI differs.
+The shell always establishes the process Runtime ABI from the **bundled implementation shipped inside the shell**. An external `current.dylib` is never allowed to define the session baseline, even when Reload is clicked before the effect has rendered. Later candidates whose Runtime ABI differs are rejected.
 
 This matters because the Rust host keeps opaque `global_data` / sequence / GPU-facing state across EffectMain calls. Rust does not promise a stable layout for such internal types across compiler/library versions.
 
 A candidate built with another Rust toolchain must therefore not be hot-swapped into an already-running session. Rebuild it with the pinned toolchain, or restart AE with a shell/default implementation built for the same runtime ABI.
+
+### Shell-assigned generation
+
+`AEHotLoader_SetGeneration(u64 generation)`
+
+The shell computes a content fingerprint from the exact staged dylib bytes and assigns that value to the implementation **before** publishing its `EffectMain` pointer.
+
+The generation is not derived from a human label. Rebuilding different code with the same label must still create a different generation.
+
+Persistent GPU/native state should record the generation that created it. New implementation code must reject or bypass stale GPU/render state from a previous generation. If an old native resource needs destruction after a reload, the persistent state must retain a destructor/function pointer belonging to the implementation generation that created that resource; old implementation images stay loaded for this reason.
 
 ### Implementation key
 
@@ -91,14 +102,16 @@ Human-readable build identifier used for diagnostics, for example `candidate-v2`
 
 ## Reload transaction
 
-1. Locate the candidate implementation.
-2. Copy it to a unique runtime path.
-3. Fingerprint the staged bytes.
-4. `dlopen` the unique copy.
-5. Resolve all required exports.
-6. Validate protocol ABI, state ABI, implementation key and Runtime ABI.
-7. Only after all validation succeeds, atomically publish the new `EffectMain` pointer.
-8. Keep every old dylib handle loaded until AE exits.
+1. Ensure the bundled implementation has established the session baseline.
+2. Locate the candidate implementation.
+3. Copy it to a unique runtime path.
+4. Fingerprint the staged bytes.
+5. `dlopen` the unique copy.
+6. Resolve all required exports.
+7. Validate protocol ABI, state ABI, implementation key and Runtime ABI.
+8. Assign the staged-byte fingerprint through `AEHotLoader_SetGeneration`.
+9. Only after all validation succeeds, publish the new `EffectMain` pointer.
+10. Keep every old dylib handle loaded until AE exits.
 
 If steps 3–6 fail, the previous implementation remains active.
 
@@ -110,7 +123,7 @@ Typical safe changes:
 - math/quality fixes;
 - performance changes;
 - CPU implementation internals that preserve the persistent AE-facing state contract;
-- GPU shader/renderer changes **only when** the existing GPU context remains fully binary/semantic compatible;
+- GPU shader/renderer changes when stale per-device state is generation-detected and safely bypassed/reinitialized;
 - behavior that preserves the persistent AE-facing state contract.
 
 Changes that normally require a shell rebuild + AE restart:
@@ -119,7 +132,7 @@ Changes that normally require a shell rebuild + AE restart:
 - match name/category;
 - parameter schema/IDs;
 - incompatible global/sequence data;
-- GPU context, pipeline, cache or opaque native-state changes that make an existing `gpu_data` pointer unsafe for new code;
+- GPU/state schema changes that are not covered by an intentional StateABI bump and compatibility migration;
 - supported command/capability flags that must be advertised during host registration.
 
 ## Threading rule
