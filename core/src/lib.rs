@@ -2,10 +2,13 @@ use after_effects as ae;
 use std::fs::OpenOptions;
 use std::io::Write;
 use std::os::raw::c_char;
+use std::sync::atomic::{AtomicU64, Ordering};
 
 const HOT_RELOAD_IMPLEMENTATION_ABI: u32 = 1;
 const HOT_RELOAD_STATE_ABI: u64 = 1;
 const HOT_RELOAD_IMPLEMENTATION_KEY: &str = "control";
+
+static HOT_RELOAD_GENERATION: AtomicU64 = AtomicU64::new(0);
 
 const IMPLEMENTATION_LABEL: &str = match option_env!("AE_HOT_LOADER_IMPL_LABEL") {
     Some(value) => value,
@@ -134,4 +137,10 @@ pub extern "C" fn AEHotLoader_ImplementationRuntimeABI(
         *output.add(count) = 0;
     }
     0
+}
+
+
+#[unsafe(no_mangle)]
+pub extern "C" fn AEHotLoader_SetGeneration(generation: u64) {
+    HOT_RELOAD_GENERATION.store(generation, Ordering::Release);
 }
