@@ -64,14 +64,6 @@ source_shell_archs="$(lipo -archs "$SHELL/Contents/MacOS/AEHotLoaderControlShell
 [[ "$source_agent_archs" == *arm64* ]] || { echo "ERROR: packaged Agent is not arm64."; exit 5; }
 [[ "$source_shell_archs" == *arm64* ]] || { echo "ERROR: packaged Control Shell is not arm64."; exit 5; }
 
-codesign --verify --deep --strict "$AGENT"
-codesign --verify --deep --strict "$SHELL"
-
-source_agent_archs="$(lipo -archs "$AGENT/Contents/MacOS/AEHotLoaderAgent" 2>/dev/null || true)"
-source_shell_archs="$(lipo -archs "$SHELL/Contents/MacOS/AEHotLoaderControlShell" 2>/dev/null || true)"
-[[ "$source_agent_archs" == *arm64* ]] || { echo "ERROR: packaged Agent is not arm64."; exit 5; }
-[[ "$source_shell_archs" == *arm64* ]] || { echo "ERROR: packaged Control Shell is not arm64."; exit 5; }
-
 mkdir -p "$PLUGIN_DEST"
 
 BACKUP_ROOT="$HOME/Library/Application Support/AE Hot Loader/backups/loader"
