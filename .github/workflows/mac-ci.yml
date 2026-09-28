@@ -482,6 +482,105 @@ jobs:
             "$(pwd)/dist/AEHotLoaderControlImpl-candidate.dylib" \
             "$RUNNER_TEMP/bad_impl.dylib"
 
+      - name: Negative test Rust runtime ABI mismatch rollback
+        shell: bash
+        run: |
+          set -euo pipefail
+          FAKE_HOME="$RUNNER_TEMP/ae-hot-loader-runtime-mismatch-home"
+          IMPL_DIR="$FAKE_HOME/Library/Application Support/AE Hot Loader/implementations/control"
+          mkdir -p "$IMPL_DIR"
+
+          cat > "$RUNNER_TEMP/runtime_mismatch_impl.cpp" <<'CPP'
+          #include <cstddef>
+          #include <cstdint>
+          #include <cstdio>
+
+          extern "C" int EffectMain(...) { return 0; }
+          extern "C" std::uint32_t AEHotLoader_ImplementationABI() { return 1; }
+          extern "C" std::uint64_t AEHotLoader_ImplementationStateABI() { return 1; }
+
+          static int Write(const char* value, char* out, std::size_t cap) {
+              if (!out || cap == 0) return -1;
+              std::snprintf(out, cap, "%s", value);
+              return 0;
+          }
+
+          extern "C" int AEHotLoader_ImplementationKey(char* out, std::size_t cap) {
+              return Write("control", out, cap);
+          }
+          extern "C" int AEHotLoader_ImplementationLabel(char* out, std::size_t cap) {
+              return Write("runtime-mismatch", out, cap);
+          }
+          extern "C" int AEHotLoader_ImplementationRuntimeABI(char* out, std::size_t cap) {
+              return Write("rustc-incompatible|aarch64-apple-darwin|after-effects=incompatible", out, cap);
+          }
+          CPP
+
+          xcrun clang++ -std=c++17 -arch arm64 -mmacosx-version-min=11.0 -dynamiclib \
+            "$RUNNER_TEMP/runtime_mismatch_impl.cpp" \
+            -o "$RUNNER_TEMP/runtime_mismatch_impl.dylib"
+          codesign --force --sign - "$RUNNER_TEMP/runtime_mismatch_impl.dylib"
+
+          cat > "$RUNNER_TEMP/runtime_mismatch_smoke.cpp" <<'CPP'
+          #include <cstdlib>
+          #include <cstdio>
+          #include <cstring>
+          #include <dlfcn.h>
+          #include <filesystem>
+
+          using ReloadFn = int (*)(char*, std::size_t);
+
+          int main(int argc, char** argv) {
+              if (argc != 4) return 60;
+              void* shell = dlopen(argv[1], RTLD_NOW | RTLD_LOCAL);
+              if (!shell) return 61;
+              auto reload = reinterpret_cast<ReloadFn>(dlsym(shell, "AEHotLoader_ShellReload"));
+              if (!reload) return 62;
+
+              const char* home = std::getenv("HOME");
+              if (!home) return 63;
+              std::filesystem::path current =
+                  std::filesystem::path(home) /
+                  "Library/Application Support/AE Hot Loader/implementations/control/current.dylib";
+              std::filesystem::create_directories(current.parent_path());
+
+              std::filesystem::copy_file(
+                  argv[2], current, std::filesystem::copy_options::overwrite_existing);
+              char good[1024]{};
+              if (reload(good, sizeof(good)) != 0) return 64;
+
+              std::filesystem::copy_file(
+                  argv[3], current, std::filesystem::copy_options::overwrite_existing);
+              char mismatch[1024]{};
+              const int mismatch_result = reload(mismatch, sizeof(mismatch));
+              std::printf("mismatch=%d %s\n", mismatch_result, mismatch);
+              if (mismatch_result != -4116 ||
+                  std::strstr(mismatch, "runtime ABI mismatch") == nullptr) {
+                  return 65;
+              }
+
+              std::filesystem::copy_file(
+                  argv[2], current, std::filesystem::copy_options::overwrite_existing);
+              char final_msg[1024]{};
+              const int final_result = reload(final_msg, sizeof(final_msg));
+              std::printf("final=%d %s\n", final_result, final_msg);
+              if (final_result != 1 ||
+                  std::strstr(final_msg, "unchanged") == nullptr) {
+                  return 66;
+              }
+
+              return 0;
+          }
+          CPP
+
+          xcrun clang++ -std=c++17 -arch arm64 "$RUNNER_TEMP/runtime_mismatch_smoke.cpp" \
+            -o "$RUNNER_TEMP/runtime_mismatch_smoke"
+
+          HOME="$FAKE_HOME" "$RUNNER_TEMP/runtime_mismatch_smoke" \
+            "$(pwd)/dist/AEHotLoaderControlShell.plugin/Contents/MacOS/AEHotLoaderControlShell" \
+            "$(pwd)/dist/AEHotLoaderControlImpl-candidate.dylib" \
+            "$RUNNER_TEMP/runtime_mismatch_impl.dylib"
+
       - name: Negative test unterminated ABI strings
         shell: bash
         run: |
