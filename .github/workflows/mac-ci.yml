@@ -357,13 +357,31 @@ jobs:
 
           extern "C" __attribute__((visibility("default")))
           int AEHotLoader_ImplementationRuntimeABI(char* output, std::size_t capacity) {
-              return Write("test-runtime-abi", output, capacity);
+              const char* value = std::getenv("AE_HOT_LOADER_TEST_RUNTIME_ABI");
+              return Write(value ? value : "", output, capacity);
           }
 
           extern "C" __attribute__((visibility("default")))
           void AEHotLoader_SetGeneration(std::uint64_t) {}
 
           CPP
+
+          RUNTIME_ABI="$(python3 - "$(pwd)/dist/AEHotLoaderControlShell.plugin/Contents/Frameworks/libae_hot_loader_core.dylib" <<'PY'
+import ctypes
+import sys
+
+lib = ctypes.CDLL(sys.argv[1])
+fn = lib.AEHotLoader_ImplementationRuntimeABI
+fn.argtypes = [ctypes.c_char_p, ctypes.c_size_t]
+fn.restype = ctypes.c_int
+buf = ctypes.create_string_buffer(512)
+rc = fn(buf, len(buf))
+if rc != 0:
+    raise SystemExit(rc)
+print(buf.value.decode("utf-8"))
+PY
+          )"
+          test -n "$RUNTIME_ABI"
 
           xcrun clang++ -std=c++17 -arch arm64 -mmacosx-version-min=11.0 -dynamiclib \
             -DIMPL_LABEL='"fake-v1"' "$RUNNER_TEMP/fake_impl.cpp" \
@@ -442,6 +460,7 @@ jobs:
           xcrun clang++ -std=c++17 -arch arm64 -mmacosx-version-min=11.0 \
             "$RUNNER_TEMP/mfr_gate_smoke.cpp" -o "$RUNNER_TEMP/mfr_gate_smoke"
 
+          AE_HOT_LOADER_TEST_RUNTIME_ABI="$RUNTIME_ABI" \
           HOME="$FAKE_HOME" "$RUNNER_TEMP/mfr_gate_smoke" \
             "$(pwd)/dist/AEHotLoaderControlShell.plugin/Contents/MacOS/AEHotLoaderControlShell" \
             "$RUNNER_TEMP/fake-v2.dylib"
@@ -476,9 +495,8 @@ jobs:
               if (!out || cap == 0) return -1;
               std::snprintf(out, cap, "%s", "test-runtime-abi");
               return 0;
-          
+          }
           extern "C" void AEHotLoader_SetGeneration(std::uint64_t) {}
-}
           CPP
 
           xcrun clang++ -std=c++17 -arch arm64 -dynamiclib "$RUNNER_TEMP/bad_impl.cpp" -o "$RUNNER_TEMP/bad_impl.dylib"
@@ -566,9 +584,8 @@ jobs:
           }
           extern "C" int AEHotLoader_ImplementationRuntimeABI(char* out, std::size_t cap) {
               return Write("rustc-incompatible|aarch64-apple-darwin|after-effects=incompatible", out, cap);
-          
+          }
           extern "C" void AEHotLoader_SetGeneration(std::uint64_t) {}
-}
           CPP
 
           xcrun clang++ -std=c++17 -arch arm64 -mmacosx-version-min=11.0 -dynamiclib \
@@ -668,9 +685,8 @@ jobs:
               if (!out || cap == 0) return -1;
               std::snprintf(out, cap, "%s", "test-runtime-abi");
               return 0;
-          
+          }
           extern "C" void AEHotLoader_SetGeneration(std::uint64_t) {}
-}
           CPP
 
           xcrun clang++ -std=c++17 -arch arm64 -dynamiclib             "$RUNNER_TEMP/unterminated_impl.cpp"             -o "$IMPL_DIR/current.dylib"
