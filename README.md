@@ -35,8 +35,19 @@ Window → AE Hot Loader
     ↓
 AEGP Agent
     ↓
-loaded shell(s) → atomic implementation swap
+AE private loader + post-load filter registration
 ```
+
+### Ordinary plugin discovery
+
+The primary workflow accepts an ordinary After Effects `.plugin` bundle without
+requiring a wrapper or shell conversion. The Agent scans the standard Adobe
+plug-in roots, invokes the host's loader, collects newly created video-filter
+modules, and completes the same filter-loading notification used during AE
+startup.
+
+The current compatibility target is After Effects 25.6 on arm64. This path
+uses private host ABI and is version-gated.
 
 ### Stable shell
 
@@ -49,7 +60,8 @@ The shell:
 - forwards effect commands to the currently active implementation dylib;
 - can switch to a newly built implementation while AE stays open.
 
-A **new effect shell requires one AE restart the first time it is installed**. After that, implementation updates are hot-reloadable.
+A stable shell remains available for the separate implementation hot-reload
+workflow.
 
 ### Implementation dylib
 
@@ -65,13 +77,15 @@ MFR/render calls are tracked. A reload never blocks AE waiting for an active ren
 
 Production responsibility:
 - receive `Reload Plugins`;
-- discover loaded hot-reload shells;
-- ask each shell to load its latest implementation;
-- report success / unchanged / failure.
+- scan the standard Adobe plug-in roots;
+- late-register ordinary native effects through AE's loader and filter
+  notification path;
+- report loaded and newly registered module counts.
 
 ## Important research conclusion
 
-The earlier private `ML::LoadPlugins` research proved that AE can late-load some bundles, but it is not a reliable production mechanism for registering arbitrary new native effects into AE's Installed Effects Registry after startup.
+The earlier loader-only experiment was insufficient: it loaded a bundle but did
+not complete AE's post-load video-filter notification.
 
 Live diagnostics showed cases where:
 - the bundle executable was loaded;
@@ -80,9 +94,8 @@ Live diagnostics showed cases where:
 - the callback returned `0`;
 - the Installed Effects Registry still did not gain the effect.
 
-Therefore production development no longer depends on runtime registration of a completely new effect.
-
-The private loader code remains research-only and is not the product architecture.
+The completed path performs both operations and is validated against the
+ordinary-plugin workflow in AE 25.6 arm64.
 
 ## Target workflow
 

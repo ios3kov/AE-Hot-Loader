@@ -1,5 +1,4 @@
 use after_effects as ae;
-use std::ffi::CStr;
 use std::fs;
 use std::io::Write;
 use std::os::raw::{c_char, c_int};
@@ -9,14 +8,15 @@ use ae::{AegpPlugin, Error, aegp::suites::Register, define_general_plugin, sys::
 
 define_general_plugin!(Agent);
 
-const BUILD_ID: &str = "shell-reload-v1";
+const BUILD_ID: &str = "ordinary-discovery-v1";
 
 #[derive(Clone, Debug)]
 struct Agent;
 
 #[cfg(target_os = "macos")]
 unsafe extern "C" {
-    fn AEHotLoader_ReloadShells(output: *mut c_char, output_capacity: usize) -> c_int;
+    fn AEHotLoader_LoadPluginFolder(utf8_folder: *const c_char) -> c_int;
+    fn AEHotLoader_GetLastAddedModuleCount() -> u64;
 }
 
 fn log_line(message: &str) {
@@ -86,27 +86,82 @@ enum ReloadResult {
 }
 
 #[cfg(target_os = "macos")]
-fn reload_shell_implementations() -> ReloadResult {
-    let mut buffer = [0 as c_char; 2048];
-    let result = unsafe { AEHotLoader_ReloadShells(buffer.as_mut_ptr(), buffer.len()) };
+fn ordinary_plugin_roots() -> Vec<PathBuf> {
+    let mut roots = vec![
+        PathBuf::from("/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore"),
+        PathBuf::from("/Library/Application Support/Adobe/Plug-Ins/CC"),
+    ];
 
-    let message = unsafe { CStr::from_ptr(buffer.as_ptr()) }
-        .to_string_lossy()
-        .into_owned();
+    if let Some(home) = std::env::var_os("HOME") {
+        let home = PathBuf::from(home);
+        roots.push(home.join("Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore"));
+        roots.push(home.join("Library/Application Support/Adobe/Plug-Ins/CC"));
+    }
 
-    log_line(&format!(
-        "shell-reload: result={result} message={message:?}"
-    ));
+    if let Ok(entries) = fs::read_dir("/Applications") {
+        for entry in entries.flatten() {
+            let name = entry.file_name();
+            if name.to_string_lossy().starts_with("Adobe After Effects") {
+                roots.push(entry.path().join("Contents/Plug-ins"));
+            }
+        }
+    }
 
-    match result {
-        0 => ReloadResult::Success(format!("{BUILD_ID}: {message}")),
-        1 => ReloadResult::Noop(format!("{BUILD_ID}: {message}")),
-        _ => ReloadResult::Error(format!("{BUILD_ID}: {message}")),
+    roots
+}
+
+#[cfg(target_os = "macos")]
+fn discover_ordinary_plugins() -> ReloadResult {
+    let mut scanned = 0;
+    let mut loaded = 0;
+    let mut added_modules = 0;
+    let mut failures = Vec::new();
+
+    for root in ordinary_plugin_roots() {
+        if !root.is_dir() {
+            continue;
+        }
+        scanned += 1;
+
+        let root_text = root.to_string_lossy().into_owned();
+        let root_c = match std::ffi::CString::new(root_text.as_bytes()) {
+            Ok(value) => value,
+            Err(_) => {
+                failures.push(format!("{}: invalid path", root.display()));
+                continue;
+            }
+        };
+
+        let result = unsafe { AEHotLoader_LoadPluginFolder(root_c.as_ptr()) };
+        if result >= 0 {
+            loaded += result;
+            added_modules += unsafe { AEHotLoader_GetLastAddedModuleCount() };
+            log_line(&format!(
+                "ordinary-discovery: root={} loaded={result}",
+                root.display()
+            ));
+        } else {
+            failures.push(format!("{}: error {result}", root.display()));
+        }
+    }
+
+    let mut summary =
+        format!("{BUILD_ID}: scanned={scanned} loaded={loaded} new_effect_modules={added_modules}");
+    if !failures.is_empty() {
+        summary.push_str(&format!("; failures={}", failures.join(" | ")));
+    }
+
+    if !failures.is_empty() {
+        ReloadResult::Error(summary)
+    } else if loaded == 0 {
+        ReloadResult::Noop(summary)
+    } else {
+        ReloadResult::Success(summary)
     }
 }
 
 #[cfg(not(target_os = "macos"))]
-fn reload_shell_implementations() -> ReloadResult {
+fn discover_ordinary_plugins() -> ReloadResult {
     ReloadResult::Error(format!("{BUILD_ID}: unsupported platform"))
 }
 
@@ -158,7 +213,7 @@ fn process_request() {
         return;
     }
 
-    match reload_shell_implementations() {
+    match discover_ordinary_plugins() {
         ReloadResult::Success(message) => write_response(&request_id, "success", &message),
         ReloadResult::Noop(message) => write_response(&request_id, "noop", &message),
         ReloadResult::Error(message) => write_response(&request_id, "error", &message),

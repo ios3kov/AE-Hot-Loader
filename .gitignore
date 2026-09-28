@@ -5,3 +5,5 @@ dist/
 package/
 *.zip
 .DS_Store
+build-ae-hot-loader-baseline.txt
+build-ae-hot-loader/

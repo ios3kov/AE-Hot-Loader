@@ -20,6 +20,8 @@
 #include <cstring>
 #include <dispatch/dispatch.h>
 #include <dlfcn.h>
+#include <string>
+#include <vector>
 
 namespace {
 
@@ -27,6 +29,7 @@ constexpr const char* kLogPath = "/tmp/ae-hot-loader-agent.log";
 constexpr const char* kPluginSupportMarker = "/PluginSupport.framework/";
 constexpr const char* kLoadPluginsPrefix = "ML::LoadPlugins(";
 std::atomic<std::uint64_t> gLoadGeneration{0};
+std::atomic<std::uint64_t> gLastAddedModules{0};
 
 struct RawString {
     void* data;
@@ -49,6 +52,23 @@ using LoadPluginsFn = std::size_t (*)(
     const RawVector*,
     const RawVector*,
     bool);
+
+// Private AE 25.6 arm64 ABI. These are opaque host-owned references. The
+// values are copied only long enough to notify AE of newly loaded modules.
+struct InterfaceRef {
+    void* interface_ptr;
+    void* owner;
+    void* control;
+};
+static_assert(sizeof(InterfaceRef) == 24, "Unexpected InterfaceRef size");
+
+using GetVideoFilterModulesFn = void (*)(RawVector*);
+using NotifyFilterLoadingDoneFn = void (*)(const RawVector*);
+
+constexpr const char* kGetVideoFilterModulesSymbol =
+    "_Z25MEE_GetVideoFilterModulesRNSt3__16vectorIN7dvacore8classref12InterfaceRefIN2ML18IVideoFilterModuleEEENS_9allocatorIS6_EEEE";
+constexpr const char* kNotifyFilterLoadingDoneSymbol =
+    "_Z27FLT_NotifyFilterLoadingDoneRKNSt3__16vectorIN7dvacore8classref12InterfaceRefIN2ML18IVideoFilterModuleEEENS_9allocatorIS6_EEEE";
 
 void DiagnosticReport(const char* fmt, ...) {
     FILE* f = std::fopen("/tmp/ae-hot-loader-diagnostic-report.log", "a");
@@ -414,7 +434,109 @@ void DiagnoseLoadedBundles(const char* root) {
         matched);
 }
 
+bool ReadInterfaceVector(
+    const RawVector& vector,
+    std::vector<InterfaceRef>* values,
+    std::vector<void*>* identities) {
+    const auto begin = reinterpret_cast<std::uintptr_t>(vector.begin);
+    const auto end = reinterpret_cast<std::uintptr_t>(vector.end);
+    const auto capacity_end = reinterpret_cast<std::uintptr_t>(vector.capacity_end);
+    if (end < begin || capacity_end < end ||
+        (end - begin) % sizeof(InterfaceRef) != 0) {
+        return false;
+    }
+
+    const std::size_t count = (end - begin) / sizeof(InterfaceRef);
+    if (count > 10000) {
+        return false;
+    }
+
+    const auto* first = reinterpret_cast<const InterfaceRef*>(vector.begin);
+    if (values) {
+        values->assign(first, first + count);
+    }
+    if (identities) {
+        identities->clear();
+        identities->reserve(count);
+        for (std::size_t i = 0; i < count; ++i) {
+            identities->push_back(first[i].interface_ptr);
+        }
+    }
+    return true;
+}
+
+bool ContainsIdentity(const std::vector<void*>& identities, void* value) {
+    for (void* identity : identities) {
+        if (identity == value) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int NotifyNewVideoFilterModules(
+    std::size_t* added_count,
+    const std::vector<void*>& before_identities) {
+    if (added_count) {
+        *added_count = 0;
+    }
+
+    const auto get_modules = reinterpret_cast<GetVideoFilterModulesFn>(
+        dlsym(RTLD_DEFAULT, kGetVideoFilterModulesSymbol));
+    const auto notify_done = reinterpret_cast<NotifyFilterLoadingDoneFn>(
+        dlsym(RTLD_DEFAULT, kNotifyFilterLoadingDoneSymbol));
+    if (!get_modules || !notify_done) {
+        Log(
+            "internal-loader: post-load symbols missing get=%p notify=%p",
+            reinterpret_cast<void*>(get_modules),
+            reinterpret_cast<void*>(notify_done));
+        return -3010;
+    }
+
+    // The loader has already completed by this point. Get the current module
+    // list and pass only objects not present in the pre-load snapshot to the
+    // same FLT notification used by AE's normal startup path.
+    RawVector after{};
+    get_modules(&after);
+    std::vector<InterfaceRef> current;
+    if (!ReadInterfaceVector(after, &current, nullptr)) {
+        Log("internal-loader: invalid post-load video module vector");
+        return -3012;
+    }
+
+    std::vector<InterfaceRef> added;
+    added.reserve(current.size());
+    for (const InterfaceRef& module : current) {
+        if (!ContainsIdentity(before_identities, module.interface_ptr)) {
+            added.push_back(module);
+        }
+    }
+
+    Log(
+        "internal-loader: video modules before=%zu after=%zu added=%zu",
+        before_identities.size(),
+        current.size(),
+        added.size());
+    if (added.empty()) {
+        return 0;
+    }
+
+    RawVector delta{
+        added.data(),
+        added.data() + added.size(),
+        added.data() + added.size()};
+    notify_done(&delta);
+    if (added_count) {
+        *added_count = added.size();
+    }
+    Log(
+        "internal-loader: FLT_NotifyFilterLoadingDone returned added=%zu",
+        added.size());
+    return 0;
+}
+
 int LoadPluginFolder(const char* utf8_folder) {
+    gLastAddedModules.store(0, std::memory_order_release);
 #if !defined(__aarch64__)
     Log("internal-loader: refusing non-arm64 build");
     return -3001;
@@ -457,22 +579,35 @@ int LoadPluginFolder(const char* utf8_folder) {
 
     RawVector output{};
     RawString root = MakeRawUTF16(resolved_folder);
-    RawString player_media_core = MakeRawUTF16("PlayerMediaCore");
-    if (!root.data || !player_media_core.data) {
+    if (!root.data) {
         std::free(root.data);
-        std::free(player_media_core.data);
         Log("internal-loader: failed to build ABI strings");
         return -3008;
     }
 
-    RawVector filters{
-        &player_media_core,
-        reinterpret_cast<void*>(
-            reinterpret_cast<std::uintptr_t>(&player_media_core) +
-            sizeof(RawString)),
-        reinterpret_cast<void*>(
-            reinterpret_cast<std::uintptr_t>(&player_media_core) +
-            sizeof(RawString))};
+    RawVector modules_before{};
+    const auto get_modules = reinterpret_cast<GetVideoFilterModulesFn>(
+        dlsym(RTLD_DEFAULT, kGetVideoFilterModulesSymbol));
+    if (!get_modules) {
+        std::free(root.data);
+        Log("internal-loader: MEE_GetVideoFilterModules is unavailable");
+        return -3010;
+    }
+    get_modules(&modules_before);
+    std::vector<void*> before_module_identities;
+    if (!ReadInterfaceVector(
+            modules_before,
+            nullptr,
+            &before_module_identities)) {
+        std::free(root.data);
+        Log("internal-loader: invalid pre-load video module vector");
+        return -3011;
+    }
+
+    // An empty filter list is required for ordinary AE effect bundles. The
+    // old PlayerMediaCore filter was useful for the initial loader probe but
+    // does not describe the complete ordinary-plugin discovery path.
+    RawVector filters{};
     RawVector extra{};
 
     Log(
@@ -481,7 +616,7 @@ int LoadPluginFolder(const char* utf8_folder) {
         raw_fn);
 
     const std::size_t result =
-        fn(&output, &root, 1u, &filters, &extra, false);
+        fn(&output, &root, 1u, &filters, &extra, true);
 
     Log(
         "internal-loader: returned=%zu output=[%p,%p,%p]",
@@ -498,6 +633,22 @@ int LoadPluginFolder(const char* utf8_folder) {
         output.capacity_end);
 
     DiagnoseLoadedBundles(resolved_folder);
+
+    std::size_t added_modules = 0;
+    const int notify_result = NotifyNewVideoFilterModules(
+        &added_modules,
+        before_module_identities);
+    if (notify_result != 0) {
+        Log(
+            "internal-loader: post-load registration failed=%d",
+            notify_result);
+        return notify_result;
+    }
+    Log(
+        "internal-loader: ordinary registration complete loaded=%zu added_modules=%zu",
+        result,
+        added_modules);
+    gLastAddedModules.store(added_modules, std::memory_order_release);
 
     // Intentionally keep the private-ABI string storage alive after ML::LoadPlugins.
     // The successful isolated LLDB probe does the same. AE may retain references
@@ -538,6 +689,11 @@ extern "C" int AEHotLoader_LoadPluginFolder(const char* utf8_folder) {
 
 extern "C" unsigned long long AEHotLoader_GetLoadGeneration() {
     return static_cast<unsigned long long>(gLoadGeneration.load(std::memory_order_acquire));
+}
+
+extern "C" unsigned long long AEHotLoader_GetLastAddedModuleCount() {
+    return static_cast<unsigned long long>(
+        gLastAddedModules.load(std::memory_order_acquire));
 }
 
 extern "C" int AEHotLoader_QueuePluginFolder(const char* utf8_folder) {

@@ -21,9 +21,11 @@ timestamp=1720000000000
 
 For production, `reload_plugins` means:
 
-**reload the implementation dylib of every loaded AE Hot Loader shell.**
+**scan the configured Adobe plug-in roots and late-register newly installed
+ordinary native effect bundles in the running AE process.**
 
-It no longer means “register arbitrary new effect bundles through the private AE loader”.
+The current implementation uses the AE 25.6 arm64 private loader followed by
+the host's post-load filter-registration notification.
 
 ## Response
 
@@ -33,7 +35,7 @@ File: `response.txt`
 version=1
 request_id=1720000000000-123456
 status=success
-message=Reloaded 2 shell implementation(s); 1 unchanged
+message=ordinary-discovery-v1: scanned=2 loaded=1 new_effect_modules=1
 ```
 
 Status values:
@@ -45,6 +47,9 @@ Status values:
 
 ScriptUI only reads/writes files.
 
-The native Agent receives the request from AE's resident AEGP path and invokes shell reload entry points from inside the AE process.
+The native Agent receives the request from AE's resident AEGP path and invokes
+ordinary-plugin discovery from inside the AE process.
 
-Each shell performs an atomic implementation-pointer swap. Old implementation dylibs remain loaded until AE exits.
+The legacy shell implementation remains available as a separate native
+component, but this command's production path performs ordinary-plugin
+discovery and filter registration.

@@ -1,5 +1,29 @@
 # AE Hot Loader — Production Plan
 
+## Ordinary-plugin discovery milestone — 2026-09-28
+
+The original workflow is now proven on After Effects 25.6.0 ARM64:
+
+1. AE remains open in one process.
+2. A previously absent ordinary `.plugin` bundle is placed in an isolated
+   plug-in root.
+3. The Agent-native loader invokes `ML::LoadPlugins`.
+4. The newly created `IVideoFilterModule` is passed to
+   `FLT_NotifyFilterLoadingDone`, matching AE's startup completion path.
+5. The Installed Effects Registry changes from `783` to `784`.
+6. The new effect can be added to a layer and rendered to a valid `128×128`
+   PNG in the same process.
+
+The production Agent now scans the standard Adobe plug-in roots and reports
+the number of newly registered filter modules. The private ABI is currently
+gated to AE 25.6 arm64 and must be revalidated for other host versions.
+
+Evidence is retained under the local ordinary-discovery test workspace. The
+Rust probe produced `canAdd=true`, applied with one parameter, and exported a
+valid `128×128` PNG (`14,323` bytes). The probe is intentionally a one-shot
+diagnostic effect; AE disables it after the first render, so later attempts in
+the same process are not treated as independent passes.
+
 ## Product definition
 
 AE Hot Loader is a dockable ScriptUI tool that reloads the implementation of already-registered native After Effects effects without restarting AE.
@@ -16,11 +40,8 @@ It does **not** auto-apply an effect to the active layer.
 
 After Effects performs effect registration during normal plug-in discovery/startup.
 
-Production therefore assumes:
-
-**one stable shell registration → many implementation reloads**
-
-A brand-new effect shell requires one normal AE restart after installation. Subsequent implementation changes must not require a restart.
+Production supports ordinary native plug-in discovery after AE startup. A
+separate stable-shell workflow remains available for implementation reloads.
 
 ## Final architecture
 
@@ -28,10 +49,10 @@ A brand-new effect shell requires one normal AE restart after installation. Subs
 ScriptUI panel
     ↓ request/response
 AEGP Agent
-    ↓ enumerate loaded shells
-stable effect shell .plugin
-    ↓ atomic function-pointer swap
-versioned implementation .dylib
+    ↓ scan Adobe plug-in roots
+ML::LoadPlugins + FLT notification
+    ↓
+ordinary effect module in AE registry
 ```
 
 ### Stable effect shell
@@ -62,15 +83,15 @@ This trades a small amount of temporary process memory for much safer reload beh
 
 Responsibilities:
 - receive ScriptUI commands on AE's main-thread/idle path;
-- enumerate already loaded shell plug-ins;
-- invoke their reload exports;
-- collect per-shell results;
+- scan standard Adobe plug-in roots;
+- invoke ordinary discovery and post-load registration;
+- collect loaded and newly registered module counts;
 - return concise status to the panel;
 - keep diagnostics/logging.
 
 The Agent must not depend on applying an internal effect to a layer.
 
-## Research path — closed for production
+## Research path — completed for production
 
 The project investigated:
 - saved `PF_PluginDataCB2`;
@@ -80,14 +101,18 @@ The project investigated:
 - registry diagnostics;
 - Rust/C++ single- and multi-PiPL controls.
 
-The research established that successful binary loading and even a registration callback result of `0` do not reliably imply insertion into AE's Installed Effects Registry after startup.
+The first loader-only experiment established that binary loading and a
+registration callback result of `0` do not by themselves imply insertion into
+AE's Installed Effects Registry after startup. The completed path adds the
+missing video-filter module notification.
 
 Therefore:
 
-- private `ML::LoadPlugins` is **not** the production architecture;
+- private `ML::LoadPlugins` is used only together with the version-gated
+  post-load filter notification;
 - UI refresh hacks are abandoned;
-- runtime registration of an arbitrary brand-new effect is not a release requirement;
-- research code stays isolated until it is removed or archived.
+- runtime registration of a brand-new ordinary effect is the primary release
+  requirement for the current milestone.
 
 ## Implementation phases
 
@@ -102,17 +127,18 @@ Therefore:
 
 **Gate:** repeated implementation swaps work without restarting AE.
 
-### Phase 2 — Agent integration
+### Phase 2 — ordinary discovery Agent integration
 
-1. Replace production `Reload Plugins` behavior with shell enumeration.
-2. Find shell exports in loaded dyld images.
-3. Invoke every shell reload.
-4. Return per-shell success / unchanged / error.
-5. Keep the ScriptUI protocol stable.
+1. Scan the standard Adobe plug-in roots.
+2. Invoke the AE private loader on the idle/main path.
+3. Snapshot and diff video-filter modules.
+4. Notify AE of newly loaded modules.
+5. Return loaded and newly registered counts.
 
-**Gate:** one panel click reloads the control shell implementation.
+**Gate:** one panel click adds a newly installed ordinary effect without an AE
+restart.
 
-### Phase 3 — ElasticGrid adapter
+### Phase 3 — stable-shell implementation reload
 
 1. Preserve ElasticGrid's public PiPL identity in a shell.
 2. Move effect logic into its implementation dylib.
@@ -231,10 +257,10 @@ Verified behavior:
 ### Agent / installer hardening
 
 The production Agent:
-- no longer links or calls private `ML::LoadPlugins`;
-- discovers already loaded shells through dyld;
-- calls only `AEHotLoader_ShellReload`;
-- reports per-shell reloaded / unchanged / failed state.
+- links the version-gated ordinary discovery helper;
+- scans system/user/app plug-in roots;
+- calls `ML::LoadPlugins` followed by `FLT_NotifyFilterLoadingDone`;
+- reports loaded and newly registered module counts.
 
 Installer:
 - refuses updates while AE is running;
@@ -303,4 +329,3 @@ Before merge to `main`, the remaining real-AE work is:
 See `docs/CODE_AUDIT_2026-09-28.md` for the full audit and rationale.
 
 No merge to `main` before these live gates pass.
-
