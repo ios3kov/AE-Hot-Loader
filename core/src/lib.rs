@@ -4,7 +4,7 @@ use std::io::Write;
 use std::os::raw::c_char;
 use std::sync::atomic::{AtomicU64, Ordering};
 
-const HOT_RELOAD_IMPLEMENTATION_ABI: u32 = 1;
+const HOT_RELOAD_IMPLEMENTATION_ABI: u32 = 2;
 const HOT_RELOAD_STATE_ABI: u64 = 1;
 const HOT_RELOAD_IMPLEMENTATION_KEY: &str = "control";
 
