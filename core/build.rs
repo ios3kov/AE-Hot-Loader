@@ -33,8 +33,10 @@ fn main() {
     );
     let lock_fingerprint = hot_reload_lock_fingerprint(&manifest_dir);
     println!(
-        "cargo:rustc-env=AE_HOT_LOADER_RUNTIME_ABI={}|{}|after-effects=83dcc93734fd5db1335b6ec83cba7a6505a39dcc|lock={},
-        rustc_version, target
+        "cargo:rustc-env=AE_HOT_LOADER_RUNTIME_ABI={}|{}|after-effects=83dcc93734fd5db1335b6ec83cba7a6505a39dcc|lock={}",
+        rustc_version,
+        target,
+        lock_fingerprint
     );
     for name in [
         "catch_panics",
