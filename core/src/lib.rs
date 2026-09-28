@@ -113,7 +113,6 @@ pub extern "C" fn AEHotLoader_ImplementationKey(
     0
 }
 
-
 const HOT_RELOAD_RUNTIME_ABI: &str = env!("AE_HOT_LOADER_RUNTIME_ABI");
 
 #[unsafe(no_mangle)]
