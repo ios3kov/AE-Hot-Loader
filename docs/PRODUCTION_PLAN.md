@@ -164,90 +164,147 @@ Development stops and the architecture is considered viable only when all are tr
 2. newer AE versions after the shell ABI is stable
 3. Windows only after the macOS product workflow is complete
 
-## Shell architecture implementation status — 2026-09-27
+## Shell architecture implementation status — 2026-09-28
 
 Production shell architecture is implemented on `feature/internal-loader-agent`.
 
-Implemented and CI-verified:
+### Hardened runtime contract
 
-- stable control effect shell registered by AE at normal startup;
-- resident AEGP Agent servicing `Window → AE Hot Loader → Reload Plugins`;
-- dyld enumeration of loaded hot-reload shells;
-- unique runtime copies for every implementation load;
-- atomic `EffectMain` pointer swap;
-- old implementation dylibs retained until AE exit;
-- bundled-implementation fallback when a staged candidate is invalid or incompatible;
-- explicit implementation protocol ABI;
-- explicit implementation state/schema ABI;
-- per-effect implementation key validation;
-- human-readable implementation build label;
-- stale staged control candidate cleared by installer;
-- packaged runtime log collector.
+Current shell protocol:
 
-The control shell CI performs a real macOS `dlopen` reload smoke outside AE:
-candidate implementation loads successfully and an unchanged second reload is detected.
+- Protocol ABI: **2**
+- implementation key validation;
+- explicit StateABI;
+- explicit Runtime ABI;
+- `AEHotLoader_SetGeneration` before candidate publication;
+- content fingerprint generation;
+- bundled implementation is always the process ABI baseline;
+- external `current.dylib` cannot become the session baseline by merely existing;
+- old implementation images stay loaded until AE exits;
+- maximum 64 retained generations per shell/process.
 
-Latest verified AE Hot Loader CI at this checkpoint: **run #142 — SUCCESS**.
+For Rust implementations, Runtime ABI includes:
+- exact rustc/toolchain identity;
+- target triple;
+- pinned `after-effects` dependency family/revision.
 
-### ElasticGrid adapter
+Hot-reload builds are pinned to Rust **1.98.1**.
 
-Repository: `ios3kov/ElasticGridFX`  
-Branch: `feature/ae-hot-loader-shell`
+### Concurrency / MFR hardening
 
-Implemented:
+The shell tracks active EffectMain calls and a pending swap state.
 
-- existing `ElasticGrid FX` PiPL identity retained;
-- match name remains `com.elasticgrid.fx.warp`;
-- stable C++ shell owns AE registration;
-- existing Rust host is packaged as `libelasticgrid_impl.dylib`;
-- implementation key: `elasticgrid`;
-- hot-reload staging script added;
-- shell ABI validation and bundled fallback enabled.
+Rules:
 
-Verified:
+1. concurrent MFR calls remain concurrent;
+2. reload never waits indefinitely for a render;
+3. if any call is active, reload returns busy/retry;
+4. candidate pointer publication happens only with zero active calls;
+5. C++ exceptions are contained inside every exported C ABI boundary.
 
-- dedicated macOS Hot Loader Shell CI: **SUCCESS**;
-- real shell-reload smoke: **SUCCESS**;
-- full portable CI: GCC, Clang, ASan/UBSan, TSan and static analysis: **SUCCESS**.
+### Persistent state hardening
 
-### Stellar Gradient adapter
+ElasticGrid and Stellar Gradient adapter StateABI is currently **3**.
 
-Repository: `ios3kov/stellar-gradient`  
-Branch: `feature/ae-hot-loader-shell`
+Their state-contract gates freeze:
+- parameter IDs/order;
+- custom/wire-format state where applicable;
+- SmartFX pre-render payloads;
+- GPU/native state layout;
+- generation field;
+- old-generation native destroy-function pointer.
 
-Implemented:
+The shell assigns a fingerprint-derived generation to every accepted implementation. GPU/native state created by an older generation is not blindly reused by newer code.
 
-- existing `Stellar Gradient` PiPL identity retained;
-- category remains `Stellar`;
-- match name remains `StellarLabs.StellarGradient`;
-- stable C++ shell owns AE registration;
-- existing Rust host is packaged as `libstellar_gradient_impl.dylib`;
-- implementation key: `stellar-gradient`;
-- hot-reload staging script added;
-- shell ABI validation and bundled fallback enabled;
-- original support URL metadata retained.
+### Rollback behavior
 
-Verified:
+Verified behavior:
 
-- dedicated macOS Hot Loader Shell CI: **SUCCESS**;
-- implementation build: **SUCCESS**;
-- shell bundle/signing: **SUCCESS**;
-- real shell-reload smoke: **SUCCESS**.
+- invalid key/ABI/runtime ABI candidate is rejected;
+- active implementation remains unchanged;
+- malformed/unterminated ABI strings are rejected;
+- removing an external candidate reloads the bundled default;
+- unchanged reload does not consume a generation.
+
+### Agent / installer hardening
+
+The production Agent:
+- no longer links or calls private `ML::LoadPlugins`;
+- discovers already loaded shells through dyld;
+- calls only `AEHotLoader_ShellReload`;
+- reports per-shell reloaded / unchanged / failed state.
+
+Installer:
+- refuses updates while AE is running;
+- scans system/user/app plug-in roots for duplicate Loader copies;
+- validates signatures and arm64 architecture;
+- backs up managed plug-ins and restores them on install failure;
+- clears stale bridge files and staged control candidates.
+
+### CI evidence
+
+AE Hot Loader:
+- direct shell reload smoke;
+- Agent dyld discovery → shell reload smoke;
+- MFR busy-swap stress;
+- invalid key/ABI rollback;
+- Runtime ABI mismatch rejection;
+- malformed ABI-string rejection;
+- bundled default → candidate;
+- candidate removal → bundled rollback.
+
+Latest known green checkpoint:
+**AE Hot Loader run #215 — SUCCESS**.
+
+ElasticGrid adapter:
+- dedicated shell CI;
+- PiPL ↔ shell metadata parity;
+- state-contract verifier;
+- pinned Rust toolchain;
+- default + candidate binary kit;
+- deployment target and dylib dependency checks;
+- bundled default → candidate → unchanged → bundled rollback;
+- full project GCC / Clang / ASan+UBSan / TSan / static-analysis gates.
+
+Latest stable green checkpoint before the current state-contract extension:
+**Hot Loader Shell CI #48 — SUCCESS** and full project CI #126 — SUCCESS.
+The newest verifier run must also be green before live AE installation.
+
+Stellar Gradient adapter:
+- dedicated shell CI;
+- PiPL ↔ shell metadata parity;
+- exact parameter-ID freeze;
+- `ParamsC`, `RenderStateC`, and GPU context state-contract verifier;
+- pinned Rust toolchain;
+- default + candidate binary kit;
+- deployment target and dylib dependency checks;
+- bundled default → candidate → unchanged → bundled rollback.
+
+Latest stable green checkpoint before the current params/PiPL contract extension:
+**Hot Loader Shell CI #57 — SUCCESS**.
+The newest verifier run must also be green before live AE installation.
 
 ### Remaining live gate
 
-No further private-loader/PiPL research is required.
+No further private-loader/PiPL reverse-engineering is required.
 
-The next required evidence must come from a real After Effects 25.6 process:
+Before merge to `main`, real After Effects 25.6 must prove:
 
-1. install the current AE Hot Loader control shell + Agent package;
-2. restart AE once;
-3. confirm the control shell appears through normal native registration;
-4. stage `candidate-v2` while AE remains open;
-5. click **Reload Plugins**;
-6. confirm the Agent finds one loaded shell and reports `reloaded=1`;
-7. render/use the existing effect instance after the swap;
-8. repeat Reload without a new candidate and confirm `unchanged=1`.
+1. Control shell registers through normal AE startup.
+2. Bundled default applies and renders.
+3. Candidate reload reports success through the Agent/panel path.
+4. Existing instance renders after swap.
+5. Unchanged reload reports unchanged.
+6. Busy render returns retry instead of hanging AE.
+7. Removing the candidate rolls back to bundled default.
+8. ElasticGrid passes CPU, custom UI, MFR, GPU smoke.
+9. Stellar Gradient passes CPU, SmartFX, MFR, GPU smoke.
+10. Existing GPU/native state survives/reinitializes safely across generation changes.
+11. Repeated A→B→C reloads remain stable.
+12. Project save/reopen remains compatible.
+13. No duplicate Agent/shell copies are discovered.
 
-After that passes, run the equivalent live gate for ElasticGrid and Stellar Gradient. No merge to `main` before these runtime gates pass.
+See `docs/CODE_AUDIT_2026-09-28.md` for the full audit and rationale.
+
+No merge to `main` before these live gates pass.
 
