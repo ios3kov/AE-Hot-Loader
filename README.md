@@ -2,6 +2,14 @@
 
 Hot-reload workflow for native Adobe After Effects effects on macOS Apple Silicon.
 
+## Clean installer
+
+`INSTALL.command` now performs a clean migration before installing the current build.
+
+It validates the new package first, backs up the currently managed user Agent/Control Shell, then moves known old diagnostic/legacy AE Hot Loader copies out of Adobe plug-in folders. This includes LiveTest, ProbeTest, DualPiPL, RustProbe, RustProbePermissive, SinglePiPLCpp, old Loader/Bridge copies, and other bundles using the `com.os3kov.AEHotLoader.*` bundle-ID prefix.
+
+The installer asks for the macOS administrator password only when old system-wide copies actually need to be moved. Stale staged implementations, bridge files, runtime copies and Loader logs are also cleared from the active paths. See `QUICK_START.md`.
+
 ## Product UX
 
 User-facing surface:
