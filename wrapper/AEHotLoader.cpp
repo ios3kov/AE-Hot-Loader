@@ -468,7 +468,33 @@ int LoadImplementationFromSourceLocked(
 
 int LoadImplementation(bool force, std::string* detail) {
     std::lock_guard<std::mutex> lock(g_reload_mutex);
-    return LoadImplementationFromSourceLocked(SelectSource(), force, detail);
+
+    // A Reload click may happen before AE has ever called EffectMain for this
+    // shell. Establish the process/runtime ABI from the bundled implementation
+    // first so an arbitrary stale current.dylib can never define compatibility.
+    if (g_effect_main.load(std::memory_order_acquire) == nullptr) {
+        std::string baseline_detail;
+        const int baseline_result = LoadImplementationFromSourceLocked(
+            DefaultImplementationPath(),
+            true,
+            &baseline_detail);
+        if (baseline_result < 0) {
+            if (detail) {
+                *detail = "Bundled implementation baseline failed: " + baseline_detail;
+            }
+            return baseline_result;
+        }
+    }
+
+    const std::string source = SelectSource();
+    if (source == DefaultImplementationPath()) {
+        if (detail) {
+            *detail = "Bundled implementation active; no external candidate staged.";
+        }
+        return 1;
+    }
+
+    return LoadImplementationFromSourceLocked(source, force, detail);
 }
 
 int EnsureImplementationLoaded(std::string* detail) {
