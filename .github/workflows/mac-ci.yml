@@ -10,7 +10,10 @@ on:
       - "ui/**"
       - "INSTALL.command"
       - "STAGE_IMPLEMENTATION.command"
+      - "STAGE_BUSY_TEST.command"
+      - "ROLLBACK_TO_BUNDLED.command"
       - "COLLECT_LOGS.command"
+      - "QUICK_START.md"
       - ".github/workflows/mac-ci.yml"
       - "tools/verify_shell_metadata.py"
       - "docs/**"
@@ -47,6 +50,9 @@ jobs:
           zsh -n STAGE_BUSY_TEST.command
           zsh -n ROLLBACK_TO_BUNDLED.command
           zsh -n COLLECT_LOGS.command
+          grep -q "AEHotLoaderLiveTest" INSTALL.command
+          grep -q "AEHotLoaderProbeTest" INSTALL.command
+          grep -q "CLEAN INSTALL COMPLETE" INSTALL.command
           python3 tools/verify_shell_contract.py core/build.rs core/src/lib.rs wrapper/AEHotLoader.cpp agent/native/ShellReloader.cpp
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only wrapper/AEHotLoader.cpp
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only agent/native/ShellReloader.cpp
@@ -761,6 +767,7 @@ jobs:
           cp COLLECT_LOGS.command package/
           cp "ui/AE Hot Loader.jsx" package/
           cp README.md package/
+          cp QUICK_START.md package/
           cp core/Cargo.lock package/core-Cargo.lock.generated
           cp agent/Cargo.lock package/agent-Cargo.lock.generated
           chmod +x package/INSTALL.command package/STAGE_IMPLEMENTATION.command package/STAGE_BUSY_TEST.command package/ROLLBACK_TO_BUNDLED.command package/COLLECT_LOGS.command
