@@ -1,89 +1,95 @@
 # ScriptUI ↔ Native Agent Protocol
 
-Current implementation: source `4357e36732f106233020fccd110c0e9f19a03a76`.
-Protocol version remains **1**. New Agent identity fields are additive.
+Version 1 with additive compiled Agent identity fields. Panel handshake
+integration: `04fea70`. Native Agent protocol implementation is unchanged by
+that iteration. Target: research on AE 25.6.0 / macOS Apple Silicon.
 
-## Location and transport
+## Transport
 
-`Folder.userData/AE Hot Loader/bridge/`, under the macOS user's Application
-Support directory. `request.txt` and `response.txt` contain UTF-8 key/value
-lines. The client publishes a complete request through a temporary file.
-The Agent replies with the matching `request_id`. Ignore replies belonging to
-other requests. A timeout means unknown result, not cancellation of a scan.
+Directory: `Folder.userData/AE Hot Loader/bridge/` (macOS Application Support).
+Files: `request.txt` and `response.txt`. UTF-8 `key=value` lines, final newline.
+The new panel publishes a request-specific temporary file only after successful
+write/close and refuses to overwrite an existing pending request. Responses
+are consumed only for the current request ID; recognized duplicate fields,
+unsupported versions/statuses and incomplete/oversized responses are rejected.
+The panel bounds response reads at 16 KiB. This is not a multi-client lock.
 
-## Commands
+## Commands and sequence
 
-Illustrative request; values below are examples, not runtime evidence:
+Example diagnostic request, with a newly generated ID/timestamp for each run:
 
 ```text
 version=1
 command=get_build_identity
-request_id=diagnostics-unique-run-id
-timestamp=1790625600000
+request_id=1720000000000-1-123456
+timestamp=1720000000000
 ```
 
-- `reload_plugins`: scans configured Adobe plug-in roots using the gated
-  AE 25.6 arm64 loader and filter-loading notification. A successful loader
-  pass is not proof of registration, application or rendering.
-- `get_build_identity`: returns the resident Agent's compiled identity;
-  branches before ordinary discovery. It does not scan/load effect bundles
-  or access the project, but still performs normal bridge file I/O.
+`get_build_identity` returns compiled metadata before native discovery. It does
+not scan plug-ins, apply an effect or modify a project. `reload_plugins` invokes
+the gated ordinary-discovery path; loaded module counts do not prove effect
+registration, application or rendering. Unknown commands/versions return errors.
+The Agent bounds requests at 4096 bytes and IDs at 1–128 characters.
 
-Unknown commands/versions produce an error. Requests are newline-terminated,
-limited to 4096 bytes, with a nonempty `request_id` of at most 128 bytes.
-The current panel sends only `reload_plugins`; diagnostic UI is not yet added.
+**Diagnostics:** send `get_build_identity`, compare identity, display the result,
+then stop. No registry snapshot or native scan follows.
 
-## Responses and identity
+**Reload Plugins:** send `get_build_identity`; require a successful matching
+identity; copy registry match names immediately before a new `reload_plugins`
+request. Recheck identity on its matching reply, then compare registry identities.
+Do not report apply/render success from a registry delta.
 
-All current Agent replies include:
+Both buttons share the panel's pending-operation guard. Scheduled polls carry
+the request ID; stale callbacks and stale replies cannot complete a later phase.
+Each phase has a 30-second panel timeout. Diagnostic timeout means no scan was
+dispatched by that operation. Scan timeout means unknown outcome, not cancellation.
+
+## Replies and required identity fields
 
 ```text
 version=1
-request_id=diagnostics-unique-run-id
+request_id=1720000000000-1-123456
 status=success
-message=<command-specific result>
-agent_build_id=<compiled build ID>
-agent_git_commit=<full 40-character source commit>
+message=<diagnostic JSON or loader summary>
+agent_build_id=<compiled Build ID>
+agent_git_commit=<40-character commit>
 agent_source_clean=true
 agent_target=aarch64-apple-darwin
 agent_version=0.1.0
 ```
 
-Status is `success`, `noop` or `error`. The actual message is one line; normal
-message sanitization replaces line breaks and equals signs. For
-`get_build_identity` it contains the compact compiled JSON record with:
-`schema_version`, `component`, `git_commit`, `build_id`, `source_clean`,
-`target`, `version`, `loader_path_id` and `dependency_lock_sha256`.
-The current generator validates values to avoid protocol delimiters.
+Statuses: `success`, `error`, `noop`. Only `success` is a valid diagnostic
+handshake. A loader `success` is not registration/render evidence. Partial
+loader errors remain errors even if the registry grows.
 
-`agent_source_clean=false` identifies an explicitly allowed internal dirty
-experiment; it does not establish an approved build. An older Agent may omit
-identity fields. Missing fields must not be treated as verified identity.
-Version-1 clients may ignore additive fields; the existing panel does so.
+The panel compares all five `agent_*` fields to its generated inline metadata.
+An older Agent without those fields, a dirty build or any mismatch blocks the
+scan. Its diagnostic text identifies observed panel/Agent builds. The diagnostic
+`message` is never executed or used to supply expected identity.
 
-A diagnostics consumer must compare the returned identity with the intended
-artifact manifest, not merely test for `status=success`. The old
-`ordinary-discovery-v1` string now identifies the loader path, not a unique
-build. Registry presence and apply/render require separate checks.
+`tools/build_panel.py` generates expected metadata from clean Git source using
+the same `PACKAGE_BUILD_ID` and Agent package version. The repository JSX is a
+template and cannot scan until stamped. No runtime manifest or global override
+changes the expected identity. This protects against accidental mismatched
+installation, not malicious code running as the same user.
 
-## Native identity getters and threading
+Agent metadata JSON also includes `schema_version`, `component`,
+`dependency_lock_sha256` and `loader_path_id`. The existing Agent sanitizes
+message separators/newlines and emits its compiled identity on every reply.
 
-The loaded Agent also exports `AEHotLoader_AgentBuildIdentity` and
-`AEHotLoader_AgentImagePath`. They use caller-owned buffers and never report
-truncated success. Contracts and generator requirements are described in
-[the identity iteration](ITERATION_AGENT_IDENTITY_2026-09-28.md).
-Full image paths are available only through the explicit native getter, not
-added to normal bridge replies or startup logs.
+## Native diagnostics and execution context
 
-The Agent processes bridge requests through its resident idle/main-thread
-path. The panel reads the Installed Effects Registry around a loader request;
-it does not apply effects or change the project. Shell implementation reload
-remains separate from these commands. Shared bridge ownership/multiple host
-instances, timeout/retry policy and panel lifecycle remain open hardening work.
+The existing exported getters are `AEHotLoader_AgentBuildIdentity` and
+`AEHotLoader_AgentImagePath`. Both take caller-owned buffers/capacities, return
+0 for a full NUL-terminated result, -1 for invalid arguments and -2 for
+insufficient space. They do not silently truncate. Image path comes from the
+loaded module; the normal panel reply does not expose that path.
 
-## Verification limits
+Agent discovery runs from the resident AEGP idle path. The panel only performs
+file IPC and read-only registry snapshots; it does not access `app.project`.
+Generic Control Shell implementation reload remains separate from this command.
 
-[The checkpoint](CI_CHECKPOINT_4357e36.md) verifies actual identity getters in
-an isolated macOS process and full native compilation/packaging. The new
-bridge query and startup metadata have **not been exercised inside AE**.
-No standalone getter or source inspection result substitutes for that gate.
+Evidence: [CI_CHECKPOINT_04fea70](CI_CHECKPOINT_04fea70.md) tests the exact packaged
+Agent getters outside AE and the generated panel under mocks. Real AE roundtrip,
+shared-process ownership, multiple panels/reopen and in-flight timeout/retry
+remain separate mandatory integration gates.
