@@ -315,6 +315,7 @@ jobs:
           #include <cstdint>
           #include <cstdio>
           #include <cstring>
+          #include <cstdlib>
           #include <thread>
 
           #ifndef IMPL_LABEL
@@ -366,21 +367,7 @@ jobs:
 
           CPP
 
-          RUNTIME_ABI="$(python3 - "$(pwd)/dist/AEHotLoaderControlShell.plugin/Contents/Frameworks/libae_hot_loader_core.dylib" <<'PY'
-import ctypes
-import sys
-
-lib = ctypes.CDLL(sys.argv[1])
-fn = lib.AEHotLoader_ImplementationRuntimeABI
-fn.argtypes = [ctypes.c_char_p, ctypes.c_size_t]
-fn.restype = ctypes.c_int
-buf = ctypes.create_string_buffer(512)
-rc = fn(buf, len(buf))
-if rc != 0:
-    raise SystemExit(rc)
-print(buf.value.decode("utf-8"))
-PY
-          )"
+          RUNTIME_ABI="$(python3 -c 'import ctypes,sys; lib=ctypes.CDLL(sys.argv[1]); fn=lib.AEHotLoader_ImplementationRuntimeABI; fn.argtypes=[ctypes.c_char_p,ctypes.c_size_t]; fn.restype=ctypes.c_int; buf=ctypes.create_string_buffer(512); rc=fn(buf,len(buf)); (print(buf.value.decode("utf-8")) if rc == 0 else sys.exit(rc))' "$(pwd)/dist/AEHotLoaderControlShell.plugin/Contents/Frameworks/libae_hot_loader_core.dylib")"
           test -n "$RUNTIME_ABI"
 
           xcrun clang++ -std=c++17 -arch arm64 -mmacosx-version-min=11.0 -dynamiclib \
