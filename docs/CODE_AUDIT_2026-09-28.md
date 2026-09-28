@@ -284,7 +284,7 @@ Current hardened production CI covers:
 - candidate removal → bundled rollback.
 
 Latest known green checkpoint:
-**AE Hot Loader run #223 — SUCCESS**.
+**AE Hot Loader run #227 — SUCCESS**.
 
 ### ElasticGrid
 

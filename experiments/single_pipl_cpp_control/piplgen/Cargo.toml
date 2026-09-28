@@ -1,0 +1,11 @@
+[package]
+name = "single_pipl_cpp_control_piplgen"
+version = "0.1.0"
+edition = "2024"
+build = "build.rs"
+
+[build-dependencies]
+pipl = "=0.1.1"
+
+[lib]
+path = "src/lib.rs"
