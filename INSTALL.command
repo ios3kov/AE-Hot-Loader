@@ -78,6 +78,13 @@ record_legacy() {
     exit 6
   fi
 
+  local existing
+  for existing in "${legacy_targets[@]}"; do
+    case "$found" in
+      "$existing"/*) return ;;
+    esac
+  done
+
   if [[ -z "${legacy_seen[$found]-}" ]]; then
     legacy_seen[$found]=1
     legacy_targets+=("$found")
@@ -261,6 +268,16 @@ for root in "${scan_roots[@]}"; do
       -name "AEHotLoaderControlShell.plugin"
     \) -prune -print 2>/dev/null
   )
+
+  while IFS= read -r found; do
+    is_current_managed "$found" && continue
+    plist="$found/Contents/Info.plist"
+    [[ -f "$plist" ]] || continue
+    bundle_id="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$plist" 2>/dev/null || true)"
+    case "$bundle_id" in
+      com.os3kov.AEHotLoader.*) leftovers+=("$found") ;;
+    esac
+  done < <(find "$root" -type d -name "*.plugin" -prune -print 2>/dev/null)
 done
 
 if (( ${#leftovers[@]} > 0 )); then
