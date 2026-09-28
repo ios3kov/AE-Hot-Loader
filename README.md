@@ -47,7 +47,9 @@ A **new effect shell requires one AE restart the first time it is installed**. A
 
 Effect logic lives in a separate dylib.
 
-Reloading uses a new uniquely staged dylib image and atomically switches the shell's function pointer. Old dylib images are intentionally kept loaded until AE exits; this avoids unloading code that may still be referenced by render threads or existing instances.
+Reloading uses a new uniquely staged dylib image, validates Protocol ABI / State ABI / Runtime ABI / implementation key, assigns a content-derived generation, and only then publishes the new `EffectMain`.
+
+MFR/render calls are tracked. A reload never blocks AE waiting for an active render; when the effect is busy, Reload returns a retry status. Old dylib images stay loaded until AE exits so persistent state and generation-specific destructors remain valid.
 
 ### AEGP Agent
 
@@ -90,15 +92,23 @@ edit effect code
 
 - After Effects 25.6
 - macOS Apple Silicon
+- shell protocol ABI: **2**
+- adapter StateABI: **3** for ElasticGrid and Stellar Gradient
+- pinned hot-reload Rust toolchain: **1.98.1**
 - first production adapters: ElasticGrid and StellarGradient
+
+The detailed pre-AE code audit is in `docs/CODE_AUDIT_2026-09-28.md`.
 
 ## Release gate
 
 The shell architecture is considered ready when:
 
 1. shell is visible in native Effects & Presets after normal AE startup;
-2. effect can be applied and rendered;
-3. implementation can be rebuilt while AE remains open;
-4. **Reload Plugins** switches to the new implementation;
-5. existing project/effect instances remain stable;
-6. repeated reloads do not require AE restart.
+2. bundled default applies and renders;
+3. **Reload Plugins** switches to a validated candidate;
+4. existing instances remain stable after the swap;
+5. busy MFR/render produces retry instead of hang/crash;
+6. candidate removal rolls back to bundled default;
+7. ElasticGrid passes CPU/UI/MFR/GPU smoke;
+8. Stellar Gradient passes CPU/SmartFX/MFR/GPU smoke;
+9. repeated A→B→C reloads do not require AE restart.
