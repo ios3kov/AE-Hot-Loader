@@ -44,8 +44,7 @@ fn run_busy_reload_selftest() {
         .iter()
         .position(|&value| value == 0)
         .unwrap_or(message.len());
-    let bytes =
-        unsafe { std::slice::from_raw_parts(message.as_ptr().cast::<u8>(), len) };
+    let bytes = unsafe { std::slice::from_raw_parts(message.as_ptr().cast::<u8>(), len) };
     let detail = String::from_utf8_lossy(bytes);
     log_impl(&format!("BusySelfTest result={result} message={detail}"));
 }
@@ -182,11 +181,8 @@ pub extern "C" fn AEHotLoader_SetGeneration(generation: u64) {
     HOT_RELOAD_GENERATION.store(generation, Ordering::Release);
 }
 
-
 #[unsafe(no_mangle)]
-pub extern "C" fn AEHotLoader_SetBusyTestReloadCallback(
-    callback: Option<BusyTestReloadFn>,
-) {
+pub extern "C" fn AEHotLoader_SetBusyTestReloadCallback(callback: Option<BusyTestReloadFn>) {
     let raw = callback.map(|function| function as usize).unwrap_or(0);
     BUSY_TEST_RELOAD_CALLBACK.store(raw, Ordering::Release);
 }
