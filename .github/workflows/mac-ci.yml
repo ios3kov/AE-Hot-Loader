@@ -471,6 +471,7 @@ jobs:
           cat > "$RUNNER_TEMP/unterminated_impl.cpp" <<'CPP'
           #include <cstddef>
           #include <cstdint>
+          #include <cstdio>
           #include <cstring>
           extern "C" int EffectMain(...) { return 0; }
           extern "C" std::uint32_t AEHotLoader_ImplementationABI() { return 1; }
