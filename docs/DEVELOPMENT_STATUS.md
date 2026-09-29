@@ -6,6 +6,16 @@ source, Build ID, hashes and evidence.
 
 ## Current stage — registration-pair startup control
 
+Latest scoped harness: source `1a67e7e`, research Build ID
+`scoped-938e28da8c55`. The external controller now bounds waiting, verifies the
+same PID/start time and independent result, and prevents overlapping/replayed
+requests. Atomic publication closes partial-record and hard-link races.
+106 Python, 62 Node, 15 native guard and three inert-entry cases PASS locally;
+research CI `36565764998` and full macOS CI `36565765080` PASS for that source.
+Live preparation is BLOCKED because the isolated test host is absent; no scan
+was sent. See [latest identities, CI and next gate](SCOPED_DISCOVERY_SUPERVISOR_2026-09-29.md).
+The following scoped build record describes the earlier module-only checkpoint.
+
 Scoped research AEGP build: **PASS**, source `01aef68`, Build ID
 `scoped-0d35394a6f6a`. This separate module pins one fixture root, validates
 hashes and host/PID identity, and records a durable one-shot claim plus exact
