@@ -66,13 +66,52 @@ PY
 )"
 
 REPORT="$(python3 - "$PRE" "$APP" "$JSX" <<'PY'
-import importlib.util,pathlib,subprocess,sys
+import importlib.util,os,pathlib,stat,subprocess,sys
+
+def evidence_dirs(downloads):
+    result={}
+    try:
+        entries=downloads.iterdir()
+    except OSError as error:
+        raise SystemExit("STOP: cannot inspect evidence root: "+str(error))
+    for path in entries:
+        if not path.name.startswith("aehl-rsmb-"):
+            continue
+        try:
+            info=path.lstat()
+        except FileNotFoundError:
+            continue
+        if stat.S_ISDIR(info.st_mode) and info.st_uid == os.getuid():
+            result[path.name]=path
+    return result
+
+def locate_report(downloads,before):
+    after=evidence_dirs(downloads)
+    created=sorted(set(after)-set(before))
+    if len(created) != 1:
+        raise SystemExit("STOP: expected exactly one new RSMB evidence directory")
+    report=after[created[0]]/"report.json"
+    try:
+        info=report.lstat()
+    except FileNotFoundError:
+        raise SystemExit("STOP: RSMB report missing")
+    if (not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid()
+            or info.st_size <= 0 or info.st_size > 65536):
+        raise SystemExit("STOP: invalid RSMB report file")
+    return report
+
 pre,app,jsx=sys.argv[1:]
 spec=importlib.util.spec_from_file_location("aehl_preflight",pre)
 m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
 code=m.applescript(pathlib.Path(app)).replace("with timeout of 20 seconds","with timeout of 45 seconds")
-r=subprocess.run(["/usr/bin/osascript","-e",code,jsx],check=True,capture_output=True,text=True,timeout=50)
-print(r.stdout.strip())
+downloads=pathlib.Path.home()/"Downloads"
+root_info=downloads.lstat()
+if not stat.S_ISDIR(root_info.st_mode) or root_info.st_uid != os.getuid():
+    raise SystemExit("STOP: invalid evidence root")
+before=set(evidence_dirs(downloads))
+subprocess.run(["/usr/bin/osascript","-e",code,jsx],check=True,
+               capture_output=True,text=True,timeout=50)
+print(locate_report(downloads,before))
 PY
 )"
 [[ -f "$REPORT" ]] || { echo "STOP: RSMB report missing"; exit 7; }
