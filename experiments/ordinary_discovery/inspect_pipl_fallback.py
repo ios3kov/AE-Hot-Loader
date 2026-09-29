@@ -19,6 +19,7 @@ FUNCTIONS = (
     'ML::PiPL::LoadFromResource(std::__1::shared_ptr<ASL::Module>, short)',
 )
 ASL_FUNCTIONS = (
+    'ASL::Module::LoadResourceFromURL(__CFURL const*, int&) const',
     'ASL::Module::LoadResource(short, std::__1::basic_string<unsigned short, std::__1::char_traits<unsigned short>, dvacore::allocator::STLAllocator<unsigned short>> const&, int&) const',
     'ASL::Module::LoadResource(unsigned short const*, unsigned short const*, int&) const',
     'ASL::Module::FindLocalizedResource(unsigned short const*, unsigned short const*, int&) const',
