@@ -4,6 +4,18 @@ Updated: 2026-09-28. Branch: `research/ordinary-plugin-discovery`.
 The branch head identifies development; tested artifacts have their own exact
 source, Build ID, hashes and evidence.
 
+## RSMB apply/render gate prepared — 2026-09-29
+
+Source d19edca adds a controlled one-frame RSMB apply/render harness. Research
+run 36546959381 (#13) passed with 51/51 panel tests and 87/87 Python tests;
+the macOS native-syntax job also passed. Full macOS run 36546959423 (#247)
+passed all existing build/sign/package/native smoke gates.
+
+The user's latest private preflight showed the resident Agent identity PASS,
+the blank clean project baseline PASS, and RSMB registry presence PASS.
+Real RSMB apply/render is still NOT RUN until the checked harness is executed
+on that host. See CI_CHECKPOINT_d19edca.md and
+ITERATION_RSMB_APPLY_RENDER_2026-09-29.md.
 ## Current diagnostic work
 
 The requested user preflight report has been received. Its two read-only
