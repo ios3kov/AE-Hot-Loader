@@ -6,7 +6,8 @@
 #include <cstring>
 
 int main(int argc, char** argv) {
-    if (argc != 2) return 2;
+    if (argc != 2 && !(argc == 3 && std::strcmp(argv[2], "--flat") == 0)) return 2;
+    const bool flat = argc == 3;
     auto url = CFURLCreateFromFileSystemRepresentation(nullptr,
         reinterpret_cast<const UInt8*>(argv[1]), std::strlen(argv[1]), true);
     if (!url) return 2;
@@ -16,13 +17,31 @@ int main(int argc, char** argv) {
     const bool loadedBefore = CFBundleIsExecutableLoaded(bundle);
     auto urls = CFBundleCopyResourceURLsOfType(bundle, CFSTR("PiPL"), nullptr);
     const auto urlCount = urls ? CFArrayGetCount(urls) : 0;
-    if (urls) CFRelease(urls);
     CFBundleRefNum base = -1, localized = -1;
     const auto saved = CurResFile();
-    const auto status = CFBundleOpenBundleResourceFiles(bundle, &base, &localized);
+    const auto status = flat ? (urlCount == 1 ? 0 : -1) : CFBundleOpenBundleResourceFiles(bundle, &base, &localized);
     long size = 0;
     char hash[CC_SHA256_DIGEST_LENGTH * 2 + 1] = {};
-    if (status == 0) {
+    if (flat && status == 0) {
+        auto resourceURL = static_cast<CFURLRef>(CFArrayGetValueAtIndex(urls, 0));
+        auto stream = CFReadStreamCreateWithFile(nullptr, resourceURL);
+        if (stream && CFReadStreamOpen(stream)) {
+            UInt8 bytes[1024 * 1024 + 1];
+            CFIndex total = 0, n = 0;
+            while (total < static_cast<CFIndex>(sizeof(bytes)) &&
+                   (n = CFReadStreamRead(stream, bytes + total, sizeof(bytes) - total)) > 0)
+                total += n;
+            if (n == 0 && total > 0 && total <= 1024 * 1024) {
+                size = total;
+                unsigned char digest[CC_SHA256_DIGEST_LENGTH];
+                CC_SHA256(bytes, static_cast<CC_LONG>(size), digest);
+                for (unsigned i = 0; i < sizeof(digest); ++i)
+                    std::snprintf(hash + 2*i, 3, "%02x", digest[i]);
+            }
+            CFReadStreamClose(stream);
+        }
+        if (stream) CFRelease(stream);
+    } else if (!flat && status == 0) {
         UseResFile(base);
         auto resource = Get1Resource('PiPL', 16000);
         if (resource) {
@@ -42,6 +61,7 @@ int main(int argc, char** argv) {
             CFBundleCloseBundleResourceMap(bundle, localized);
         if (base != -1) CFBundleCloseBundleResourceMap(bundle, base);
     }
+    if (urls) CFRelease(urls);
     const bool loadedAfter = CFBundleIsExecutableLoaded(bundle);
     const bool pass = status == 0 && hash[0] && !loadedBefore && !loadedAfter;
     std::printf("{\"status\":\"%s\",\"resource_open_status\":%d,"

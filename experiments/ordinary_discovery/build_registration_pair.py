@@ -39,10 +39,19 @@ def pipl(name, match):
     return data
 
 
+def variants(kind):
+    if kind == "dynamic":
+        return [(0, "PiPL", "rsrc"), (1, "Dynamic", "rsrc")]
+    if kind == "resource":
+        return [(0, "Rsrc", "rsrc"), (0, "Flat", "flat")]
+    raise ValueError("Unknown pair kind")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--sdk', type=Path, required=True,
                         help='Adobe After Effects SDK Examples directory')
+    parser.add_argument('--pair-kind', choices=('dynamic', 'resource'), default='dynamic')
     args = parser.parse_args()
     headers = args.sdk.resolve() / 'Headers'
     if not (headers / 'AE_Effect.h').is_file():
@@ -50,7 +59,7 @@ def main():
     root = Path(__file__).resolve().parents[2]
     source = Path(__file__).with_name("RegistrationPair.cpp")
     run_id = uuid.uuid4().hex[:12]
-    output = root / "build-ae-hot-loader" / ("registration-pair-" + run_id)
+    output = root / "build-ae-hot-loader" / (args.pair_kind + "-pair-" + run_id if args.pair_kind == 'resource' else "registration-pair-" + run_id)
     output.mkdir(parents=True, exist_ok=False)
     record = {
         "run_id": run_id, "commit": run("git", "rev-parse", "HEAD").strip(),
@@ -60,8 +69,9 @@ def main():
         "ae_sdk_headers": str(headers),
         "ae_effect_header_sha256": hashlib.sha256((headers / 'AE_Effect.h').read_bytes()).hexdigest(),
         "scope": "registration only; do not apply or render", "probes": [],
+        "pair_kind": args.pair_kind,
     }
-    for dynamic, label in [(0, "PiPL"), (1, "Dynamic")]:
+    for dynamic, label, representation in variants(args.pair_kind):
         name = "AEHL " + label + " " + run_id
         match = "AEHL." + label + "." + run_id
         stem = "AEHLPair" + label + run_id
@@ -80,8 +90,11 @@ def main():
         resource.write_text("data 'PiPL' (16000) {\n" + "\n".join(
             '$"' + data[i:i+32].hex() + '"' for i in range(0, len(data), 32)
         ) + "\n};\n")
-        run("Rez", "-useDF", str(resource), "-o",
-            str(contents / "Resources" / (stem + ".rsrc")))
+        if representation == "rsrc":
+            run("Rez", "-useDF", str(resource), "-o",
+                str(contents / "Resources" / (stem + ".rsrc")))
+        else:
+            (contents / "Resources" / "16000.PiPL").write_bytes(data)
         binary = contents / "MacOS" / stem
         command = ["clang++", "-std=c++17", "-arch", "arm64", "-bundle",
                    '-I' + str(headers), '-I' + str(headers / 'SP'),
@@ -90,12 +103,16 @@ def main():
                    '-DPROBE_NAME="' + name + '"', '-DPROBE_MATCH="' + match + '"',
                    str(source), "-o", str(binary)]
         run(*command)
+        unsigned_hash = hashlib.sha256(binary.read_bytes()).hexdigest()
         run("codesign", "--force", "--sign", "-", str(bundle))
         run("codesign", "--verify", "--strict", str(bundle))
         exports = run("nm", "-arch", "arm64", "-gU", str(binary))
         assert "_EffectMain" in exports
         assert ("_PluginDataEntryFunction2" in exports) == bool(dynamic)
         record["probes"].append({"name": name, "match": match,
+            "resource_representation": representation,
+            "pipl_sha256": hashlib.sha256(data).hexdigest(),
+            "unsigned_binary_sha256": unsigned_hash,
             "bundle": bundle.name, "command": command, "exports": exports,
             "files": {str(p.relative_to(bundle)): hashlib.sha256(p.read_bytes()).hexdigest()
                       for p in sorted(bundle.rglob("*")) if p.is_file()}})
