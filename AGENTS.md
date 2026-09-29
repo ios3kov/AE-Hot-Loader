@@ -2,8 +2,10 @@
 
 Before each significant stage, read and apply the current shared
 [FSTR-Line DEVELOPMENT_RULES](https://github.com/ios3kov/FSTR-Line/blob/main/DEVELOPMENT_RULES.md).
-Reviewed on 2026-09-28: rules blob
-`a1760fde8763f789b50b91c20407938b4fcaea4a`.
+Reviewed on 2026-09-29: rules blob
+`701a8c1ae3acb4dbfe1d7eda94acbf8095b88608` (FSTR-Line source
+`c69e3663de59dc44cbdef18042891f6dd1ce5ee6`). State the current project
+stage before each significant step; do not invent a completion percentage.
 Do not treat this short entry point as a replacement for the full rules.
 
 Read `docs/DEVELOPMENT_STATUS.md` and `docs/PRODUCTION_PLAN.md` first. Reports

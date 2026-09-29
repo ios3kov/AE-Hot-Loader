@@ -4,6 +4,17 @@ Updated: 2026-09-29. Branch: `research/ordinary-plugin-discovery`.
 The branch head identifies development; tested artifacts have their own exact
 source, Build ID, hashes and evidence.
 
+## Current stage — registration-pair startup control
+
+Stage C of plan A–D, with open gates in A/B. Shared rules were refreshed to
+blob `701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`. A fresh registration-only
+pair was built from clean `f393fbd` with build/run ID `50a85fce3046`:
+build/signature/export checks PASS; installation/startup/late-load NOT RUN.
+The next discriminating gate first validates both exact fixtures at startup,
+then compares late loading of the same bytes. See
+[prepared inputs and acceptance](REGISTRATION_PAIR_NEXT_GATE_2026-09-29.md).
+The scoped RSMB apply/render PASS below remains valid.
+
 ## RSMB apply/render gate prepared — 2026-09-29
 
 Source d19edca adds a controlled one-frame RSMB apply/render harness. Research
