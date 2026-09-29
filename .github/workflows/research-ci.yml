@@ -37,9 +37,9 @@ jobs:
             printf 'run_id=%s\nattempt=%s\n' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
             printf 'node='; node --version
             printf 'scope=Node host mocks; not a live AE test\n'
-            sha256sum 'ui/AE Hot Loader.jsx' tests/panel.test.cjs tools/collect_ae_host.py tests/test_ae_host_probe.py tests/ae-host-snapshot.cjs
+            sha256sum 'ui/AE Hot Loader.jsx' tests/panel.test.cjs tools/collect_ae_host.py tests/test_ae_host_probe.py tests/ae-host-snapshot.cjs experiments/ordinary_discovery/render_rsmb.jsx experiments/host_preflight/RUN_RSMB_APPLY_RENDER.command tests/test_rsmb_render_probe.py tests/rsmb-render-js.cjs
           } > reports/source-identity.txt
-      - name: Panel contract regression (host mocks)
+      - name: Research regression (host mocks)
         shell: bash
         run: |
           set -euo pipefail
