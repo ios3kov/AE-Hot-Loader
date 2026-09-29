@@ -6,12 +6,20 @@ source, Build ID, hashes and evidence.
 
 ## Current stage — registration-pair startup control
 
+Scoped research AEGP build: **PASS**, source `01aef68`, Build ID
+`scoped-0d35394a6f6a`. This separate module pins one fixture root, validates
+hashes and host/PID identity, and records a durable one-shot claim plus exact
+registry delta. SDK build/signature/identity, 15 native guard cases, three inert
+entrypoint cases, 11 snapshot cases, 51 panel tests and 100 Python tests PASS.
+Live gate remains BLOCKED on an isolated AE environment and bounded supervisor.
+See [build evidence and limitations](SCOPED_DISCOVERY_BUILD_2026-09-29.md).
+
 Single embedded-resource fixture offline gate: **PASS** for clean source,
 signed arm64 build, one owned scan-root inventory and standalone PiPL read.
 Build ID `88019a1a01a7`, source `50cb81f`, exact evidence in
 [the scoped fixture record](SCOPED_EMBEDDED_FIXTURE_2026-09-29.md). Live AE
-registration is NOT RUN; safe scoped invocation is BLOCKED because the current
-Agent still scans broad shared roots. The working AE was not touched.
+registration is NOT RUN. The product Agent still scans broad shared roots;
+the separate research module above has only offline evidence so far.
 
 Recovered crash evidence for the failed resource-pair scan: **PASS** for exact
 PID/time/stack correlation. AE PID 21778 received EXC_BAD_ACCESS while its
@@ -24,9 +32,10 @@ The working AE was not touched; next runtime gate needs an isolated host.
 
 Latest offline dispatch check: **PASS**, exact AE 25.6 image places a PiPL
 Resource Manager converter around the noncached `GetPiPLs` path and maps the
-fallback virtual slot to AEPlugin/PluginImpl PiPL loading. The runtime receiver,
-conversion invocation and registry insertion in the failed late scan remain
-unobserved. See [dispatch evidence](RESEARCH_PIPL_DISPATCH_2026-09-29.md).
+fallback virtual slot to AEPlugin/PluginImpl PiPL loading. The recovered crash
+subsequently identified the PluginImpl receiver; conversion invocation and
+registry insertion in the failed late scan remain unobserved. See
+[dispatch evidence](RESEARCH_PIPL_DISPATCH_2026-09-29.md).
 Next runtime gate requires an isolated host and an embedded-resource fixture;
 do not repeat the raw flat or shared-root scan in the working AE.
 
