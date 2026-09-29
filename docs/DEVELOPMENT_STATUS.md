@@ -171,6 +171,12 @@ readiness claim is made.
 
 ## Next gates
 
+Latest stage-C application gate: **FAIL**. The corrected Dynamic fixture returned
+one scripting child property; the probe expected zero. Its cleanup reported PASS,
+but independent postflight is BLOCKED because the AE process was absent. See
+[REGISTRATION_APPLY_FAIL_2026-09-29](REGISTRATION_APPLY_FAIL_2026-09-29.md).
+Do not equate this property count with native parameter count or claim 25::34 fixed.
+
 Validate Diagnostics and Reload through the real ScriptUI panel in an owned AE
 25.6.0 arm64 environment, including an intentionally mismatched Agent and
 project-safety checks. Establish controlled RSMB cold-start causality, then
