@@ -135,7 +135,7 @@ def main():
               'native_source_sha256': sha(native), 'generated_native_sha256': sha(native_copy),
               'native_changes': 'only the two log destinations redirected to owned evidence',
               'config_sha256': sha(config), 'exports': exports,
-              'host_executable': str(host), 'scan_root': fixture['scan_root'],
+              'host_executable': str(host), 'scan_root': fixture['scan_root'], 'match': fixture['match'],
               'evidence': str(evidence), 'activation_env': {'AEHL_SCOPED_GATE_TOKEN': token},
               'checks': {'build_sign_exports': 'PASS', 'identity_getter': 'PASS',
                          'inert_entrypoint': 'PASS', 'native_guard_tests': 'PASS',

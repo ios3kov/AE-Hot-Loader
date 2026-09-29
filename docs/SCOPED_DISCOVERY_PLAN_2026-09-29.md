@@ -33,6 +33,12 @@ the local Adobe SDK declarations are the interface authority.
 6. No install, startup, debugger attachment or discovery in the current user
    host during offline preparation. An isolated AE host remains a runtime
    prerequisite; an environment token alone is not proof of isolation.
+7. An external supervisor verifies the pinned manifest, loaded helper identity
+   and file hashes, exact PID/executable/start time, and untouched evidence
+   namespace. Publish one complete request atomically without replacement;
+   bound waiting to 1–60 seconds, preserve pending state on timeout/crash and
+   never terminate AE. Independently verify snapshots and call identity before
+   accepting native PASS. Use an exclusive supervisor claim against overlap.
 
 ## Predeclared checks
 
@@ -41,6 +47,9 @@ the local Adobe SDK declarations are the interface authority.
 - AEGP compile/link with SDK 25.6 declarations and warnings as errors.
 - Ad-hoc signature, exports, identity and final per-file hashes.
 - Existing Python regression and relevant static audit.
+- Supervisor negative cases: wrong host, stale request, incomplete/incorrect
+  result, timeout, process exit and replay. Atomic request/result publication
+  must keep a single hard link and expose only complete records.
 - Real AE idle-hook/registry/project-safety/timeout/crash gate: NOT RUN until
   an isolated host and external bounded supervisor are established.
 

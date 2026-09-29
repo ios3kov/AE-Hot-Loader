@@ -3,6 +3,7 @@
 #include <CommonCrypto/CommonDigest.h>
 #include <algorithm>
 #include <cerrno>
+#include <cstdio>
 #include <fcntl.h>
 #include <filesystem>
 #include <functional>
@@ -73,7 +74,8 @@ inline void OwnedEvidence(const fs::path& path) {
 inline void Save(const Config& c, const char* name, const std::string& value) {
     OwnedEvidence(c.evidence);
     const auto path = fs::path(c.evidence) / name;
-    const int fd = open(path.c_str(), O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0600);
+    const auto temporary = fs::path(path.string() + ".writing");
+    const int fd = open(temporary.c_str(), O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0600);
     Require(fd >= 0, "evidence already exists or cannot be created");
     std::size_t offset = 0;
     while (offset < value.size()) {
@@ -85,6 +87,8 @@ inline void Save(const Config& c, const char* name, const std::string& value) {
     const int sync_result = fsync(fd);
     const int close_result = close(fd);
     Require(sync_result == 0 && close_result == 0, "evidence flush failed");
+    Require(renamex_np(temporary.c_str(), path.c_str(), RENAME_EXCL) == 0,
+            "evidence publication failed or already exists");
 }
 inline void VerifyScope(const Config& c) {
     NoLinks(c.root);
