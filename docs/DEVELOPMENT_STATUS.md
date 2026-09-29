@@ -11,12 +11,16 @@ run 36546959381 (#13) passed with 51/51 panel tests and 87/87 Python tests;
 the macOS native-syntax job also passed. Full macOS run 36546959423 (#247)
 passed all existing build/sign/package/native smoke gates.
 
-The user's latest private preflight showed the resident Agent identity PASS,
+The user's earlier private preflight showed the resident Agent identity PASS,
 the blank clean project baseline PASS, and RSMB registry presence PASS.
-Real RSMB apply/render remains NOT RUN. A subsequent execution attempt was
-BLOCKED before its bridge request because AE was rendering a non-owned project;
-it created no disposable test project and produced no render output. See
-[the attempt record](RSMB_APPLY_RENDER_ATTEMPT_2026-09-29.md),
+Real RSMB apply/render remains NOT RUN. The first execution attempt was BLOCKED
+before its bridge request because AE was rendering a non-owned project. A
+follow-up attempt re-established Agent identity, registry presence and unchanged
+project state as PASS, but its blank baseline was FAIL because a saved,
+non-blank project was open. The overall gate was therefore BLOCKED before JSX;
+neither attempt created a disposable project or render output. See the
+[first attempt](RSMB_APPLY_RENDER_ATTEMPT_2026-09-29.md), the
+[follow-up attempt](RSMB_APPLY_RENDER_ATTEMPT_2_2026-09-29.md),
 CI_CHECKPOINT_d19edca.md and ITERATION_RSMB_APPLY_RENDER_2026-09-29.md.
 ## Current diagnostic work
 
