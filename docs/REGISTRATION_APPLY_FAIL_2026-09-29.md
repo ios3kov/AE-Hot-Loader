@@ -1,5 +1,11 @@
 # Registration fixture application gate — FAIL
 
+Subsequent correction: the same PID/start was found alive; absence from the
+earlier collector did not prove exit. A later property-enumeration run established
+a harness expectation defect, followed by a separate PASS. See
+[follow-up evidence](REGISTRATION_APPLY_PASS_2026-09-29.md). Original reports below
+are preserved and must not be read as a confirmed crash or current gate status.
+
 Stage C of the A–D research plan; not production acceptance. Rules reviewed:
 FSTR-Line DEVELOPMENT_RULES blob `701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`.
 

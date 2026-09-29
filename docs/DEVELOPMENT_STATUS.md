@@ -6,6 +6,14 @@ source, Build ID, hashes and evidence.
 
 ## Current stage — registration-pair startup control
 
+Latest Dynamic application gate: **PASS**, source `b97b401`, fixture Build ID
+`50650366d8b6`. Exact-match add, built-in-only properties, removal, cleanup and
+independent same-process postflight passed. The prior zero-child assertion was
+a harness defect. The prior claim of host termination is withdrawn: the original
+PID/start is still present. See [live evidence](REGISTRATION_APPLY_PASS_2026-09-29.md).
+Render remains NOT RUN; historical PiPL-only late registration remains FAIL.
+The following records retain earlier observations, not the latest gate verdict.
+
 Latest source `8980c3c` corrects fixture parameter setup using actual Adobe SDK
 types. Build `50650366d8b6`: standalone lifecycle and Python 90/90 PASS;
 controlled startup registry PASS for both variants; late registry Dynamic PASS,
@@ -173,7 +181,7 @@ readiness claim is made.
 
 ## Next gates
 
-Latest stage-C application gate: **FAIL**. The corrected Dynamic fixture returned
+Earlier stage-C application gate: **FAIL**. The corrected Dynamic fixture returned
 one scripting child property; the probe expected zero. Its cleanup reported PASS,
 but independent postflight is BLOCKED because the AE process was absent. See
 [REGISTRATION_APPLY_FAIL_2026-09-29](REGISTRATION_APPLY_FAIL_2026-09-29.md).
