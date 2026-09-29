@@ -47,12 +47,21 @@ def variants(kind):
     raise ValueError("Unknown pair kind")
 
 
+def pair_kind_allowed(kind, allow_retired_flat):
+    return kind != 'resource' or allow_retired_flat
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--sdk', type=Path, required=True,
                         help='Adobe After Effects SDK Examples directory')
     parser.add_argument('--pair-kind', choices=('dynamic', 'resource'), default='dynamic')
+    parser.add_argument('--allow-retired-flat-offline-build', action='store_true',
+                        help='permit reproducing the retired flat fixture offline only; never install or scan it')
     args = parser.parse_args()
+    if not pair_kind_allowed(args.pair_kind, args.allow_retired_flat_offline_build):
+        parser.error('resource pair contains the retired unsafe flat PiPL fixture; '
+                     'offline reproduction requires --allow-retired-flat-offline-build')
     headers = args.sdk.resolve() / 'Headers'
     if not (headers / 'AE_Effect.h').is_file():
         parser.error('--sdk must contain Headers/AE_Effect.h')

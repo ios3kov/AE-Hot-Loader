@@ -1,6 +1,8 @@
 import importlib.util
 from pathlib import Path
+import subprocess
 import struct
+import sys
 import unittest
 
 spec = importlib.util.spec_from_file_location('pair', Path(__file__).resolve().parents[1] / 'experiments/ordinary_discovery/build_registration_pair.py')
@@ -8,6 +10,16 @@ pair = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(pair)
 
 class ResourcePairTests(unittest.TestCase):
+    def test_retired_flat_requires_explicit_offline_opt_in(self):
+        self.assertFalse(pair.pair_kind_allowed('resource', False))
+        self.assertTrue(pair.pair_kind_allowed('resource', True))
+        self.assertTrue(pair.pair_kind_allowed('dynamic', False))
+        result = subprocess.run(
+            [sys.executable, str(Path(pair.__file__)), '--sdk', '/nonexistent',
+             '--pair-kind', 'resource'], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 2)
+        self.assertIn('retired unsafe flat PiPL fixture', result.stderr)
+
     def test_variants(self):
         self.assertEqual(pair.variants('resource'), [(0,'Rsrc','rsrc'),(0,'Flat','flat')])
         self.assertEqual(pair.variants('dynamic'), [(0,'PiPL','rsrc'),(1,'Dynamic','rsrc')])
