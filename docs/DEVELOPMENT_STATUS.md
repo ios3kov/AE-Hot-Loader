@@ -10,7 +10,9 @@ Latest source `8980c3c` corrects fixture parameter setup using actual Adobe SDK
 types. Build `50650366d8b6`: standalone lifecycle and Python 90/90 PASS;
 controlled startup registry PASS for both variants; late registry Dynamic PASS,
 PiPL-only FAIL. Test installations retired with hashes checked. Live application
-and original modal-error resolution remain NOT RUN. See
+gate subsequently returned FAIL; independent postflight was BLOCKED when the
+host process disappeared. Original modal-error resolution remains NOT RUN. See
+[application failure](REGISTRATION_APPLY_FAIL_2026-09-29.md) and
 [lifecycle correction and fresh evidence](REGISTRATION_PAIR_LIFECYCLE_FIX_2026-09-29.md).
 The following paragraph describes the previous failed fixture, not this build.
 

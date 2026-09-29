@@ -5,6 +5,7 @@
     var file = new File(cfg.report);
     if (file.exists) throw Error("Existing report; refusing overwrite");
     var result = "FAIL", cleanup = "NOT RUN", reason = "", count = -1;
+    var children = [], stage = "baseline";
     var owned = false;
     function blank(p) {
         return p && p.numItems === 0 && p.file === null && p.dirty === false &&
@@ -30,13 +31,24 @@
         var layer = comp.layers.addSolid([0,0,0], "Disabled test input", 64,64,1,1/24);
         layer.enabled = false;
         var group = layer.property("ADBE Effect Parade");
+        stage = "can_add";
         if (!group.canAddProperty(cfg.match)) throw Error("canAddProperty rejected fixture");
+        stage = "add";
         var fx = group.addProperty(cfg.match);
         if (!fx || fx.matchName !== cfg.match) throw Error("Wrong effect identity");
         fx.enabled = false;
+        stage = "properties";
         count = fx.numProperties;
+        if (count < 0 || count > 32 || count !== Math.floor(count)) throw Error("Invalid child property count");
+        for (var j = 1; j <= count; ++j) {
+            var child = fx.property(j);
+            if (!child) throw Error("Missing child property");
+            children.push('{"index":'+j+',"match_name":'+q(child.matchName)+
+                ',"name":'+q(child.name)+'}');
+        }
         if (count !== 0) throw Error("Expected zero user parameters");
         fx.remove();
+        stage = "complete";
         result = "PASS";
     } catch (error) {
         reason = String(error).slice(0,500);
@@ -52,7 +64,8 @@
         if (!file.open("w")) throw Error("Cannot create report");
         try {
             if (!file.write('{"run_id":'+q(cfg.run_id)+',"match":'+q(cfg.match)+
-                ',"apply":'+q(result)+',"user_parameters":'+count+',"cleanup":'+q(cleanup)+
+                ',"apply":'+q(result)+',"stage":'+q(stage)+',"child_property_count":'+count+
+                ',"children":['+children.join(',')+'],"cleanup":'+q(cleanup)+
                 ',"render":"NOT RUN","reason":'+q(reason)+'}\n')) throw Error("Report write failed");
         } finally { file.close(); }
     }

@@ -50,3 +50,31 @@ Establish why the host session ended, then run a separately identified fixture
 property-enumeration diagnostic with fresh baseline and postflight. Keep this
 failure record. Historical RSMB render PASS and PiPL late-registration FAIL are
 unchanged. No full-product release, merge, push or main changes were performed.
+
+## Follow-up diagnostic preparation
+
+Rules hash rechecked: unchanged `701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`.
+AE was still absent. Read-only macOS logs for 12:52–12:54 and the AE UXP log
+did not establish a cause of exit. Crash versus user quit remains unresolved;
+user clarification requested. No process was launched or terminated.
+
+The probe now records stage, child_property_count and bounded child-property
+names/match names (maximum 32). This avoids calling scripting children native
+parameters. The zero-child acceptance assertion is deliberately unchanged:
+enumeration is diagnostic evidence, not permission to turn the old FAIL into
+PASS. No native binary or installed component changed. Live repeat is BLOCKED
+pending safe host/session re-establishment; original-symptom resolution NOT RUN.
+
+Checks on the diagnostic source: JSX mocks 9/9 PASS (including expired request,
+bounded enumeration and JSON escaping); RSMB JSX mocks 6/6 PASS; Python 90/90
+PASS; diff whitespace PASS. JSX SHA-256:
+`a840a2727fb3000431080ea4ff7a0edf9ee190ce213994db9c609603adf04c05`.
+
+Skill static scanner exit 1 (FAIL; findings require review), not release approval.
+Confirmed existing debt in `.github/workflows/dual-pipl.yml`: three unpinned
+actions at lines 21, 23, 176 and default checkout credential persistence.
+These are outside this diagnostic change and remain open, not waived for release.
+The rate-limit finding at `tools/artifact_manifest.py:71` is a false positive:
+this is a local argparse CLI, not an authentication route.
+Local scanner evidence: projectless workspace `work/apply-diagnostic-audit.json`,
+SHA-256 `af85847195badb74769dee7455f192fb24569ca638269198aa562523c9386d5a`.
