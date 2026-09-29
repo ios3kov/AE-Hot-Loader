@@ -68,3 +68,9 @@ jobs:
             xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Wpedantic -Werror -fsyntax-only "$source"
           done
           for script in ./*.command experiments/host_preflight/*.command; do zsh -n "$script"; done
+      - name: Scoped research guard (mock loader, no AE)
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Werror tests/scoped_discovery_gate.cpp -o "$RUNNER_TEMP/scoped-guard-tests"
+          "$RUNNER_TEMP/scoped-guard-tests"
