@@ -6,6 +6,12 @@ source, Build ID, hashes and evidence.
 
 ## Current stage — registration-pair startup control
 
+Latest offline finding: disk PiPL bytes and parser input are different
+representations. A byte-conversion callback exists; the inspected base URL
+reader copies raw bytes. Missing conversion is a concrete conditional risk
+for the failed flat experiment, not proven host-exit cause or a legacy fix.
+Do not repeat the raw flat test. See [byte-order boundary evidence](RESEARCH_PIPL_BYTE_ORDER_2026-09-29.md).
+
 Latest offline SDK control: **PASS**, diagnostic PiPL bytes equal SDK 25.6
 Rez output for the controlled 312-byte property set; Python regression 92/92
 PASS. This does not establish standalone-file host acceptance or repair late
