@@ -13,8 +13,9 @@ passed all existing build/sign/package/native smoke gates.
 
 The user's earlier private preflight showed the resident Agent identity PASS,
 the blank clean project baseline PASS, and RSMB registry presence PASS.
-Real RSMB apply/render remains NOT RUN. The first execution attempt was BLOCKED
-before its bridge request because AE was rendering a non-owned project. A
+At that checkpoint, real RSMB apply/render was NOT RUN. The first execution
+attempt was BLOCKED before its bridge request because AE was rendering a
+non-owned project. A
 follow-up attempt re-established Agent identity, registry presence and unchanged
 project state as PASS, but its blank baseline was FAIL because a saved,
 non-blank project was open. The overall gate was therefore BLOCKED before JSX;
@@ -129,8 +130,11 @@ inspection iteration changes no panel, Agent, private ABI or render code.
 | Existing native shell gates | PASS: 7/7 | Standalone synthetic scenarios, not AE/MFR rendering |
 | Exact packaged Agent identity/path getters | PASS | Standalone macOS process, not in AE |
 | Independent downloaded package verification | PASS | All 24 payload files and ZIP/manifest hashes |
-| Real ScriptUI / resident Agent roundtrip | BLOCKED | User preflight did not send the query; no isolated AE runtime in this session |
-| RSMB controlled cold-start / apply / render | NOT RUN | Uploaded presence-only evidence does not change historical late-registration FAIL |
+| Resident Agent bridge identity | PASS | Exact runtime identity verified before and after the live RSMB gate |
+| Real ScriptUI panel roundtrip | NOT RUN | Panel Diagnostics/Reload path is separate from the direct preflight bridge query |
+| RSMB startup-registered apply / render | PASS | Controlled exact-match apply, one-frame render, cleanup and postflight |
+| RSMB controlled cold-start causality | NOT RUN | The harness did not control the complete AE startup sequence |
+| RSMB late registration | FAIL | Historical result remains; the startup-registered smoke does not repair it |
 | Complete adapter-specific cleanup | NOT RUN | Historical research and generic shell remain |
 
 The reference CI log contains a reviewed redundant Rust-action-input warning;
@@ -139,11 +143,10 @@ readiness claim is made.
 
 ## Next gates
 
-Inspect the preserved bridge records using the passive tool, then establish a
-fresh verified resident Agent identity without risking unsaved work. Validate
-Diagnostics and Reload in an owned AE 25.6.0 arm64 environment, including an
-intentionally mismatched Agent and project-safety checks. Establish controlled
-RSMB startup/apply/render evidence, then isolate missing legacy registration.
+Validate Diagnostics and Reload through the real ScriptUI panel in an owned AE
+25.6.0 arm64 environment, including an intentionally mismatched Agent and
+project-safety checks. Establish controlled RSMB cold-start causality, then
+isolate missing legacy late registration with a dedicated pair/harness.
 Complete remaining component identities, IPC ownership/reopen/timeout checks,
 scope and CI cleanup before product handoff.
 
