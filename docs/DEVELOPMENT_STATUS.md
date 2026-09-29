@@ -6,6 +6,13 @@ source, Build ID, hashes and evidence.
 
 ## Current stage — registration-pair startup control
 
+Latest standalone public-API experiment: **PASS**, Resource Manager invoked
+our process-local header-only callback; native count changed from 201326592
+to 12. A fresh baseline process returned the original count. Bundle hashes
+unchanged; plugin executable never loaded. This confirms the conversion
+boundary, not AE's active callback or a registration fix. See
+[resource endian control](RESOURCE_ENDIAN_CONTROL_2026-09-29.md).
+
 Latest offline finding: disk PiPL bytes and parser input are different
 representations. A byte-conversion callback exists; the inspected base URL
 reader copies raw bytes. Missing conversion is a concrete conditional risk
