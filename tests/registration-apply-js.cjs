@@ -10,8 +10,8 @@ function run(o={}) {
       const layer={enabled:true,property(){return {
         canAddProperty(){return !o.canAddFail;},
         addProperty(){assert.equal(layer.enabled,false);if(o.addFail)throw Error('add failed');
-          return {matchName:match,numProperties:o.excessive?33:o.countFail?1:0,
-            property(i){assert.equal(i,1);return {matchName:'mock.child',name:'Quote " and newline\n'};},
+          return {matchName:match,numProperties:o.excessive?33:o.zero?0:1,
+            property(i){assert.equal(i,1);return {matchName:o.countFail?'mock.child':'ADBE Effect Built In Params',name:'Quote " and newline\n'};},
             remove(){removed++;}};}
       };}}; return layer;
     }}};}}; return p;
@@ -24,7 +24,7 @@ function run(o={}) {
   return {report,created,removed};
 }
 let r=run();assert.equal(r.report.apply,'PASS');assert.equal(r.report.cleanup,'PASS');assert.equal(r.removed,1);
-for(const key of ['dirty','missing','canAddFail','addFail','countFail','closeFail','excessive','expired']) {
+for(const key of ['dirty','missing','canAddFail','addFail','countFail','closeFail','excessive','expired','zero']) {
   r=run({[key]:true});assert.equal(r.report.apply,'FAIL');
   assert.equal(r.report.cleanup,['dirty','missing','expired'].includes(key)?'NOT RUN':key==='closeFail'?'FAIL':'PASS');
   if(['dirty','missing','expired'].includes(key))assert.equal(r.created,0);
@@ -34,4 +34,4 @@ for(const key of ['dirty','missing','canAddFail','addFail','countFail','closeFai
     assert.deepEqual(r.report.children,[{index:1,match_name:'mock.child',name:'Quote " and newline\n'}]);
   }
 }
-console.log('PASS: registration apply JSX 9/9');
+console.log('PASS: registration apply JSX 10/10');

@@ -46,7 +46,10 @@
             children.push('{"index":'+j+',"match_name":'+q(child.matchName)+
                 ',"name":'+q(child.name)+'}');
         }
-        if (count !== 0) throw Error("Expected zero user parameters");
+        // AE 25.6 exposes its own Compositing Options group even when the
+        // native fixture declares only the host input layer (num_params=1).
+        if (count !== 1 || fx.property(1).matchName !== "ADBE Effect Built In Params")
+            throw Error("Expected only the host built-in effect parameter group");
         fx.remove();
         stage = "complete";
         result = "PASS";
