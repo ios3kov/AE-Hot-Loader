@@ -1,5 +1,6 @@
 """Build isolated registration-only fixtures; does not install or contact AE."""
 import hashlib
+import argparse
 import json
 from pathlib import Path
 import plistlib
@@ -39,6 +40,13 @@ def pipl(name, match):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--sdk', type=Path, required=True,
+                        help='Adobe After Effects SDK Examples directory')
+    args = parser.parse_args()
+    headers = args.sdk.resolve() / 'Headers'
+    if not (headers / 'AE_Effect.h').is_file():
+        parser.error('--sdk must contain Headers/AE_Effect.h')
     root = Path(__file__).resolve().parents[2]
     source = Path(__file__).with_name("RegistrationPair.cpp")
     run_id = uuid.uuid4().hex[:12]
@@ -49,6 +57,8 @@ def main():
         "source_state": run("git", "status", "--porcelain"),
         "compiler": run("clang++", "--version"),
         "sdk": run("xcrun", "--show-sdk-version").strip(),
+        "ae_sdk_headers": str(headers),
+        "ae_effect_header_sha256": hashlib.sha256((headers / 'AE_Effect.h').read_bytes()).hexdigest(),
         "scope": "registration only; do not apply or render", "probes": [],
     }
     for dynamic, label in [(0, "PiPL"), (1, "Dynamic")]:
@@ -74,6 +84,7 @@ def main():
             str(contents / "Resources" / (stem + ".rsrc")))
         binary = contents / "MacOS" / stem
         command = ["clang++", "-std=c++17", "-arch", "arm64", "-bundle",
+                   '-I' + str(headers), '-I' + str(headers / 'SP'),
                    "-fvisibility=hidden", "-Wall", "-Wextra", "-Werror",
                    "-DDYNAMIC_REGISTRATION=" + str(dynamic),
                    '-DPROBE_NAME="' + name + '"', '-DPROBE_MATCH="' + match + '"',
