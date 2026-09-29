@@ -24,12 +24,18 @@ ASL_FUNCTIONS = (
     'ASL::Module::FindLocalizedResource(unsigned short const*, unsigned short const*, int&) const',
     'ASL::Module::FindNonLocalizedResource(unsigned short const*, unsigned short const*, int&) const',
 )
+PARSER_FUNCTIONS = (
+    'ML::PiPL::LoadFromResource(std::__1::shared_ptr<ASL::Module>, __CFURL const*)',
+    'ML::PiPL::LoadFromResource(std::__1::shared_ptr<ASL::Module> const&)',
+    'ML::PiPL::SetPiPLData(char*, unsigned int)',
+    'ML::PiPL::SetPiPLValues()',
+)
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--image', type=Path, required=True)
     parser.add_argument('--output-parent', type=Path, required=True)
-    parser.add_argument('--profile', choices=('pipl', 'asl'), default='pipl')
+    parser.add_argument('--profile', choices=('pipl', 'asl', 'parser'), default='pipl')
     args = parser.parse_args()
     image = args.image.resolve(strict=True)
     if not image.is_file() or any(c in str(image) for c in '\"\n\r'):
@@ -40,7 +46,8 @@ def main():
     folder = args.output_parent.resolve(strict=True) / run
     folder.mkdir(mode=0o700)
     commands = ['target create "' + str(image) + '"']
-    commands += ['disassemble -n "' + name + '"' for name in (ASL_FUNCTIONS if args.profile == 'asl' else FUNCTIONS)]
+    selected = {'pipl': FUNCTIONS, 'asl': ASL_FUNCTIONS, 'parser': PARSER_FUNCTIONS}[args.profile]
+    commands += ['disassemble -n "' + name + '"' for name in selected]
     commands += ['quit']
     argv = ['xcrun', 'lldb', '-b', '--no-lldbinit']
     for command in commands:
