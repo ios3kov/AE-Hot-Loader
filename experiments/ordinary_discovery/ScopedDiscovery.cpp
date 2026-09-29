@@ -15,6 +15,7 @@ namespace {
 SPBasicSuite* basic = nullptr;
 AEGP_PluginID plugin_id = 0;
 bool consumed = false;
+void ImageMarker() {}
 
 template<class T> struct Suite {
     SPBasicSuite* provider;
@@ -135,7 +136,7 @@ A_Err EntryPointFunc(SPBasicSuite* suites, A_long, A_long, AEGP_PluginID id,
         scoped::Require(registration.value->AEGP_RegisterIdleHook(id, Idle, nullptr) == 0,
                         "idle hook registration failed");
         Dl_info image{};
-        scoped::Require(dladdr(reinterpret_cast<const void*>(&AEHL_ScopedBuildIdentity), &image) &&
+        scoped::Require(dladdr(reinterpret_cast<const void*>(&ImageMarker), &image) &&
                         image.dli_fname, "research image identity unavailable");
         scoped::Save(research_config, "ready.txt", std::string(research_identity) +
                      "\npid=" + std::to_string(getpid()) + "\nimage=" + image.dli_fname + "\n");

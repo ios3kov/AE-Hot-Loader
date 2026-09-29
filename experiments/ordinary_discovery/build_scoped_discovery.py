@@ -120,14 +120,12 @@ def main():
     getter.restype = ctypes.c_char_p
     if json.loads(getter().decode()) != identity:
         raise ValueError('runtime metadata mismatch')
-    # A null suite pointer must remain inert even if this library is loaded by
-    # a standalone diagnostic process; never invoke a real AE entry point here.
-    entry = library.EntryPointFunc
-    entry.argtypes = [ctypes.c_void_p, ctypes.c_int32, ctypes.c_int32,
-                     ctypes.c_int32, ctypes.c_void_p]
-    entry.restype = ctypes.c_int32
-    if entry(None, 0, 0, 0, None) != 0 or list(evidence.iterdir()):
-        raise ValueError('inactive entrypoint produced side effects')
+    inert = output / 'scoped-inert-tests'
+    run(*(common + ['-I' + str(sdk / 'Headers'), '-I' + str(sdk / 'Headers/SP'),
+                   str(repo / 'tests/scoped_discovery_inert.cpp'), '-o', str(inert)]))
+    inert_result = run(str(inert), str(binary), token)
+    if list(evidence.iterdir()):
+        raise ValueError('inert entrypoint produced filesystem side effects')
     test = output / 'scoped-guard-tests'
     run(*(common + [str(repo / 'tests/scoped_discovery_gate.cpp'), '-o', str(test)]))
     test_result = run(str(test))
@@ -140,8 +138,9 @@ def main():
               'host_executable': str(host), 'scan_root': fixture['scan_root'],
               'evidence': str(evidence), 'activation_env': {'AEHL_SCOPED_GATE_TOKEN': token},
               'checks': {'build_sign_exports': 'PASS', 'identity_getter': 'PASS',
-                         'inert_null_entrypoint': 'PASS', 'native_guard_tests': 'PASS',
+                         'inert_entrypoint': 'PASS', 'native_guard_tests': 'PASS',
                          'live_ae': 'NOT RUN'}, 'native_guard_output': test_result,
+              'inert_entrypoint_output': inert_result, 'inert_test_binary_sha256': sha(inert),
               'native_guard_binary_sha256': sha(test),
               'files': {str(p.relative_to(bundle)): sha(p) for p in sorted(bundle.rglob('*'))
                         if p.is_file()}}

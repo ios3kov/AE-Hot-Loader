@@ -102,6 +102,7 @@ jobs:
         run: |
           set -euo pipefail
           node --test tests/panel.test.cjs | tee "$RUNNER_TEMP/native-evidence/panel.tap"
+          node --test tests/scoped-snapshot.test.cjs | tee "$RUNNER_TEMP/native-evidence/scoped-snapshot.tap"
           python3 -m unittest discover -s tests -p 'test_*.py' -v 2>&1 | tee "$RUNNER_TEMP/native-evidence/python-tests.txt"
           xcrun clang++ -std=c++17 -arch arm64 -Wall -Wextra -Werror tests/scoped_discovery_gate.cpp -o "$RUNNER_TEMP/scoped-guard-tests"
           "$RUNNER_TEMP/scoped-guard-tests" | tee "$RUNNER_TEMP/native-evidence/scoped-guard-tests.txt"
