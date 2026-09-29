@@ -1,6 +1,6 @@
 # AE Hot Loader — current development status
 
-Updated: 2026-09-28. Branch: `research/ordinary-plugin-discovery`.
+Updated: 2026-09-29. Branch: `research/ordinary-plugin-discovery`.
 The branch head identifies development; tested artifacts have their own exact
 source, Build ID, hashes and evidence.
 
@@ -13,9 +13,11 @@ passed all existing build/sign/package/native smoke gates.
 
 The user's latest private preflight showed the resident Agent identity PASS,
 the blank clean project baseline PASS, and RSMB registry presence PASS.
-Real RSMB apply/render is still NOT RUN until the checked harness is executed
-on that host. See CI_CHECKPOINT_d19edca.md and
-ITERATION_RSMB_APPLY_RENDER_2026-09-29.md.
+Real RSMB apply/render remains NOT RUN. A subsequent execution attempt was
+BLOCKED before its bridge request because AE was rendering a non-owned project;
+it created no disposable test project and produced no render output. See
+[the attempt record](RSMB_APPLY_RENDER_ATTEMPT_2026-09-29.md),
+CI_CHECKPOINT_d19edca.md and ITERATION_RSMB_APPLY_RENDER_2026-09-29.md.
 ## Current diagnostic work
 
 The requested user preflight report has been received. Its two read-only
