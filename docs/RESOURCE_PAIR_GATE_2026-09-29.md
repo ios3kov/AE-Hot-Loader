@@ -41,3 +41,39 @@ Neither registry presence nor offline resource reading proves runtime apply or
 render. Flat success would support a resource-path hypothesis only for this
 fixture, not fix RSMB. Both failing would leave dispatch/parser/registry-stage
 hypotheses open. Startup control for this new pair is separate and NOT RUN.
+
+## Live attempt — FAIL
+
+Run `late-a60748b4fc87423f9ed6a4f4ba612aae` under the build directory above.
+Fresh baseline: AE 25.6x101 PID 21778, start Sep 29 12:49:13 2026; Agent
+`native-36483421984-1` identity PASS; blank unsaved clean idle project and
+unchanged-project checks PASS. Both exact names absent. The collector's generic
+registry/RSMB wording is not applicable to these overridden match-name inputs;
+absence is the intended precondition, not a startup compatibility failure.
+
+One reload request was published. No matching response arrived within 35 seconds:
+overall gate FAIL, registry outcome BLOCKED, postflight BLOCKED. Neither fixture
+can be classified registered or unregistered after this attempt. PID-specific
+ps checks did not find PID 21778, and UI application inventory reported AE not
+running. This is stronger than the earlier collector-only failure, but the cause
+is still unknown; no crash report was found in the initial DiagnosticReports
+search. No automatic restart or repeat request was made.
+
+The shared Agent log snapshot ends at entry to ML::LoadPlugins for user MediaCore.
+It has no per-record timestamps/PIDs/request IDs, so it does not prove the exact
+failure point or implicate either fixture. Preserve it as supporting evidence,
+not a correlated crash stack. Snapshot stored as `agent-log-snapshot.txt`.
+
+Cleanup PASS: verified the complete exact installed file set against the manifest,
+then moved the owned `AEHLResourcePair79a6ce4be9f7` directory to this run's
+`retired-timeout` folder. Original installation path absent; files recoverable.
+No bridge files were removed, no third-party files changed, and no host process
+was terminated by the runner. At inspection request/response files were absent.
+Result JSON SHA-256:
+`fb1018541f4f9f10589907887fb17b914d6841be57dc0c0ff9aaa24437f316e9`.
+
+Do not repeat this fixture in the working host until the interrupted scan is
+diagnosed. Next: examine flat payload format/byte order against host parsing
+and seek process-exit evidence, offline first. Build and resource-read PASS do
+not establish that the flat resource is accepted by AE. Original historical
+registration outcomes and prior Dynamic application PASS remain unchanged.
