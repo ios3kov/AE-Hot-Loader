@@ -6,6 +6,15 @@ source, Build ID, hashes and evidence.
 
 ## Current stage — registration-pair startup control
 
+Latest user-authorized working-AE gate: **FAIL**, research source `45de0c9`,
+Build ID `scoped-0b8c8f122e80`. The single embedded fixture image loaded, but
+the registry remained identical (785 effects, target absent). Native before/
+after and independent postflight show the blank clean project unchanged;
+same AE PID remains. No crash observed. The research module was hash-verified
+and retired from autoload; no repeat scan. [Exact runtime evidence and limits](SCOPED_USER_HOST_2026-09-29.md).
+The earlier isolated-host prerequisite below was superseded only for this
+explicitly authorized experiment, not for release certification.
+
 Latest scoped harness: source `1a67e7e`, research Build ID
 `scoped-938e28da8c55`. The external controller now bounds waiting, verifies the
 same PID/start time and independent result, and prevents overlapping/replayed
