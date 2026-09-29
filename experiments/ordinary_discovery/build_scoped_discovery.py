@@ -31,7 +31,19 @@ def main():
     parser.add_argument('--fixture', type=Path, required=True)
     parser.add_argument('--fixture-sha256', required=True,
                         help='expected SHA-256 from the approved fixture record')
+    parser.add_argument('--authorized-host', type=Path,
+                        help='explicitly user-authorized existing AE executable; not isolated')
+    parser.add_argument('--authorized-plugin-root', type=Path,
+                        help='explicitly authorized installation directory for this research module')
     args = parser.parse_args()
+    if bool(args.authorized_host) != bool(args.authorized_plugin_root):
+        parser.error('authorized host and plugin root must be supplied together')
+    if args.authorized_host:
+        for path in (args.authorized_host, args.authorized_plugin_root):
+            if not path.is_absolute() or path.resolve() != path or not path.exists():
+                parser.error('authorized paths must be existing absolute canonical paths')
+        if not args.authorized_host.is_file() or not args.authorized_plugin_root.is_dir():
+            parser.error('invalid authorized host or plugin root')
     repo = Path(__file__).resolve().parents[2]
     owned = repo / 'build-ae-hot-loader'
     fixture_path = args.fixture.absolute()
@@ -57,6 +69,8 @@ def main():
     # This deliberately does not point to /Applications or the running AE.
     # A future supervisor must establish real host isolation at this location.
     host = output / 'host/Adobe After Effects 2025.app/Contents/MacOS/After Effects'
+    if args.authorized_host:
+        host = args.authorized_host
     commit = run('git', '-C', str(repo), 'rev-parse', 'HEAD').strip()
     identity = {'build_id': build_id, 'source_commit': commit, 'source_clean': True,
                 'target': 'aarch64-apple-darwin', 'kind': 'research-only-scoped-aegp',
@@ -86,6 +100,10 @@ def main():
     native_copy.write_text(loader)
     stem = 'AEHLScopedResearch' + build_id.removeprefix('scoped-')
     bundle = output / (stem + '.plugin')
+    installed_bundle = (args.authorized_plugin_root / bundle.name
+                        if args.authorized_host else None)
+    if installed_bundle and installed_bundle.exists():
+        raise ValueError('installation destination already exists')
     contents = bundle / 'Contents'
     (contents / 'MacOS').mkdir(parents=True)
     (contents / 'Resources').mkdir()
@@ -136,6 +154,8 @@ def main():
               'native_changes': 'only the two log destinations redirected to owned evidence',
               'config_sha256': sha(config), 'exports': exports,
               'host_executable': str(host), 'scan_root': fixture['scan_root'], 'match': fixture['match'],
+              'host_mode': 'authorized-user-host' if args.authorized_host else 'owned-isolated-host',
+              'authorized_bundle': str(installed_bundle) if installed_bundle else None,
               'evidence': str(evidence), 'activation_env': {'AEHL_SCOPED_GATE_TOKEN': token},
               'checks': {'build_sign_exports': 'PASS', 'identity_getter': 'PASS',
                          'inert_entrypoint': 'PASS', 'native_guard_tests': 'PASS',

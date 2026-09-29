@@ -50,7 +50,8 @@ def process_identity(pid):
     return {'pid': pid, 'executable': str(Path(os.fsdecode(buffer.value)).resolve()), 'start': start}
 
 
-def prepare(manifest_path, expected_hash, pid, identity_fn=process_identity):
+def prepare(manifest_path, expected_hash, pid, identity_fn=process_identity,
+            authorized_host=None, authorized_bundle=None):
     require(pid > 0, 'invalid PID')
     raw = read(manifest_path)
     require(hashlib.sha256(raw).hexdigest() == expected_hash, 'manifest hash mismatch')
@@ -66,7 +67,15 @@ def prepare(manifest_path, expected_hash, pid, identity_fn=process_identity):
     require(stat.S_ISDIR(info.st_mode) and info.st_uid == os.getuid() and
             stat.S_IMODE(info.st_mode) == 0o700, 'evidence directory is not private/owned')
     host = Path(record['host_executable'])
-    require(host.is_relative_to(base / 'host'), 'host executable outside owned host directory')
+    user_host = record.get('host_mode') == 'authorized-user-host'
+    if user_host:
+        require(authorized_host is not None and authorized_bundle is not None,
+                'explicit authorized host and bundle required')
+        require(str(authorized_host) == str(host) and
+                str(authorized_bundle) == record['authorized_bundle'],
+                'authorized paths differ from manifest')
+    else:
+        require(host.is_relative_to(base / 'host'), 'host executable outside owned host directory')
     no_links(host)
     observed = identity_fn(pid)
     require(observed['executable'] == str(host), 'PID is not the pinned test host')
@@ -78,9 +87,13 @@ def prepare(manifest_path, expected_hash, pid, identity_fn=process_identity):
         'build_id', 'source_commit', 'source_clean', 'target', 'kind',
         'fixture_build_id', 'fixture_manifest_sha256')}, 'loaded research identity mismatch')
     image = Path(ready[2][6:])
-    require(image == image.resolve() and image.is_relative_to(base / 'host') and image.parent.name == 'MacOS' and
+    require(image == image.resolve() and image.parent.name == 'MacOS' and
             image.parent.parent.name == 'Contents', 'research image outside owned host')
     bundle = image.parent.parent.parent
+    if user_host:
+        require(str(bundle) == record['authorized_bundle'], 'research image outside authorized bundle')
+    else:
+        require(image.is_relative_to(base / 'host'), 'research image outside owned host')
     no_links(bundle)
     actual = {}
     for path in bundle.rglob('*'):
@@ -183,9 +196,13 @@ def main():
     parser.add_argument('--pid', required=True, type=int)
     parser.add_argument('--timeout', type=int, default=45, choices=range(1, 61), metavar='1..60')
     parser.add_argument('--execute', action='store_true', help='publish the one-shot request after checks')
+    parser.add_argument('--authorized-host', type=Path)
+    parser.add_argument('--authorized-bundle', type=Path)
     args = parser.parse_args()
     try:
-        record, evidence, observed, request = prepare(args.manifest, args.sha256, args.pid)
+        record, evidence, observed, request = prepare(
+            args.manifest, args.sha256, args.pid,
+            authorized_host=args.authorized_host, authorized_bundle=args.authorized_bundle)
     except (OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
         parser.exit(2, 'BLOCKED: ' + str(error) + '\n')
     if not args.execute:

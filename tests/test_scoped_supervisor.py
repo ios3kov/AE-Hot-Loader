@@ -56,6 +56,54 @@ class ScopedSupervisorTests(unittest.TestCase):
                                identity_fn=lambda pid: self.observed)
         self.assertEqual(list(self.evidence.iterdir()), [])
 
+    def test_user_host_needs_explicit_matching_authorization(self):
+        record = {**self.record, 'source_clean': True, 'kind': 'research-only-scoped-aegp',
+                  'evidence': str(self.evidence), 'host_executable': '/authorized/After Effects',
+                  'host_mode': 'authorized-user-host', 'authorized_bundle': '/authorized/Test.plugin'}
+        manifest = self.base / 'manifest.json'
+        raw = json.dumps(record).encode()
+        manifest.write_bytes(raw)
+        digest = hashlib.sha256(raw).hexdigest()
+        with self.assertRaisesRegex(ValueError, 'explicit authorized'):
+            supervisor.prepare(manifest, digest, 42)
+        with self.assertRaisesRegex(ValueError, 'paths differ'):
+            supervisor.prepare(manifest, digest, 42, authorized_host=Path('/wrong'),
+                               authorized_bundle=Path('/authorized/Test.plugin'))
+        with self.assertRaisesRegex(ValueError, 'PID is not'):
+            supervisor.prepare(manifest, digest, 42, identity_fn=lambda pid: self.observed,
+                               authorized_host=Path('/authorized/After Effects'),
+                               authorized_bundle=Path('/authorized/Test.plugin'))
+        self.assertEqual(list(self.evidence.iterdir()), [])
+
+    def test_authorized_bundle_identity_and_hashes(self):
+        bundle = self.base / 'installed/Test.plugin'
+        image = bundle / 'Contents/MacOS/Test'
+        image.parent.mkdir(parents=True)
+        image.write_bytes(b'identified test binary')
+        host = self.base / 'ordinary/After Effects'
+        record = {**self.record, 'source_clean': True, 'target': 'aarch64-apple-darwin',
+                  'kind': 'research-only-scoped-aegp', 'fixture_build_id': 'fixture',
+                  'fixture_manifest_sha256': 'fixture-hash', 'evidence': str(self.evidence),
+                  'host_executable': str(host), 'host_mode': 'authorized-user-host',
+                  'authorized_bundle': str(bundle),
+                  'activation_env': {'AEHL_SCOPED_GATE_TOKEN': 'test-token'},
+                  'files': {'Contents/MacOS/Test': hashlib.sha256(image.read_bytes()).hexdigest()}}
+        identity = {k: record[k] for k in ('build_id', 'source_commit', 'source_clean', 'target',
+                    'kind', 'fixture_build_id', 'fixture_manifest_sha256')}
+        (self.evidence / 'ready.txt').write_text(json.dumps(identity) + '\npid=42\nimage=' + str(image) + '\n')
+        raw = json.dumps(record).encode()
+        manifest = self.base / 'manifest.json'
+        manifest.write_bytes(raw)
+        def prepare():
+            return supervisor.prepare(manifest, hashlib.sha256(raw).hexdigest(), 42,
+                identity_fn=lambda pid: {**self.observed, 'executable': str(host)},
+                authorized_host=host, authorized_bundle=bundle)
+        self.assertEqual(prepare()[0], record)
+        self.assertFalse((self.evidence / 'request.txt').exists())
+        image.write_bytes(b'changed')
+        with self.assertRaisesRegex(ValueError, 'file/hash mismatch'):
+            prepare()
+
     @unittest.skipUnless(sys.platform == 'darwin', 'macOS exclusive rename API')
     def test_atomic_request_never_replaces_existing_and_has_one_link(self):
         supervisor.publish(self.evidence, self.request)
