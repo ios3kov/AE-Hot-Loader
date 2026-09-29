@@ -33,6 +33,17 @@ PASS: 6/6 focused harness tests, 89/89 Python discovery tests, 6/6 JSX mocks
 and zsh syntax. Corrected live apply/render remains NOT RUN until the new
 identified runner is executed. See
 [the fix record](ITERATION_RSMB_PREFLIGHT_REVISION_FIX_2026-09-29.md).
+
+The first execution of that corrected baseline validator reached the JSX and
+produced PASS for baseline, RSMB apply, one-frame render and disposable-project
+cleanup. The overall launcher still returned FAIL because After Effects
+`DoScriptFile` returned status `0`, not the JSX report path; therefore its
+output-hash, same-PID and postflight steps were NOT RUN. Source
+`f7cae49f5d50b4ff56e0e759945027715afc39d9` now discovers exactly one new,
+user-owned regular evidence report without trusting `DoScriptFile` output.
+Local regression is PASS: 7/7 focused harness tests, 90/90 Python discovery
+tests, 6/6 JSX mocks and zsh syntax. The complete corrected live gate remains
+NOT RUN. See [attempt 3](RSMB_APPLY_RENDER_ATTEMPT_3_2026-09-29.md).
 ## Current diagnostic work
 
 The requested user preflight report has been received. Its two read-only
