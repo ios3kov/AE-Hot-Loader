@@ -6,6 +6,14 @@ source, Build ID, hashes and evidence.
 
 ## Current stage — registration-pair startup control
 
+Latest offline dispatch check: **PASS**, exact AE 25.6 image places a PiPL
+Resource Manager converter around the noncached `GetPiPLs` path and maps the
+fallback virtual slot to AEPlugin/PluginImpl PiPL loading. The runtime receiver,
+conversion invocation and registry insertion in the failed late scan remain
+unobserved. See [dispatch evidence](RESEARCH_PIPL_DISPATCH_2026-09-29.md).
+Next runtime gate requires an isolated host and an embedded-resource fixture;
+do not repeat the raw flat or shared-root scan in the working AE.
+
 Latest standalone public-API experiment: **PASS**, Resource Manager invoked
 our process-local header-only callback; native count changed from 201326592
 to 12. A fresh baseline process returned the original count. Bundle hashes
