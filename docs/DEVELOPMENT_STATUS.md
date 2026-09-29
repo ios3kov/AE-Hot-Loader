@@ -30,8 +30,8 @@ but exposed a launcher validation defect: the collector's additional
 Source `b3c30a09b6106c3c9f57e486bd621e4e2959954f` now validates only the
 required baseline fields with exact types and values. Local regression is
 PASS: 6/6 focused harness tests, 89/89 Python discovery tests, 6/6 JSX mocks
-and zsh syntax. Corrected live apply/render remains NOT RUN until the new
-identified runner is executed. See
+and zsh syntax. At that checkpoint, corrected live apply/render was NOT RUN
+pending execution of the new identified runner. See
 [the fix record](ITERATION_RSMB_PREFLIGHT_REVISION_FIX_2026-09-29.md).
 
 The first execution of that corrected baseline validator reached the JSX and
@@ -42,8 +42,22 @@ output-hash, same-PID and postflight steps were NOT RUN. Source
 `f7cae49f5d50b4ff56e0e759945027715afc39d9` now discovers exactly one new,
 user-owned regular evidence report without trusting `DoScriptFile` output.
 Local regression is PASS: 7/7 focused harness tests, 90/90 Python discovery
-tests, 6/6 JSX mocks and zsh syntax. The complete corrected live gate remains
-NOT RUN. See [attempt 3](RSMB_APPLY_RENDER_ATTEMPT_3_2026-09-29.md).
+tests, 6/6 JSX mocks and zsh syntax. At that checkpoint, the complete corrected
+live gate was NOT RUN. See
+[attempt 3](RSMB_APPLY_RENDER_ATTEMPT_3_2026-09-29.md).
+
+The complete corrected live gate is now PASS for the scoped startup-registered
+RSMB compatibility smoke. Source `f7cae49f5d50b4ff56e0e759945027715afc39d9`
+ran fresh preflight, exact-match apply, one-frame render, cleanup, same-PID
+verification and fresh postflight in AE 25.6x101. The resident Agent remained
+`native-36483421984-1` from source `04fea706`; the render output SHA-256 is
+`49961f447cf8ce22e5f8ff8f6622a0fc6d92f220aac1c85e727ea12881d10071`.
+See [the live PASS record](RSMB_APPLY_RENDER_PASS_2026-09-29.md).
+
+This PASS does not establish controlled cold-start causality or repair
+historical late registration. Temporal quality, MFR, bit depth, color,
+performance and license certification also remain outside this smoke test.
+CI for the two local harness-fix commits is NOT RUN until they are pushed.
 ## Current diagnostic work
 
 The requested user preflight report has been received. Its two read-only
