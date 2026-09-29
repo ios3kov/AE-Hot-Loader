@@ -22,6 +22,17 @@ neither attempt created a disposable project or render output. See the
 [first attempt](RSMB_APPLY_RENDER_ATTEMPT_2026-09-29.md), the
 [follow-up attempt](RSMB_APPLY_RENDER_ATTEMPT_2_2026-09-29.md),
 CI_CHECKPOINT_d19edca.md and ITERATION_RSMB_APPLY_RENDER_2026-09-29.md.
+
+A later fresh preflight observed the required blank, unsaved, clean and idle
+project with Agent identity, registry and unchanged-project checks all PASS,
+but exposed a launcher validation defect: the collector's additional
+`revision` field made whole-object equality reject an otherwise valid baseline.
+Source `b3c30a09b6106c3c9f57e486bd621e4e2959954f` now validates only the
+required baseline fields with exact types and values. Local regression is
+PASS: 6/6 focused harness tests, 89/89 Python discovery tests, 6/6 JSX mocks
+and zsh syntax. Corrected live apply/render remains NOT RUN until the new
+identified runner is executed. See
+[the fix record](ITERATION_RSMB_PREFLIGHT_REVISION_FIX_2026-09-29.md).
 ## Current diagnostic work
 
 The requested user preflight report has been received. Its two read-only
