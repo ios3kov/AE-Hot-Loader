@@ -6,6 +6,14 @@ source, Build ID, hashes and evidence.
 
 ## Current stage — registration-pair startup control
 
+Latest source `8980c3c` corrects fixture parameter setup using actual Adobe SDK
+types. Build `50650366d8b6`: standalone lifecycle and Python 90/90 PASS;
+controlled startup registry PASS for both variants; late registry Dynamic PASS,
+PiPL-only FAIL. Test installations retired with hashes checked. Live application
+and original modal-error resolution remain NOT RUN. See
+[lifecycle correction and fresh evidence](REGISTRATION_PAIR_LIFECYCLE_FIX_2026-09-29.md).
+The following paragraph describes the previous failed fixture, not this build.
+
 The new live comparison recorded both fixtures present at controlled startup;
 late discovery registered Dynamic but not PiPL-only. However, the user reported
 AE error 25::34 (parameter count mismatch) for the Dynamic fixture. Overall
