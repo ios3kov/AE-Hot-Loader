@@ -6,6 +6,15 @@ source, Build ID, hashes and evidence.
 
 ## Current stage — registration-pair startup control
 
+Recovered crash evidence for the failed resource-pair scan: **PASS** for exact
+PID/time/stack correlation. AE PID 21778 received EXC_BAD_ACCESS while its
+PluginImpl PiPL URL-read path was called from Agent `ML::LoadPlugins`. The dump
+contains the flat fixture name but not the faulting URL; exact file and
+instruction remain BLOCKED. Original gate remains FAIL. The retired flat
+fixture now requires explicit offline-only build opt-in; 93/93 Python tests
+PASS. See [new crash record](RESOURCE_PAIR_CRASH_CORRELATION_2026-09-29.md).
+The working AE was not touched; next runtime gate needs an isolated host.
+
 Latest offline dispatch check: **PASS**, exact AE 25.6 image places a PiPL
 Resource Manager converter around the noncached `GetPiPLs` path and maps the
 fallback virtual slot to AEPlugin/PluginImpl PiPL loading. The runtime receiver,
