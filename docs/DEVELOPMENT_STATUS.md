@@ -6,6 +6,13 @@ source, Build ID, hashes and evidence.
 
 ## Current stage — registration-pair startup control
 
+Single embedded-resource fixture offline gate: **PASS** for clean source,
+signed arm64 build, one owned scan-root inventory and standalone PiPL read.
+Build ID `88019a1a01a7`, source `50cb81f`, exact evidence in
+[the scoped fixture record](SCOPED_EMBEDDED_FIXTURE_2026-09-29.md). Live AE
+registration is NOT RUN; safe scoped invocation is BLOCKED because the current
+Agent still scans broad shared roots. The working AE was not touched.
+
 Recovered crash evidence for the failed resource-pair scan: **PASS** for exact
 PID/time/stack correlation. AE PID 21778 received EXC_BAD_ACCESS while its
 PluginImpl PiPL URL-read path was called from Agent `ML::LoadPlugins`. The dump
