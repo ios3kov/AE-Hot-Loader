@@ -35,7 +35,11 @@ for k,v in need.items():
         raise SystemExit("STOP: preflight "+k+" is not PASS")
 want={"dirty":False,"items":0,"queued":0,"rendering":False,"saved":False}
 for phase in ("before","after"):
-    if d.get(phase,{}).get("project") != want:
+    project=d.get(phase,{}).get("project")
+    if not isinstance(project,dict) or any(
+        type(project.get(k)) is not type(v) or project.get(k) != v
+        for k,v in want.items()
+    ):
         raise SystemExit("STOP: "+phase+" project is not blank/clean")
 print("PASS: preflight Agent/RSMB/blank-project")
 PY
