@@ -19,6 +19,7 @@ FUNCTIONS = (
     'ML::PiPL::LoadFromResource(std::__1::shared_ptr<ASL::Module>, short)',
 )
 ASL_FUNCTIONS = (
+    'ASL::LoadResourceFromURL(__CFURL const* const&, int&)',
     'ASL::Module::LoadResourceFromURL(__CFURL const*, int&) const',
     'ASL::Module::LoadResource(short, std::__1::basic_string<unsigned short, std::__1::char_traits<unsigned short>, dvacore::allocator::STLAllocator<unsigned short>> const&, int&) const',
     'ASL::Module::LoadResource(unsigned short const*, unsigned short const*, int&) const',
@@ -26,6 +27,7 @@ ASL_FUNCTIONS = (
     'ASL::Module::FindNonLocalizedResource(unsigned short const*, unsigned short const*, int&) const',
 )
 PARSER_FUNCTIONS = (
+    'ML::PiPLFlipper::PiPLEndianFlipProc(unsigned int, unsigned int, short, void*, unsigned long, unsigned char, void*)',
     'ML::PiPL::LoadFromResource(std::__1::shared_ptr<ASL::Module>, __CFURL const*)',
     'ML::PiPL::LoadFromResource(std::__1::shared_ptr<ASL::Module> const&)',
     'ML::PiPL::SetPiPLData(char*, unsigned int)',
