@@ -6,10 +6,19 @@ source, Build ID, hashes and evidence.
 
 ## Current stage — registration-pair startup control
 
+The new live comparison recorded both fixtures present at controlled startup;
+late discovery registered Dynamic but not PiPL-only. However, the user reported
+AE error 25::34 (parameter count mismatch) for the Dynamic fixture. Overall
+fixture acceptance is FAIL. Both test installations have been retired into
+evidence; loaded images may remain in AE until normal exit. Further live use
+of the no-op fixtures is stopped pending a valid SDK lifecycle implementation.
+See [results and defect](REGISTRATION_PAIR_RESULT_2026-09-29.md).
+
 Stage C of plan A–D, with open gates in A/B. Shared rules were refreshed to
 blob `701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`. A fresh registration-only
 pair was built from clean `f393fbd` with build/run ID `50a85fce3046`:
-build/signature/export checks PASS; installation/startup/late-load NOT RUN.
+build/signature/export checks PASS. At preparation, runtime checks were NOT RUN;
+the subsequent observed results and host error are recorded above.
 The next discriminating gate first validates both exact fixtures at startup,
 then compares late loading of the same bytes. See
 [prepared inputs and acceptance](REGISTRATION_PAIR_NEXT_GATE_2026-09-29.md).
