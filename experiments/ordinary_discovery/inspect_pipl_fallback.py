@@ -33,12 +33,19 @@ PARSER_FUNCTIONS = (
     'ML::PiPL::SetPiPLData(char*, unsigned int)',
     'ML::PiPL::SetPiPLValues()',
 )
+DISPATCH_FUNCTIONS = (
+    'ML::PiPLFlipper::InstallPiPLFlipper::InstallPiPLFlipper()',
+    'ML::PiPLFlipper::InstallPiPLFlipper::~InstallPiPLFlipper()',
+    'ML::PluginImpl::GetPiPLs()',
+    'ML::AEPlugin::LoadPiPLs()',
+    'ML::PluginImpl::LoadPiPLs()',
+)
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--image', type=Path, required=True)
     parser.add_argument('--output-parent', type=Path, required=True)
-    parser.add_argument('--profile', choices=('pipl', 'asl', 'parser'), default='pipl')
+    parser.add_argument('--profile', choices=('pipl', 'asl', 'parser', 'dispatch'), default='pipl')
     args = parser.parse_args()
     image = args.image.resolve(strict=True)
     if not image.is_file() or any(c in str(image) for c in '\"\n\r'):
@@ -49,7 +56,8 @@ def main():
     folder = args.output_parent.resolve(strict=True) / run
     folder.mkdir(mode=0o700)
     commands = ['target create "' + str(image) + '"']
-    selected = {'pipl': FUNCTIONS, 'asl': ASL_FUNCTIONS, 'parser': PARSER_FUNCTIONS}[args.profile]
+    selected = {'pipl': FUNCTIONS, 'asl': ASL_FUNCTIONS,
+                'parser': PARSER_FUNCTIONS, 'dispatch': DISPATCH_FUNCTIONS}[args.profile]
     commands += ['disassemble -n "' + name + '"' for name in selected]
     commands += ['quit']
     argv = ['xcrun', 'lldb', '-b', '--no-lldbinit']
@@ -58,13 +66,24 @@ def main():
     result = subprocess.run(argv, capture_output=True, text=True, timeout=30)
     with (folder / 'disassembly.txt').open('x') as f:
         f.write(result.stdout + result.stderr)
+    vtables = None
+    if args.profile == 'dispatch':
+        vtables = subprocess.run(['otool', '-s', '__DATA_CONST', '__const', str(image)],
+                                 capture_output=True, text=True, timeout=30)
+        with (folder / 'vtables.txt').open('x') as f:
+            f.write(vtables.stdout + vtables.stderr)
     record = dict(run_id=run, scope='offline-only-not-runtime-proof',
                   image=str(image), image_sha256=sha, command=argv,
                   source_commit=subprocess.check_output(['git','rev-parse','HEAD'], cwd=repo, text=True).strip(),
                   source_state=subprocess.check_output(['git','status','--porcelain'], cwd=repo, text=True),
-                  status='PASS' if result.returncode == 0 and hashlib.sha256(image.read_bytes()).hexdigest() == sha else 'FAIL',
+                  status='PASS' if result.returncode == 0 and
+                    (vtables is None or vtables.returncode == 0) and
+                    hashlib.sha256(image.read_bytes()).hexdigest() == sha else 'FAIL',
                   returncode=result.returncode,
                   output_sha256=hashlib.sha256((folder/'disassembly.txt').read_bytes()).hexdigest())
+    if vtables is not None:
+        record['vtables_returncode'] = vtables.returncode
+        record['vtables_sha256'] = hashlib.sha256((folder/'vtables.txt').read_bytes()).hexdigest()
     with (folder / 'record.json').open('x') as f:
         json.dump(record, f, indent=2)
     print(record['status'], folder)
