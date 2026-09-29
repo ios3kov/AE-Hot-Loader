@@ -14,6 +14,7 @@ class ResourcePairTests(unittest.TestCase):
         self.assertFalse(pair.pair_kind_allowed('resource', False))
         self.assertTrue(pair.pair_kind_allowed('resource', True))
         self.assertTrue(pair.pair_kind_allowed('dynamic', False))
+        self.assertTrue(pair.pair_kind_allowed('embedded', False))
         result = subprocess.run(
             [sys.executable, str(Path(pair.__file__)), '--sdk', '/nonexistent',
              '--pair-kind', 'resource'], capture_output=True, text=True)
@@ -23,6 +24,7 @@ class ResourcePairTests(unittest.TestCase):
     def test_variants(self):
         self.assertEqual(pair.variants('resource'), [(0,'Rsrc','rsrc'),(0,'Flat','flat')])
         self.assertEqual(pair.variants('dynamic'), [(0,'PiPL','rsrc'),(1,'Dynamic','rsrc')])
+        self.assertEqual(pair.variants('embedded'), [(0,'Embedded','rsrc')])
         with self.assertRaises(ValueError): pair.variants('unknown')
 
     def test_only_identities_differ(self):

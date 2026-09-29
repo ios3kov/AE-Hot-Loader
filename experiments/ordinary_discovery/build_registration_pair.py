@@ -40,6 +40,8 @@ def pipl(name, match):
 
 
 def variants(kind):
+    if kind == "embedded":
+        return [(0, "Embedded", "rsrc")]
     if kind == "dynamic":
         return [(0, "PiPL", "rsrc"), (1, "Dynamic", "rsrc")]
     if kind == "resource":
@@ -55,7 +57,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--sdk', type=Path, required=True,
                         help='Adobe After Effects SDK Examples directory')
-    parser.add_argument('--pair-kind', choices=('dynamic', 'resource'), default='dynamic')
+    parser.add_argument('--pair-kind', choices=('dynamic', 'resource', 'embedded'), default='dynamic')
     parser.add_argument('--allow-retired-flat-offline-build', action='store_true',
                         help='permit reproducing the retired flat fixture offline only; never install or scan it')
     args = parser.parse_args()
@@ -68,8 +70,13 @@ def main():
     root = Path(__file__).resolve().parents[2]
     source = Path(__file__).with_name("RegistrationPair.cpp")
     run_id = uuid.uuid4().hex[:12]
-    output = root / "build-ae-hot-loader" / (args.pair_kind + "-pair-" + run_id if args.pair_kind == 'resource' else "registration-pair-" + run_id)
+    prefix = "embedded-fixture-" if args.pair_kind == 'embedded' else (
+        "resource-pair-" if args.pair_kind == 'resource' else "registration-pair-")
+    output = root / "build-ae-hot-loader" / (prefix + run_id)
     output.mkdir(parents=True, exist_ok=False)
+    scan_root = output / "scan-root" if args.pair_kind == 'embedded' else output
+    if args.pair_kind == 'embedded':
+        scan_root.mkdir()
     record = {
         "run_id": run_id, "commit": run("git", "rev-parse", "HEAD").strip(),
         "source_state": run("git", "status", "--porcelain"),
@@ -79,12 +86,13 @@ def main():
         "ae_effect_header_sha256": hashlib.sha256((headers / 'AE_Effect.h').read_bytes()).hexdigest(),
         "scope": "registration only; do not apply or render", "probes": [],
         "pair_kind": args.pair_kind,
+        "scan_root": "scan-root" if args.pair_kind == 'embedded' else None,
     }
     for dynamic, label, representation in variants(args.pair_kind):
         name = "AEHL " + label + " " + run_id
         match = "AEHL." + label + "." + run_id
         stem = "AEHLPair" + label + run_id
-        bundle = output / (stem + ".plugin")
+        bundle = scan_root / (stem + ".plugin")
         contents = bundle / "Contents"
         (contents / "MacOS").mkdir(parents=True)
         (contents / "Resources").mkdir()
@@ -122,7 +130,7 @@ def main():
             "resource_representation": representation,
             "pipl_sha256": hashlib.sha256(data).hexdigest(),
             "unsigned_binary_sha256": unsigned_hash,
-            "bundle": bundle.name, "command": command, "exports": exports,
+            "bundle": str(bundle.relative_to(output)), "command": command, "exports": exports,
             "files": {str(p.relative_to(bundle)): hashlib.sha256(p.read_bytes()).hexdigest()
                       for p in sorted(bundle.rglob("*")) if p.is_file()}})
     (output / "manifest.json").write_text(json.dumps(record, indent=2) + "\n")
