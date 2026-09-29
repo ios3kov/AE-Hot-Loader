@@ -6,6 +6,11 @@ source, Build ID, hashes and evidence.
 
 ## Current stage — registration-pair startup control
 
+Latest research: offline inspection confirms non-dynamic PiPL fallback paths
+exist in the exact installed PluginSupport image. Runtime dispatch/resource
+results remain unproven; no safe corrective operation is established. See
+[PiPL fallback evidence and next checks](RESEARCH_PIPL_FALLBACK_2026-09-29.md).
+
 Latest Dynamic application gate: **PASS**, source `b97b401`, fixture Build ID
 `50650366d8b6`. Exact-match add, built-in-only properties, removal, cleanup and
 independent same-process postflight passed. The prior zero-child assertion was
