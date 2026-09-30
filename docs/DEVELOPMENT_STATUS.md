@@ -7,104 +7,104 @@ and shared DEVELOPMENT_RULES, rechecked at unchanged blob
 `701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`.
 
 The preceding status is preserved at
-[immutable checkpoint 454806c](https://github.com/ios3kov/AE-Hot-Loader/blob/454806c96d1c2f869d5d00461a03b3182ce52c83/docs/DEVELOPMENT_STATUS.md).
-Dated evidence remains unchanged. Old next-step instructions do not renew
-permissions or establish a current runtime baseline.
+[immutable checkpoint 8489d5c](https://github.com/ios3kov/AE-Hot-Loader/blob/8489d5c51cd08389e1f3c52a0985f53510e361a1/docs/DEVELOPMENT_STATUS.md).
+Dated evidence remains unchanged. Old instructions do not renew permissions
+or establish a fresh runtime baseline.
 
-## Latest result — complete v3 capture; resource and video-module paths separated
+## Latest result — separate resource-effect registration chain mapped
 
-The user supplied `AEHL-MEE.tk18ws_t.zip`. All 12 payload hashes match its
-record. Recomputed selection and actual v3 transcript validation pass:
-41 windows, 3529 addressed instructions, 14116 bytes, no omitted/capped windows,
-empty stderr and final quit. The before/after MEE hash statements match the
-pinned image. Binary bytes were not supplied for independent image hashing.
-This completes the requested file-only capture, not live registration.
+The user supplied original PLUG.dylib and FLT.dylib in
+`AEHL-PLUG-FLT.WyTSaS.zip`. Both received binaries were independently hashed
+and match the identical before/after source statements. They were only read,
+never loaded or executed. Input hashes were rechecked after analysis.
 
-New static finding: the identified AELibraryVideoFilterFactory checks the
-PiPL resource-origin predicate. On the normal resource branch it retains the
-IPlugin reference in a separate collection at factory+0x20, writes output
-status zero and returns no video module. CreateUnknown only appends non-null
-modules to the collection at +0x08 read by GetModules. AddModuleToList for this
-concrete factory is a bare return instruction.
+New conditional static chain: FLT_Birth installs FLT_PLUGScanFunc into PLUG's
+scan list; PLUG_Search's file path invokes matching callbacks. The FLT callback
+reads resource PiPLs and reaches FLTp_FiltSetup. A successful accepted path
+registers a PLUG routine, then FLTp_AddEffect reaches the actual FLT filter
+registry vector/map. Routine registration and effect publication are distinct.
 
-The retained-vector trace name mentions PLUG, but the shown branch does not
-establish an actual PLUG registration call. A non-resource lane separately
-constructs a video module and invokes a host setter callback during SetupFilter.
-These paths are consistent with the historical dynamic/resource contrast;
-the failed live run's receiver and predicate values remain unobserved.
-Do not claim a proven live root cause or a repaired loader.
+A path predicate supplied to PLUG_Birth can skip a file before that callback.
+Its concrete implementation and the normal caller's inputs are not identified.
+The empty-input notifier does not enumerate these resource effects; forcing it
+is not the missing resource pass. Neither PLUG_Search nor FLT_SetupAEPlugin
+is explicitly called in the current InternalLoader.cpp, whose blob remains
+`df64e125a984199e45cd777eef8c16a556ec393b`.
 
-Four virtual-table entries were cross-checked with PluginSupport's constructor,
-neighboring symbols and predicates, interpreting serialized chained-rebase
-words rather than treating them as resident pointers. The original fixup-format
-header and live receiver were not supplied; those limits remain explicit.
+Together with the prior MEE resource-retention branch, this supports a concrete
+missing-pass hypothesis, not proof of the failed live run's receiver, predicate
+or root cause. Do not add a speculative private call, fabricate scan data,
+change the bool, rerun initialization or trigger a broad PLUG scan.
 
-See [exact input hashes, 33 structural assertions, static addresses and next gate](MEE_RESOURCE_ROUTE_2026-09-30.md).
-All 33 assertions pass on the supplied text; these are not unit or runtime tests.
-Original inputs remain unchanged. No product/collector code, native build,
-installation, restart, main change, merge or release in this continuation.
+Local LLVM 17 decoded the two arm64 text sections: 14572 and 165100 addressed
+instructions, with full section-address coverage and no unknown words in the
+final apple-m1 decoding. Sixteen BL targets were checked directly against raw
+instruction words and eight additional text anchors passed. These **24
+structural assertions** are static evidence, not unit or live-AE tests.
+
+See [binary identities, exact addresses, checks, limitations and next request](PLUG_FLT_RESOURCE_REGISTRATION_2026-09-30.md).
+No product/collector source, native build, installation, restart, main change,
+merge or release in this continuation. Proprietary binaries and raw dumps stay
+private, not in Git.
+
+## Next safe gate
+
+Inspect the normal resource-pass caller before considering a bounded runtime
+test. The already received AfterFXLib symbols import PLUG_Search from PLUG,
+but the failed earlier dump contains no instruction bodies. Obtain only the
+original AfterFXLib binary with source-before/source-after/copy hash agreement;
+the linked report includes a tested file-copy command. No repeat MEE/PLUG/FLT
+collection or LLDB collector is requested. The identity of the path-predicate
+owner remains unresolved; an import is not proof of actual invocation.
+
+The file-copy command passed bash syntax and an isolated Linux fixture check,
+not a Mac host run. It does not require AE running or execute any Adobe code.
+Stop on missing files or changed hashes and preserve partial evidence.
+
+Any risky host test requires a specific falsifiable hypothesis, fresh host/
+project/loaded identity, bounded evidence and separate authorization. The
+installation and one-restart permissions remain consumed. No unchanged scan,
+forced notifier, private teardown, native unload or preference reset is allowed.
 
 ## Collector and prior automated checks
 
-The successful uploaded collection used unchanged v3:
-code/test commit `1fa62a775b0b0197f51c4e93b86caefba95c43d4`,
-collector blob `57d992404cdb7e1cda82341db1c3e795173efeb9`, SHA-256
+Last changed code/test commit remains
+`1fa62a775b0b0197f51c4e93b86caefba95c43d4`, collector v3, blob
+`57d992404cdb7e1cda82341db1c3e795173efeb9`, SHA-256
 `1e198f5bf92e125c6577b9d60dd30754eb6ba687b290a9df547f22fb982c2d7e`.
-The old v2 false-alarm capture remains a historical incomplete capture; its
-missing after-image hash is not repaired by validating its transcript.
+Its complete MEE capture is recorded in
+[MEE_RESOURCE_ROUTE](MEE_RESOURCE_ROUTE_2026-09-30.md); the historical v2
+incomplete capture is not retrospectively promoted to PASS.
 
-Prior CI for exact code 1fa62a7: research `36750543637` PASS, full macOS
+Prior CI for that exact code: research `36750543637` PASS, macOS
 `36750543464` PASS; macOS Python 208/208, research Python 202 PASS/six skips,
-Node 62 PASS, native scoped guards 15 PASS. These are the previously recorded
-checks, not new tests of a product change or real-AE integration.
-[Collector fix and CI evidence](MEE_FACTORY_TRANSCRIPT_FIX_2026-09-30.md).
-
-Full regression and static-security audit were not rerun for this docs-only
-change. Five historical audit findings remain unresolved. Documentation uses
-[skip ci]; a new documentation head is not a newly tested native artifact.
+Node 62 PASS, native scoped guards 15 PASS. These are prior checks, not new
+tests of a product change or real-AE integration.
+[Collector checks](MEE_FACTORY_TRANSCRIPT_FIX_2026-09-30.md).
+This documentation-only continuation uses [skip ci]. Full regression and
+static-security audit were not rerun; five historical findings remain open.
 
 ## Last real host results — separate and unchanged
 
 | Gate | Result |
 |---|---|
-| Scoped embedded late registration | FAIL: source 45de0c9, Build ID scoped-0b8c8f122e80, fixture 88019a1a01a7; 785 unchanged effect identities, target absent |
+| Scoped embedded late registration | FAIL: source45de0c9, Build ID scoped-0b8c8f122e80, fixture88019a1a01a7; 785 unchanged effects, target absent |
 | RSMB startup-registered apply/render | PASS: historical identified one-frame smoke, not broad certification |
 | RSMB late registration | FAIL: retained separately from startup smoke |
 | Dynamic fixture application | PASS: earlier exact-match add/remove; render NOT RUN |
 | Earlier flat-resource failure | FAIL: historical crash evidence, not fixed |
-| Current AE/project/runtime identity | NOT OBSERVED; file collection is not a live baseline |
+| New live registration/apply/render | NOT RUN |
+| Current AE/project/runtime identity | NOT OBSERVED; received binaries are not a live baseline |
 
 [Scoped host test](SCOPED_USER_HOST_2026-09-29.md),
 [RSMB apply/render](RSMB_APPLY_RENDER_PASS_2026-09-29.md),
 [Dynamic application](REGISTRATION_APPLY_PASS_2026-09-29.md),
 [flat-resource crash](RESOURCE_PAIR_CRASH_CORRELATION_2026-09-29.md).
-The earlier PID 78417 observation is not a fresh blank/clean/idle baseline.
+The earlier PID78417 observation is not a fresh blank/clean/idle baseline.
 Local Mac source was last reported as ce5d80d; no local pull/update is claimed.
-Reference product remains source 04fea706, Build ID native-36483421984-1;
+Reference product remains source04fea706, Build ID native-36483421984-1;
 no installed Agent, shell, panel or third-party effect changed.
-
-## Next safe gate
-
-Do not repeat MEE collection or the unchanged in-host scan. Inspect the resource
-effect path in PLUG and FLT, whose dependency names/imports are present in the
-supplied data. Identify its normal caller and relation to the host setter;
-do not confuse an AEGP scan path with ordinary effect registration.
-
-The linked report contains a read-only request that copies just PLUG.dylib and
-FLT.dylib into a private Desktop archive, records before/after source hashes
-and checks copied bytes. Original binaries permit independent hashing and
-local offline analysis without another heuristic LLDB collector. The copy/archive
-command passed shell syntax and an isolated Linux fixture check; actual Mac
-execution is not yet observed. The local offline reader successfully inspected
-an owned synthetic arm64 Mach-O without executing it. Proprietary binaries and
-raw disassembly must remain private, never committed to the repository.
-
-No discovered name or static branch authorizes private host calls. A risky live
-experiment still requires separate consent, a falsifiable hypothesis, bounded
-evidence and fresh host/project/runtime identities. Previous installation and
-one-restart permissions are consumed. No forced notifier, speculative bool flip,
-private teardown, preference reset or native unload.
 
 Scope cleanup, controlled cold-start causality, demonstrated safe registration,
 separate apply/render, real panel integration, IPC/repeat/timeout checks,
-compatibility and the clean-candidate release gates remain open.
+compatibility and clean-candidate release gates remain open.
