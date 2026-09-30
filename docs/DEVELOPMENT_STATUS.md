@@ -11,7 +11,46 @@ Previous status is preserved at
 Dated evidence is not rewritten. Earlier instructions do not renew risky-action
 permissions or supply a current runtime baseline.
 
-## Latest implementation — resource-pass transaction policy, not a runnable AE test
+## Current continuation — real disk journal, native binding still blocked
+
+Added `ResourcePassJournal.hpp`: concrete disk-backed claim, snapshot, call-marker
+and final-result methods for the existing resource-pass backend. `RunJournaled`
+requires final evidence persistence before returning PASS. No FILE/PLUG symbols,
+AE entrypoint or installable research bridge have been connected.
+
+Exact code/test commit: **`5beb51c1dbd70d1f0c6115578387f27dfab78776`**.
+The new 32 cases use actual private files and child processes, including an
+eight-process race with one winner, exits after claim/marker, a real partial
+write failure and refusal of symlinks, hardlinks, changed records and directory
+replacement. The host observations and spec/search callbacks remain synthetic.
+No claim of AE registration, power-loss safety or hostile-owner protection.
+
+Research CI `36761528713` and full macOS CI `36761528656`: **PASS**.
+macOS Python: **210/210**, including the 32 new journal cases and 63 original
+policy cases as nested tests. Research Linux: **204 PASS / six skips**, 210
+collected. Node: **62/62**. Existing scoped native guards: **15 PASS**.
+Local clang/GCC strict builds, ASan/UBSan and focused clang analysis also passed.
+Both CI evidence archive hashes and all three source files were verified.
+
+[Implementation, real checks, scope, hashes and next FILE request](RESOURCE_PASS_JOURNAL_2026-09-30.md).
+The new storage component intentionally does not alter scoped::Save: it adds
+pinned directory descriptors, record revalidation and directory fsync only for
+the future resource pass. Existing scoped-discovery commands remain unchanged.
+
+Native integration is still **BLOCKED** on the unavailable FILE.dylib
+implementation and unverified FILE_New/string/ownership/roundtrip contract.
+The supplied aelib/PLUG/FLT contain imports, not that implementation. The linked
+record includes a minimal copy/hash/archive request for FILE.dylib, tested on an
+owned dummy file. It does not contact AE, scan, install or restart anything.
+
+No old authorization is reused. Current AE/project/loaded identity is **NOT
+OBSERVED**. Scoped registration FAIL, RSMB startup-registered apply/render PASS
+and historical late-registration FAIL are unchanged and separate. Five known
+static-audit findings remain open. Product source, main and installed components
+are unchanged. No release. CI applies to the exact code commit, not the later
+documentation-only head. The earlier record below retains its original scope.
+
+## Earlier implementation — resource-pass transaction policy, not a runnable AE test
 
 Added `experiments/ordinary_discovery/ResourcePassGate.hpp`, 63 synthetic native
 cases in `tests/resource_pass_gate.cpp`, and their Python/CI launcher.
@@ -104,7 +143,7 @@ The earlier PID 78417 is not a current baseline. Mac source was last reported
 as ce5d80d; no local pull/update is claimed. Reference installed product remains
 04fea706 / native-36483421984-1 unless fresh runtime evidence establishes otherwise.
 
-## Next development boundary
+## Earlier development boundary — current continuation takes precedence
 
 Complete the native FILE/PLUG adapter contract and a separate create/roundtrip/
 release check, then wire the policy into a separately identified scoped AEGP
