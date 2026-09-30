@@ -3,80 +3,65 @@
 Updated: 2026-09-30. Branch: `research/ordinary-plugin-discovery`.
 Current stage: **C of A–D**, with open gates in A/B/D. No completion percentage
 or release approval. Follow [PRODUCTION_PLAN](PRODUCTION_PLAN.md), AGENTS.md
-and the shared DEVELOPMENT_RULES, rechecked at unchanged blob
+and shared DEVELOPMENT_RULES, rechecked at unchanged blob
 `701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`.
 
-The preceding status remains available at
-[immutable checkpoint 475f1ef](https://github.com/ios3kov/AE-Hot-Loader/blob/475f1efce04ddfacdd87a7b243fc748b5916ef71/docs/DEVELOPMENT_STATUS.md).
-Dated evidence is not rewritten; old next-step instructions do not override
-this page, renew permissions or establish a current runtime baseline.
+The preceding status is preserved at
+[immutable checkpoint 454806c](https://github.com/ios3kov/AE-Hot-Loader/blob/454806c96d1c2f869d5d00461a03b3182ce52c83/docs/DEVELOPMENT_STATUS.md).
+Dated evidence remains unchanged. Old next-step instructions do not renew
+permissions or establish a current runtime baseline.
 
-## Latest result — false collector alarm resolved; concrete factory identified
+## Latest result — complete v3 capture; resource and video-module paths separated
 
-The supplied MEE error archive was inspected. All 12 payload hashes match its
-record; all 96 requested windows and 15408 addressed instructions are present,
-followed by quit, with empty stderr. The v2 collector mistook six instruction
-annotations containing error: or std::runtime_error:: for a debugger failure.
-This defect is reproduced from the actual saved output. The original capture
-still lacks its after-image hash, so its FAIL and unverified image stability
-are preserved; transcript validation alone does not make it a complete capture.
+The user supplied `AEHL-MEE.tk18ws_t.zip`. All 12 payload hashes match its
+record. Recomputed selection and actual v3 transcript validation pass:
+41 windows, 3529 addressed instructions, 14116 bytes, no omitted/capped windows,
+empty stderr and final quit. The before/after MEE hash statements match the
+pinned image. Binary bytes were not supplied for independent image hashing.
+This completes the requested file-only capture, not live registration.
 
-Static MEE code now links the selected registry GUID
-`7a7d3cd3-6b81-48f8-bee0-ec40018a4432` to
-`ML::AELibraryVideoFilterFactory`. MEE_GetVideoFilterModules calls that same
-factory's Instance/GetModules. This establishes a concrete static inspection
-target, not the failed live run's receiver, rejection reason or a safe fix.
+New static finding: the identified AELibraryVideoFilterFactory checks the
+PiPL resource-origin predicate. On the normal resource branch it retains the
+IPlugin reference in a separate collection at factory+0x20, writes output
+status zero and returns no video module. CreateUnknown only appends non-null
+modules to the collection at +0x08 read by GetModules. AddModuleToList for this
+concrete factory is a bare return instruction.
 
-The prior selector gave every MEE_* function priority over factory methods.
-Consequently the capped output omitted the key Create/CreateUnknown/
-CreateUnknownImpl/AddModuleToList/GetModules bodies. Their symbols exist but
-implementation semantics are not established. [Exact findings and evidence](MEE_FACTORY_TRANSCRIPT_FIX_2026-09-30.md).
+The retained-vector trace name mentions PLUG, but the shown branch does not
+establish an actual PLUG registration call. A non-resource lane separately
+constructs a video module and invokes a host setter callback during SetupFilter.
+These paths are consistent with the historical dynamic/resource contrast;
+the failed live run's receiver and predicate values remain unobserved.
+Do not claim a proven live root cause or a repaired loader.
 
-## Verified collector v3
+Four virtual-table entries were cross-checked with PluginSupport's constructor,
+neighboring symbols and predicates, interpreting serialized chained-rebase
+words rather than treating them as resident pointers. The original fixup-format
+header and live receiver were not supplied; those limits remain explicit.
 
-Code/test commit: `1fa62a775b0b0197f51c4e93b86caefba95c43d4`.
-Collector blob: `57d992404cdb7e1cda82341db1c3e795173efeb9`.
-Standalone `AEHL-collect-factory-v3.py`: 14644 bytes; SHA-256
+See [exact input hashes, 33 structural assertions, static addresses and next gate](MEE_RESOURCE_ROUTE_2026-09-30.md).
+All 33 assertions pass on the supplied text; these are not unit or runtime tests.
+Original inputs remain unchanged. No product/collector code, native build,
+installation, restart, main change, merge or release in this continuation.
+
+## Collector and prior automated checks
+
+The successful uploaded collection used unchanged v3:
+code/test commit `1fa62a775b0b0197f51c4e93b86caefba95c43d4`,
+collector blob `57d992404cdb7e1cda82341db1c3e795173efeb9`, SHA-256
 `1e198f5bf92e125c6577b9d60dd30754eb6ba687b290a9df547f22fb982c2d7e`.
-The standalone file is byte-identical to the successful macOS CI source snapshot.
+The old v2 false-alarm capture remains a historical incomplete capture; its
+missing after-image hash is not repaired by validating its transcript.
 
-Nonzero subprocess exits still fail. Validation now distinguishes diagnostic
-lines from instruction data and requires every expected command/address plus
-final quit; empty, partial, replayed and misordered transcripts fail closed.
-The old --force correction is retained.
+Prior CI for exact code 1fa62a7: research `36750543637` PASS, full macOS
+`36750543464` PASS; macOS Python 208/208, research Python 202 PASS/six skips,
+Node 62 PASS, native scoped guards 15 PASS. These are the previously recorded
+checks, not new tests of a product change or real-AE integration.
+[Collector fix and CI evidence](MEE_FACTORY_TRANSCRIPT_FIX_2026-09-30.md).
 
-New explicit mode: `--module MEE --factory-only`. It pins the known main/MEE
-image hashes and reads only the identified factory/module and related anchors.
-On the supplied symbols: 41 windows, 37 previously missing plus four revisited
-anchors, 14116 bytes, no cap/omission. This does not prove exhaustive function
-boundaries. Ordinary mode retains 4096 bytes/window; explicit factory mode
-allows 8192 to include the observed 4148-byte next-symbol span. The 96-window,
-timeout/output limits and before/after image checks remain. FLT is not requested
-at this gate because the concrete selected factory was found in MEE.
-
-## Checks for exact source 1fa62a7
-
-| Check | Result and scope |
-|---|---|
-| Local Python regression | 202 PASS, six macOS-only skips; 208 collected |
-| Local focused checks | 55 PASS, two real-LLDB skips on Linux |
-| Local Node | 62 PASS; panel/snapshot mocks, not AE |
-| Saved MEE transcript and focused selection | PASS, supplied-file analysis only |
-| Research CI | PASS, run 36750543637; 202 Python PASS, six skips, 62 Node PASS |
-| Full macOS CI | PASS, run 36750543464; build/sign/package/smoke steps complete |
-| macOS Python | 208/208 PASS, no skips |
-| Real macOS LLDB regression | PASS: valid error: string accepted; old incompatible --force still fails |
-| Native scoped guards | 15 PASS, mock loader, not AE |
-| Downloaded evidence/source identity | PASS; both evidence ZIP hashes and all four changed code/test files verified |
-| Actual v3 factory-only collection on user's Mac | NOT RUN; next bounded file-only request |
-| Full static-security audit | NOT RUN again; five historical findings remain unresolved |
-
-Real LLDB tests used Xcode 16.4/lldb-1700.0.9.502 and compiled an owned arm64
-fixture without executing it. The user's saved transcript came from
-lldb-2103.0.34.103 and was checked offline, not by a new host run. Detailed
-artifact IDs/hashes are in the linked record. Documentation commits use
-[skip ci]; CI applies to exact code 1fa62a7. The native package is not handed
-over or installed. Green CI does not clear unreviewed warnings or certify AE.
+Full regression and static-security audit were not rerun for this docs-only
+change. Five historical audit findings remain unresolved. Documentation uses
+[skip ci]; a new documentation head is not a newly tested native artifact.
 
 ## Last real host results — separate and unchanged
 
@@ -84,10 +69,10 @@ over or installed. Green CI does not clear unreviewed warnings or certify AE.
 |---|---|
 | Scoped embedded late registration | FAIL: source 45de0c9, Build ID scoped-0b8c8f122e80, fixture 88019a1a01a7; 785 unchanged effect identities, target absent |
 | RSMB startup-registered apply/render | PASS: historical identified one-frame smoke, not broad certification |
-| RSMB late registration | FAIL: historical result, not repaired by startup smoke |
+| RSMB late registration | FAIL: retained separately from startup smoke |
 | Dynamic fixture application | PASS: earlier exact-match add/remove; render NOT RUN |
 | Earlier flat-resource failure | FAIL: historical crash evidence, not fixed |
-| Fresh current AE/project/runtime identity | NOT OBSERVED; offline file inspection is not a live baseline |
+| Current AE/project/runtime identity | NOT OBSERVED; file collection is not a live baseline |
 
 [Scoped host test](SCOPED_USER_HOST_2026-09-29.md),
 [RSMB apply/render](RSMB_APPLY_RENDER_PASS_2026-09-29.md),
@@ -100,19 +85,26 @@ no installed Agent, shell, panel or third-party effect changed.
 
 ## Next safe gate
 
-Collect only the exact v3 diagnostic with `--module MEE --factory-only`.
-It does not require AE running, attach, launch, script, scan, unload or install.
-It writes a new private Desktop archive and preserves prior evidence. Stop on
-hash mismatch or tool error. Then inspect the missing factory's PiPL decisions
-and module-collection updates offline. Do not infer registration success from
-candidate counts, loaded images, disassembly or tests of the collector.
+Do not repeat MEE collection or the unchanged in-host scan. Inspect the resource
+effect path in PLUG and FLT, whose dependency names/imports are present in the
+supplied data. Identify its normal caller and relation to the host setter;
+do not confuse an AEGP scan path with ordinary effect registration.
 
-Any risky live operation still needs a falsifiable hypothesis, bounded evidence,
-fresh host/project/loaded identity and separate authorization. The prior install
-and one-restart permissions are consumed. No unchanged in-host scan, speculative
-bool flip, forced notifier, private teardown, preference reset or native unload.
+The linked report contains a read-only request that copies just PLUG.dylib and
+FLT.dylib into a private Desktop archive, records before/after source hashes
+and checks copied bytes. Original binaries permit independent hashing and
+local offline analysis without another heuristic LLDB collector. The copy/archive
+command passed shell syntax and an isolated Linux fixture check; actual Mac
+execution is not yet observed. The local offline reader successfully inspected
+an owned synthetic arm64 Mach-O without executing it. Proprietary binaries and
+raw disassembly must remain private, never committed to the repository.
+
+No discovered name or static branch authorizes private host calls. A risky live
+experiment still requires separate consent, a falsifiable hypothesis, bounded
+evidence and fresh host/project/runtime identities. Previous installation and
+one-restart permissions are consumed. No forced notifier, speculative bool flip,
+private teardown, preference reset or native unload.
 
 Scope cleanup, controlled cold-start causality, demonstrated safe registration,
 separate apply/render, real panel integration, IPC/repeat/timeout checks,
-compatibility and clean-candidate release gates remain open. No native product
-source, main, merge or release was changed in this continuation.
+compatibility and the clean-candidate release gates remain open.
