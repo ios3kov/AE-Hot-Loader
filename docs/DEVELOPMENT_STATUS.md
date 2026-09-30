@@ -1,395 +1,125 @@
 # AE Hot Loader — current development status
 
 Updated: 2026-09-30. Branch: `research/ordinary-plugin-discovery`.
-The branch head identifies development; tested artifacts have their own exact
-source, Build ID, hashes and evidence.
+Current stage: **C of A–D**, with remaining gates in A/B/D. No completion
+percentage or release approval is assigned. Follow [PRODUCTION_PLAN](PRODUCTION_PLAN.md).
+Shared DEVELOPMENT_RULES rechecked at unchanged blob
+`701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`; AGENTS.md remains applicable.
 
-## Latest evidence — static factory dispatch mapped, Stage C
+The preceding chronological status is retained verbatim at
+[immutable checkpoint e9993ef](https://github.com/ios3kov/AE-Hot-Loader/blob/e9993ef081b1cd0e7080064ec5ddbe0c716e2e0a/docs/DEVELOPMENT_STATUS.md),
+rather than duplicating historical "current" and "next" instructions here.
+Dated evidence records are unchanged. This page describes development state;
+it does not reclassify historical results or identify a new tested native build.
 
-The supplied PluginSupport offline archive was read and hashed. Its before/
-after image statements match the expected image hash; the binary itself was
-not supplied for an independent rehash. 32 addressed structural text checks
-passed; these are not unit tests or live-AE evidence.
+## Latest evidence — main executable imports implementation from AfterFXLib
 
-New findings: the ordinary `ML::LoadPlugins` return counts candidate entries,
-not registered effects. The final bool, currently true in our wrapper, restricts
-factory selection to one GUID and selects an AELibraryPlugins cache branch.
-This does not establish that true is wrong. Recognition and subsequent
-returned-reference handoff already occur inside `AddPlugin`; the concrete
-factory implementation and its connection to the video-module list are not
-resolved. Do not insert a speculative extra dispatch or change the bool.
+The supplied `AEHL-factory.Z7cgNu.zip` was inspected and hashed. Matching
+before/after statements report main executable SHA-256
+`464ad678ca19ba78478e2989c42f42bea3fd95e51c9180c1556c53c973457df6`.
+The binary itself was not supplied for independent hashing.
 
-Next locate the concrete factory using main-image symbols/dependencies, then
-inspect its PiPL acceptance and module handoff offline. The main image is a
-search target, not a proven factory owner. No new scan or host experiment.
-Latest scoped registration remains FAIL; RSMB startup-registered apply/render
-PASS and historical late-registration FAIL remain separate. Current host/
-project identity is still BLOCKED. Five static-audit findings remain open.
+The symbol table attributes EggMain and startup imports to AfterFXLib; its
+arm64 dependency list names AfterFXLib.framework. AfterFXLib is therefore the
+next concrete search target, NOT a proven owner of the selected factory.
+The concrete factory, PiPL acceptance and reason for registration failure remain
+unresolved. [Input identities, findings and limits](FACTORY_MAIN_IMAGE_2026-09-30.md).
 
-See [input hashes, static locations, limits and next read-only collection](REGISTRATION_DISPATCH_STATIC_2026-09-30.md).
-No production source, native build, installation, restart, main change, merge
-or release. Documentation-only [skip ci]; CI remains tied to code `626babcf`.
-The earlier evidence below retains its historical wording; this review narrows
-its return-value and post-scan-dispatch uncertainties, not its live verdicts.
+Earlier [PluginSupport analysis](REGISTRATION_DISPATCH_STATIC_2026-09-30.md)
+showed that ML::LoadPlugins returns a candidate count, not registered-effect
+count. Its final bool restricts factory selection; this does not prove true is
+wrong. Recognition and returned-reference handoff already occur inside AddPlugin.
+Do not flip that bool or insert speculative notification/registration calls.
+The [original scoped logs](REGISTRATION_GAP_SAVED_LOGS_2026-09-30.md) were
+verified against their previously recorded hashes. Their output vector is empty
+and its recorded signature describes strings, not unconsumed plugin objects.
 
-## Earlier evidence — original scoped logs verified, Stage C
+## New file-only collector and exact identity
 
-The user supplied the original scoped log archive. Native-loader/before/after
-SHA-256 values match the hashes recorded before the upload. The unchanged
-analyzer from `626babcf` was verified against its Git blob and run on these
-actual inputs: analysis PASS, registry addition FAIL. Independent byte and
-cross-log checks also passed. The original-log access blocker is now resolved;
-this does not turn the historical live FAIL into a PASS or a new live test.
+Added `experiments/ordinary_discovery/collect_factory_image.py` in `d31b8da`.
+Code/test checkpoint: `9fdb39b751c96f6e34adcf5df9d8f94183153b37`.
+Collector Git blob: `f72624c35389eedf3ccb9c6b226b5acb2c8d7b15`.
+Collector SHA-256:
+`10097a09b97876d6bbf4fce9c5abf5a5ebc300826d5dfefac906859a8863f89c`.
+The standalone chat copy `AEHL-collect-factory.py` is byte-identical.
 
-New concrete finding: both logs show an empty output vector. The resolved
-signature describes a vector of 16-bit-code-unit strings, not plugin objects.
-The hypothesis that this run left returned plugin objects unregistered is not
-supported. The vector's purpose and loader return semantics remain unknown.
-Next inspect PiPL interpretation and video-module creation/publication in the
-exact PluginSupport image offline, rather than forcing notifier dispatch.
+It reads the known AfterFXLib file, gathers symbols/dependencies/headers and
+at most 96 address-selected offline disassembly windows, each bounded to 4096
+bytes or the next known text symbol. It records omitted/capped windows, input
+hashes and file hashes in a new private Desktop archive. These are heuristic
+windows, not guaranteed complete functions or exhaustive factory coverage.
 
-The user's process listing reports a different AE PID, 78417, started
-2026-09-30 17:40:29 local. Current project state, responsiveness, runtime version
-and loaded identities remain BLOCKED; this is not the old test process or a
-fresh blank-project baseline. Local source was still `ce5d80d`. No scan,
-installation, restart, native source change, main change, merge or release.
-RSMB startup-registered apply/render PASS and historical late-registration FAIL
-remain separate. Five known static-audit findings remain unresolved.
+The collector never attaches to, launches, scripts, stops or scans AE. LLDB
+creates an offline target with no dependents and script/init loading disabled.
+Tool invocations are bounded; failure preserves partial evidence. Main-image
+identity is pinned; AfterFXLib's own hash is a first observation, not a prior
+independent identity assertion. It does not modify the installed files.
+This is a diagnostic data request, not an installable AE product handoff.
 
-See [verified bytes, corrected hypothesis, limits and next read-only command](REGISTRATION_GAP_SAVED_LOGS_2026-09-30.md).
-This documentation-only follow-up uses [skip ci]; prior CI remains tied to its
-code commit. The report-only continuation below retains its historical wording;
-this new evidence supersedes its original-log blocker and narrows its hypothesis.
+## Verification for the new collector
 
-## Earlier continuation — Stage C, offline registration-gap analysis
+| Check | Result and exact scope |
+|---|---|
+| Focused local parser/command tests | PASS, 20 synthetic tests, Python warnings treated as errors |
+| Additional full-flow checks | PASS, five mocked scenarios; committed counterparts also passed in research CI |
+| Exact collector bytes vs Git blob | PASS |
+| Research CI for 9fdb39b | PASS, run 36745551046; native-syntax and panel-contract |
+| Python in research Linux CI | 176 collected: 172 PASS, four macOS-only supervisor cases skipped |
+| New committed collector tests in that job | PASS, all 25, no real Adobe-image execution |
+| Node in research CI | PASS, 51 panel + 11 snapshot tests, no AE |
+| Full macOS CI for 9fdb39b | IN PROGRESS at this record, run 36745551281; no final PASS asserted |
+| Preceding macOS CI for 0ca114dd | CANCELLED, run 36745344719; skipped later stages are not PASS |
+| Actual new collector run on user's Mac | NOT RUN; next requested data collection |
+| Local real LLDB execution | BLOCKED: Linux LLDB cannot start without its libpython3.11 dependency |
+| Full static-security audit | NOT RUN again; five historical findings remain unresolved |
 
-Continued from `ce5d80dcff1b2bb1324a42f227a9f79590fa25fd`, not from a new plan.
-AGENTS.md and shared rules were read; rules blob remains
-`701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`.
+The research job 109990710114 log was read: checkout 9fdb39b, exact test names,
+counts and four skips were verified. Evidence artifact 11112107888 has the
+Actions-reported upload SHA-256
+`0edf298e6f96ddac15b147846ba7ab11b6362894e0e106cbde3f4ab683e6ac7e`.
+This is not an independently downloaded archive hash. CI annotations are not
+cleared by green jobs; no warning-free claim is made. Documentation follow-ups
+use [skip ci]. A documentation head is not a newly tested native artifact.
 
-Added a read-only saved-evidence analyzer and 43 synthetic regression tests.
-Verified code commit: `626babcf1c4bf6df25a0c2df9d0eb74c4e77a691`.
-Research CI `36735169447` and full macOS CI `36735169446`: PASS.
-The research Linux job collected 151 Python tests: 147 passed, four macOS-only
-supervisor cases skipped. All 62 Node tests passed. The focused 43 tests also
-passed locally with warnings treated as errors. These are not live-AE tests.
-The original checkpoint's macOS #250 and research #16 CI also passed.
+## Last real host results — retained separately
 
-New localization: with the recorded zero new video modules, the identified
-loader source returns before its `FLT_NotifyFilterLoadingDone` call. This is
-an inference from source and the prior runtime report, not a newly captured
-trace. Investigate PiPL interpretation and module creation/publication before
-notification. The wrapper only logs the `ML::LoadPlugins` output vector;
-whether the ordinary startup caller performs additional output processing is
-a hypothesis, not a demonstrated missing operation or safe fix.
+| Gate | Result |
+|---|---|
+| Scoped embedded late registration | FAIL: source 45de0c9, Build ID scoped-0b8c8f122e80, fixture 88019a1a01a7; 785 unchanged effect identities, target absent |
+| RSMB startup-registered apply/render smoke | PASS: the previously identified one-frame test, not broad compatibility certification |
+| RSMB late registration | FAIL: historical result, not repaired by the startup smoke |
+| Dynamic fixture application | PASS: earlier exact-match add/remove gate; render NOT RUN |
+| Earlier flat-resource failure | FAIL: historical crash evidence remains, not declared fixed |
+| Fresh current AE/project/runtime identity | BLOCKED: no direct Mac access or fresh identified project snapshot |
 
-Latest real registration result remains **FAIL**, Build ID
-`scoped-0b8c8f122e80`, tested source `45de0c9`: embedded image present, 785
-effect identities unchanged, target absent. RSMB startup-registered apply/render
-**PASS** and historical RSMB late-registration **FAIL** remain separate.
+See [scoped host test](SCOPED_USER_HOST_2026-09-29.md),
+[RSMB apply/render](RSMB_APPLY_RENDER_PASS_2026-09-29.md),
+[Dynamic application](REGISTRATION_APPLY_PASS_2026-09-29.md) and
+[flat-resource crash correlation](RESOURCE_PAIR_CRASH_CORRELATION_2026-09-29.md).
+The previously supplied PID 78417/start-time observation is not a current
+blank/clean/idle project baseline. Local Mac source was last reported as ce5d80d;
+no pull, installation or local update is claimed.
 
-Fresh current-AE state and reanalysis of original private logs are **BLOCKED**:
-this iteration has Linux/GitHub access, not the user's Mac or retained evidence
-bytes. The 2026-09-29 blank/clean/idle postflight is not a current observation.
-The prior install/restart authorization is consumed. No scan, installation,
-restart, private host call, main change, merge or release was performed.
-No native product source was changed by this continuation.
+Reference product package remains source
+`04fea7060c7ef7ebc4a315b5c39364850287e294`, Build ID `native-36483421984-1`.
+[Reference identity and checks](CI_CHECKPOINT_04fea70.md). Nothing in this
+continuation replaces the installed Agent, shell, panel or third-party effects.
 
-Next safe step: recover read-only access to hash-pinned retained evidence and
-the exact host image; inspect the normal startup output consumer and the
-PiPL-to-video-module publication path offline. Do not repeat the unchanged
-scan or force notification. A new risky host experiment needs separate
-approval and a specific bounded hypothesis. A/B/D and release gates remain open.
+## Next safe gate and remaining work
 
-See [analysis, exact identities, tests, CI and limitations](REGISTRATION_GAP_OFFLINE_2026-09-30.md).
-The historical five-finding static-audit FAIL remains; the full audit was not
-rerun. CI annotation-level review is BLOCKED by connector access, not declared
-clean. Documentation-only follow-ups use [skip ci]; verified CI applies to the
-exact code commit above, not to a newly tested native artifact.
+Run only the exact standalone collector on the Mac and inspect its new archive.
+It does not need AE open. Missing files, hash changes or tool failures stop
+collection; do not regenerate the failed scan. After receipt, locate the
+concrete factory and trace its PiPL acceptance and module-publication path
+using the actual bounded windows and their declared limitations.
 
-## Historical checkpoint text retained — 2026-09-29
+Any subsequent risky host operation needs a falsifiable hypothesis, bounded
+instrumentation, fresh host/project/loaded identity and separate authorization.
+The previous installation and one-restart permission are consumed. No speculative
+private dispatch, teardown, unload, preference reset or unchanged scan is allowed.
 
-The following chronological records are preserved unchanged. Their words
-"latest", "current", "remains" and "next" refer to their own checkpoints,
-not fresh observations or permissions. The continuation above takes precedence.
-
-## Current stage — registration-pair startup control
-
-Latest user-authorized working-AE gate: **FAIL**, research source `45de0c9`,
-Build ID `scoped-0b8c8f122e80`. The single embedded fixture image loaded, but
-the registry remained identical (785 effects, target absent). Native before/
-after and independent postflight show the blank clean project unchanged;
-same AE PID remains. No crash observed. The research module was hash-verified
-and retired from autoload; no repeat scan. [Exact runtime evidence and limits](SCOPED_USER_HOST_2026-09-29.md).
-The earlier isolated-host prerequisite below was superseded only for this
-explicitly authorized experiment, not for release certification.
-
-Latest scoped harness: source `1a67e7e`, research Build ID
-`scoped-938e28da8c55`. The external controller now bounds waiting, verifies the
-same PID/start time and independent result, and prevents overlapping/replayed
-requests. Atomic publication closes partial-record and hard-link races.
-106 Python, 62 Node, 15 native guard and three inert-entry cases PASS locally;
-research CI `36565764998` and full macOS CI `36565765080` PASS for that source.
-Live preparation is BLOCKED because the isolated test host is absent; no scan
-was sent. See [latest identities, CI and next gate](SCOPED_DISCOVERY_SUPERVISOR_2026-09-29.md).
-The following scoped build record describes the earlier module-only checkpoint.
-
-Scoped research AEGP build: **PASS**, source `01aef68`, Build ID
-`scoped-0d35394a6f6a`. This separate module pins one fixture root, validates
-hashes and host/PID identity, and records a durable one-shot claim plus exact
-registry delta. SDK build/signature/identity, 15 native guard cases, three inert
-entrypoint cases, 11 snapshot cases, 51 panel tests and 100 Python tests PASS.
-Live gate remains BLOCKED on an isolated AE environment and bounded supervisor.
-See [build evidence and limitations](SCOPED_DISCOVERY_BUILD_2026-09-29.md).
-
-Single embedded-resource fixture offline gate: **PASS** for clean source,
-signed arm64 build, one owned scan-root inventory and standalone PiPL read.
-Build ID `88019a1a01a7`, source `50cb81f`, exact evidence in
-[the scoped fixture record](SCOPED_EMBEDDED_FIXTURE_2026-09-29.md). Live AE
-registration is NOT RUN. The product Agent still scans broad shared roots;
-the separate research module above has only offline evidence so far.
-
-Recovered crash evidence for the failed resource-pair scan: **PASS** for exact
-PID/time/stack correlation. AE PID 21778 received EXC_BAD_ACCESS while its
-PluginImpl PiPL URL-read path was called from Agent `ML::LoadPlugins`. The dump
-contains the flat fixture name but not the faulting URL; exact file and
-instruction remain BLOCKED. Original gate remains FAIL. The retired flat
-fixture now requires explicit offline-only build opt-in; 93/93 Python tests
-PASS. See [new crash record](RESOURCE_PAIR_CRASH_CORRELATION_2026-09-29.md).
-The working AE was not touched; next runtime gate needs an isolated host.
-
-Latest offline dispatch check: **PASS**, exact AE 25.6 image places a PiPL
-Resource Manager converter around the noncached `GetPiPLs` path and maps the
-fallback virtual slot to AEPlugin/PluginImpl PiPL loading. The recovered crash
-subsequently identified the PluginImpl receiver; conversion invocation and
-registry insertion in the failed late scan remain unobserved. See
-[dispatch evidence](RESEARCH_PIPL_DISPATCH_2026-09-29.md).
-Next runtime gate requires an isolated host and an embedded-resource fixture;
-do not repeat the raw flat or shared-root scan in the working AE.
-
-Latest standalone public-API experiment: **PASS**, Resource Manager invoked
-our process-local header-only callback; native count changed from 201326592
-to 12. A fresh baseline process returned the original count. Bundle hashes
-unchanged; plugin executable never loaded. This confirms the conversion
-boundary, not AE's active callback or a registration fix. See
-[resource endian control](RESOURCE_ENDIAN_CONTROL_2026-09-29.md).
-
-Latest offline finding: disk PiPL bytes and parser input are different
-representations. A byte-conversion callback exists; the inspected base URL
-reader copies raw bytes. Missing conversion is a concrete conditional risk
-for the failed flat experiment, not proven host-exit cause or a legacy fix.
-Do not repeat the raw flat test. See [byte-order boundary evidence](RESEARCH_PIPL_BYTE_ORDER_2026-09-29.md).
-
-Latest offline SDK control: **PASS**, diagnostic PiPL bytes equal SDK 25.6
-Rez output for the controlled 312-byte property set; Python regression 92/92
-PASS. This does not establish standalone-file host acceptance or repair late
-registration. No host mutation. See [SDK control](SDK_PIPL_CONTROL_2026-09-29.md).
-
-Latest resource-pair live gate: **FAIL**, discovery response timed out after a
-fresh safe baseline. Registry and postflight BLOCKED; process checks and app
-inventory then reported AE absent, cause unknown. Test installation hash-verified
-and retired (cleanup PASS). No repeat/restart. See
-[resource-pair build and failed gate](RESOURCE_PAIR_GATE_2026-09-29.md).
-
-Latest resource check: standalone PiPL reads PASS for both exact fixtures;
-returned hashes match generated bytes and bundle executables were not loaded.
-This is not in-host ASL proof. See [resource-read evidence](RESEARCH_ASL_RESOURCE_READ_2026-09-29.md).
-Next discriminator: standalone-file parsing versus embedded-resource dispatch,
-with correlated diagnostics; do not repeat the interrupted full-root scan.
-
-Latest research: offline inspection confirms non-dynamic PiPL fallback paths
-exist in the exact installed PluginSupport image. Runtime dispatch/resource
-results remain unproven; no safe corrective operation is established. See
-[PiPL fallback evidence and next checks](RESEARCH_PIPL_FALLBACK_2026-09-29.md).
-
-Latest Dynamic application gate: **PASS**, source `b97b401`, fixture Build ID
-`50650366d8b6`. Exact-match add, built-in-only properties, removal, cleanup and
-independent same-process postflight passed. The prior zero-child assertion was
-a harness defect. The prior claim of host termination is withdrawn: the original
-PID/start is still present. See [live evidence](REGISTRATION_APPLY_PASS_2026-09-29.md).
-Render remains NOT RUN; historical PiPL-only late registration remains FAIL.
-The following records retain earlier observations, not the latest gate verdict.
-
-Latest source `8980c3c` corrects fixture parameter setup using actual Adobe SDK
-types. Build `50650366d8b6`: standalone lifecycle and Python 90/90 PASS;
-controlled startup registry PASS for both variants; late registry Dynamic PASS,
-PiPL-only FAIL. Test installations retired with hashes checked. Live application
-gate subsequently returned FAIL; independent postflight was BLOCKED when the
-host process disappeared. Original modal-error resolution remains NOT RUN. See
-[application failure](REGISTRATION_APPLY_FAIL_2026-09-29.md) and
-[lifecycle correction and fresh evidence](REGISTRATION_PAIR_LIFECYCLE_FIX_2026-09-29.md).
-The following paragraph describes the previous failed fixture, not this build.
-
-The new live comparison recorded both fixtures present at controlled startup;
-late discovery registered Dynamic but not PiPL-only. However, the user reported
-AE error 25::34 (parameter count mismatch) for the Dynamic fixture. Overall
-fixture acceptance is FAIL. Both test installations have been retired into
-evidence; loaded images may remain in AE until normal exit. Further live use
-of the no-op fixtures is stopped pending a valid SDK lifecycle implementation.
-See [results and defect](REGISTRATION_PAIR_RESULT_2026-09-29.md).
-
-Stage C of plan A–D, with open gates in A/B. Shared rules were refreshed to
-blob `701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`. A fresh registration-only
-pair was built from clean `f393fbd` with build/run ID `50a85fce3046`:
-build/signature/export checks PASS. At preparation, runtime checks were NOT RUN;
-the subsequent observed results and host error are recorded above.
-The next discriminating gate first validates both exact fixtures at startup,
-then compares late loading of the same bytes. See
-[prepared inputs and acceptance](REGISTRATION_PAIR_NEXT_GATE_2026-09-29.md).
-The scoped RSMB apply/render PASS below remains valid.
-
-## RSMB apply/render gate prepared — 2026-09-29
-
-Source d19edca adds a controlled one-frame RSMB apply/render harness. Research
-run 36546959381 (#13) passed with 51/51 panel tests and 87/87 Python tests;
-the macOS native-syntax job also passed. Full macOS run 36546959423 (#247)
-passed all existing build/sign/package/native smoke gates.
-
-The user's earlier private preflight showed the resident Agent identity PASS,
-the blank clean project baseline PASS, and RSMB registry presence PASS.
-At that checkpoint, real RSMB apply/render was NOT RUN. The first execution
-attempt was BLOCKED before its bridge request because AE was rendering a
-non-owned project. A
-follow-up attempt re-established Agent identity, registry and unchanged-project
-checks as PASS, but its blank baseline was FAIL because a saved,
-non-blank project was open. The overall gate was therefore BLOCKED before JSX;
-neither attempt created a disposable project or render output. See the
-[first attempt](RSMB_APPLY_RENDER_ATTEMPT_2026-09-29.md), the
-[follow-up attempt](RSMB_APPLY_RENDER_ATTEMPT_2_2026-09-29.md),
-CI_CHECKPOINT_d19edca.md and ITERATION_RSMB_APPLY_RENDER_2026-09-29.md.
-
-A later fresh preflight observed the required blank, unsaved, clean and idle
-project with Agent identity, registry and unchanged-project checks all PASS,
-but exposed a launcher validation defect: the collector's additional
-`revision` field made whole-object equality reject an otherwise valid baseline.
-Source `b3c30a09b6106c3c9f57e486bd621e4e2959954f` now validates only the
-required baseline fields with exact types and values. Local regression is
-PASS: 6/6 focused harness tests, 89/89 Python discovery tests, 6/6 JSX mocks
-and zsh syntax. At that checkpoint, corrected live apply/render was NOT RUN
-pending execution of the new identified runner. See
-[the fix record](ITERATION_RSMB_PREFLIGHT_REVISION_FIX_2026-09-29.md).
-
-The first execution of that corrected baseline validator reached the JSX and
-produced PASS for baseline, RSMB apply, one-frame render and disposable-project
-cleanup. The overall launcher still returned FAIL because After Effects
-`DoScriptFile` returned status `0`, not the JSX report path; therefore its
-output-hash, same-PID and postflight steps were NOT RUN. Source
-`f7cae49f5d50b4ff56e0e759945027715afc39d9` now discovers exactly one new,
-user-owned regular evidence report without trusting `DoScriptFile` output.
-Local regression is PASS: 7/7 focused harness tests, 90/90 Python discovery
-tests, 6/6 JSX mocks and zsh syntax. At that checkpoint, the complete corrected
-live gate was NOT RUN. See
-[attempt 3](RSMB_APPLY_RENDER_ATTEMPT_3_2026-09-29.md).
-
-The complete corrected live gate is now PASS for the scoped startup-registered
-RSMB compatibility smoke. Source `f7cae49f5d50b4ff56e0e759945027715afc39d9`
-ran fresh preflight, exact-match apply, one-frame render, cleanup, same-PID
-verification and fresh postflight in AE 25.6x101. The resident Agent remained
-`native-36483421984-1` from source `04fea706`; the render output SHA-256 is
-`49961f447cf8ce22e5f8ff8f6622a0fc6d92f220aac1c85e727ea12881d10071`.
-See [the live PASS record](RSMB_APPLY_RENDER_PASS_2026-09-29.md).
-
-This PASS does not establish controlled cold-start causality or repair
-historical late registration. Temporal quality, MFR, bit depth, color,
-performance and license certification also remain outside this smoke test.
-CI for the two local harness-fix commits is NOT RUN until they are pushed.
-## Current diagnostic work
-
-The requested user preflight report has been received. Its two read-only
-snapshots report AE 25.6x101 and all three exact RSMB identities present.
-The observed project counters are unchanged; the project was already dirty
-before the probe. Resident Agent identity is BLOCKED: the collector preserved
-an existing request/response and did not send a diagnostic query. Apply/render,
-controlled startup and product ScriptUI roundtrip were NOT RUN.
-[Evidence and exact limits](AE_HOST_PREFLIGHT_RESULT_2026-09-28.md).
-
-Added `tools/inspect_ae_bridge.py` in `0964462a75ce2c232813567dd40779193040ede8`.
-This separate passive tool identifies existing request/response records without
-contacting AE, publishing requests or deleting files. Messages and raw IDs are
-omitted. Stored build metadata is not proof of the resident Agent or safe
-cleanup. The original collector, product code and native loader are unchanged.
-
-Verification: 22/22 new local tests, 83/83 Python and 51/51 panel mock tests in
-research CI #12 passed; macOS static/Python/panel steps also passed. The exact
-handed-over standalone Python copy passed a synthetic Linux CLI test with
-bridge bytes retained and no request created. User bridge execution remains
-NOT RUN. [Run identities, scope and file hash](CI_CHECKPOINT_0964462.md).
-The full native job #246 was still running when that diagnostic checkpoint
-was authored; its package is not being handed over by this iteration.
-
-Only the passive inspector is requested next. Do not rerun the unchanged
-active preflight or clear IPC state blindly. Do not close/restart a dirty
-working project. This is a minimal environment-data request, not a product
-release or a substitute for real AE integration tests.
-
-## Reference product package
-
-Source: `04fea7060c7ef7ebc4a315b5c39364850287e294`.
-Build ID: `native-36483421984-1`.
-Full macOS build #243 (run 36483421984) and research #9 (run 36483422020) passed.
-[Complete evidence and hashes](CI_CHECKPOINT_04fea70.md).
-
-Both diagnostic tools compare against this immutable reference package, not
-an unspecified latest branch build. They do not replace installed components.
-No installable candidate has been handed over or approved for release.
-No user installation or change to `main` occurred.
-
-## Product behavior
-
-The panel has a **Diagnostics** button. Each **Reload Plugins** first requests
-`get_build_identity`, then compares the resident Agent's Build ID, full commit,
-clean state, platform and version against generated panel metadata. Missing
-identity, an older/different build or failed diagnostics blocks scan dispatch.
-Diagnostics alone does not scan plug-ins or read/change the project or registry.
-The matching scan reply is rechecked before reporting registry changes.
-
-The panel is generated during packaging from clean Git source with the same
-Build ID as the Agent. The unstamped repository JSX intentionally cannot scan.
-Pending bridge requests are preserved, temporary files are request-specific,
-response parsing is bounded and timer callbacks are tied to a request ID.
-These guards do not establish cross-process IPC ownership or cancel native work.
-
-All four full-package Cargo builds use `--locked`. The CI tests the exact
-generated panel and reads both getters from the exact Agent extracted from the
-final ZIP. Their metadata and hashes match the package manifest. This passive
-inspection iteration changes no panel, Agent, private ABI or render code.
-
-## Reference package verification matrix
-
-| Check | Result | Scope |
-|---|---|---|
-| Panel regression | PASS: 51/51 | Host/file mocks; also exact generated ZIP payload |
-| Python regression | PASS: 38/38 | Reference package generator/identity/manifest tests |
-| Full build / signing / packaging | PASS | macOS arm64, ad-hoc signing, not release approval |
-| Existing native shell gates | PASS: 7/7 | Standalone synthetic scenarios, not AE/MFR rendering |
-| Exact packaged Agent identity/path getters | PASS | Standalone macOS process, not in AE |
-| Independent downloaded package verification | PASS | All 24 payload files and ZIP/manifest hashes |
-| Resident Agent bridge identity | PASS | Exact runtime identity verified before and after the live RSMB gate |
-| Real ScriptUI panel roundtrip | NOT RUN | Panel Diagnostics/Reload path is separate from the direct preflight bridge query |
-| RSMB startup-registered apply / render | PASS | Controlled exact-match apply, one-frame render, cleanup and postflight |
-| RSMB controlled cold-start causality | NOT RUN | The harness did not control the complete AE startup sequence |
-| RSMB late registration | FAIL | Historical result remains; the startup-registered smoke does not repair it |
-| Complete adapter-specific cleanup | NOT RUN | Historical research and generic shell remain |
-
-The reference CI log contains a reviewed redundant Rust-action-input warning;
-the pinned compiler version is correct. No warning-free or full production
-readiness claim is made.
-
-## Next gates
-
-Earlier stage-C application gate: **FAIL**. The corrected Dynamic fixture returned
-one scripting child property; the probe expected zero. Its cleanup reported PASS,
-but independent postflight is BLOCKED because the AE process was absent. See
-[REGISTRATION_APPLY_FAIL_2026-09-29](REGISTRATION_APPLY_FAIL_2026-09-29.md).
-Do not equate this property count with native parameter count or claim 25::34 fixed.
-
-Validate Diagnostics and Reload through the real ScriptUI panel in an owned AE
-25.6.0 arm64 environment, including an intentionally mismatched Agent and
-project-safety checks. Establish controlled RSMB cold-start causality, then
-isolate missing legacy late registration with a dedicated pair/harness.
-Complete remaining component identities, IPC ownership/reopen/timeout checks,
-scope and CI cleanup before product handoff.
-
-Follow [PRODUCTION_PLAN](PRODUCTION_PLAN.md). Historical AE results remain
-historical; do not call unverified private teardown/reinitialization functions
-or turn mock tests into live-AE evidence.
+Remaining production gates include scope cleanup, controlled RSMB cold-start
+causality, a demonstrated safe late-registration operation, separate apply/render,
+real ScriptUI roundtrip, IPC ownership/reopen/timeout/repeat checks, compatibility
+and the final clean-candidate gate. No native source, production installation,
+main, merge or release was changed by this continuation.
