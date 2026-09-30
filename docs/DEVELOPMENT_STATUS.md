@@ -4,7 +4,36 @@ Updated: 2026-09-30. Branch: `research/ordinary-plugin-discovery`.
 The branch head identifies development; tested artifacts have their own exact
 source, Build ID, hashes and evidence.
 
-## Latest continuation — Stage C, offline registration-gap analysis
+## Latest evidence — original scoped logs verified, Stage C
+
+The user supplied the original scoped log archive. Native-loader/before/after
+SHA-256 values match the hashes recorded before the upload. The unchanged
+analyzer from `626babcf` was verified against its Git blob and run on these
+actual inputs: analysis PASS, registry addition FAIL. Independent byte and
+cross-log checks also passed. The original-log access blocker is now resolved;
+this does not turn the historical live FAIL into a PASS or a new live test.
+
+New concrete finding: both logs show an empty output vector. The resolved
+signature describes a vector of 16-bit-code-unit strings, not plugin objects.
+The hypothesis that this run left returned plugin objects unregistered is not
+supported. The vector's purpose and loader return semantics remain unknown.
+Next inspect PiPL interpretation and video-module creation/publication in the
+exact PluginSupport image offline, rather than forcing notifier dispatch.
+
+The user's process listing reports a different AE PID, 78417, started
+2026-09-30 17:40:29 local. Current project state, responsiveness, runtime version
+and loaded identities remain BLOCKED; this is not the old test process or a
+fresh blank-project baseline. Local source was still `ce5d80d`. No scan,
+installation, restart, native source change, main change, merge or release.
+RSMB startup-registered apply/render PASS and historical late-registration FAIL
+remain separate. Five known static-audit findings remain unresolved.
+
+See [verified bytes, corrected hypothesis, limits and next read-only command](REGISTRATION_GAP_SAVED_LOGS_2026-09-30.md).
+This documentation-only follow-up uses [skip ci]; prior CI remains tied to its
+code commit. The report-only continuation below retains its historical wording;
+this new evidence supersedes its original-log blocker and narrows its hypothesis.
+
+## Earlier continuation — Stage C, offline registration-gap analysis
 
 Continued from `ce5d80dcff1b2bb1324a42f227a9f79590fa25fd`, not from a new plan.
 AGENTS.md and shared rules were read; rules blob remains
@@ -193,8 +222,8 @@ the blank clean project baseline PASS, and RSMB registry presence PASS.
 At that checkpoint, real RSMB apply/render was NOT RUN. The first execution
 attempt was BLOCKED before its bridge request because AE was rendering a
 non-owned project. A
-follow-up attempt re-established Agent identity, registry presence and unchanged
-project state as PASS, but its blank baseline was FAIL because a saved,
+follow-up attempt re-established Agent identity, registry and unchanged-project
+checks as PASS, but its blank baseline was FAIL because a saved,
 non-blank project was open. The overall gate was therefore BLOCKED before JSX;
 neither attempt created a disposable project or render output. See the
 [first attempt](RSMB_APPLY_RENDER_ATTEMPT_2026-09-29.md), the
