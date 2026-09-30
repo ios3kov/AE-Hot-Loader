@@ -30,6 +30,10 @@ class RealLLDBTests(unittest.TestCase):
         source = cls.base / 'fixture.s'
         source.write_text('.text\n.p2align 2\n.globl _AEHL_PluginFactoryFixture\n'
                           '_AEHL_PluginFactoryFixture:\n mov w0, #7\n ret\n'
+                          '.globl _AEHL_PluginFactoryErrorText\n'
+                          '_AEHL_PluginFactoryErrorText:\n adrp x0, Lmessage@PAGE\n'
+                          ' add x0, x0, Lmessage@PAGEOFF\n ret\n'
+                          '.section __TEXT,__cstring\nLmessage:\n .asciz "error: owned fixture payload"\n.text\n'
                           '.globl _main\n_main:\n mov w0, #0\n ret\n')
         cls.image = cls.base / 'fixture'
         subprocess.run(['/usr/bin/xcrun', 'clang', '-arch', 'arm64', str(source),
@@ -37,8 +41,8 @@ class RealLLDBTests(unittest.TestCase):
         symbols = subprocess.run(['/usr/bin/nm', '-arch', 'arm64', '-n', '-m', str(cls.image)],
                                  check=True, capture_output=True, text=True, timeout=15).stdout
         cls.selection = collect.choose_symbols(symbols)
-        if len(cls.selection['functions']) != 1:
-            raise AssertionError('The owned fixture must select exactly one function')
+        if len(cls.selection['functions']) != 2:
+            raise AssertionError('The owned fixture must select exactly two functions')
         cls.image_hash = collect.digest(cls.image)
         version = subprocess.run(['/usr/bin/xcrun', 'lldb', '--version'], check=True,
                                  capture_output=True, text=True, timeout=15)
@@ -65,12 +69,16 @@ class RealLLDBTests(unittest.TestCase):
     def test_fixed_explicit_address_range_disassembles_without_execution(self):
         result = self.inspect(legacy=False)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertNotIn('error:', (result.stdout + result.stderr).lower())
+        # The old substring guard rejected this valid disassembly annotation.
+        self.assertIn('error:', result.stdout.lower())
+        report = collect.validate_disassembly(result.stdout.encode(), result.stderr.encode(), self.selection)
+        self.assertEqual(report['status'], 'PASS')
+        self.assertEqual(report['windows'], 2)
         self.assertIn('AEHL_PluginFactoryFixture', result.stdout)
         self.assertRegex(result.stdout, r'\bmov\s+w0,\s*#(?:0x)?7\b')
         self.assertRegex(result.stdout, r'\bret\b')
         self.assertNotIn('Process ', result.stdout)
-        print('REAL_LLDB_FIXED: arm64 mov/ret decoded; no fixture executed', flush=True)
+        print('REAL_LLDB_FIXED: two arm64 windows including error: string validated; no fixture executed', flush=True)
 
 
 if __name__ == '__main__':
