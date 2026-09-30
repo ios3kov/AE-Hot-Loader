@@ -4,7 +4,19 @@
 #pragma once
 #include "DirectorySpecAdapter.hpp"
 #include "ResidentImageBinding.hpp"
+#include <type_traits>
 namespace native_directory {
+// The const-qualified inspection address is not a const-qualified function.
+// This platform-supported conversion changes no page protections or code bytes.
+// It is not a signature/provenance validator: only use an already checked export.
+template<class Function> inline Function Callable(const void* address) {
+    static_assert(std::is_pointer<Function>::value &&
+                  std::is_function<typename std::remove_pointer<Function>::type>::value,
+                  "A function pointer type is required");
+    resident_binding::Require(address != nullptr);
+    return reinterpret_cast<Function>(const_cast<void*>(address));
+}
+
 inline const std::vector<std::string>& FileExports() {
     static const std::vector<std::string> names{
         "__Z8FILE_NewRKNSt3__112basic_stringItNS_11char_traitsItEEN7dvacore9allocator12STLAllocatorItEEEE",
@@ -38,10 +50,10 @@ inline directory_spec::Functions Bind(const Profile& profile) {
     f.indirect = AEHL_Arm64_IndirectResult;
     f.ascii_to_host = utility.functions.at(ProducerExport());
     f.inquire_path = file.functions.at(FileExports()[2]);
-    f.destroy_string = reinterpret_cast<decltype(f.destroy_string)>(core.functions.at(DestructorExport()));
-    f.new_spec = reinterpret_cast<decltype(f.new_spec)>(file.functions.at(FileExports()[0]));
-    f.is_dir = reinterpret_cast<decltype(f.is_dir)>(file.functions.at(FileExports()[1]));
-    f.dispose_spec = reinterpret_cast<decltype(f.dispose_spec)>(file.functions.at(FileExports()[3]));
+    f.destroy_string = Callable<decltype(f.destroy_string)>(core.functions.at(DestructorExport()));
+    f.new_spec = Callable<decltype(f.new_spec)>(file.functions.at(FileExports()[0]));
+    f.is_dir = Callable<decltype(f.is_dir)>(file.functions.at(FileExports()[1]));
+    f.dispose_spec = Callable<decltype(f.dispose_spec)>(file.functions.at(FileExports()[3]));
     f.read_memory = directory_spec::ReadSelfMemory;
     Require(f.complete()); return f;
     // Resolved addresses are not an authorization, ABI proof or lifetime lease.

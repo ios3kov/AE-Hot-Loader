@@ -9,6 +9,7 @@
 #include <thread>
 #endif
 using namespace resident_binding;
+int OwnedCallable() { return 73; }
 Bytes Read(const char* path) {
     std::ifstream in(path, std::ios::binary); Require(bool(in));
     return Bytes(std::istreambuf_iterator<char>(in), {});
@@ -19,7 +20,15 @@ void Fail(const Bytes& b, const std::vector<std::string>& n) {
 }
 int main(int argc, char** argv) {
     try {
-        Require(argc >= 3); const auto bytes = Read(argv[1]); const std::string symbol = argv[2];
+        Require(argc >= 3);
+        // Compile this conversion on every platform, not only in the Apple branch.
+        const void* inspected = reinterpret_cast<const void*>(&OwnedCallable);
+        Require(native_directory::Callable<int (*)()>(inspected)() == 73);
+        bool null_blocked = false;
+        try { (void)native_directory::Callable<int (*)()>(nullptr); }
+        catch (const std::exception&) { null_blocked = true; }
+        Require(null_blocked);
+        const auto bytes = Read(argv[1]); const std::string symbol = argv[2];
         auto image = Parse(bytes, {symbol}); Require(image.exports.size() == 1);
         Fail(Bytes{}, {symbol}); Fail(bytes, {symbol, symbol}); Fail(bytes, {"_AEHL_NOT_PRESENT"});
         auto bad = bytes; bad[image.slice + 4] = 0; Fail(bad, {symbol});
@@ -62,7 +71,7 @@ int main(int argc, char** argv) {
             // The TEST, not the resolver, loads this freshly compiled owned fixture.
             void* handle = dlopen(argv[1], RTLD_NOW | RTLD_LOCAL); Require(handle);
             const auto before = Snapshot(); auto bound = Resolve(pin, {symbol});
-            const auto value = reinterpret_cast<int (*)()>(bound.functions.at(symbol));
+            const auto value = native_directory::Callable<int (*)()>(bound.functions.at(symbol));
             Require(value() == 73); Require(before == Snapshot());
             auto wrong = pin; wrong.sha256[0] ^= 1;
             bool hash_blocked = false, thread_blocked = false;
