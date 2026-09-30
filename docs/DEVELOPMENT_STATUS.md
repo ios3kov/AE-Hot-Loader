@@ -4,7 +4,35 @@ Updated: 2026-09-30. Branch: `research/ordinary-plugin-discovery`.
 The branch head identifies development; tested artifacts have their own exact
 source, Build ID, hashes and evidence.
 
-## Latest evidence — original scoped logs verified, Stage C
+## Latest evidence — static factory dispatch mapped, Stage C
+
+The supplied PluginSupport offline archive was read and hashed. Its before/
+after image statements match the expected image hash; the binary itself was
+not supplied for an independent rehash. 32 addressed structural text checks
+passed; these are not unit tests or live-AE evidence.
+
+New findings: the ordinary `ML::LoadPlugins` return counts candidate entries,
+not registered effects. The final bool, currently true in our wrapper, restricts
+factory selection to one GUID and selects an AELibraryPlugins cache branch.
+This does not establish that true is wrong. Recognition and subsequent
+returned-reference handoff already occur inside `AddPlugin`; the concrete
+factory implementation and its connection to the video-module list are not
+resolved. Do not insert a speculative extra dispatch or change the bool.
+
+Next locate the concrete factory using main-image symbols/dependencies, then
+inspect its PiPL acceptance and module handoff offline. The main image is a
+search target, not a proven factory owner. No new scan or host experiment.
+Latest scoped registration remains FAIL; RSMB startup-registered apply/render
+PASS and historical late-registration FAIL remain separate. Current host/
+project identity is still BLOCKED. Five static-audit findings remain open.
+
+See [input hashes, static locations, limits and next read-only collection](REGISTRATION_DISPATCH_STATIC_2026-09-30.md).
+No production source, native build, installation, restart, main change, merge
+or release. Documentation-only [skip ci]; CI remains tied to code `626babcf`.
+The earlier evidence below retains its historical wording; this review narrows
+its return-value and post-scan-dispatch uncertainties, not its live verdicts.
+
+## Earlier evidence — original scoped logs verified, Stage C
 
 The user supplied the original scoped log archive. Native-loader/before/after
 SHA-256 values match the hashes recorded before the upload. The unchanged
