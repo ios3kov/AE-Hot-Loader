@@ -2,104 +2,95 @@
 
 Updated: 2026-09-30. Branch: `research/ordinary-plugin-discovery`.
 Stage **C of A–D**, with open A/B/D and release gates. No completion percentage.
-Follow [PRODUCTION_PLAN](PRODUCTION_PLAN.md) and AGENTS.md. Shared rules were
-rechecked unchanged at blob `701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`.
+AGENTS, PRODUCTION_PLAN and shared rules apply; rules were rechecked unchanged
+at blob `701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`.
+Previous status is preserved at [immutable checkpoint 56683d8](https://github.com/ios3kov/AE-Hot-Loader/blob/56683d873edbafb1b489e331458c14783422b6d0/docs/DEVELOPMENT_STATUS.md).
+Dated evidence is unchanged; old permissions are not renewed.
 
-Previous state is preserved at
-[immutable checkpoint ad1ec8d](https://github.com/ios3kov/AE-Hot-Loader/blob/ad1ec8d2f49fc262260a6986d0566ac763f5c7d7/docs/DEVELOPMENT_STATUS.md).
-Dated evidence is unchanged. Old instructions do not renew permissions.
+## Latest implementation — one offline run, one private report
 
-## Latest result — FILE contract inspected; indirect-result primitive verified
+Code/test/workflow commit: **`7411a903fb6cb21ca1f93e258d172e1a268072a2`**.
+Added `tools/run_research_checks.py`, `RUN_OFFLINE_CHECKS.command` and 22
+orchestration regressions. The research workflow now uses the same runner on
+Linux and macOS while retaining its two existing job names. The separate full
+macOS product build/sign/package/smoke workflow is unchanged.
 
-The received FILE.dylib was independently hashed and matched both uploaded
-before/after statements. SHA-256:
-`df0db4a31955f1890b9bd6b1bff0f28c753824f63e4736721172e8697326f864`.
-Its code was read as data, never loaded or executed. The original inputs remain
-unchanged. Twenty-five structural assertions passed; these are not runtime tests.
+The runner executes existing offline checks sequentially, pins actual tracked
+bytes to HEAD (including hidden assume-unchanged modifications), checks source
+identity between stages, stops after failure and retains one new report ZIP.
+It records explicit platform skips and never treats offline PASS as live-AE or
+release PASS. Real test-child failure/timeout, bounded logs, source changes,
+missing worker evidence, report hashes and non-overwrite behavior were tested.
 
-The constructor copies its input host string and owns File/Dir members.
-FILE_InqUnicodePath returns a host object indirectly through x8, not a borrowed
-char pointer. FILE_Dispose can close resources and unload an associated module;
-it has no leading null guard and is not an unconditional free. Consequently the
-first host probe must create/roundtrip/release only its own ordinary directory
-specification, without resource or executable loading. Borrowed plugin objects
-must not be disposed; a release error is not permission to retry.
+This consolidates implemented checks, **not** the complete future user pipeline.
+Product build/sign/package is NOT RUN by this local runner; its independent CI
+result is separate. No native FILE adapter, no-scan host probe, registration,
+apply/render or risky-action permission is connected. No user run is requested.
+[Scope, exact behavior, failure handling and remaining integration](UNIFIED_OFFLINE_RUNNER_2026-09-30.md).
 
-A recheck found that PLUG_Search also invokes sack cleanup callbacks after its
-root loop. One supplied root does not by itself restrict all end-of-pass effects.
-The active cleanup list and post-startup safety still require review; do not
-remove or bypass callbacks to make the experiment appear scoped.
+## Verified results for exact code 7411a90
 
-Implemented `HostIndirectResult_arm64.S`: four register-transfer/tail-call
-instructions, no Adobe addresses, resolver, automatic execution or host binding.
-It is linked only to an owned C++ test producer. The new tests check exact
-assembled words and actual nontrivial return, destruction, canaries and exception
-propagation on macOS arm64. This is NOT a complete FILE adapter or AE probe.
-
-Exact code/test commit: **`847b7ded4be07995b42facfba38bac0f9d52f060`**.
-[FILE findings, source/input hashes, checks and limits](FILE_OBJECT_CONTRACT_2026-09-30.md).
-
-## Checks for exact code 847b7de
-
-| Check | Result and scope |
+| Gate | Result and scope |
 |---|---|
-| Local cross-assembly and strict C++ syntax | PASS; no Adobe code |
-| Local Python | 212 collected: 205 PASS, seven platform-specific skips |
-| Local Node | 62/62 PASS; panel/snapshot mocks |
-| Research CI 36763733179 | PASS; 205 Python PASS/seven skips, 62 Node PASS |
-| Full macOS CI 36763733162 | PASS; build/sign/package/smoke steps complete |
-| macOS Python | 212/212 PASS, no skips |
-| Real owned arm64 ABI test | Six cases PASS at both -O0 and -O2; includes exception/destructor checks |
-| Existing resource policy / disk journal | 63 / 32 cases retained as nested Python tests |
-| Existing native scoped guards | 15 PASS; mock loader |
-| Downloaded evidence/source | Both evidence ZIP hashes and all three new files verified |
-| Actual FILE/PLUG binding and no-scan AE probe | NOT IMPLEMENTED / NOT RUN |
-| Full static-security audit | NOT RUN again; five historical findings remain open |
+| Local unified Linux run | PASS: 234 Python collected, 227 PASS/seven explicit macOS skips; Node 51+11 PASS |
+| New orchestration regressions | 22 PASS in the complete local/CI suites, including actual owned child processes and temporary Git/file tests |
+| Research CI 36767508822 | PASS, both Linux and macOS jobs completed |
+| Unified macOS arm64 run | PASS: all 21 planned stages; Python 234/234 without skips, Node 62/62, native scoped mock-loader guards 15/15 |
+| Owned ABI/LLDB tests on macOS | Retained and passed; six owned ABI cases at both -O0/-O2; no Adobe code execution |
+| Existing resource policy/journal cases | Retained within Python totals, not counted again as additional Python tests |
+| Downloaded unified reports | PASS: both outer hashes, inner manifests, exact source commit and all five changed file hashes verified |
+| Full product macOS CI 36767508583 | IN PROGRESS at this documentation checkpoint; source/static/regression and default build passed; final build/package result not yet asserted |
+| FILE/PLUG binding and live-AE tests | NOT IMPLEMENTED / NOT RUN; full pipeline remains BLOCKED |
+| Full static-security audit | NOT RUN again; five historical findings remain unresolved |
 
-macOS evidence identifies clean source, Xcode 16.4 and Apple clang 17.0.0.
-The owned producer is not Adobe's string or allocator. Green CI does not certify
-AE compatibility or clear unreviewed warnings. No CI product package is handed
-over. Documentation uses [skip ci]; verification belongs to the code commit.
+The macOS unified report identifies macOS 15.7.9 arm64, Python 3.14.7,
+Apple clang 17.0.0 and Node 22.23.2. This is hosted CI, not the user's working AE.
+No successful test is represented as a new ordinary-plugin registration result.
+The earlier 212-test suite is retained, with 22 orchestration tests added.
 
-## Next bounded implementation
+Evidence from research run `36767508822` was downloaded and independently hashed:
 
-Connect a verified host string producer/destructor, FILE_New, path return and
-FILE_Dispose only after exact symbol/module provenance and ownership review.
-The assembly primitive does not validate targets; never accept call addresses
-from requests or users, or fabricate a host string/FILE_Spec layout.
-
-Prepare a separate no-scan create/roundtrip/release probe before a registration
-attempt. Require a fresh owned root, one-shot journal, loaded-image identity,
-exact path roundtrip, successful single release, unchanged PID/project/registry
-and no new module loading or unloading. The real backend and external supervisor
-remain unbound. Existing scoped-discovery commands still run the old loader.
-The later PLUG pass additionally needs review of cleanup callbacks and retained
-state. Do not use global-folder or initialization helpers, alter the path
-predicate, clear caches, force a notifier or repeat the unchanged scan.
-
-No new user command or collection is requested now. Any private host call,
-installation, restart or debugger attachment needs separate authorization and
-a fresh identified host/project baseline. Earlier permissions are consumed.
-
-## Preserved results and boundaries
-
-| Actual host gate | Historical result |
+| Evidence | ID / SHA-256 |
 |---|---|
-| Scoped embedded late registration | FAIL: source 45de0c9, build scoped-0b8c8f122e80, fixture 88019a1a01a7; 785 unchanged effects |
-| RSMB startup-registered apply/render | PASS: previously identified one-frame smoke |
-| RSMB late registration | FAIL, separate from startup smoke |
-| Dynamic fixture application | PASS, earlier add/remove test; render NOT RUN |
-| Flat-resource failure | FAIL, earlier crash evidence retained |
-| Current AE/project/resident identity | NOT OBSERVED |
+| macOS Actions archive | `11121352036` / `596ec86fe9e6aa3770c9c3412b978b30894db140b459cee544687159d25f40c3` |
+| macOS inner report ZIP | `8c1e89de46a659886d52c495095c0d7e758cea53f0e8b3f6659e46cbb1d81651` |
+| Linux Actions archive | `11121431993` / `a79c6de719610876a43c72be030d7079d0fa78e1b7a6a80a93f9a945d23daec7` |
+| Linux inner report ZIP | `a859d47840084e1da2e479f226bae71c6a3f3f7373d29906a35cfd983e94f026` |
 
-[Scoped host evidence](SCOPED_USER_HOST_2026-09-29.md),
-[RSMB smoke](RSMB_APPLY_RENDER_PASS_2026-09-29.md),
-[resource policy](SCOPED_RESOURCE_GATE_DESIGN_2026-09-30.md),
-[disk journal](RESOURCE_PASS_JOURNAL_2026-09-30.md),
-[startup resource route](AELIB_RESOURCE_PASS_2026-09-30.md).
-The old PID 78417 and Mac source ce5d80d are historical observations, not a fresh
-baseline. No local pull/update, installed-component identity or blank project
-is asserted. No product loader, installed Agent/shell/panel, user project,
-settings or third-party plugin changed. No main update, merge, install, restart
-or release. Proprietary inputs remain private. The live registration fix,
-separate apply/render, integration, compatibility and release gates remain open.
+Runner SHA-256: `e9f1968549e2974a5033aa970341d876416e20ff1f3b1d5dbc65f13063705aa3`.
+Runner Git blob: `8d03dab4d1bed4724e14709d2fb06d23a6b6215b`.
+Tests SHA-256: `380e69951e6b8b8e546fe07496869c7027236feea9c4d71c2096632a9af56e7b`.
+No installable AE package is handed over. Green jobs do not clear unreviewed
+warnings. Documentation follow-ups use [skip ci]; CI belongs to the code commit.
+
+## Core engineering boundary — unchanged by test consolidation
+
+The [FILE contract](FILE_OBJECT_CONTRACT_2026-09-30.md) and tested arm64
+indirect-result primitive remain the baseline. The missing work is verified
+host-string construction/destruction, FILE_New/path return/disposal binding,
+loaded-symbol provenance, and the separate no-scan create/roundtrip/release
+probe. The later PLUG resource pass also needs its end-of-pass callbacks and
+retained state reviewed; a single root does not constrain every cleanup callback.
+The backend and live external supervisor remain unbound. Existing scoped commands
+still invoke the old loader and must not be reused for the proposed resource pass.
+
+Do not replace host callbacks, fabricate host objects, use global folder helpers,
+replay Birth/InitIterator/RequiredPreSearch, change the final bool, clear caches,
+force notification, unload native modules or repeat the unchanged scan.
+Any private host call, installation, restart or attachment needs separately
+specified authorization and a fresh host/project/loaded identity. The original
+installation and one-restart permissions are consumed.
+
+## Preserved actual host results
+
+Scoped embedded late registration remains **FAIL**, source `45de0c9`, Build ID
+`scoped-0b8c8f122e80`, fixture `88019a1a01a7`, 785 unchanged effect identities.
+RSMB startup-registered apply/render **PASS** and historical late-registration
+**FAIL** remain separate. The earlier flat-resource failure is not declared fixed.
+Current AE/project/resident identity is **NOT OBSERVED**; no user-Mac update,
+pull, installation or fresh baseline is claimed. The old PID 78417 is historical.
+
+Product loader/Agent/shell/panel, user projects/settings, third-party plugins
+and main are unchanged. No merge, installation, restart or release. Proprietary
+inputs remain private. Live registration, apply/render, integration, compatibility
+and clean-candidate release gates remain open.
