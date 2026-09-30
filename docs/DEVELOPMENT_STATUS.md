@@ -1,8 +1,60 @@
 # AE Hot Loader — current development status
 
-Updated: 2026-09-29. Branch: `research/ordinary-plugin-discovery`.
+Updated: 2026-09-30. Branch: `research/ordinary-plugin-discovery`.
 The branch head identifies development; tested artifacts have their own exact
 source, Build ID, hashes and evidence.
+
+## Latest continuation — Stage C, offline registration-gap analysis
+
+Continued from `ce5d80dcff1b2bb1324a42f227a9f79590fa25fd`, not from a new plan.
+AGENTS.md and shared rules were read; rules blob remains
+`701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`.
+
+Added a read-only saved-evidence analyzer and 43 synthetic regression tests.
+Verified code commit: `626babcf1c4bf6df25a0c2df9d0eb74c4e77a691`.
+Research CI `36735169447` and full macOS CI `36735169446`: PASS.
+The research Linux job collected 151 Python tests: 147 passed, four macOS-only
+supervisor cases skipped. All 62 Node tests passed. The focused 43 tests also
+passed locally with warnings treated as errors. These are not live-AE tests.
+The original checkpoint's macOS #250 and research #16 CI also passed.
+
+New localization: with the recorded zero new video modules, the identified
+loader source returns before its `FLT_NotifyFilterLoadingDone` call. This is
+an inference from source and the prior runtime report, not a newly captured
+trace. Investigate PiPL interpretation and module creation/publication before
+notification. The wrapper only logs the `ML::LoadPlugins` output vector;
+whether the ordinary startup caller performs additional output processing is
+a hypothesis, not a demonstrated missing operation or safe fix.
+
+Latest real registration result remains **FAIL**, Build ID
+`scoped-0b8c8f122e80`, tested source `45de0c9`: embedded image present, 785
+effect identities unchanged, target absent. RSMB startup-registered apply/render
+**PASS** and historical RSMB late-registration **FAIL** remain separate.
+
+Fresh current-AE state and reanalysis of original private logs are **BLOCKED**:
+this iteration has Linux/GitHub access, not the user's Mac or retained evidence
+bytes. The 2026-09-29 blank/clean/idle postflight is not a current observation.
+The prior install/restart authorization is consumed. No scan, installation,
+restart, private host call, main change, merge or release was performed.
+No native product source was changed by this continuation.
+
+Next safe step: recover read-only access to hash-pinned retained evidence and
+the exact host image; inspect the normal startup output consumer and the
+PiPL-to-video-module publication path offline. Do not repeat the unchanged
+scan or force notification. A new risky host experiment needs separate
+approval and a specific bounded hypothesis. A/B/D and release gates remain open.
+
+See [analysis, exact identities, tests, CI and limitations](REGISTRATION_GAP_OFFLINE_2026-09-30.md).
+The historical five-finding static-audit FAIL remains; the full audit was not
+rerun. CI annotation-level review is BLOCKED by connector access, not declared
+clean. Documentation-only follow-ups use [skip ci]; verified CI applies to the
+exact code commit above, not to a newly tested native artifact.
+
+## Historical checkpoint text retained — 2026-09-29
+
+The following chronological records are preserved unchanged. Their words
+"latest", "current", "remains" and "next" refer to their own checkpoints,
+not fresh observations or permissions. The continuation above takes precedence.
 
 ## Current stage — registration-pair startup control
 
