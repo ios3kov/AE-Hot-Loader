@@ -1,8 +1,9 @@
-"""Offline AfterFXLib inspection. Never attach, launch AE, scan or call host code.
+"""Offline inspection of allowlisted AE libraries. Never attach, launch AE, scan or call host code.
 
 Python 3.9+, macOS developer tools. Output is private research evidence, not
 an installable plug-in. Symbol selection is heuristic and explicitly bounded.
 """
+import argparse
 import hashlib
 import json
 import os
@@ -16,6 +17,8 @@ import zipfile
 
 APP = Path('/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app')
 REL_IMAGE = 'Contents/Frameworks/AfterFXLib.framework/Versions/A/AfterFXLib'
+IMAGE_PATHS = {'AfterFXLib': REL_IMAGE, 'MEE': 'Contents/Frameworks/MEE.dylib',
+               'FLT': 'Contents/Frameworks/FLT.dylib'}
 MAIN_SHA256 = '464ad678ca19ba78478e2989c42f42bea3fd95e51c9180c1556c53c973457df6'
 MAX_FUNCTIONS = 96
 MAX_BYTES_PER_FUNCTION = 4096
@@ -80,7 +83,8 @@ def commands(image, selection):
         start, end = item['start'], item['end']
         if type(start) is not int or type(end) is not int or not 0 < start < end <= start + MAX_BYTES_PER_FUNCTION:
             raise ValueError('Invalid address window')
-        result.append('disassemble --start-address 0x%x --end-address 0x%x --force' % (start, end))
+        # LLDB's explicit end-address option group does not accept --force.
+        result.append('disassemble --start-address 0x%x --end-address 0x%x' % (start, end))
     return result + ['quit']
 
 
@@ -98,34 +102,41 @@ def run_tool(argv, folder, name, timeout=60):
     return (folder / name).read_bytes()
 
 
-def main():
+def main(module='AfterFXLib'):
     if sys.platform != 'darwin':
         print('BLOCKED: run this offline collector on macOS.', file=sys.stderr)
         return 2
     folder = None
+    record = None
     try:
+        if module not in IMAGE_PATHS:
+            raise ValueError('Unknown inspection module')
         app = APP.resolve(strict=True)
-        image = (app / REL_IMAGE).resolve(strict=True)
+        image = (app / IMAGE_PATHS[module]).resolve(strict=True)
         image.relative_to(app)
         if not image.is_file() or not 0 < image.stat().st_size <= 1024 ** 3:
-            raise ValueError('Invalid AfterFXLib image')
+            raise ValueError('Invalid inspection image')
         host = app / 'Contents/MacOS/After Effects'
         if digest(host) != MAIN_SHA256:
             raise ValueError('Main executable differs from the supplied baseline')
         before = digest(image)
-        folder = Path(tempfile.mkdtemp(prefix='AEHL-AfterFXLib.', dir=Path.home() / 'Desktop'))
+        folder = Path(tempfile.mkdtemp(prefix='AEHL-' + module + '.', dir=Path.home() / 'Desktop'))
         os.chmod(folder, 0o700)
         record = dict(scope='offline-file-inspection-not-live-AE-proof',
+                      module=module, capture_status='NOT RUN',
                       collector_sha256=digest(Path(__file__).resolve()),
                       main_image_sha256=MAIN_SHA256, image_before_sha256=before,
                       image_baseline='first-observation-not-previously-pinned',
                       runtime_registration='NOT RUN', current_project='NOT OBSERVED')
+        # Save identity before the first tool, including on partial failure.
+        (folder / 'record.json').write_text(json.dumps(record, indent=2) + '\n')
         nm = run_tool(['/usr/bin/nm', '-arch', 'arm64', '-n', '-m', str(image)], folder, 'symbols.txt')
         run_tool(['/usr/bin/otool', '-arch', 'arm64', '-L', str(image)], folder, 'libraries.txt')
         run_tool(['/usr/bin/otool', '-arch', 'arm64', '-l', str(image)], folder, 'headers.txt')
         selection = choose_symbols(nm.decode('utf-8', errors='strict'))
         (folder / 'selection.json').write_text(json.dumps(selection, indent=2) + '\n')
         if selection['functions']:
+            run_tool(['/usr/bin/xcrun', 'lldb', '--version'], folder, 'lldb-version.txt')
             script = folder / 'inspect.lldb'
             script.write_text('\n'.join(commands(image, selection)) + '\n')
             output = run_tool(['/usr/bin/xcrun', 'lldb', '--no-lldbinit', '--batch',
@@ -140,7 +151,7 @@ def main():
                       omitted_by_limit=selection['omitted_by_limit'],
                       capture_status='PASS' if selection['functions'] else 'BLOCKED_NO_MATCHES',
                       coverage='bounded-symbol-windows-not-complete-functions-or-factory-proof')
-        record['files_sha256'] = {p.name: digest(p) for p in sorted(folder.iterdir()) if p.is_file()}
+        record['files_sha256'] = {p.name: digest(p) for p in sorted(folder.iterdir()) if p.is_file() and p.name != 'record.json'}
         (folder / 'record.json').write_text(json.dumps(record, indent=2) + '\n')
         archive = folder.with_name(folder.name + '.zip')
         with zipfile.ZipFile(archive, 'x', zipfile.ZIP_DEFLATED) as bundle:
@@ -152,9 +163,34 @@ def main():
     except (OSError, ValueError, UnicodeError, subprocess.TimeoutExpired) as exc:
         print('BLOCKED: ' + str(exc), file=sys.stderr)
         if folder:
+            if record is not None:
+                record.update(capture_status='FAIL', error_type=type(exc).__name__,
+                              failure=str(exc), image_after_sha256=None,
+                              image_stability='NOT VERIFIED after failure')
+                try:
+                    record['files_sha256'] = {p.name: digest(p) for p in sorted(folder.iterdir())
+                                               if p.is_file() and p.name != 'record.json'}
+                    (folder / 'record.json').write_text(json.dumps(record, indent=2) + '\n')
+                except OSError:
+                    pass  # Preserve all earlier outputs even if the disk is unavailable.
             print('Частичные данные сохранены: ' + str(folder), file=sys.stderr)
         return 2
 
 
+def entry(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--module', choices=tuple(IMAGE_PATHS), action='append',
+                        help='Read only this library; repeat to inspect MEE and FLT.')
+    args = parser.parse_args(argv)
+    modules = args.module or ['AfterFXLib']
+    if len(set(modules)) != len(modules):
+        parser.error('Do not repeat a module')
+    for module in modules:
+        status = main(module)
+        if status:
+            return status
+    return 0
+
+
 if __name__ == '__main__':
-    raise SystemExit(main())
+    raise SystemExit(entry())
