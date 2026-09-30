@@ -6,105 +6,103 @@ or release approval. Follow [PRODUCTION_PLAN](PRODUCTION_PLAN.md), AGENTS.md
 and shared DEVELOPMENT_RULES, rechecked at unchanged blob
 `701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`.
 
-The preceding status is preserved at
-[immutable checkpoint 8489d5c](https://github.com/ios3kov/AE-Hot-Loader/blob/8489d5c51cd08389e1f3c52a0985f53510e361a1/docs/DEVELOPMENT_STATUS.md).
-Dated evidence remains unchanged. Old instructions do not renew permissions
-or establish a fresh runtime baseline.
+The preceding status remains at
+[immutable checkpoint 61b14fa](https://github.com/ios3kov/AE-Hot-Loader/blob/61b14fafac48339a47a86d3bdc35f48e28368d2c/docs/DEVELOPMENT_STATUS.md).
+Dated evidence is not rewritten. Old instructions do not renew permissions or
+establish a current runtime baseline.
 
-## Latest result — separate resource-effect registration chain mapped
+## Latest result — plugin initialization and preset scanning separated
 
-The user supplied original PLUG.dylib and FLT.dylib in
-`AEHL-PLUG-FLT.WyTSaS.zip`. Both received binaries were independently hashed
-and match the identical before/after source statements. They were only read,
-never loaded or executed. Input hashes were rechecked after analysis.
+The received AfterFXLib binary was independently hashed and matches both
+source-before/source-after statements: SHA-256
+`ce3aa2f16fe5449a77379a6b622e1a221596e511b86f7708dd3e2f7a3cced01a`.
+It was read only, not loaded or executed. Input identity was checked again
+after analysis. This is received-file identity, not resident-code identity.
 
-New conditional static chain: FLT_Birth installs FLT_PLUGScanFunc into PLUG's
-scan list; PLUG_Search's file path invokes matching callbacks. The FLT callback
-reads resource PiPLs and reaches FLTp_FiltSetup. A successful accepted path
-registers a PLUG routine, then FLTp_AddEffect reaches the actual FLT filter
-registry vector/map. Routine registration and effect publication are distinct.
+The only direct B/BL reference found to AfterFXLib's PLUG_Search import stub
+belongs to CFx::PresetFxSearch. Its caller creates a separate PLUG sack and
+installs the FaFX preset callback. This is not the ordinary resource-effect
+startup call; copying it would conflate preset scanning with effect registration.
+Indirect/transitive calls are not excluded by this direct-reference search.
 
-A path predicate supplied to PLUG_Birth can skip a file before that callback.
-Its concrete implementation and the normal caller's inputs are not identified.
-The empty-input notifier does not enumerate these resource effects; forcing it
-is not the missing resource pass. Neither PLUG_Search nor FLT_SetupAEPlugin
-is explicitly called in the current InternalLoader.cpp, whose blob remains
-`df64e125a984199e45cd777eef8c16a556ec393b`.
+The ordinary plugin startup boundary is more precise now: MainMain calls
+aelib::Birth, and CEggApp::BirthPlugins advances aelib::InitIterator through
+the observed stage thresholds before its plugin-scan-complete diagnostic.
+The separate preset scan happens afterward. Actual import library ordinals
+resolve Birth and iterator advancement to
+`aelib.framework/Versions/A/aelib`, a different file from AfterFXLib.
+The iterator's implementation, resource-pass inputs and path predicate remain
+unobserved. No startup lifecycle call is approved for late invocation.
 
-Together with the prior MEE resource-retention branch, this supports a concrete
-missing-pass hypothesis, not proof of the failed live run's receiver, predicate
-or root cause. Do not add a speculative private call, fabricate scan data,
-change the bool, rerun initialization or trigger a broad PLUG scan.
+Forty structural assertions passed: raw import/branch mappings, dependency
+ordinals, negative import checks, selected window coverage and addressed
+anchors. Seven windows contain 5,016 decoded instructions. This is static
+file analysis, not unit tests, an executed startup trace or a live fix.
+[Exact identities, addresses, checks and limits](AFTERFX_INIT_ITERATOR_2026-09-30.md).
 
-Local LLVM 17 decoded the two arm64 text sections: 14572 and 165100 addressed
-instructions, with full section-address coverage and no unknown words in the
-final apple-m1 decoding. Sixteen BL targets were checked directly against raw
-instruction words and eight additional text anchors passed. These **24
-structural assertions** are static evidence, not unit or live-AE tests.
+## Retained research findings
 
-See [binary identities, exact addresses, checks, limitations and next request](PLUG_FLT_RESOURCE_REGISTRATION_2026-09-30.md).
-No product/collector source, native build, installation, restart, main change,
-merge or release in this continuation. Proprietary binaries and raw dumps stay
-private, not in Git.
+The [PLUG/FLT resource-effect chain](PLUG_FLT_RESOURCE_REGISTRATION_2026-09-30.md)
+remains valid within its conditional static scope: an installed FLT callback
+can read PiPL resources, set up a PLUG routine and publish a filter into FLT's
+registry. A path predicate can skip a file before that callback. The current
+loader contains no explicit PLUG_Search or FLT_SetupAEPlugin call. A confirmed
+safe missing pass has not yet been demonstrated.
+
+The [MEE resource branch](MEE_RESOURCE_ROUTE_2026-09-30.md) retains resource
+plugin references separately and returns no video module on its normal path.
+The failed live run's receiver and predicate results are still not observed.
+No forced notifier, speculative bool flip or generic extra dispatch is justified.
 
 ## Next safe gate
 
-Inspect the normal resource-pass caller before considering a bounded runtime
-test. The already received AfterFXLib symbols import PLUG_Search from PLUG,
-but the failed earlier dump contains no instruction bodies. Obtain only the
-original AfterFXLib binary with source-before/source-after/copy hash agreement;
-the linked report includes a tested file-copy command. No repeat MEE/PLUG/FLT
-collection or LLDB collector is requested. The identity of the path-predicate
-owner remains unresolved; an import is not proof of actual invocation.
+Obtain only the original `aelib.framework/Versions/A/aelib` binary, with
+source-before/source-after/copied-byte hash agreement. This target is supported
+by actual import ownership and caller instructions, not merely its filename.
+No repeat AfterFXLib/MEE/PLUG/FLT collection or new LLDB collector is requested.
+The copy/hash/archive command passed shell syntax and an isolated Linux fixture
+check, not a Mac execution.
 
-The file-copy command passed bash syntax and an isolated Linux fixture check,
-not a Mac host run. It does not require AE running or execute any Adobe code.
-Stop on missing files or changed hashes and preserve partial evidence.
+Inspect InitIterator's stage dispatch to locate the normal resource pass and
+its predicate/setter initialization. Do not call Birth, advance a live iterator,
+rerun subsystem initialization or launch a broad PLUG scan. An eventual live
+test needs a falsifiable hypothesis, bounded evidence, fresh host/project/loaded
+identity and separate authorization. Previous installation and one-restart
+permissions remain consumed.
 
-Any risky host test requires a specific falsifiable hypothesis, fresh host/
-project/loaded identity, bounded evidence and separate authorization. The
-installation and one-restart permissions remain consumed. No unchanged scan,
-forced notifier, private teardown, native unload or preference reset is allowed.
+## Checks and code identity
 
-## Collector and prior automated checks
-
-Last changed code/test commit remains
-`1fa62a775b0b0197f51c4e93b86caefba95c43d4`, collector v3, blob
-`57d992404cdb7e1cda82341db1c3e795173efeb9`, SHA-256
-`1e198f5bf92e125c6577b9d60dd30754eb6ba687b290a9df547f22fb982c2d7e`.
-Its complete MEE capture is recorded in
-[MEE_RESOURCE_ROUTE](MEE_RESOURCE_ROUTE_2026-09-30.md); the historical v2
-incomplete capture is not retrospectively promoted to PASS.
-
-Prior CI for that exact code: research `36750543637` PASS, macOS
-`36750543464` PASS; macOS Python 208/208, research Python 202 PASS/six skips,
-Node 62 PASS, native scoped guards 15 PASS. These are prior checks, not new
-tests of a product change or real-AE integration.
-[Collector checks](MEE_FACTORY_TRANSCRIPT_FIX_2026-09-30.md).
-This documentation-only continuation uses [skip ci]. Full regression and
-static-security audit were not rerun; five historical findings remain open.
+No product or collector source changed. Last changed code/test remains
+`1fa62a775b0b0197f51c4e93b86caefba95c43d4`, collector v3. Its previous CI results
+remain historical: research 36750543637 and macOS 36750543464 PASS;
+macOS Python 208/208, research Python 202 PASS/six skips, Node 62 PASS and
+15 native mock-loader guards PASS. They are not new tests of this analysis.
+Full regression and static-security audit were not rerun for this docs-only
+continuation; five historical audit findings remain unresolved. Documentation
+uses [skip ci], not a newly tested native artifact or release approval.
 
 ## Last real host results — separate and unchanged
 
 | Gate | Result |
 |---|---|
-| Scoped embedded late registration | FAIL: source45de0c9, Build ID scoped-0b8c8f122e80, fixture88019a1a01a7; 785 unchanged effects, target absent |
-| RSMB startup-registered apply/render | PASS: historical identified one-frame smoke, not broad certification |
-| RSMB late registration | FAIL: retained separately from startup smoke |
+| Scoped embedded late registration | FAIL: source 45de0c9, Build ID scoped-0b8c8f122e80, fixture 88019a1a01a7; 785 unchanged effect identities, target absent |
+| RSMB startup-registered apply/render | PASS: retained identified one-frame smoke, not broad compatibility certification |
+| RSMB late registration | FAIL: retained separately |
 | Dynamic fixture application | PASS: earlier exact-match add/remove; render NOT RUN |
-| Earlier flat-resource failure | FAIL: historical crash evidence, not fixed |
-| New live registration/apply/render | NOT RUN |
-| Current AE/project/runtime identity | NOT OBSERVED; received binaries are not a live baseline |
+| Earlier flat-resource failure | FAIL: retained historical crash evidence |
+| Current AE/project/runtime identity | NOT OBSERVED; offline binaries are not a fresh host baseline |
 
 [Scoped host test](SCOPED_USER_HOST_2026-09-29.md),
 [RSMB apply/render](RSMB_APPLY_RENDER_PASS_2026-09-29.md),
 [Dynamic application](REGISTRATION_APPLY_PASS_2026-09-29.md),
 [flat-resource crash](RESOURCE_PAIR_CRASH_CORRELATION_2026-09-29.md).
-The earlier PID78417 observation is not a fresh blank/clean/idle baseline.
+The earlier PID 78417 observation does not establish today's project state.
 Local Mac source was last reported as ce5d80d; no local pull/update is claimed.
-Reference product remains source04fea706, Build ID native-36483421984-1;
-no installed Agent, shell, panel or third-party effect changed.
+Reference product remains source 04fea706, Build ID native-36483421984-1.
 
+No installed Agent, shell, panel, third-party effect, settings or project changed;
+no native build, main change, merge or release in this continuation. Proprietary
+binaries, symbols and raw disassembly stay private, outside the repository.
 Scope cleanup, controlled cold-start causality, demonstrated safe registration,
 separate apply/render, real panel integration, IPC/repeat/timeout checks,
-compatibility and clean-candidate release gates remain open.
+compatibility and the clean-candidate release gates remain open.
