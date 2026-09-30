@@ -3,123 +3,117 @@
 Updated: 2026-09-30. Branch: `research/ordinary-plugin-discovery`.
 Current stage: **C of A–D**, with remaining gates in A/B/D. No completion
 percentage or release approval is assigned. Follow [PRODUCTION_PLAN](PRODUCTION_PLAN.md).
-Shared DEVELOPMENT_RULES rechecked at unchanged blob
-`701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`; AGENTS.md remains applicable.
+Shared DEVELOPMENT_RULES and AGENTS.md remain applicable.
 
-The preceding chronological status is retained verbatim at
-[immutable checkpoint e9993ef](https://github.com/ios3kov/AE-Hot-Loader/blob/e9993ef081b1cd0e7080064ec5ddbe0c716e2e0a/docs/DEVELOPMENT_STATUS.md),
-rather than duplicating historical "current" and "next" instructions here.
-Dated evidence records are unchanged. This page describes development state;
-it does not reclassify historical results or identify a new tested native build.
+The preceding status is preserved at
+[immutable checkpoint 687ff51](https://github.com/ios3kov/AE-Hot-Loader/blob/687ff5192f5740fe6384e02fc3c7966a0b86a03a/docs/DEVELOPMENT_STATUS.md).
+Dated evidence is not rewritten. Historical wording describes its own checkpoint,
+not current permissions, runtime identity or an independently retested artifact.
 
-## Latest evidence — main executable imports implementation from AfterFXLib
+## Latest result — offline collector failure corrected and checked with real LLDB
 
-The supplied `AEHL-factory.Z7cgNu.zip` was inspected and hashed. Matching
-before/after statements report main executable SHA-256
-`464ad678ca19ba78478e2989c42f42bea3fd95e51c9180c1556c53c973457df6`.
-The binary itself was not supplied for independent hashing.
+The user supplied the failed AfterFXLib collection. LLDB created an offline
+target but rejected the first disassembly command: the collector combined
+explicit start/end addresses with the incompatible --force option. The previous
+mock test expected that invalid string and did not exercise the real parser.
+This is a diagnostic defect, not a new AE crash or registration result.
 
-The symbol table attributes EggMain and startup imports to AfterFXLib; its
-arm64 dependency list names AfterFXLib.framework. AfterFXLib is therefore the
-next concrete search target, NOT a proven owner of the selected factory.
-The concrete factory, PiPL acceptance and reason for registration failure remain
-unresolved. [Input identities, findings and limits](FACTORY_MAIN_IMAGE_2026-09-30.md).
+Code/test checkpoint: `4d31a39cbb3a0acec9adc5fbdd6f6a139c0c5673`.
+The collector removes --force, retains bounded address windows, saves input
+identity before the first tool, preserves structured failure evidence, records
+LLDB version, and supports literal allowlisted module choices MEE and FLT.
+Default AfterFXLib behavior is retained; unknown/duplicate choices and failures
+stop collection without retry. No native product source or private ABI changed.
 
-Earlier [PluginSupport analysis](REGISTRATION_DISPATCH_STATIC_2026-09-30.md)
-showed that ML::LoadPlugins returns a candidate count, not registered-effect
-count. Its final bool restricts factory selection; this does not prove true is
-wrong. Recognition and returned-reference handoff already occur inside AddPlugin.
-Do not flip that bool or insert speculative notification/registration calls.
-The [original scoped logs](REGISTRATION_GAP_SAVED_LOGS_2026-09-30.md) were
-verified against their previously recorded hashes. Their output vector is empty
-and its recorded signature describes strings, not unconsumed plugin objects.
+Real macOS LLDB tests now reproduce the old option failure and verify the
+corrected command against an owned arm64 Mach-O. The fixture is compiled/read,
+never executed. Full macOS CI and research CI both passed for this exact source.
+[Failure evidence, changes, exact hashes, tests and next gate](FACTORY_COLLECTOR_LLDB_FIX_2026-09-30.md).
 
-## New file-only collector and exact identity
+Collector Git blob: `49780e919f5e0128479cb35f26f578d7e71dce03`.
+SHA-256: `04c94b6169ef0b40035c135d2cc8ac3da611ee72731b12a75add9c013b94fc17`.
+The standalone `AEHL-collect-factory-v2.py` matches the source snapshot downloaded
+from the successful macOS CI run byte-for-byte. It is a file-only diagnostic,
+not an installable AE product or a new release candidate.
 
-Added `experiments/ordinary_discovery/collect_factory_image.py` in `d31b8da`.
-Code/test checkpoint: `9fdb39b751c96f6e34adcf5df9d8f94183153b37`.
-Collector Git blob: `f72624c35389eedf3ccb9c6b226b5acb2c8d7b15`.
-Collector SHA-256:
-`10097a09b97876d6bbf4fce9c5abf5a5ebc300826d5dfefac906859a8863f89c`.
-The standalone chat copy `AEHL-collect-factory.py` is byte-identical.
+## Research narrowed using the already supplied partial data
 
-It reads the known AfterFXLib file, gathers symbols/dependencies/headers and
-at most 96 address-selected offline disassembly windows, each bounded to 4096
-bytes or the next known text symbol. It records omitted/capped windows, input
-hashes and file hashes in a new private Desktop archive. These are heuristic
-windows, not guaranteed complete functions or exhaustive factory coverage.
+AfterFXLib's dependency list names MEE.dylib and FLT.dylib; its symbol table
+attributes undefined imports to those modules. They are the next concrete
+inspection targets, not yet proven owners of the selected plugin factory.
+The partial archive contains no instruction body or durable AfterFXLib image
+hash record. Do not invent either. Generic Factory-name matches are not proof
+of a plugin-factory implementation. The old AfterFXLib scan need not be repeated.
 
-The collector never attaches to, launches, scripts, stops or scans AE. LLDB
-creates an offline target with no dependents and script/init loading disabled.
-Tool invocations are bounded; failure preserves partial evidence. Main-image
-identity is pinned; AfterFXLib's own hash is a first observation, not a prior
-independent identity assertion. It does not modify the installed files.
-This is a diagnostic data request, not an installable AE product handoff.
+The earlier [PluginSupport review](REGISTRATION_DISPATCH_STATIC_2026-09-30.md)
+showed candidate-count return semantics, restricted factory selection by the
+final bool, and recognition/returned-reference handoff within AddPlugin.
+The [verified original logs](REGISTRATION_GAP_SAVED_LOGS_2026-09-30.md) show an
+empty string output vector and no new video modules. These observations do not
+justify changing the bool or forcing notification. PiPL acceptance and the
+missing module-publication step remain unresolved.
 
-## Verification for the new collector
+## Verification for code 4d31a39
 
-| Check | Result and exact scope |
+| Check | Result and scope |
 |---|---|
-| Focused local parser/command tests | PASS, 20 synthetic tests, Python warnings treated as errors |
-| Additional full-flow checks | PASS, five mocked scenarios; committed counterparts also passed in research CI |
-| Exact collector bytes vs Git blob | PASS |
-| Research CI for 9fdb39b | PASS, run 36745551046; native-syntax and panel-contract |
-| Python in research Linux CI | 176 collected: 172 PASS, four macOS-only supervisor cases skipped |
-| New committed collector tests in that job | PASS, all 25, no real Adobe-image execution |
-| Node in research CI | PASS, 51 panel + 11 snapshot tests, no AE |
-| Full macOS CI for 9fdb39b | IN PROGRESS at this record, run 36745551281; no final PASS asserted |
-| Preceding macOS CI for 0ca114dd | CANCELLED, run 36745344719; skipped later stages are not PASS |
-| Actual new collector run on user's Mac | NOT RUN; next requested data collection |
-| Local real LLDB execution | BLOCKED: Linux LLDB cannot start without its libpython3.11 dependency |
+| Local focused tests, warnings as errors | 25 PASS; two real macOS cases skipped on Linux |
+| Research CI | PASS, run 36747955033 |
+| Research Python | 183 collected: 177 PASS, six platform-specific skips |
+| Node | PASS, 51 panel plus 11 snapshot tests |
+| Full macOS CI | PASS, run 36747954818, all build/sign/package/smoke steps complete |
+| macOS Python | PASS, 183/183, no skipped tests |
+| Real macOS LLDB option regression | PASS, both legacy-failure and corrected-disassembly cases |
+| Native scoped guards | PASS, 15 mock-loader cases, not AE |
+| Exact diagnostic vs downloaded CI source | PASS |
+| Actual corrected MEE/FLT collection | NOT RUN, next requested file-only collection |
 | Full static-security audit | NOT RUN again; five historical findings remain unresolved |
 
-The research job 109990710114 log was read: checkout 9fdb39b, exact test names,
-counts and four skips were verified. Evidence artifact 11112107888 has the
-Actions-reported upload SHA-256
-`0edf298e6f96ddac15b147846ba7ab11b6362894e0e106cbde3f4ab683e6ac7e`.
-This is not an independently downloaded archive hash. CI annotations are not
-cleared by green jobs; no warning-free claim is made. Documentation follow-ups
-use [skip ci]. A documentation head is not a newly tested native artifact.
+The real debugger tests used Xcode 16.4 and lldb-1700.0.9.502. Both research and
+macOS evidence archives were downloaded and independently hashed. The detailed
+record contains the artifact IDs, hashes and limitations. Green CI does not
+clear unreviewed warnings or establish runtime AE compatibility. Documentation
+follow-ups use [skip ci]; CI remains tied to the exact code commit above.
 
 ## Last real host results — retained separately
 
 | Gate | Result |
 |---|---|
 | Scoped embedded late registration | FAIL: source 45de0c9, Build ID scoped-0b8c8f122e80, fixture 88019a1a01a7; 785 unchanged effect identities, target absent |
-| RSMB startup-registered apply/render smoke | PASS: the previously identified one-frame test, not broad compatibility certification |
+| RSMB startup-registered apply/render smoke | PASS: previously identified one-frame test, not broad compatibility certification |
 | RSMB late registration | FAIL: historical result, not repaired by the startup smoke |
-| Dynamic fixture application | PASS: earlier exact-match add/remove gate; render NOT RUN |
+| Dynamic fixture application | PASS: earlier exact-match add/remove; render NOT RUN |
 | Earlier flat-resource failure | FAIL: historical crash evidence remains, not declared fixed |
-| Fresh current AE/project/runtime identity | BLOCKED: no direct Mac access or fresh identified project snapshot |
+| Fresh AE/project/runtime identity | BLOCKED: offline file inspection is not a fresh live-host snapshot |
 
 See [scoped host test](SCOPED_USER_HOST_2026-09-29.md),
 [RSMB apply/render](RSMB_APPLY_RENDER_PASS_2026-09-29.md),
 [Dynamic application](REGISTRATION_APPLY_PASS_2026-09-29.md) and
 [flat-resource crash correlation](RESOURCE_PAIR_CRASH_CORRELATION_2026-09-29.md).
-The previously supplied PID 78417/start-time observation is not a current
-blank/clean/idle project baseline. Local Mac source was last reported as ce5d80d;
-no pull, installation or local update is claimed.
+The earlier PID 78417 observation is not a fresh blank/clean/idle baseline.
+Local Mac source was last reported as ce5d80d; no local pull/update is claimed.
 
-Reference product package remains source
-`04fea7060c7ef7ebc4a315b5c39364850287e294`, Build ID `native-36483421984-1`.
-[Reference identity and checks](CI_CHECKPOINT_04fea70.md). Nothing in this
-continuation replaces the installed Agent, shell, panel or third-party effects.
+Reference product remains source `04fea7060c7ef7ebc4a315b5c39364850287e294`,
+Build ID `native-36483421984-1`.
+[Reference identity and checks](CI_CHECKPOINT_04fea70.md).
+No installed Agent, shell, panel or third-party effect was changed.
 
-## Next safe gate and remaining work
+## Next safe gate
 
-Run only the exact standalone collector on the Mac and inspect its new archive.
-It does not need AE open. Missing files, hash changes or tool failures stop
-collection; do not regenerate the failed scan. After receipt, locate the
-concrete factory and trace its PiPL acceptance and module-publication path
-using the actual bounded windows and their declared limitations.
+Run only the exact corrected diagnostic with `--module MEE --module FLT`.
+It does not need AE open and produces two new private Desktop archives. It
+reads only allowlisted files, never launches/attaches/scripts/scans AE, and
+preserves old evidence. Review omitted/capped windows before claiming complete
+coverage. Stop on errors or changed identities; do not regenerate the failed
+in-host scan. After receipt, locate the concrete factory and trace its PiPL
+acceptance and video-module publication using the saved offline data.
 
-Any subsequent risky host operation needs a falsifiable hypothesis, bounded
-instrumentation, fresh host/project/loaded identity and separate authorization.
-The previous installation and one-restart permission are consumed. No speculative
-private dispatch, teardown, unload, preference reset or unchanged scan is allowed.
+Any risky live operation requires a falsifiable hypothesis, bounded evidence,
+fresh host/project/loaded identity and separate authorization. The installation
+and one-restart permission are consumed. No speculative private dispatch,
+teardown, unload, preference reset or unchanged scan is allowed.
 
-Remaining production gates include scope cleanup, controlled RSMB cold-start
-causality, a demonstrated safe late-registration operation, separate apply/render,
-real ScriptUI roundtrip, IPC ownership/reopen/timeout/repeat checks, compatibility
-and the final clean-candidate gate. No native source, production installation,
-main, merge or release was changed by this continuation.
+Remaining gates include scope cleanup, controlled RSMB cold-start causality,
+a demonstrated safe late-registration operation, separate apply/render, real
+ScriptUI roundtrip, IPC ownership/reopen/timeout/repeat checks, compatibility
+and the final clean-candidate gate. No main change, merge or release occurred.
