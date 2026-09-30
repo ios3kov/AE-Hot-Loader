@@ -16,11 +16,11 @@ spec.loader.exec_module(collect)
 
 
 class CollectorFlowTests(unittest.TestCase):
-    def exercise(self, mode):
+    def exercise(self, mode, factory_only=False):
         with tempfile.TemporaryDirectory() as temporary:
             base = Path(temporary)
             app = base / 'app'
-            image = app / collect.REL_IMAGE
+            image = app / (collect.IMAGE_PATHS['MEE'] if factory_only else collect.REL_IMAGE)
             image.parent.mkdir(parents=True)
             image.write_bytes(b'image')
             host = app / 'Contents/MacOS/After Effects'
@@ -33,8 +33,17 @@ class CollectorFlowTests(unittest.TestCase):
                 seen.append(argv)
                 if mode == 'tool-error':
                     raise OSError('reader failed')
-                output = (b'0000000000001000 (__TEXT,__text) external _PluginFactory\n'
+                output = (b'0000000000001000 (__TEXT,__text) external _AELibraryVideoFilterFactory_Create\n'
                           b'0000000000001010 (__TEXT,__text) external _other\n') if name == 'symbols.txt' else b'offline output\n'
+                if name == 'disassembly.txt':
+                    output = (b'(lldb) disassemble --start-address 0x1000 --end-address 0x1010\n'
+                              b'fixture[0x1000] <+0>: mov w0, #7 ; "error: owned string"\n'
+                              b'fixture[0x1004] <+4>: nop\nfixture[0x1008] <+8>: nop\n'
+                              b'fixture[0x100c] <+12>: ret\n(lldb) quit\n')
+                if name == 'disassembly.txt' and mode == 'diagnostic-error':
+                    output += b'error: synthetic diagnostic\n'
+                if name == 'disassembly.txt' and mode == 'empty-transcript':
+                    output = b''
                 if mode == 'no-matches' and name == 'symbols.txt':
                     output = b'0000000000001000 (__TEXT,__text) external _other\n'
                 (folder / name).write_bytes(output)
@@ -47,11 +56,12 @@ class CollectorFlowTests(unittest.TestCase):
             with mock.patch.object(collect.sys, 'platform', 'darwin'), \
                     mock.patch.object(collect, 'APP', app), \
                     mock.patch.object(collect, 'MAIN_SHA256', expected), \
+                    mock.patch.object(collect, 'MEE_IMAGE_SHA256', '0' * 64 if mode == 'bad-image' else collect.digest(image)), \
                     mock.patch.object(Path, 'home', return_value=base), \
                     mock.patch.object(collect, 'run_tool', side_effect=run), \
                     contextlib.redirect_stdout(io.StringIO()), \
                     contextlib.redirect_stderr(io.StringIO()):
-                status = collect.main()
+                status = collect.main('MEE', factory_only=True) if factory_only else collect.main()
             archives = list((base / 'Desktop').glob('*.zip'))
             if mode == 'good':
                 self.assertEqual(status, 0)
@@ -59,6 +69,8 @@ class CollectorFlowTests(unittest.TestCase):
                 with zipfile.ZipFile(archives[0]) as archive:
                     record = json.loads(archive.read('record.json'))
                     self.assertEqual(record['capture_status'], 'PASS')
+                    self.assertEqual(record['disassembly_validation']['windows'], 1)
+                    self.assertEqual(record['factory_only'], factory_only)
                     self.assertEqual(record['runtime_registration'], 'NOT RUN')
                     self.assertEqual(record['current_project'], 'NOT OBSERVED')
                     self.assertEqual(record['image_before_sha256'], record['image_after_sha256'])
@@ -89,6 +101,18 @@ class CollectorFlowTests(unittest.TestCase):
 
     def test_tool_failure(self):
         self.exercise('tool-error')
+
+    def test_real_diagnostic_line_blocks(self):
+        self.exercise('diagnostic-error')
+
+    def test_zero_exit_empty_output_blocks(self):
+        self.exercise('empty-transcript')
+
+    def test_factory_focus_success(self):
+        self.exercise('good', factory_only=True)
+
+    def test_factory_focus_image_hash_mismatch(self):
+        self.exercise('bad-image', factory_only=True)
 
 
 if __name__ == '__main__':
