@@ -80,7 +80,7 @@ class CollectionTests(unittest.TestCase):
         chosen = collect.choose_symbols(table('_PluginFactory;quit'))
         result = collect.commands(Path('/owned/image with spaces'), chosen)
         self.assertEqual(result[:3], ['settings set target.load-cwd-lldbinit false', 'settings set target.load-script-from-symbol-file false', 'target create --no-dependents --arch arm64 "/owned/image with spaces"'])
-        self.assertEqual(result[3], 'disassemble --start-address 0x1000 --end-address 0x2000 --force')
+        self.assertEqual(result[3], 'disassemble --start-address 0x1000 --end-address 0x2000')
         self.assertEqual(result[-1], 'quit')
         self.assertNotIn('PluginFactory', '\n'.join(result))
 
@@ -124,6 +124,69 @@ class CollectionTests(unittest.TestCase):
             with self.assertRaises(FileExistsError):
                 collect.run_tool(['must-not-run'], Path(tmp), 'old.txt')
             self.assertEqual(p.read_bytes(), b'keep')
+
+    def test_cli_explicit_modules(self):
+        with mock.patch.object(collect, 'main', return_value=0) as run:
+            self.assertEqual(collect.entry(['--module', 'MEE', '--module', 'FLT']), 0)
+            self.assertEqual(run.call_args_list, [mock.call('MEE'), mock.call('FLT')])
+
+    def test_cli_rejects_unknown_or_duplicate_modules(self):
+        with mock.patch.object(collect, 'main') as run, contextlib.redirect_stderr(io.StringIO()):
+            for args in (['--module', '../other'], ['--module', 'MEE', '--module', 'MEE']):
+                with self.subTest(args=args), self.assertRaises(SystemExit):
+                    collect.entry(args)
+            run.assert_not_called()
+
+    def test_cli_stops_on_failure_without_retry(self):
+        with mock.patch.object(collect, 'main', return_value=2) as run:
+            self.assertEqual(collect.entry(['--module', 'MEE', '--module', 'FLT']), 2)
+            run.assert_called_once_with('MEE')
+
+    def test_default_module_is_unchanged(self):
+        with mock.patch.object(collect, 'main', return_value=0) as run:
+            self.assertEqual(collect.entry([]), 0)
+            run.assert_called_once_with('AfterFXLib')
+
+    def test_failure_retains_identity_for_allowlisted_modules(self):
+        import json
+        for module in ('MEE', 'FLT'):
+            with self.subTest(module=module), tempfile.TemporaryDirectory() as tmp:
+                base = Path(tmp).resolve()
+                app = base / 'app'
+                image = app / collect.IMAGE_PATHS[module]
+                image.parent.mkdir(parents=True)
+                image.write_bytes(b'owned synthetic image')
+                host = app / 'Contents/MacOS/After Effects'
+                host.parent.mkdir(parents=True)
+                host.write_bytes(b'owned synthetic host')
+                (base / 'Desktop').mkdir()
+                image_hash, host_hash = collect.digest(image), collect.digest(host)
+
+                def fail(argv, folder, name, timeout=60):
+                    record = json.loads((folder / 'record.json').read_text())
+                    self.assertEqual(record['image_before_sha256'], image_hash)
+                    self.assertEqual(record['module'], module)
+                    self.assertEqual(record['capture_status'], 'NOT RUN')
+                    self.assertEqual(argv[-1], str(image))
+                    raise OSError('synthetic inspection failure')
+
+                with mock.patch.object(collect.sys, 'platform', 'darwin'), \
+                        mock.patch.object(collect, 'APP', app), \
+                        mock.patch.object(collect, 'MAIN_SHA256', host_hash), \
+                        mock.patch.object(Path, 'home', return_value=base), \
+                        mock.patch.object(collect, 'run_tool', side_effect=fail), \
+                        contextlib.redirect_stderr(io.StringIO()):
+                    self.assertEqual(collect.main(module), 2)
+                records = list((base / 'Desktop').glob('*/record.json'))
+                self.assertEqual(len(records), 1)
+                record = json.loads(records[0].read_text())
+                self.assertEqual(record['capture_status'], 'FAIL')
+                self.assertEqual(record['runtime_registration'], 'NOT RUN')
+                self.assertEqual(record['image_before_sha256'], image_hash)
+                self.assertIsNone(record['image_after_sha256'])
+                self.assertNotIn('record.json', record['files_sha256'])
+                self.assertEqual(collect.digest(image), image_hash)
+                self.assertEqual(collect.digest(host), host_hash)
 
 
 if __name__ == '__main__':
