@@ -24,7 +24,9 @@ class ResourceAbiCollectorTests(unittest.TestCase):
             folder = Path(tmp).resolve()
             source = folder / "owned.s"
             source.write_text(".text\n.globl _owned_abi_probe\n.p2align 2\n"
-                              "_owned_abi_probe:\n add w0, w0, #1\n ret\n")
+                              "_owned_abi_probe:\n add w0, w0, #1\n ret\n"
+                              ".data\n.p2align 3\n.globl _owned_abi_data\n"
+                              "_owned_abi_data:\n.quad 0x1234\n.quad 0x5678\n")
             binary = folder / "owned.bundle"
             subprocess.run(["/usr/bin/xcrun", "clang", "-arch", "arm64", "-bundle",
                             str(source), "-o", str(binary)], check=True,
@@ -42,6 +44,33 @@ class ResourceAbiCollectorTests(unittest.TestCase):
             self.assertRegex(output, r"add\s+w0, w0, #0x1")
             self.assertRegex(output, r"\bret\b")
             self.assertEqual(collector.validate_disassembly(output, start, start + 8), 2)
+            data_symbol = re.search(r"^([0-9a-fA-F]+)\s+[DS]\s+_owned_abi_data$", symbols, re.M)
+            self.assertIsNotNone(data_symbol, symbols)
+            data_start = int(data_symbol.group(1), 16)
+            data_script = folder / "data.lldb"
+            data_script.write_text(collector.lldb_data_script(binary, data_start, 2))
+            output, diagnostics = collector.run_tool(
+                ["/usr/bin/xcrun", "lldb", "--no-lldbinit", "--batch", "--source", str(data_script)])
+            self.assertNotIn("error:", (output + diagnostics).lower())
+            self.assertEqual(collector.validate_data(output, data_start, 2), [0x1234, 0x5678])
+
+    def test_file_data_requires_exact_coverage(self):
+        text = '0x00001000: 0x0000000000001234 0x0000000000005678\n'
+        self.assertEqual(collector.validate_data(text, 0x1000, 2), [0x1234, 0x5678])
+        for bad in ('', text + text, text.replace('1000', '1008'),
+                    text.replace(' 0x0000000000005678', ''), text.replace('5678', 'oops')):
+            with self.subTest(output=bad), self.assertRaisesRegex(ValueError, 'bounds'):
+                collector.validate_data(bad, 0x1000, 2)
+
+    def test_file_data_script_is_bounded_and_offline(self):
+        script = collector.lldb_data_script(Path('/tmp/owned.bundle'), 0x1000, 2)
+        self.assertIn('target create --no-dependents --arch arm64', script)
+        self.assertIn('memory read --format x --size 8 --count 2 0x1000\n', script)
+        self.assertNotIn('process launch', script)
+        self.assertNotIn('process attach', script)
+        for start, count in ((0, 2), (0x1004, 2), (0x1000, 0), (0x1000, 33)):
+            with self.subTest(start=start, count=count), self.assertRaisesRegex(ValueError, 'bounded'):
+                collector.lldb_data_script(Path('/tmp/owned.bundle'), start, count)
 
     def test_disassembly_requires_exact_decoded_coverage(self):
         text = "owned[0x1000] <+0>: add w0, w0, #0x1\nowned[0x1004] <+4>: ret\n"

@@ -62,6 +62,7 @@ inline std::string PlanBytes(const Plan& p) {
     std::string s;
     Field(s, "run", p.run_id); Field(s, "source", p.source_commit);
     Field(s, "bridge", p.bridge_sha256); Field(s, "fixture", p.fixture_manifest_sha256);
+    Field(s, "cleanup_inventory", p.cleanup_inventory_sha256);
     Field(s, "executable", p.executable); Field(s, "root", p.root); Field(s, "match", p.match);
     Field(s, "timeout_ms", std::to_string(p.timeout_ms));
     for (const auto& image : p.images) { Field(s, "image_name", image.first); Field(s, "image_hash", image.second); }
@@ -76,6 +77,10 @@ inline std::string ObservationBytes(const Observation& o) {
     Field(s, "dirty", std::to_string(o.dirty)); Field(s, "rendering", std::to_string(o.rendering));
     Field(s, "items", std::to_string(o.items)); Field(s, "queued", std::to_string(o.queued));
     Field(s, "revision", std::to_string(o.revision));
+    Field(s, "cleanup_observed", std::to_string(o.cleanup.observed));
+    Field(s, "cleanup_complete", std::to_string(o.cleanup.complete));
+    Field(s, "cleanup_inventory", o.cleanup.inventory_sha256);
+    Field(s, "general_plugin_records", std::to_string(o.cleanup.general_plugin_records));
     for (const auto& image : o.images) { Field(s, "image_name", image.first); Field(s, "image_hash", image.second); }
     Field(s, "runtime_image_count", std::to_string(o.runtime_images.size()));
     for (const auto& image : o.runtime_images) {

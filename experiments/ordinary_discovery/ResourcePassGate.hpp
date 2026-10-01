@@ -22,6 +22,9 @@ struct RuntimeImage {
 };
 struct Plan {
     std::string run_id, source_commit, bridge_sha256, fixture_manifest_sha256;
+    // Digest of the complete reviewed callback target/context inventory, bound
+    // by the external supervisor to this run and resident provider identities.
+    std::string cleanup_inventory_sha256;
     std::string executable, root, match;
     Images images;
     std::uint64_t timeout_ms = 15000;
@@ -32,6 +35,13 @@ struct Approval {
     bool new_private_call_authorized = false;
     bool native_contract_reviewed = false;
 };
+struct CleanupObservation {
+    // Missing information must never be interpreted as an empty vector.
+    // These are unbound backend observations, not an implemented private reader.
+    bool observed = false, complete = false;
+    std::string inventory_sha256;
+    std::uint64_t general_plugin_records = 0;
+};
 struct Observation {
     std::int64_t pid = 0;
     std::string process_start, executable, version, arch, bridge_sha256;
@@ -41,6 +51,7 @@ struct Observation {
     bool main_thread = false, unsaved = false, dirty = true, rendering = true;
     std::uint64_t items = 0, queued = 0, revision = 0;
     std::vector<std::string> registry;
+    CleanupObservation cleanup;
 };
 struct SearchResult { int code = -1; int errors = -1; bool cancelled = true; };
 struct Spec { const void* value = nullptr; }; // opaque token, NOT a FILE_Spec layout
@@ -92,6 +103,7 @@ inline void Validate(const Plan& p, const Approval& a) {
          Hex(p.run_id.substr(14), 32), "invalid-run-id");
     Need(Hex(p.source_commit, 40) && Hex(p.bridge_sha256, 64) &&
          Hex(p.fixture_manifest_sha256, 64), "invalid-source-or-artifact-identity");
+    Need(Hex(p.cleanup_inventory_sha256, 64), "reviewed-cleanup-inventory-required");
     Need(Canonical(p.root) && Canonical(p.executable) &&
          p.root.size() >= 10 && p.root.substr(p.root.size() - 10) == "/scan-root",
          "invalid-owned-root-or-executable");
@@ -111,6 +123,7 @@ inline void Validate(const Plan& p, const Approval& a) {
     Need(a.new_private_call_authorized && q.run_id == p.run_id &&
          q.source_commit == p.source_commit && q.bridge_sha256 == p.bridge_sha256 &&
          q.fixture_manifest_sha256 == p.fixture_manifest_sha256 && q.executable == p.executable &&
+         q.cleanup_inventory_sha256 == p.cleanup_inventory_sha256 &&
          q.root == p.root && q.match == p.match && q.images == p.images && q.timeout_ms == p.timeout_ms,
          "fresh-exact-authorization-required");
 }
@@ -168,6 +181,17 @@ inline void Safe(const Plan& p, const Observation& o) {
          o.revision > 0, "project-not-blank-clean-idle");
     ValidateRuntimeImages(o.runtime_images);
 }
+inline void SafeCleanup(const Plan& p, const Observation& o) {
+    Need(o.cleanup.observed && o.cleanup.complete &&
+         Hex(o.cleanup.inventory_sha256, 64) &&
+         o.cleanup.inventory_sha256 == p.cleanup_inventory_sha256,
+         "cleanup-state-not-observed-or-reviewed");
+    // PLUG_PrepRoutine success does not suppress MEE's saved entrypoint call.
+    // No exception for "already prepped", KeepLoaded or null progress exists.
+    Need(o.cleanup.general_plugin_records == 0, "retained-general-plugins-block-resource-pass");
+    // Empty observed state is necessary, not sufficient: all callback effects,
+    // readers and the private call still require separate native-contract review.
+}
 // A returned Result is NOT durable evidence until the external supervisor saves
 // it and independently verifies the same PID/start, bytes and postflight.
 inline Result Run(const Plan& supplied, const Approval& supplied_approval, Backend& backend) {
@@ -194,6 +218,7 @@ inline Result Run(const Plan& supplied, const Approval& supplied_approval, Backe
         backend.verify_fixture(p);
         before = backend.observe();
         Safe(p, before);
+        SafeCleanup(p, before);
         expected = Names(before);
         Need(!std::binary_search(expected.begin(), expected.end(), p.match), "fixture-already-present");
         tick();
@@ -210,6 +235,7 @@ inline Result Run(const Plan& supplied, const Approval& supplied_approval, Backe
         backend.verify_fixture(p);
         const auto immediately_before = backend.observe();
         Safe(p, immediately_before);
+        SafeCleanup(p, immediately_before);
         Need(SameHost(p, before, immediately_before) && before.revision == immediately_before.revision &&
              expected == Names(immediately_before), "baseline-changed-before-call");
         tick();
@@ -229,6 +255,7 @@ inline Result Run(const Plan& supplied, const Approval& supplied_approval, Backe
         r.postflight_observed = true;
         backend.save_observation("after", after);
         Safe(p, after);
+        SafeCleanup(p, after);
         Need(SameHost(p, before, after) && before.revision == after.revision, "host-or-project-changed");
         tick();
         Need(search.code == 0 && search.errors == 0 && !search.cancelled, "search-error-or-cancel");

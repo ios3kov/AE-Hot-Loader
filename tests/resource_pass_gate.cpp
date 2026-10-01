@@ -12,6 +12,7 @@ static Plan TestPlan() {
     p.source_commit = std::string(40, '2');
     p.bridge_sha256 = std::string(64, '3');
     p.fixture_manifest_sha256 = std::string(64, '4');
+    p.cleanup_inventory_sha256 = std::string(64, '6');
     p.executable = "/owned/host/After Effects";
     p.root = "/owned/fresh/scan-root";
     p.match = "AEHL.Embedded.123456789abc";
@@ -43,6 +44,7 @@ struct Model final : Backend {
         base.build = 101; base.main_thread = true;
         base.unsaved = true; base.dirty = false; base.rendering = false; base.revision = 1;
         base.registry = {"ADBE.A", "ADBE.B"};
+        base.cleanup = {true, true, p.cleanup_inventory_sha256, 0};
     }
     std::uint64_t now_ms() override { return clock; }
     Observation observe() override {
@@ -99,6 +101,13 @@ int main() {
     const std::vector<std::pair<std::string, Mutate>> preblocked = {
         {"no-new-authorization", [](Model& m) { m.a.new_private_call_authorized = false; }},
         {"unreviewed-native-contract", [](Model& m) { m.a.native_contract_reviewed = false; }},
+        {"missing-reviewed-cleanup", [](Model& m) { m.p.cleanup_inventory_sha256.clear(); }},
+        {"different-approved-cleanup", [](Model& m) { m.a.scope.cleanup_inventory_sha256[0] = '7'; }},
+        {"cleanup-state-not-observed", [](Model& m) { m.base.cleanup.observed = false; }},
+        {"cleanup-inventory-incomplete", [](Model& m) { m.base.cleanup.complete = false; }},
+        {"cleanup-inventory-not-reviewed", [](Model& m) { m.base.cleanup.inventory_sha256[0] = '7'; }},
+        {"cleanup-inventory-missing", [](Model& m) { m.base.cleanup.inventory_sha256.clear(); }},
+        {"retained-general-plugin", [](Model& m) { m.base.cleanup.general_plugin_records = 1; }},
         {"old-permission-run", [](Model& m) { m.a.scope.run_id.back() = '2'; }},
         {"different-approved-root", [](Model& m) { m.a.scope.root = "/different/scan-root"; }},
         {"different-approved-host", [](Model& m) { m.a.scope.executable += "2"; }},
@@ -190,6 +199,26 @@ int main() {
         passed("exact-success-and-operation-order");
         Check(good.run().status == "BLOCKED" && good.searches == 1 && good.creates == 1);
         passed("successful-request-cannot-replay");
+        for (const auto& item : std::vector<std::pair<std::string, Mutate>>{
+            {"cleanup-state-lost-before-call", [](Model& m) { m.change = [](Observation& o, int n) {
+                if (n == 2) o.cleanup.observed = false; }; }},
+            {"cleanup-inventory-changed-before-call", [](Model& m) { m.change = [](Observation& o, int n) {
+                if (n == 2) o.cleanup.inventory_sha256[0] = '7'; }; }},
+            {"general-plugin-added-before-call", [](Model& m) { m.change = [](Observation& o, int n) {
+                if (n == 2) o.cleanup.general_plugin_records = 1; }; }},
+            {"cleanup-inventory-changed-after-call", [](Model& m) { m.change = [](Observation& o, int n) {
+                if (n == 3) o.cleanup.inventory_sha256[0] = '7'; }; }},
+            {"general-plugin-added-after-call", [](Model& m) { m.change = [](Observation& o, int n) {
+                if (n == 3) o.cleanup.general_plugin_records = 1; }; }},
+        }) {
+            Model m; item.second(m); const auto result = m.run();
+            Check(result.status == "FAIL" && m.releases == 1);
+            const bool after = item.first.find("after-call") != std::string::npos;
+            Check(m.searches == (after ? 1 : 0) && m.marker == after);
+            const auto attempts = m.searches;
+            Check(m.run().status == "BLOCKED" && m.searches == attempts);
+            passed(item.first);
+        }
         Model system_lazy;
         system_lazy.change = [](Observation& o, int n) {
             if (n == 3) o.runtime_images.push_back({

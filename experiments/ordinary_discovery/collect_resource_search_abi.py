@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Collect bounded Stage C1 search ABI or cleanup evidence from pinned files.
+"""Collect bounded Stage C1 search, cleanup or lifecycle evidence from pinned files.
 
 Offline/file-only: never launches or attaches to After Effects and never loads
 Adobe code. Captures fixed arm64 disassembly windows plus selected symbols.
@@ -38,7 +38,17 @@ REVIEWS = {
         ("MEE-finish", "MEE", 0x37EEC, 0x37F34),
         ("MEE-setdown", "MEE", 0x37F34, 0x38044),
     ),
+    "lifecycle": (
+        ("PLUG-prep", "PLUG", 0x7DE4, 0x807C),
+        ("PLUG-unprep", "PLUG", 0x807C, 0x82B8),
+        ("PLUG-unprep-internal", "PLUG", 0x7C74, 0x7D70),
+        ("PLUG-state", "PLUG", 0xDFF0, 0xE028),
+        ("PLUG-constructor", "PLUG", 0xC9B4, 0xCD74),
+        ("MEE-callback", "MEE", 0x376EC, 0x37A00),
+        ("MEE-setdown", "MEE", 0x37F34, 0x38044),
+    ),
 }
+DATA_WINDOWS = {"lifecycle": (("PLUG-vtable", "PLUG", 0x14920, 12),)}
 INPUTS = {
     "aelib": (
         APP / "Contents/Frameworks/aelib.framework/Versions/A/aelib",
@@ -62,6 +72,8 @@ SYMBOL_WANTED = {
     "cleanup": re.compile(r"(PLUG_InstallScan|PLUGp_DoCleanups|FLT_Birth|"
                           r"SetupGeneralPluginScan|PluginScanFunc|PluginCleanupFunc|"
                           r"CleanupGeneralPluginScan|SetdownGeneralPlugins)"),
+    "lifecycle": re.compile(r"(PLUG_PrepRoutine|PLUG_UnprepRoutine|PLUGp_UnprepRoutine|"
+                            r"PLUG_RoutineDescPriv|PluginCleanupFunc|SetdownGeneralPlugins)"),
 }
 
 
@@ -126,20 +138,41 @@ def validate_input(path, expected):
     return actual
 
 
-def lldb_script(path, start, end):
+def lldb_target(path):
     value = str(path)
     require(not any(c in value for c in ('"', "\\", "\n", "\r", "\x00")),
             "unsafe input path")
-    require(0 < start < end <= start + 4096 and start % 4 == 0 and end % 4 == 0,
-            "invalid bounded disassembly window")
-    return "\n".join([
+    return [
         "settings set target.load-cwd-lldbinit false",
         "settings set target.load-script-from-symbol-file false",
         'target create --no-dependents --arch arm64 "' + value + '"',
-        "disassemble --start-address 0x%x --end-address 0x%x" % (start, end),
-        "quit",
-        "",
-    ])
+    ]
+
+
+def lldb_script(path, start, end):
+    require(0 < start < end <= start + 4096 and start % 4 == 0 and end % 4 == 0,
+            "invalid bounded disassembly window")
+    return "\n".join(lldb_target(path) + [
+        "disassemble --start-address 0x%x --end-address 0x%x" % (start, end), "quit", ""])
+
+
+def lldb_data_script(path, start, count):
+    require(0 < start and start % 8 == 0 and 1 <= count <= 32,
+            "invalid bounded data window")
+    return "\n".join(lldb_target(path) + [
+        "memory read --format x --size 8 --count %d 0x%x" % (count, start), "quit", ""])
+
+
+def validate_data(text, start, count):
+    """Validate file-backed words only; never interpret them as runtime pointers."""
+    words = []
+    for address, values in re.findall(
+            r"^0x([0-9a-fA-F]+):((?:\s+0x[0-9a-fA-F]{16})+)\s*$", text, re.M):
+        for index, value in enumerate(values.split()):
+            words.append((int(address, 16) + index * 8, int(value, 16)))
+    require([address for address, _ in words] == list(range(start, start + count * 8, 8)),
+            "data window is incomplete or outside reviewed bounds")
+    return [value for _, value in words]
 
 
 def run_tool(argv, *, input_text=None, timeout=45):
@@ -228,7 +261,7 @@ def main():
                 "owned build directory is unsafe")
         parent = parent.resolve(strict=True)
         observed = {name: validate_input(*INPUTS[name]) for name in names}
-        prefix = "resource-abi-" if args.review == "search-abi" else "resource-cleanup-"
+        prefix = "resource-abi-" if args.review == "search-abi" else "resource-" + args.review + "-"
         folder = Path(tempfile.mkdtemp(prefix=prefix + uuid.uuid4().hex[:8] + "-",
                                        dir=parent))
         os.chmod(folder, 0o700)
@@ -259,17 +292,41 @@ def main():
                 "window_start": hex(start), "window_end": hex(end),
                 "decoded_instructions": instruction_count,
             }
+        data_outputs = {}
+        for label, name, start, count in DATA_WINDOWS.get(args.review, ()):
+            require(name in names, "data image not included in review identity")
+            script = lldb_data_script(INPUTS[name][0], start, count)
+            script_path = folder / (label + "-inspect.lldb")
+            write_exclusive(script_path, script)
+            output, diagnostics = run_tool(
+                ["/usr/bin/xcrun", "lldb", "--no-lldbinit", "--batch", "--source", str(script_path)],
+                timeout=60)
+            require("error:" not in (output + diagnostics).lower() and
+                    "fatal:" not in (output + diagnostics).lower(), "lldb reported a data inspection error")
+            values = validate_data(output, start, count)
+            write_exclusive(folder / (label + "-data.txt"), output)
+            if diagnostics:
+                write_exclusive(folder / (label + "-stderr.txt"), diagnostics)
+            data_outputs[label] = {"image": name, "start": hex(start), "word_count": len(values),
+                                   "interpretation": "file-backed serialized words, not runtime pointers"}
+        if args.review == "lifecycle":
+            fixups, diagnostics = run_tool(
+                ["/usr/bin/xcrun", "dyld_info", "-arch", "arm64", "-fixup_chains", str(INPUTS["PLUG"][0])])
+            require(not diagnostics.strip() and
+                    re.search(r"pointer_format:\s+6 \(DYLD_CHAINED_PTR_64_OFFSET\)", fixups),
+                    "reviewed PLUG fixup format was not confirmed")
+            write_exclusive(folder / "PLUG-fixup-chains.txt", fixups)
         after = {name: validate_input(*INPUTS[name]) for name in names}
         require(observed == after, "input files changed during collection")
         record = {
             "schema": "AEHL-C1-RESOURCE-ABI-1",
-            "scope": ("offline-bounded-resource-search-abi-only" if args.review == "search-abi"
-                      else "offline-bounded-resource-cleanup-only"),
+            "scope": "offline-bounded-resource-" + args.review + "-only",
             "review": args.review,
             "source_commit": commit,
             "live_ae_operation": "NOT RUN",
             "plugin_scan": "NOT RUN",
             "inputs": outputs,
+            "data_windows": data_outputs,
         }
         archive = package(folder, record)
         print("PASS: bounded offline " + args.review + " evidence only; Adobe calls=0")

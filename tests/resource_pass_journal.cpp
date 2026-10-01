@@ -17,6 +17,7 @@ static void Wait(pid_t pid, int expected) { int status=0; Check(::waitpid(pid,&s
 static Plan TestPlan() {
     Plan p; p.run_id="resource-pass-"+std::string(32,'1'); p.source_commit=std::string(40,'2');
     p.bridge_sha256=std::string(64,'3'); p.fixture_manifest_sha256=std::string(64,'4');
+    p.cleanup_inventory_sha256=std::string(64,'6');
     p.executable="/owned/host/After Effects"; p.root="/owned/fresh/scan-root"; p.match="AEHL.Embedded.123456789abc";
     for (const auto& key : {"AfterEffects","FILE","U","dvacore","FLT","MEE","PLUG","PluginSupport","aelib"}) p.images[key]=std::string(64,'5');
     return p;
@@ -34,6 +35,7 @@ struct Model final : JournaledBackend {
             {"/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app/Contents/Frameworks/PLUG.dylib",0x2000,16}};
         base.main_thread=true; base.unsaved=true; base.dirty=false;
         base.rendering=false; base.revision=1; base.registry={"ADBE.A","ADBE.B"};
+        base.cleanup={true,true,p.cleanup_inventory_sha256,0};
     }
     std::uint64_t now_ms() override { return clock++; }
     Observation observe() override { ++observations; auto o=base; if (searches) o.registry.push_back(p.match); return o; }
@@ -68,6 +70,13 @@ int main(int argc, char** argv) {
             }
             Check(names==std::set<std::string>{"claim.txt","before.txt","call-started.txt","native.txt","after.txt","result.txt"});
             Check(Read(d/"claim.txt").find(b.p.root)!=std::string::npos);
+            for (const auto& name : {"claim.txt", "before.txt", "call-started.txt", "after.txt"})
+                Check(Read(d/name).find("cleanup_inventory=64:"+b.p.cleanup_inventory_sha256+"\n")!=std::string::npos);
+            for (const auto& name : {"before.txt", "call-started.txt", "after.txt"}) {
+                Check(Read(d/name).find("cleanup_observed=1:1\n")!=std::string::npos);
+                Check(Read(d/name).find("cleanup_complete=1:1\n")!=std::string::npos);
+                Check(Read(d/name).find("general_plugin_records=1:0\n")!=std::string::npos);
+            }
             Check(Read(d/"native.txt").find("scope=21:resource-registration\n")!=std::string::npos);
             Check(Read(d/"native.txt").find("code=1:0\n")!=std::string::npos);
             Check(Read(d/"result.txt").find("search_observed=1:1\n")!=std::string::npos);
