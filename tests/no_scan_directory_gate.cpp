@@ -58,7 +58,7 @@ struct Model final : JournaledBackend {
 int main() {
     char tmp[]="/tmp/aehl-noscan-tests-XXXXXX";
     const char* made=mkdtemp(tmp); assert(made);
-    const fs::path root(made);
+    const fs::path root = fs::canonical(fs::path(made));
     int cases=0;
     auto fixture=[&](const std::string& name) {
         const auto base=root/name; Check(fs::create_directory(base));

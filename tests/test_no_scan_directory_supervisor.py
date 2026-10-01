@@ -26,7 +26,7 @@ def journal_file(path, payload):
 
 class Fixture:
     def __init__(self, root):
-        self.root = Path(root)
+        self.root = Path(root).resolve()
         self.base = self.root / 'noscan-build'; self.base.mkdir(mode=0o700)
         self.control = self.base / 'control'; self.journal = self.base / 'journal'; self.probe = self.base / 'probe-directory'
         for path in (self.control, self.journal, self.probe): path.mkdir(mode=0o700)
