@@ -70,5 +70,46 @@ The collector reuses reviewed original-file validation, exclusive private writes
 and ZIP verification. It caps file reads at 256 MiB, freezes root requests and
 records only metadata/identities. There is no runtime-address or sampler-scope
 conversion. Focused original-file inspection matched the pinned hashes and
-static roots; durable clean-source collection and full CI are NOT RUN before
-code checkpoint.
+static roots; exact clean-source collection now PASS at
+**efe05f2f7d320ffb026ff963188079c06f4aca49**.
+
+| Provider | Symbol VM | Reviewed root VM / extent | Zero-fill section | UUID |
+|---|---|---|---|---|
+| PLUG | 0x18488 | 0x18490 / 8 bytes | __DATA,__common, ordinal 13 | d4ddb055e565378fb8f433ac0bb2253d |
+| MEE | 0x10fa00 | 0x10fd70 / 16 bytes | __DATA,__bss, ordinal 12 | 74a30dbaa08b367bbd9915d6d77e9d52 |
+
+Both slices have base VM 0, FAT slice offset 16384, exact reviewed hashes before/
+after. PLUG section range is 0x18488 + 320 bytes; MEE section range is 0x10f080
++ 28512 bytes. The metadata records serialized_root_bytes=null; never decode
+zero-filled file padding as a current sack or an empty live vector.
+
+Private collection ZIP resource-roots-8e75fd87-cp3a2bav.zip SHA-256:
+`8056742d352ce0bfd62c3e79e2f7e5978763aaf940740d8296abc82bfe653228`.
+Manifest and all three payload hashes independently verified. Original provider
+files were not modified and no raw Adobe bytes/disassembly are committed.
+
+Exact-clean-source local unified regression: PASS, 284 Python without skips,
+62 Node, 22 stages; source inventory unchanged before/after. Private ZIP
+AEHL-checks-sy_ac_cx.zip SHA-256:
+`935a094cb7df202e97603a11cbea235d8f80893e057c9fdfdd220200cfae150c`.
+Run ID feaa841baa3b4587902d0be97ebb96b4; every archived payload hash verified.
+
+Research CI [36927550112](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/36927550112):
+PASS, Linux + macOS, exact efe05f2. Full macOS CI
+[36927550048](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/36927550048):
+PASS (build/sign/package/synthetic smoke). These are offline/build checks, not registry or runtime-state evidence.
+
+Bounded scanner: 248 supported files, no omissions, clean efe05f2 source.
+Exit 1/review_required is retained: sole known artifact_manifest.py:71
+local-argparse false positive. No finding suppressed; not a full security audit.
+Documentation closeout does not inherit a new code/test run.
+
+## Next step and preserved gates
+
+Continue resident module/header/text identity and root VM containment checks on
+owned fixtures before preparing a concrete live diagnostic observer. No loaded
+Adobe identity or actual root/state has been observed. Lifetime, heap allocation
+and quiescence remain unresolved; matching snapshots cannot become a complete
+inventory. Native resource backend NOT READY; C1 registration/apply/render NOT
+RUN. C0 stays its recorded live PASS. No private mutex call, setup/setdown/unprep
+or repeated scan is authorized by static addresses or these test results.

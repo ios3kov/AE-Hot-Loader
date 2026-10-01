@@ -11,42 +11,34 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
-## Current Stage C1 — bounded cleanup snapshots prepared offline
+## Current Stage C1 — static root provenance and indirection verified
 
-Code/test head: **`6a758a811790e68846d9ecb9a78c0c16df069c9d`**.
-CleanupSnapshot.hpp reads an injected exact-byte source within explicit regions,
-following sack/list metadata and reading the MEE vector begin/end. It preserves
-ordered callback target/context words, validates counts/strides/overflow and
-compares two complete bounded captures. Any read failure/change stops without
-retry. Limits: 256 callbacks, 8192 retained records, 12 reads / 16384-byte budget.
-No callback, LIST getter, Adobe function or foreign process was invoked.
+Code/test head: **`efe05f2f7d320ffb026ff963188079c06f4aca49`**.
+Bounded file-only Mach-O collection independently confirms PLUG's sack-handle
+pointer slot at image VM 0x18490 and MEE's vector begin/end at 0x10fd70, with
+reviewed UUID/section containment and unchanged provider hashes. Both are
+zero-fill sections: serialized file bytes do not supply their live state.
 
-This is isolated observer preparation, not the live observer or C1 backend.
-Matching captures do not prove atomicity/completeness, allocation ownership,
-provider identity, valid pointer representation or future stability. No automatic
-conversion supplies ResourcePassGate's observed/complete/digest fields. Actual
-AE callback/vector state remains **NOT OBSERVED**. The existing empty-state
-restriction remains necessary and must not be relaxed.
+Important indirection: PLUGp_G+8 contains the handle address; the handle then
+contains the sack address. CleanupSnapshot's supplied sack_slot is the validated
+handle address, not automatically PLUGp_G+8. No runtime address/scope adapter is
+connected. Actual AE roots/callbacks/vector and allocation/lifetime/quiescence
+remain NOT OBSERVED/UNKNOWN. The complete-inventory and empty-retained-state
+resource restrictions remain unchanged.
 
-Focused regression: **PASS**, 44 nested synthetic cases and real owned-process
-buffer inspection on macOS arm64. Address/undefined-behavior sanitizers: **PASS**.
-Clean-source unified local regression: **PASS**, 271 Python without skips,
-62 Node, 22 stages; source inventory unchanged. Current research CI
-**36926349585 — PASS**; full macOS CI **36926349591 — PASS**.
-These are offline/build results, not registration proof.
+Focused regression: PASS, 13 root metadata tests, portable malformed fixtures
+and an owned compiled Mach-O never loaded. Clean-source full local regression:
+PASS, 284 Python without skips, 62 Node, 22 stages; source inventory unchanged.
+Research CI **36927550112 — PASS**; full macOS CI **36927550048 — PASS**.
 
-Current contract, evidence and remaining gate:
-[C1_CLEANUP_SNAPSHOT_REVIEW_2026-10-01.md](C1_CLEANUP_SNAPSHOT_REVIEW_2026-10-01.md).
-Prior [lifecycle review](C1_REPEAT_PREPARATION_REVIEW_2026-10-01.md) is preserved:
-repeat preparation can return success and invoke existing general plugins again;
-270-test / exact 52f4f80 CI results remain that checkpoint's evidence.
-
-Next: reviewed root/provider identity, memory-range provenance and a host
-lifetime/quiescence strategy before any complete observation claim. Critical
-unknown behavior blocks native C1 integration; independent file-only preparation
-remains allowed. C0 remains recorded live PASS; C1 registration/apply/render are
-**NOT RUN**. Original checkout remains preserved at 182d058; development uses a
-separate research-branch clone. No installable/live candidate is handed off.
+Current evidence and next step:
+[C1_ROOT_PROVENANCE_REVIEW_2026-10-01.md](C1_ROOT_PROVENANCE_REVIEW_2026-10-01.md).
+Prior snapshot and lifecycle evidence remain preserved. Continue resident
+module/header/text identity and data-root containment checks using owned fixtures,
+then prepare a concrete scoped diagnostic observer before seeking live authority.
+Critical unknown state/callback behavior still blocks resource integration.
+C0 remains recorded live PASS; C1 registration/apply/render are NOT RUN. Original
+checkout is preserved at 182d058; research uses a separate writable clone.
 
 ## Second live no-scan result — PASS; Stage C0 closed
 
