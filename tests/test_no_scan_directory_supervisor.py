@@ -52,7 +52,9 @@ class Fixture:
             'files': files,
         }
         identity = {k: self.record[k] for k in ('build_id', 'source_commit', 'source_clean', 'target', 'kind', 'run_id')}
-        (self.control / 'ready.txt').write_text(json.dumps(identity, sort_keys=True) + '\npid=4321\nimage=' + str(binary) + '\n')
+        (self.control / 'ready.txt').write_text(json.dumps(identity, sort_keys=True) +
+                                                '\npid=4321\nimage=' + str(binary) +
+                                                '\nstart=123.456\n')
         (self.control / 'ready.txt').chmod(0o600)
         self.manifest = self.base / 'manifest.json'; self.manifest.write_text(json.dumps(self.record, sort_keys=True) + '\n'); self.manifest.chmod(0o600)
         self.manifest_hash = hashlib.sha256(self.manifest.read_bytes()).hexdigest()
@@ -111,6 +113,7 @@ class NoScanSupervisorTests(unittest.TestCase):
             f = Fixture(tmp)
             prepared = f.prepared()
             self.assertEqual(prepared[4], f.identity)
+            self.assertEqual(prepared[0]['loaded_process_start'], '123.456')
             self.assertIn(b'private_file_call=authorized', prepared[5])
             self.assertEqual({p.name for p in f.control.iterdir()}, {'ready.txt'})
             self.assertFalse(any(f.journal.iterdir()))
@@ -134,6 +137,27 @@ class NoScanSupervisorTests(unittest.TestCase):
                 self.assertNotIn('request.txt', names)
                 self.assertNotIn('manifest.json', names)
                 self.assertNotIn('a' * 32, b''.join(z.read(n) for n in names).decode(errors='ignore'))
+
+    def test_native_process_start_must_match_loaded_aegp_ready_record(self):
+        with tempfile.TemporaryDirectory(prefix='aehl-noscan-supervisor-') as tmp:
+            f = Fixture(tmp)
+            identity = {k: f.record[k] for k in (
+                'build_id', 'source_commit', 'source_clean', 'target', 'kind', 'run_id')}
+            (f.control / 'ready.txt').write_text(
+                json.dumps(identity, sort_keys=True) + '\npid=4321\nimage=' +
+                f.record['module_path'] + '\nstart=999.000\n')
+            (f.control / 'ready.txt').chmod(0o600)
+            prepared = f.prepared()
+            def publish(control, request):
+                f.write_pass(request)
+            report = f.base / 'start-mismatch.zip'
+            result, archive = mod.supervise(*prepared, 20, identity_fn=f.identity_fn,
+                                            provider_verifier=f.provider_verifier,
+                                            publish_fn=publish, clock=lambda: 0.0,
+                                            sleep=lambda _: None, report_path=report)
+            self.assertEqual(result['status'], 'FAIL')
+            self.assertIn('process-start differs', result['reason'])
+            self.assertTrue(archive.is_file())
 
     def test_package_report_keeps_adapter_stop_evidence(self):
         with tempfile.TemporaryDirectory(prefix='aehl-noscan-supervisor-') as tmp:
