@@ -50,7 +50,7 @@ struct NativeResult {
 };
 struct Result {
     std::string status = "BLOCKED", stage = "validate", reason;
-    bool claimed = false, call_started = false, postflight_observed = false;
+    bool claimed = false, call_started = false, native_observed = false, postflight_observed = false;
     bool cleanup_ok = false;
 };
 struct Backend {
@@ -62,6 +62,7 @@ struct Backend {
     virtual void save_observation(const char*, const Observation&) = 0;
     virtual void mark_call_started(const Plan&, const Observation&) = 0;
     virtual NativeResult run_directory_probe(const Plan&, const Approval&) = 0;
+    virtual void save_native_result(const NativeResult&) = 0;
 };
 inline void Need(bool ok, const char* reason) {
     if (!ok) throw std::runtime_error(reason);
@@ -138,10 +139,29 @@ inline void Safe(const Plan& p, const Observation& o) {
     (void)Registry(o);
     ValidateImages(o.images);
 }
+inline bool SystemLazyImage(const RuntimeImage& image) {
+    return image.path.rfind("/System/Library/", 0) == 0;
+}
+inline bool CompatibleImages(const std::vector<RuntimeImage>& before,
+                             const std::vector<RuntimeImage>& after) {
+    // Existing images may not move, unload or change identity. New images are
+    // tolerated only from the immutable Apple system framework root, because
+    // AE/macOS can lazily load those during otherwise unrelated host activity.
+    // User, Adobe and plug-in paths remain exact and additions still fail.
+    for (const auto& image : before) {
+        if (std::find(after.begin(), after.end(), image) == after.end()) return false;
+    }
+    for (const auto& image : after) {
+        if (std::find(before.begin(), before.end(), image) == before.end() &&
+            !SystemLazyImage(image)) return false;
+    }
+    return true;
+}
 inline bool SameRuntime(const Observation& a, const Observation& b) {
     return a.pid == b.pid && a.process_start == b.process_start &&
            a.executable == b.executable && a.module_path == b.module_path &&
-           a.revision == b.revision && Registry(a) == Registry(b) && a.images == b.images;
+           a.revision == b.revision && Registry(a) == Registry(b) &&
+           CompatibleImages(a.images, b.images);
 }
 inline void RequireNativeSuccess(const NativeResult& n) {
     Need(n.invoked && n.completed && n.cleanup_ok, "directory-operation-failed");
@@ -193,6 +213,8 @@ inline Result Run(const Plan& supplied, const Approval& supplied_approval, Backe
         r.stage = "directory-call";
         const auto native = backend.run_directory_probe(p, approval);
         r.cleanup_ok = native.cleanup_ok;
+        backend.save_native_result(native);
+        r.native_observed = true;
         r.stage = "postflight";
         postflight_attempted = true;
         const auto after = backend.observe();
