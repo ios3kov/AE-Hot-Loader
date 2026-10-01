@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 
@@ -21,11 +22,11 @@ def verify(manifest_path, owned_base):
     if manifest_path.is_symlink() or not manifest_path.is_file():
         raise ValueError("manifest must be a regular file")
     manifest_stat = manifest_path.stat()
-    if manifest_stat.st_uid != __import__('os').getuid() or manifest_stat.st_nlink != 1 or \
+    if manifest_stat.st_uid != os.getuid() or manifest_stat.st_nlink != 1 or \
             (manifest_stat.st_mode & 0o777) != 0o600:
         raise ValueError("manifest must be owned/private")
     fixture_stat = manifest_path.parent.stat()
-    if fixture_stat.st_uid != __import__('os').getuid() or (fixture_stat.st_mode & 0o777) != 0o700:
+    if fixture_stat.st_uid != os.getuid() or (fixture_stat.st_mode & 0o777) != 0o700:
         raise ValueError("fixture directory must be owned/private")
     record = json.loads(manifest_path.read_text())
     if (record.get("pair_kind") != "embedded" or record.get("scan_root") != "scan-root" or
@@ -47,7 +48,7 @@ def verify(manifest_path, owned_base):
     if root.is_symlink() or not root.is_dir():
         raise ValueError("scan root is missing or is a symlink")
     root_stat = root.stat()
-    if root_stat.st_uid != __import__('os').getuid() or (root_stat.st_mode & 0o777) != 0o700:
+    if root_stat.st_uid != os.getuid() or (root_stat.st_mode & 0o777) != 0o700:
         raise ValueError("scan root must be owned/private")
     bundle_name = probe.get("bundle")
     if not isinstance(bundle_name, str) or bundle_name != "scan-root/" + Path(bundle_name).name or not bundle_name.endswith(".plugin"):
