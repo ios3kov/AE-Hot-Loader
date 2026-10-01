@@ -18,7 +18,7 @@ static Plan TestPlan() {
     Plan p; p.run_id="resource-pass-"+std::string(32,'1'); p.source_commit=std::string(40,'2');
     p.bridge_sha256=std::string(64,'3'); p.fixture_manifest_sha256=std::string(64,'4');
     p.executable="/owned/host/After Effects"; p.root="/owned/fresh/scan-root"; p.match="AEHL.Embedded.123456789abc";
-    for (const auto& key : {"AfterEffects","FILE","FLT","MEE","PLUG","PluginSupport","aelib"}) p.images[key]=std::string(64,'5');
+    for (const auto& key : {"AfterEffects","FILE","U","dvacore","FLT","MEE","PLUG","PluginSupport","aelib"}) p.images[key]=std::string(64,'5');
     return p;
 }
 struct Model final : JournaledBackend {
