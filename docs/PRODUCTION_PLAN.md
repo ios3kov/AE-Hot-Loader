@@ -3,8 +3,9 @@
 Updated: 2026-10-01. Branch: `research/ordinary-plugin-discovery`.
 
 Source of current verified state: [DEVELOPMENT_STATUS](DEVELOPMENT_STATUS.md).
-Shared [DEVELOPMENT_RULES](https://github.com/ios3kov/FSTR-Line/blob/main/DEVELOPMENT_RULES.md)
-and `AGENTS.md` apply. Historical plans/evidence remain preserved and must not
+Canonical [AI_ENTRYPOINT](https://github.com/ios3kov/AE-Development-Rules/blob/main/AI_ENTRYPOINT.md)
+and its selected AE Development Rules modules, plus `AGENTS.md`, apply.
+Historical plans/evidence remain preserved and must not
 be treated as current approval.
 
 ## Product scope
@@ -102,6 +103,14 @@ PASS means only:
 It does **not** mean ordinary-effect late registration works.
 
 ## Stage C1 — resource-registration experiment
+
+Current offline checkpoint: [C1_RESOURCE_ABI_REVIEW_2026-10-01.md](C1_RESOURCE_ABI_REVIEW_2026-10-01.md).
+The real bounded collector is fixed, and argument/callback/return windows were
+reviewed against pinned files. PLUG_Search calls the default sack's installed
+cleanup list even for one root. Before implementation, identify the actual
+cleanup registrations and review their retained-state effects; neither a null
+progress callback nor one root removes this requirement. No native C1 backend
+or live request is ready yet.
 
 Only after C0 PASS:
 

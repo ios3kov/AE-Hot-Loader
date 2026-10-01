@@ -1,10 +1,11 @@
 # AE Hot Loader development instructions
 
-Before each significant stage, read and apply the current shared
-[FSTR-Line DEVELOPMENT_RULES](https://github.com/ios3kov/FSTR-Line/blob/main/DEVELOPMENT_RULES.md).
-Reviewed on 2026-09-29: rules blob
-`701a8c1ae3acb4dbfe1d7eda94acbf8095b88608` (FSTR-Line source
-`c69e3663de59dc44cbdef18042891f6dd1ce5ee6`). State the current project
+Start with [AE Development Rules AI_ENTRYPOINT](https://github.com/ios3kov/AE-Development-Rules/blob/main/AI_ENTRYPOINT.md)
+and select the applicable canonical modules before each significant stage.
+Reviewed on 2026-10-01: AE-Development-Rules source
+`05bd9a8d71c11280d972b96caf64b776f2a075d7`.
+Historical FSTR-Line rule identities in dated evidence remain historical.
+State the current project
 stage before each significant step; do not invent a completion percentage.
 Do not treat this short entry point as a replacement for the full rules.
 

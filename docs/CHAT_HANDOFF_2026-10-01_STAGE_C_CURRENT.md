@@ -3,13 +3,19 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-The earlier `CHAT_HANDOFF_2026-10-01.md` is now a historical checkpoint. This
-record supersedes its "no-scan bridge not connected" statement.
+Current continuation: [C1_RESOURCE_ABI_REVIEW_2026-10-01.md](C1_RESOURCE_ABI_REVIEW_2026-10-01.md).
+The current C1 section and next-gate order below supersede historical no-scan
+preparation/permission statements in this handoff. C0 is closed; do not repeat it.
+The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
 ## Exact starting point
 
 - Repository: `ios3kov/AE-Hot-Loader`.
 - Branch: `research/ordinary-plugin-discovery`; never change `main`.
+- Current C1 code/test head:
+  **`5b88779b846d1e0dac5a50ef59f5fafc949d968f`**.
+- Current canonical AE Development Rules source:
+  **`05bd9a8d71c11280d972b96caf64b776f2a075d7`**; read AI_ENTRYPOINT first.
 - Current Stage C no-scan core head:
   **`c1e20e4ab4d4a4f6654f67df7dbb224f0790b5be`**.
 - Current live-launcher code/test head:
@@ -184,28 +190,36 @@ resource-registration experiment. Any live resource-registration/private PLUG
 operation needs fresh authorization; the second no-scan approval is consumed.
 
 
+## Current Stage C1 offline checkpoint
+
+The collector's incompatible LLDB `--force` option is fixed and regression-tested
+on an owned arm64 bundle. Complete bounded ABI windows and a supplemental
+cleanup window were collected from the hash-pinned actual files without Adobe
+execution. Clean-head local regression passed: 264 Python, 62 Node, 22 stages.
+Exact-head research CI `36920890724` and full macOS CI `36920890645` are PASS
+for `5b88779`. These are offline/build results, not live C1 execution.
+
+PLUG_Search invokes the selected sack's installed cleanup list even for one
+root and even with null progress callback. Review the actual cleanup registrations
+and retained-state effects before creating a native resource-call backend.
+An address/signature match does not prove late-call safety.
+
 ## Next gate — exact order
 
-1. Reconcile the user's local checkout
-   `/Users/os3kov/Documents/AE-Hot-Loader/` with the research branch **without
-   discarding local changes**. The last user-reported local state was older and
-   has not been re-observed here.
-2. Re-observe the current AE process/project/runtime state.
-3. On the authorized Mac, build the exact no-scan AEGP against the supplied
-   AE 25.6 SDK; record Build ID, hashes and clean source identity.
-4. Verify signing, exports and inert entry for that exact artifact.
-5. Verify the intended install path is unused and the exact loaded helper
-   identity can be proven.
-6. Only with fresh authorization, perform any needed helper installation and
-   AE launch/restart.
-7. Separately require explicit approval for:
-   - the private FILE call;
-   - retaining three already-loaded FILE/U/dvacore references until process exit.
-8. Publish exactly one request and produce exactly one ZIP report.
+1. Identify the existing default-sack cleanup registrations and their targets.
+2. Review end-of-pass effects and borrowed/retained state; freeze the complete
+   single-root native contract without replacing callbacks or replaying startup.
+3. Connect the research-only inert C1 backend/AEGP and independent one-shot
+   supervisor; verify refusal/replay/timeout/journal paths offline.
+4. Build/sign/hash/inert-test one exact clean candidate and fresh owned fixture.
+5. Obtain separately scoped authorization for that candidate's installation,
+   any AE launch, provider retention and the one private resource pass.
+6. Establish a fresh exact running host/project/resident-module baseline, then
+   publish at most one request. Stop and preserve evidence on uncertainty.
+7. Require exact registry insertion in the same process; prove apply/render
+   separately only after registration PASS.
 
-The live acceptance is only folder create → path roundtrip → one release.
-`PLUG_Search`, ordinary-effect registration and apply/render are outside this
-first run.
+C0 is already PASS and must not be repeated as a substitute for this work.
 
 ## After no-scan PASS
 
@@ -242,8 +256,10 @@ permission to retry.
 
 ## Current limitation
 
-This environment cannot inspect
-`/Users/os3kov/Documents/AE-Hot-Loader/` or the user's running AE process.
-Therefore local checkout identity, current AE baseline, exact SDK build,
-installed/loaded helper identity and the real folder-object lifecycle remain
-NOT OBSERVED / NOT RUN here.
+The original `/Users/os3kov/Documents/AE-Hot-Loader/` checkout was read clean at
+`182d058`; it was preserved. Development uses a separate working clone, initially
+synchronized to remote `9c142ed` and advanced to the C1 code head above.
+The current AE process list could not be read in the sandbox; running project
+and resident-module baseline remain NOT OBSERVED. No live C1 operation, helper
+installation, launch or project mutation was performed. The earlier C0 live
+PASS remains identified historical evidence, not today's host observation.

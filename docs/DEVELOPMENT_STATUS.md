@@ -3,11 +3,45 @@
 Updated: 2026-10-01. Branch: `research/ordinary-plugin-discovery`.
 Stage **C of A–D**; core registration, A/B/D and release gates remain open.
 Current continuation handoff: [CHAT_HANDOFF_2026-10-01_STAGE_C_CURRENT.md](CHAT_HANDOFF_2026-10-01_STAGE_C_CURRENT.md).
-AGENTS.md and PRODUCTION_PLAN apply. Shared rules rechecked unchanged:
-`701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`.
+AGENTS.md and PRODUCTION_PLAN apply. Current canonical rules:
+AE-Development-Rules `05bd9a8d71c11280d972b96caf64b776f2a075d7`, starting with
+AI_ENTRYPOINT.md. Older rule/permission/environment statements below belong
+to their named checkpoints and do not supersede this continuation.
 Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
+
+## Current Stage C1 — bounded ABI collection fixed and reviewed offline
+
+Code/test head: **`5b88779b846d1e0dac5a50ef59f5fafc949d968f`**.
+The C1 collector previously failed on real LLDB because `--force` is not
+compatible with its start/end-address option set. The command is fixed and
+covered by real LLDB disassembly of an owned arm64 bundle.
+
+The collector now validates every decoded address in the complete bounded
+SearchStatFunc/Egg_PlugSearch and PLUG_Search windows: **105 + 367 instructions**.
+The two actual pinned Adobe input files matched their reviewed hashes before
+and after file-only collection. No Adobe code was executed.
+
+The additional bounded PLUG cleanup review establishes an important scope
+limit: even a one-root search invokes the sack's installed cleanup callbacks.
+Null progress callback does not disable those callbacks. Their actual registered
+targets and retained-state effects must be reviewed before connecting C1 to AE.
+Do not replace them, replay startup, or assume a single root makes all side
+effects local.
+
+Local clean-head macOS regression: **PASS**, 264 Python tests, 62 Node tests,
+22 unified stages, unchanged source inventory. Exact-head research CI
+**36920890724 — PASS** on Linux/macOS. Full macOS CI **36920890645 — PASS**
+for the same code head, including build/sign/package/synthetic smoke. These
+are offline/build results, not a new live registration PASS.
+
+Review, exact argument evidence, hashes and remaining gate:
+[C1_RESOURCE_ABI_REVIEW_2026-10-01.md](C1_RESOURCE_ABI_REVIEW_2026-10-01.md).
+C0 remains the recorded live PASS; C1 registration, apply and render are
+**NOT RUN**. The original user checkout was observed clean at `182d058`;
+development uses a separate working clone of the research branch. The current
+running AE baseline remains NOT OBSERVED.
 
 ## Second live no-scan result — PASS; Stage C0 closed
 
