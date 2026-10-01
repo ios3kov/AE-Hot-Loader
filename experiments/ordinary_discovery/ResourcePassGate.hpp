@@ -99,7 +99,8 @@ inline void Validate(const Plan& p, const Approval& a) {
          Hex(p.match.substr(14), 12) && p.match != "AEHL.Embedded.88019a1a01a7",
          "fresh-embedded-fixture-required");
     Need(p.timeout_ms >= 1 && p.timeout_ms <= 15000, "invalid-deadline");
-    const std::vector<std::string> keys = {"AfterEffects", "FILE", "FLT", "MEE", "PLUG", "PluginSupport", "aelib"};
+    const std::vector<std::string> keys = {
+        "AfterEffects", "FILE", "U", "dvacore", "FLT", "MEE", "PLUG", "PluginSupport", "aelib"};
     Need(p.images.size() == keys.size(), "missing-image-pins");
     for (const auto& key : keys) {
         const auto it = p.images.find(key);
