@@ -1,117 +1,177 @@
 # AE Hot Loader — current development and release plan
 
-Updated: 2026-09-28. Branch: `research/ordinary-plugin-discovery`.
-Current verified source and evidence: [DEVELOPMENT_STATUS](DEVELOPMENT_STATUS.md).
-The prior plan is preserved [verbatim](archive/PRODUCTION_PLAN_6037df8.md).
+Updated: 2026-10-01. Branch: `research/ordinary-plugin-discovery`.
 
-## Scope
+Source of current verified state: [DEVELOPMENT_STATUS](DEVELOPMENT_STATUS.md).
+Shared [DEVELOPMENT_RULES](https://github.com/ios3kov/FSTR-Line/blob/main/DEVELOPMENT_RULES.md)
+and `AGENTS.md` apply. Historical plans/evidence remain preserved and must not
+be treated as current approval.
 
-Primary research: add a previously absent ordinary effect to the running
-AE 25.6.0 arm64 host, then prove it can be applied and rendered in the same
-process. Adding a new plug-in and replacing the implementation of an already
-loaded plug-in are different claims.
+## Product scope
 
-Keep the generic Agent, ordinary discovery, Control Shell and RSMB research.
-The adapter-specific cleanup direction comes from the original
-[status snapshot](DEVELOPMENT_STATUS_2026-09-28.md). Removing outdated adapter
-claims from the current plan is not a declaration that those adapters passed
-or were integrated. Their historical requirements and results are preserved.
+AE Hot Loader is a **tool/panel**, not an ordinary effect plug-in. Native AEGP
+modules are internal helpers when code must execute inside After Effects.
 
-No production loader changes without a demonstrated registration step. Do not
-call unverified private shutdown/teardown/reinitialization functions. Do not
-merge to `main`, publish, install, purge user state or close a working AE
-process as a side effect of these development checks.
+Primary Stage C goal:
 
-## Completed in this iteration
+> make an ordinary effect that is absent from the running AE registry become
+> registered in that same identified process, then prove apply and render
+> separately without restarting AE.
 
-1. The panel compares registry identities rather than trusting loaded module
-   counts, preserves partial failures, rejects malformed protocol fields and
-   restores the UI after tested I/O failures.
-2. Research pushes run the full macOS build/sign/package pipeline, 22 panel
-   host-mock tests, 14 manifest tests and seven standalone native gates.
-   Source/toolchain records, payload hashes and final archive roundtrip checks
-   passed for `2e27203`; none of these jobs executes AE.
-3. Current product documentation distinguishes historical AE results, new
-   automated checks and remaining release gates. Original documents remain
-   available unchanged.
+Loaded binaries, registry publication, application and rendering are separate
+claims.
 
-These are implementation/limited-regression results, not a release milestone.
-See [full native CI evidence](CI_CHECKPOINT_2e27203.md). The previous
-[panel checkpoint](CI_CHECKPOINT_f274961.md) remains historical evidence.
+## Preserved baseline
 
-## Next stages and predeclared acceptance
+- Scoped embedded late registration: **FAIL**
+  (`45de0c9` / `scoped-0b8c8f122e80`; 785 effect identities unchanged).
+- RSMB startup-registered apply/render: **PASS**, startup baseline only.
+- RSMB late registration: **FAIL**.
+- Supported public SDK late-registration procedure: **NOT ESTABLISHED**.
+- Current user's Mac checkout and current AE runtime identity: **NOT OBSERVED**
+  from this environment.
 
-### A. Finish scope cleanup and reproducible native checks
+Do not repeat the unchanged historical scan merely to reproduce this baseline.
 
-- Inventory adapter-only references, fixtures, commands and packaging entries.
-- Remove only those outside the retained scope; preserve generic shell tests
-  and historical evidence. Full repository-wide cleanup is still NOT RUN.
-- Full native build/sign/package gate: PASS for `2e27203`; preserve it on
-  subsequent code/build changes. Package and source identities are recorded.
-- Commit verified dependency lockfiles and enforce locked builds; generated
-  evidence lockfiles alone do not freeze future dependency selection.
-- Generate component runtime Build IDs and verify loaded identities in AE.
-  The package Build ID and payload hashes do not prove runtime identity.
+## Stage C0 — no-scan FILE ownership gate
 
-Gate: scoped checks pass, package identity is complete, generic shell/Agent
-coverage is retained and no removed item is silently needed by packaging.
+### Implemented in source/offline tests
 
-### B. Controlled RSMB startup baseline
+A separate research-only inert AEGP and external one-shot supervisor are
+connected. They are not the ordinary effect being loaded.
 
-First establish startup registration independently of late loading. This test
-has not been run and no new automated runner is claimed in this iteration.
+The live operation is deliberately limited to:
 
-Required inputs and safeguards:
+1. fresh exact AE/process/project/module baseline;
+2. one new owned ASCII directory;
+3. create one host directory specification;
+4. exact path roundtrip;
+5. release it once;
+6. postflight proof of unchanged PID/start/project/registry/image list;
+7. one report ZIP.
 
-- authorized isolated AE 25.6.0 arm64 environment and licensed test plug-ins;
-- inventory of active bundles, hashes, known dependencies and duplicate names;
-- a fresh Run ID, source/runtime identities and a dedicated evidence directory;
-- a known initial host state and explicit ownership of the test project;
-- bounded timeout with crash/hang detection; no old PASS file reuse;
-- preserve user preferences, unrelated plug-ins and unsaved work.
+The path contains **no `PLUG_Search`, ordinary-effect registration or broad
+plug-in scan**.
 
-Gate: capture exact effect match names after a controlled cold start, then
-apply each required effect and render identified outputs from the owned
-fixture. Record startup, apply and render as separate results. A registry-only
-observation cannot pass the apply/render gate. No response means NOT RUN,
-BLOCKED or FAIL according to the observed stage, never PASS.
+The supervisor publishes at most one request and never automatically retries an
+uncertain native outcome.
 
-### C. Investigate legacy late registration
+### Gate before live execution
 
-Use the controlled PiPL-only/dynamic pair and the startup baseline to isolate
-the missing registration step. Preserve host identity, exact bundles and
-before/after registry identities. Do not blame the legacy entrypoint name
-without evidence. Do not broaden support from one fixture to all third-party
-plug-ins.
+Before publishing the request:
 
-Gate before changing the native path: a repeatable, bounded test demonstrates
-that the proposed step registers the intended missing match name without
-restart, project corruption or unsafe lifecycle calls. Validate apply/render
-separately with a render-capable fixture.
+- exact clean source commit and Build ID;
+- exact SDK build of the no-scan AEGP on the authorized Mac;
+- signed artifact plus final hashes/manifest;
+- inert-entry verification;
+- exact installed/loaded module identity;
+- AE 25.6x101 arm64, fresh blank/clean/idle project;
+- exact reviewed FILE/U/dvacore provider identities;
+- one fresh owned/private probe directory;
+- separate explicit authorization for:
+  - the private FILE call;
+  - retaining three already-loaded provider references until process exit.
 
-### D. Integration and safety hardening
+A failure or timeout preserves evidence and stops. No retry, AE kill, provider
+unload or cleanup of uncertain native state.
 
-- Real ScriptUI/Agent round-trip and registry behavior of the updated JSX.
-- Panel reopen, multiple instances and shared-bridge ownership.
-- Timeout/retry policy while a native scan may still be running.
-- Repeated scan, no duplicate registration and unchanged project state.
-- Existing-instance behavior and host responsiveness.
-- Any future shell-mode integration has its own reload/cache-refresh gate;
-  do not silently apply shell claims to the ordinary-discovery button.
+### Acceptance
+
+PASS means only:
+
+- exactly one specification was created;
+- the returned path equals the approved path;
+- owned host strings/specification have the reviewed release counts;
+- exactly three approved provider references were retained;
+- cleanup completed;
+- host/project/registry/image evidence is byte-equivalent before/after.
+
+It does **not** mean ordinary-effect late registration works.
+
+## Stage C1 — resource-registration experiment
+
+Only after C0 PASS:
+
+1. review PLUG end-of-pass callbacks and retained state;
+2. freeze the exact single-root resource-pass contract;
+3. prepare one fresh embedded ordinary-effect fixture;
+4. use a new Run ID, Build ID and one-shot evidence directory;
+5. execute at most one bounded registration attempt.
+
+Forbidden shortcuts remain:
+
+- global plug-in root enumeration;
+- Birth/InitIterator/RequiredPreSearch replay;
+- callback replacement;
+- cache-predicate bypass;
+- cache purge/forced notification as a registration mechanism;
+- another `ML::LoadPlugins` pass alongside the resource pass;
+- unloading provider code;
+- reuse of consumed fixture/claim evidence.
+
+### Registration acceptance
+
+Registration PASS requires an exact new intended match name in the complete
+effect registry of the **same AE process**, with unchanged project state and
+without unrelated registry/module changes.
+
+Loaded-image evidence alone is insufficient.
+
+## Stage C2 — apply and render
+
+After exact registration PASS:
+
+- apply the newly registered installed-effect key to an owned fixture;
+- prove effect instance creation separately;
+- render an identified output separately;
+- preserve source/artifact/runtime identities and output evidence.
+
+Registration success must not be promoted to apply/render success.
+
+## Stage D — integration and hardening
+
+After C succeeds:
+
+- real ScriptUI/tool → Agent/helper roundtrip;
+- repeat/no-op/error/timeout ownership;
+- multiple panel instances/reopen;
+- project safety;
+- cache invalidation/fresh evaluation UX where applicable;
+- clean install/update/rollback behavior;
+- compatibility matrix for the actually supported AE/macOS/architecture scope;
+- full static/security review;
+- Regression Level 2.
+
+## CI and artifact requirements
+
+Every behavior/artifact change must keep:
+
+- unified offline checks green;
+- macOS product regression green where applicable;
+- `experiments/**` changes covered by macOS CI;
+- pinned workflow actions/toolchains and locked dependencies;
+- clean Git/source identity;
+- Build ID + final SHA-256/manifest for testable artifacts.
+
+The public CI environment does not contain the proprietary AE SDK/provider
+runtime. Therefore CI cannot substitute for the dedicated SDK build and real AE
+C0 gate on the authorized Mac.
 
 ## Release gate
 
-Before handing over an installable candidate:
+No merge to `main`, release or installable handoff until all applicable
+mandatory checks pass for the exact candidate:
 
-- clean source, reproducible build/package and final artifact identity;
-- all applicable Level 1 and Level 2 checks required by DEVELOPMENT_RULES;
-- real-AE clean install and runtime identity confirmation;
-- intended effect absent before scan, present afterward, applies and renders
-  in the same identified process;
-- repeat/error/timeout/duplicate and project-safety scenarios;
-- applicable host/version/architecture and render compatibility matrix;
-- logs investigated, no mandatory FAIL/BLOCKED/NOT RUN;
-- documentation and evidence tied to the exact candidate, not an older build.
+- clean identified source;
+- reproducible build/package;
+- final artifact hashes;
+- actual loaded runtime identity;
+- late registration in the same process;
+- separate apply and render PASS;
+- repeat/error/timeout/project-safety scenarios;
+- Level 2 regression;
+- no unresolved critical findings;
+- documentation/evidence matching the exact candidate.
 
-No completion percentage is assigned while the core legacy registration and
-real-AE integration gates remain open.
+Historical Control Shell success remains useful research but is not evidence of
+arbitrary ordinary-effect late registration.
