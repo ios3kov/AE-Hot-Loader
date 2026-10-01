@@ -12,6 +12,14 @@
 
 namespace resource_pass {
 using Images = std::map<std::string, std::string>;
+struct RuntimeImage {
+    std::string path;
+    std::uintptr_t header = 0;
+    std::intptr_t slide = 0;
+    bool operator==(const RuntimeImage& other) const {
+        return path == other.path && header == other.header && slide == other.slide;
+    }
+};
 struct Plan {
     std::string run_id, source_commit, bridge_sha256, fixture_manifest_sha256;
     std::string executable, root, match;
@@ -28,6 +36,7 @@ struct Observation {
     std::int64_t pid = 0;
     std::string process_start, executable, version, arch, bridge_sha256;
     Images images;
+    std::vector<RuntimeImage> runtime_images;
     int build = 0;
     bool main_thread = false, unsaved = false, dirty = true, rendering = true;
     std::uint64_t items = 0, queued = 0, revision = 0;
@@ -37,7 +46,7 @@ struct SearchResult { int code = -1; int errors = -1; bool cancelled = true; };
 struct Spec { const void* value = nullptr; }; // opaque token, NOT a FILE_Spec layout
 struct Result {
     std::string status = "BLOCKED", stage = "validate", reason;
-    bool claimed = false, call_started = false, postflight_observed = false;
+    bool claimed = false, call_started = false, search_observed = false, postflight_observed = false;
     bool cleanup_ok = true;
     // No apply/render conclusion is represented by this registration-only gate.
 };
@@ -56,6 +65,7 @@ struct Backend {
     virtual Spec create_spec(const std::string& root) = 0;
     virtual std::string spec_path(Spec) = 0;
     virtual SearchResult search_one_root(Spec, std::uint64_t deadline_ms) = 0;
+    virtual void save_search_result(const SearchResult&) = 0;
     virtual bool release_spec(Spec) noexcept = 0;
 };
 inline void Need(bool ok, const char* reason) {
@@ -103,10 +113,38 @@ inline void Validate(const Plan& p, const Approval& a) {
          q.root == p.root && q.match == p.match && q.images == p.images && q.timeout_ms == p.timeout_ms,
          "fresh-exact-authorization-required");
 }
-inline bool SameHost(const Observation& a, const Observation& b) {
+inline void ValidateRuntimeImages(const std::vector<RuntimeImage>& images) {
+    Need(!images.empty() && images.size() <= 8192, "invalid-runtime-images");
+    for (const auto& image : images)
+        Need(Canonical(image.path) && image.header != 0, "invalid-runtime-images");
+    auto sorted = images;
+    std::sort(sorted.begin(), sorted.end(), [](const RuntimeImage& a, const RuntimeImage& b) {
+        if (a.path != b.path) return a.path < b.path;
+        if (a.header != b.header) return a.header < b.header;
+        return a.slide < b.slide;
+    });
+    Need(std::adjacent_find(sorted.begin(), sorted.end()) == sorted.end(),
+         "ambiguous-runtime-images");
+}
+inline bool AllowedNewRuntimeImage(const Plan& p, const RuntimeImage& image) {
+    const std::string fixture_prefix = p.root + "/";
+    return image.path.rfind("/System/Library/", 0) == 0 ||
+           image.path.rfind(fixture_prefix, 0) == 0;
+}
+inline bool CompatibleRuntimeImages(const Plan& p,
+                                    const std::vector<RuntimeImage>& before,
+                                    const std::vector<RuntimeImage>& after) {
+    for (const auto& image : before)
+        if (std::find(after.begin(), after.end(), image) == after.end()) return false;
+    for (const auto& image : after)
+        if (std::find(before.begin(), before.end(), image) == before.end() &&
+            !AllowedNewRuntimeImage(p, image)) return false;
+    return true;
+}
+inline bool SameHost(const Plan& p, const Observation& a, const Observation& b) {
     return a.pid == b.pid && a.process_start == b.process_start &&
            a.executable == b.executable && a.bridge_sha256 == b.bridge_sha256 &&
-           a.images == b.images;
+           a.images == b.images && CompatibleRuntimeImages(p, a.runtime_images, b.runtime_images);
 }
 inline std::vector<std::string> Names(const Observation& o) {
     Need(!o.registry.empty() && o.registry.size() <= 20000, "invalid-registry");
@@ -127,6 +165,7 @@ inline void Safe(const Plan& p, const Observation& o) {
          o.main_thread, "wrong-host-or-thread");
     Need(o.unsaved && !o.dirty && !o.rendering && o.items == 0 && o.queued == 0 &&
          o.revision > 0, "project-not-blank-clean-idle");
+    ValidateRuntimeImages(o.runtime_images);
 }
 // A returned Result is NOT durable evidence until the external supervisor saves
 // it and independently verifies the same PID/start, bytes and postflight.
@@ -170,7 +209,7 @@ inline Result Run(const Plan& supplied, const Approval& supplied_approval, Backe
         backend.verify_fixture(p);
         const auto immediately_before = backend.observe();
         Safe(p, immediately_before);
-        Need(SameHost(before, immediately_before) && before.revision == immediately_before.revision &&
+        Need(SameHost(p, before, immediately_before) && before.revision == immediately_before.revision &&
              expected == Names(immediately_before), "baseline-changed-before-call");
         tick();
         r.stage = "call-marker";
@@ -179,6 +218,8 @@ inline Result Run(const Plan& supplied, const Approval& supplied_approval, Backe
         r.call_started = true; // persisted marker exists; exception cannot authorize retry
         r.stage = "search";
         const auto search = backend.search_one_root(spec, deadline);
+        backend.save_search_result(search);
+        r.search_observed = true;
         r.cleanup_ok = backend.release_spec(spec);
         spec.value = nullptr;
         r.stage = "postflight";
@@ -187,7 +228,7 @@ inline Result Run(const Plan& supplied, const Approval& supplied_approval, Backe
         r.postflight_observed = true;
         backend.save_observation("after", after);
         Safe(p, after);
-        Need(SameHost(before, after) && before.revision == after.revision, "host-or-project-changed");
+        Need(SameHost(p, before, after) && before.revision == after.revision, "host-or-project-changed");
         tick();
         Need(search.code == 0 && search.errors == 0 && !search.cancelled, "search-error-or-cancel");
         Need(r.cleanup_ok, "file-spec-release-failed");
