@@ -104,17 +104,20 @@ It does **not** mean ordinary-effect late registration works.
 
 ## Stage C1 — resource-registration experiment
 
-Current offline checkpoint: [C1_REPEAT_PREPARATION_REVIEW_2026-10-01.md](C1_REPEAT_PREPARATION_REVIEW_2026-10-01.md).
-Repeated preparation can return success and let MEE invoke an existing saved
-entrypoint; IsPrepped does not establish repeat safety. The unbound policy now
-requires fresh complete cleanup state, a reviewed inventory digest and zero
-retained general-plugin records, rechecked before the call and at postflight.
-These are necessary restrictions, not proof that any real baseline is eligible.
-Next prepare/review a read-only observer, including LIST provider identity and
-consistent bounded list/vector reads. Actual runtime state and other callback
-effects remain UNKNOWN; dependent native integration is blocked. Do not replay
-setup, invoke setdown/unprep, relax the empty-state restriction or replace
-callbacks. No native C1 backend/live request is ready. Prior records are preserved.
+Current offline checkpoint: [C1_CLEANUP_SNAPSHOT_REVIEW_2026-10-01.md](C1_CLEANUP_SNAPSHOT_REVIEW_2026-10-01.md).
+The isolated sampler captures ordered callback pairs and retained record count
+within caller-supplied regions, comparing two bounded captures without calls or
+retries. It does not create a complete observation or connect the C1 backend.
+Matching reads are not atomicity, allocation or provider identity proof.
+
+Next review root/provider identity and memory-range provenance plus host
+lifetime/quiescence. Repeat preparation can still invoke saved entrypoints;
+the ResourcePassGate must continue requiring complete reviewed cleanup state
+and zero retained general-plugin records. These are necessary restrictions,
+not proof that a real baseline is eligible. Actual state/other callback effects
+remain UNKNOWN; dependent native integration is blocked. Do not replay setup,
+setdown/unprep, relax the restriction or replace callbacks. No native C1
+backend/live request is ready. Prior records are preserved.
 
 Only after C0 PASS:
 

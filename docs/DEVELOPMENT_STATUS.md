@@ -11,46 +11,42 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
-## Current Stage C1 — repeat preparation reviewed; cleanup-state gate hardened
+## Current Stage C1 — bounded cleanup snapshots prepared offline
 
-Code/test head: **`52f4f802f6f3f1641f4109d93491b2e96d8ec3d5`**.
-Lifecycle collection: seven complete windows / **891 instructions**, one 96-byte
-serialized vtable window and confirmed PLUG fixup format. Collection source is
-3e67046; collector/gate bytes are unchanged at 52f4f80. Cleanup and search modes
-also passed again (1390 and 472 instructions). Owned LLDB code/data regression
-passes. Adobe calls = 0.
+Code/test head: **`6a758a811790e68846d9ecb9a78c0c16df069c9d`**.
+CleanupSnapshot.hpp reads an injected exact-byte source within explicit regions,
+following sack/list metadata and reading the MEE vector begin/end. It preserves
+ordered callback target/context words, validates counts/strides/overflow and
+compares two complete bounded captures. Any read failure/change stops without
+retry. Limits: 256 callbacks, 8192 retained records, 12 reads / 16384-byte budget.
+No callback, LIST getter, Adobe function or foreign process was invoked.
 
-PLUG_PrepRoutine's identified KeepLoaded/already-prepared path returns zero;
-MEE can then continue to the saved operation-3 entrypoint. IsPrepped is not a
-demonstrated repeat-call skip guard. Repeat safety for actual general plugins
-remains UNKNOWN. Unprep/teardown is not a permitted workaround.
+This is isolated observer preparation, not the live observer or C1 backend.
+Matching captures do not prove atomicity/completeness, allocation ownership,
+provider identity, valid pointer representation or future stability. No automatic
+conversion supplies ResourcePassGate's observed/complete/digest fields. Actual
+AE callback/vector state remains **NOT OBSERVED**. The existing empty-state
+restriction remains necessary and must not be relaxed.
 
-The unbound ResourcePassGate now requires complete fresh cleanup observations,
-an exact reviewed callback-inventory digest and zero retained general-plugin
-records at baseline, immediately before the call and at successful postflight.
-Missing/incomplete/changed state blocks or fails the pass. Journal records retain
-that evidence. Empty state is necessary, not sufficient; no native reader/backend
-is connected. LIST.dylib's layout was separately inspected, but its identity is
-not yet adopted into the live profile. Actual callbacks/vector remain NOT OBSERVED.
+Focused regression: **PASS**, 44 nested synthetic cases and real owned-process
+buffer inspection on macOS arm64. Address/undefined-behavior sanitizers: **PASS**.
+Clean-source unified local regression: **PASS**, 271 Python without skips,
+62 Node, 22 stages; source inventory unchanged. Current research CI
+**36926349585 — PASS**; full macOS CI **36926349591 — PASS**.
+These are offline/build results, not registration proof.
 
-Local clean-head macOS regression: **PASS**, 270 Python tests, no skips;
-62 Node tests; 22 unified stages; unchanged source inventory. Exact-code research
-CI **36925153427 — PASS**; full macOS CI **36925153460 — PASS**, including build/sign/package and synthetic
-smoke without AE.
-The prior 3e67046 macOS research CI failure remains FAIL: the runner's exit/signal
-race was reproduced and fixed in 52f4f80, retaining output limits and FAIL status.
-These are offline/build gates, not live registration.
+Current contract, evidence and remaining gate:
+[C1_CLEANUP_SNAPSHOT_REVIEW_2026-10-01.md](C1_CLEANUP_SNAPSHOT_REVIEW_2026-10-01.md).
+Prior [lifecycle review](C1_REPEAT_PREPARATION_REVIEW_2026-10-01.md) is preserved:
+repeat preparation can return success and invoke existing general plugins again;
+270-test / exact 52f4f80 CI results remain that checkpoint's evidence.
 
-Current review, exact evidence, hashes and remaining gate:
-[C1_REPEAT_PREPARATION_REVIEW_2026-10-01.md](C1_REPEAT_PREPARATION_REVIEW_2026-10-01.md).
-Earlier ABI/cleanup records remain preserved checkpoints.
-The next prerequisite is a reviewed read-only state observer with complete
-provider identity and consistency bounds. Critical unknown state/behavior blocks
-native C1 integration; independent file-only preparation remains allowed.
-C0 remains the recorded live PASS; C1 registration, apply and render are
-**NOT RUN**. The original user checkout was observed clean at `182d058`;
-development uses a separate working clone of the research branch. The current
-running AE baseline remains NOT OBSERVED.
+Next: reviewed root/provider identity, memory-range provenance and a host
+lifetime/quiescence strategy before any complete observation claim. Critical
+unknown behavior blocks native C1 integration; independent file-only preparation
+remains allowed. C0 remains recorded live PASS; C1 registration/apply/render are
+**NOT RUN**. Original checkout remains preserved at 182d058; development uses a
+separate research-branch clone. No installable/live candidate is handed off.
 
 ## Second live no-scan result — PASS; Stage C0 closed
 

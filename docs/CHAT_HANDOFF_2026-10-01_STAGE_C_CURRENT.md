@@ -3,7 +3,7 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [C1_REPEAT_PREPARATION_REVIEW_2026-10-01.md](C1_REPEAT_PREPARATION_REVIEW_2026-10-01.md).
+Current continuation: [C1_CLEANUP_SNAPSHOT_REVIEW_2026-10-01.md](C1_CLEANUP_SNAPSHOT_REVIEW_2026-10-01.md).
 The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
@@ -13,7 +13,7 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 - Repository: `ios3kov/AE-Hot-Loader`.
 - Branch: `research/ordinary-plugin-discovery`; never change `main`.
 - Current C1 code/test head:
-  **`52f4f802f6f3f1641f4109d93491b2e96d8ec3d5`**.
+  **`6a758a811790e68846d9ecb9a78c0c16df069c9d`**.
 - Current canonical AE Development Rules source:
   **`b27f45467e0a9152fc82c1072438dfed07f0c36e`**; read AI_ENTRYPOINT first.
 - Current Stage C no-scan core head:
@@ -21,7 +21,7 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 - Current live-launcher code/test head:
   **`3852192406da5af539b9100114393584642e9197`**.
 - Current status documentation before this save:
-  `02a1d975d1970d12311da8d481e7007b3381a854`.
+  `538bafac1f74d64db409e8fe2df16bccd7672acb`.
 - Shared DEVELOPMENT_RULES blob:
   `701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`.
 - Stage: **C of A–D**. Ordinary-effect late registration is still NOT fixed.
@@ -226,7 +226,7 @@ callback/state eligibility. Do not replay SetupGeneralPluginScan, invoke
 SetdownGeneralPlugins, replace cleanup or forge a sack. C0 remains the recorded
 live PASS; C1 registration/apply/render are NOT RUN.
 
-## Current Stage C1 lifecycle/cleanup-state checkpoint
+## Previous Stage C1 lifecycle/cleanup-state checkpoint
 
 Code 3e67046 adds bounded lifecycle code/data collection (891 instructions,
 96-byte vtable, confirmed fixup format) and a conservative cleanup-state gate.
@@ -250,9 +250,26 @@ native integration. Do not attach/call without a concrete reviewed scoped
 authorization, or replay setup/setdown/unprep to change the baseline.
 C0 remains its recorded PASS; C1 registration/apply/render remain NOT RUN.
 
+## Current Stage C1 bounded snapshot checkpoint
+
+Code 6a758a8 adds an isolated CleanupSnapshot sampler, 44 nested cases and an
+owned macOS self-read. It compares two complete chains inside supplied bounds,
+refuses invalid/changed/truncated state without retries, preserves callback
+order/duplicates and retained count. It never calls callbacks/getters or supplies
+complete/observed/digest fields to the resource policy. Provider identity,
+allocation provenance, quiescence and actual state remain unknown.
+
+Clean-source local regression: PASS, 271 Python (no skips), 62 Node, 22 stages.
+Owned address/undefined-behavior sanitizer run: PASS. Exact research CI
+36926349585 is PASS; full macOS CI 36926349591 is PASS. All are offline/build
+evidence. C0 remains recorded PASS; C1 registration/apply/render remain NOT RUN.
+Continue independent file-only provider/root/range preparation. A matching
+snapshot cannot authorize native integration or prove a complete eligible state.
+
 ## Next gate — exact order
 
-1. Identify the existing default-sack cleanup registrations and their targets.
+1. Review root/provider identity, memory-range provenance and host lifetime/
+   quiescence; prove complete callback/state observation without host getters.
 2. Review end-of-pass effects and borrowed/retained state; freeze the complete
    single-root native contract without replacing callbacks or replaying startup.
 3. Connect the research-only inert C1 backend/AEGP and independent one-shot

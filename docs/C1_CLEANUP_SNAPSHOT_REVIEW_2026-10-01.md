@@ -85,4 +85,38 @@ Owned fixture sanitizer run: PASS, AddressSanitizer + UndefinedBehaviorSanitizer
 The sole heuristic candidate remains artifact_manifest.py:71 local-argparse
 false positive; no suppression. This is not a full security audit.
 
-Exact-clean-source unified regression and CI: NOT RUN before code checkpoint.
+Exact code/test source: **6a758a811790e68846d9ecb9a78c0c16df069c9d**.
+Local unified regression: **PASS**, 271 Python (no skips), 62 Node, 22 stages;
+clean source inventory unchanged before/after. Run ID
+44a82255b08242c3831ea05317ebd5a3, macOS 26.6.2 arm64 / Python 3.14.2.
+Private ZIP AEHL-checks-2qll62b1.zip SHA-256:
+`fe6d372e60b31b4b6867a9756fc14df36f07890b7706a7e0e48a4e7c745cd99b`.
+Every archived payload was independently checked against manifest.json.
+The reused LIST evidence ZIP and all payload hashes were also rechecked.
+
+Clean-code scanner: 244 supported files, no inventory omissions, same sole
+local-argparse false positive; source commit 6a758a8, dirty=false. Scanner exit 1
+is retained as review_required, not relabelled as a clean security audit.
+
+| Gate | Exact-code result |
+|---|---|
+| Research CI, Linux + macOS | PASS, [36926349585](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/36926349585) |
+| macOS product build/sign/package/synthetic smoke | PASS, [36926349591](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/36926349591) |
+| Actual AE observer / callback and retained state | NOT RUN / NOT OBSERVED |
+| Complete eligible baseline / native resource backend | BLOCKED / NOT READY |
+| C1 registration, effect application, rendering | NOT RUN |
+
+CI belongs to the exact code source above; subsequent documentation-only
+checkpoint changes do not claim a new code test run. C0's recorded live PASS
+and historical late-registration FAIL/startup RSMB PASS remain separate.
+
+## Next dependent gate
+
+Prepare reviewed root/provider identity and memory-range provenance, plus a
+host lifetime/quiescence strategy sufficient for the observation being claimed.
+Matching captures alone cannot supply ResourcePassGate's complete inventory.
+All callback targets/context and side effects require separate review. Do not
+connect C1, relax empty-state refusal, use LIST_GetItem/GetNumItems as inert
+calls, replay setup/setdown/unprep or repeat a resource scan. Independent
+file-only preparation remains allowed. Any live diagnostic request must first
+have a concrete reviewed candidate and separately scoped authorization.
