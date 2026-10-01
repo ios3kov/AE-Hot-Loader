@@ -3,7 +3,7 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [C1_ROOT_PROVENANCE_REVIEW_2026-10-01.md](C1_ROOT_PROVENANCE_REVIEW_2026-10-01.md).
+Current continuation: [C1_RESIDENT_ROOT_BINDING_REVIEW_2026-10-01.md](C1_RESIDENT_ROOT_BINDING_REVIEW_2026-10-01.md).
 The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
@@ -13,7 +13,7 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 - Repository: `ios3kov/AE-Hot-Loader`.
 - Branch: `research/ordinary-plugin-discovery`; never change `main`.
 - Current C1 code/test head:
-  **`efe05f2f7d320ffb026ff963188079c06f4aca49`**.
+  **`0c4cd4c518b91240a386fcda522ddbcfe866dd77`**.
 - Current canonical AE Development Rules source:
   **`b27f45467e0a9152fc82c1072438dfed07f0c36e`**; read AI_ENTRYPOINT first.
 - Current Stage C no-scan core head:
@@ -21,7 +21,7 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 - Current live-launcher code/test head:
   **`3852192406da5af539b9100114393584642e9197`**.
 - Current status documentation before this save:
-  `45d3298a9a8feb245f4de251cad4750375f208a5`.
+  `dae3066`.
 - Shared DEVELOPMENT_RULES blob:
   `701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`.
 - Stage: **C of A–D**. Ordinary-effect late registration is still NOT fixed.
@@ -266,7 +266,7 @@ evidence. C0 remains recorded PASS; C1 registration/apply/render remain NOT RUN.
 Continue independent file-only provider/root/range preparation. A matching
 snapshot cannot authorize native integration or prove a complete eligible state.
 
-## Current Stage C1 root provenance checkpoint
+## Previous Stage C1 root provenance checkpoint
 
 Code efe05f2 independently verifies static Mach-O symbol/UUID/zero-fill roots:
 PLUG global slot 0x18490 points to a handle; only that separately validated handle
@@ -283,6 +283,21 @@ module/header/text identity and data-root containment checks, then prepare a
 concrete diagnostic candidate. The user's newest instruction requests autonomous
 continuation through all development stages; report each stage and continue,
 preserving the established live/private-call/release boundaries.
+
+## Current Stage C1 resident root checkpoint
+
+Code 0c4cd4c prepares exact resident header/text/path/hash binding and zero-fill
+root extent checks. Owned-library tests prove the actual address/data read and
+absence/hash/UUID/section/range/thread refusals. Binder never loads a provider or
+calls an anchor. This is point-in-time address identity, not lifetime/completeness.
+
+Clean local regression PASS: 287 Python (no skips), 62 Node, 22 stages. Exact
+research CI 36928329962 and macOS product CI 36928330044 PASS. No AE roots/
+callbacks/vector read. C1 registration/apply/render NOT RUN, C0 recorded PASS.
+Continue current-process mapped-range reads with verified Mach API and owned
+allocation/guard-page tests, then prepare a concrete diagnostic observer. Do not
+promote mapping metadata or matching captures to allocation/complete eligibility.
+Continue autonomously as explicitly requested; preserve live authority boundaries.
 
 ## Next gate — exact order
 

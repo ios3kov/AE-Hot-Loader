@@ -104,16 +104,17 @@ It does **not** mean ordinary-effect late registration works.
 
 ## Stage C1 — resource-registration experiment
 
-Current offline checkpoint: [C1_ROOT_PROVENANCE_REVIEW_2026-10-01.md](C1_ROOT_PROVENANCE_REVIEW_2026-10-01.md).
+Current offline checkpoint: [C1_RESIDENT_ROOT_BINDING_REVIEW_2026-10-01.md](C1_RESIDENT_ROOT_BINDING_REVIEW_2026-10-01.md).
 The isolated sampler captures ordered callback pairs and retained record count
 within caller-supplied regions, comparing two bounded captures without calls or
 retries. It does not create a complete observation or connect the C1 backend.
 Matching reads are not atomicity, allocation or provider identity proof.
 
 Static root provenance is verified in exact pinned PLUG/MEE zero-fill sections;
-PLUG requires slot → handle → sack, not direct slot → sack. Next verify resident
-module/header/text identity and root containment on owned fixtures, followed by
-memory-range provenance and host lifetime/quiescence. Repeat preparation can still invoke saved entrypoints;
+PLUG requires slot → handle → sack, not direct slot → sack. Resident root binding
+is now verified on owned data and is only a point-in-time identity/address check.
+Next current-process mapped-range reads, then bounded diagnostic observer
+preparation; heap ownership and host lifetime/quiescence remain unresolved. Repeat preparation can still invoke saved entrypoints;
 the ResourcePassGate must continue requiring complete reviewed cleanup state
 and zero retained general-plugin records. These are necessary restrictions,
 not proof that a real baseline is eligible. Actual state/other callback effects

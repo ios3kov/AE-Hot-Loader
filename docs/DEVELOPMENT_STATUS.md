@@ -11,34 +11,34 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
-## Current Stage C1 — static root provenance and indirection verified
+## Current Stage C1 — resident root binding prepared and tested on owned data
 
-Code/test head: **`efe05f2f7d320ffb026ff963188079c06f4aca49`**.
-Bounded file-only Mach-O collection independently confirms PLUG's sack-handle
-pointer slot at image VM 0x18490 and MEE's vector begin/end at 0x10fd70, with
-reviewed UUID/section containment and unchanged provider hashes. Both are
-zero-fill sections: serialized file bytes do not supply their live state.
+Code/test head: **`0c4cd4c518b91240a386fcda522ddbcfe866dd77`**.
+ResidentDataRootBinding reuses exact resident path/hash/header/text verification,
+checks a reviewed writable zero-fill root extent and derives its candidate
+address from the checked header. No function is invoked or provider loaded by
+the binder. The test alone loads its own compiled library and proves exact root
+address/read plus absence/hash/UUID/section/range/thread refusals.
 
-Important indirection: PLUGp_G+8 contains the handle address; the handle then
-contains the sack address. CleanupSnapshot's supplied sack_slot is the validated
-handle address, not automatically PLUGp_G+8. No runtime address/scope adapter is
-connected. Actual AE roots/callbacks/vector and allocation/lifetime/quiescence
-remain NOT OBSERVED/UNKNOWN. The complete-inventory and empty-retained-state
-resource restrictions remain unchanged.
+This is a point-in-time diagnostic address binding, not a lifetime lock or
+complete observation. No real PLUG/MEE root was bound/read in AE. No automatic
+conversion supplies cleanup eligibility. Runtime heap allocation, callback effects
+and lifetime/quiescence remain UNKNOWN. Static PLUG slot → handle → sack and MEE
+vector provenance is preserved in the previous report.
 
-Focused regression: PASS, 13 root metadata tests, portable malformed fixtures
-and an owned compiled Mach-O never loaded. Clean-source full local regression:
-PASS, 284 Python without skips, 62 Node, 22 stages; source inventory unchanged.
-Research CI **36927550112 — PASS**; full macOS CI **36927550048 — PASS**.
+Clean-source full local regression PASS: 287 Python without skips, 62 Node,
+22 stages; source inventory unchanged. Research CI **36928329962 — PASS**;
+full macOS CI **36928330044 — PASS**. Current evidence:
+[C1_RESIDENT_ROOT_BINDING_REVIEW_2026-10-01.md](C1_RESIDENT_ROOT_BINDING_REVIEW_2026-10-01.md).
 
-Current evidence and next step:
-[C1_ROOT_PROVENANCE_REVIEW_2026-10-01.md](C1_ROOT_PROVENANCE_REVIEW_2026-10-01.md).
-Prior snapshot and lifecycle evidence remain preserved. Continue resident
-module/header/text identity and data-root containment checks using owned fixtures,
-then prepare a concrete scoped diagnostic observer before seeking live authority.
-Critical unknown state/callback behavior still blocks resource integration.
-C0 remains recorded live PASS; C1 registration/apply/render are NOT RUN. Original
-checkout is preserved at 182d058; research uses a separate writable clone.
+Next current-process mapped-range reader with verified Mach API/count contract,
+owned allocation/guard-page coverage and explicit diagnostic limitations. Then
+prepare a concrete scoped observer before live authorization. Continue all
+independent authorized development per the user's latest instruction, reporting
+stage statuses. Resource integration remains blocked by critical unknown state/
+behavior; C1 registration/apply/render NOT RUN. C0 retains recorded live PASS.
+Original checkout preserved; main/install/launch/private-call/release boundaries
+remain unchanged.
 
 ## Second live no-scan result — PASS; Stage C0 closed
 

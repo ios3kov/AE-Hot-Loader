@@ -51,4 +51,36 @@ Bounded file-only Describe checks also passed on exact pinned PLUG/MEE bytes,
 using export identity anchors without invoking them. No live Adobe provider,
 root memory or callback was read. No profile was adopted into resource approval.
 
-Code checkpoint and exact clean regression/CI evidence: NOT RUN before commit.
+Exact code/test source **0c4cd4c518b91240a386fcda522ddbcfe866dd77**.
+Clean-source unified local regression PASS: 287 Python without skips, 62 Node,
+22 stages; inventory unchanged before/after. Private ZIP
+AEHL-checks-uixd64ns.zip SHA-256:
+`39652b261255b2ba9add1d64b09afc0dbe54c70e4f35de01dd99d1d35ef3e0da`.
+Run ID e0cbe9d11fd94b5dab72fe8ac26e9990; manifest/all payload hashes verified.
+
+| Gate | Exact-code result |
+|---|---|
+| Research CI Linux + macOS | PASS, [36928329962](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/36928329962) |
+| Full macOS build/sign/package/synthetic smoke | PASS, [36928330044](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/36928330044) |
+| Actual AE resident roots/state | NOT OBSERVED |
+| Complete observation / C1 native resource backend | BLOCKED / NOT READY |
+| C1 registration/apply/render | NOT RUN |
+
+Clean-code scanner: 254 supported files, no omissions, source 0c4cd4c,
+dirty=false. Exit 1/review_required retained for the sole known
+artifact_manifest.py:71 local-argparse false positive. No suppression or full
+security-audit claim. Subsequent docs-only closeout does not claim a new code run.
+
+## Next stage
+
+Add current-process mapped-range verification around bounded reads, first on
+owned allocations and inaccessible/guard pages. Verify the actual Mach APIs and
+count/version contract before implementation. Kernel VM mapping metadata must
+not become an allocator ownership/lifetime/quiescence claim. Then prepare a
+concrete bounded diagnostic observer with no private calls or eligibility
+conversion; separately reviewed live authorization remains necessary.
+
+An owned-page Mach region V0 experiment already PASSed locally after checking
+macOS 27.0 SDK mach_vm.h/vm_region.h/vm_prot.h: readable own mapping, protected
+own page, cross-boundary refusal and invalid-address refusal. This is an API
+preparation experiment, not yet the repository reader or an AE observation.
