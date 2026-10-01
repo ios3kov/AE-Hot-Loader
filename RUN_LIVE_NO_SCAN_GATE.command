@@ -96,16 +96,21 @@ MANIFEST_SHA="$(print -r -- "$BUILD_OUTPUT" | sed -n 's/^manifest_sha256=//p' | 
 MANIFEST="$BUILD_DIR/manifest.json"
 require_file "$MANIFEST"
 
-read -r CANDIDATE_BUNDLE AUTHORIZED_BUNDLE TOKEN <<EOF
-$(python3 - "$MANIFEST" <<'PY'
+CANDIDATE_BUNDLE="$(python3 - "$MANIFEST" <<'PY'
 import json, sys
-record = json.load(open(sys.argv[1], encoding='utf-8'))
-print(record['candidate_bundle'])
-print(record['authorized_bundle'])
-print(record['activation_env']['AEHL_NOSCAN_GATE_TOKEN'])
+print(json.load(open(sys.argv[1], encoding='utf-8'))['candidate_bundle'])
 PY
-)
-EOF
+)"
+AUTHORIZED_BUNDLE="$(python3 - "$MANIFEST" <<'PY'
+import json, sys
+print(json.load(open(sys.argv[1], encoding='utf-8'))['authorized_bundle'])
+PY
+)"
+TOKEN="$(python3 - "$MANIFEST" <<'PY'
+import json, sys
+print(json.load(open(sys.argv[1], encoding='utf-8'))['activation_env']['AEHL_NOSCAN_GATE_TOKEN'])
+PY
+)"
 
 [[ -d "$CANDIDATE_BUNDLE" ]] || blocked "candidate bundle is missing"
 [[ ! -e "$AUTHORIZED_BUNDLE" ]] || blocked "unique helper destination already exists"
@@ -128,7 +133,6 @@ if actual != record['files']:
     raise SystemExit("installed helper bytes differ from manifest")
 PY
 
-CONTROL_DIR="$(python3 - "$MANIFEST" -c '' 2>/dev/null || true)"
 CONTROL_DIR="$(python3 - "$MANIFEST" <<'PY'
 import json, sys
 print(json.load(open(sys.argv[1], encoding='utf-8'))['control_directory'])
@@ -147,7 +151,7 @@ for _ in {1..450}; do
   kill -0 "$AE_PID" 2>/dev/null || blocked "After Effects exited before helper ready evidence"
   sleep 0.2
 done
-[[ -f "$READY" ]] || blocked "helper did not become ready; AE remains untouched by this script"
+[[ -f "$READY" ]] || blocked "helper did not become ready; no native request was published"
 
 print -- "Helper ready in AE PID $AE_PID. Publishing the single authorized request..."
 exec python3 "$SUPERVISOR" "$MANIFEST"   --sha256 "$MANIFEST_SHA"   --pid "$AE_PID"   --timeout 45   --authorized-host "$HOST"   --authorized-bundle "$AUTHORIZED_BUNDLE"   --authorize-private-file-call   --authorize-provider-retention   --execute
