@@ -13,7 +13,7 @@ import uuid
 import zipfile
 
 MAGIC = b'AEHL-RESOURCE-JOURNAL-1\n'
-NATIVE_NAMES = {'claim.txt', 'before.txt', 'call-started.txt', 'after.txt', 'result.txt'}
+NATIVE_NAMES = {'claim.txt', 'before.txt', 'call-started.txt', 'native.txt', 'after.txt', 'result.txt'}
 REVIEWED_NATIVE_TIMEOUT_MS = 15000
 SUPERVISOR_MARGIN_MS = 5000
 
@@ -266,16 +266,47 @@ def field_map(payload):
     return result
 
 
+def observation_images(observation):
+    paths = observation.get('image_path', [])
+    headers = observation.get('image_header', [])
+    slides = observation.get('image_slide', [])
+    require(len(paths) == len(headers) == len(slides) and len(paths) > 0,
+            'invalid image evidence')
+    images = list(zip(paths, headers, slides))
+    require(len(images) == len(set(images)), 'ambiguous image evidence')
+    return images
+
+
+def compatible_observations(before_payload, after_payload):
+    before = field_map(before_payload)
+    after = field_map(after_payload)
+    image_keys = {'image_count', 'image_path', 'image_header', 'image_slide'}
+    before_core = {k: v for k, v in before.items() if k not in image_keys}
+    after_core = {k: v for k, v in after.items() if k not in image_keys}
+    require(before_core == after_core, 'native host/project/registry changed')
+    before_images = observation_images(before)
+    after_images = observation_images(after)
+    require(before.get('image_count') == [str(len(before_images))] and
+            after.get('image_count') == [str(len(after_images))],
+            'invalid image count evidence')
+    for image in before_images:
+        require(image in after_images, 'pre-existing runtime image changed or unloaded')
+    added = [image for image in after_images if image not in before_images]
+    require(all(image[0].startswith('/System/Library/') for image in added),
+            'non-system runtime image added')
+    return before, added
+
+
 def verify_native_pass(record, journal, observed=None):
     require({p.name for p in journal.iterdir()} == NATIVE_NAMES, 'native journal is incomplete/unexpected')
     before = unwrap_journal(journal / 'before.txt')
     after = unwrap_journal(journal / 'after.txt')
-    require(before == after, 'native pre/post observation differs')
-    observation = field_map(before)
+    observation, lazy_system_images = compatible_observations(before, after)
     claim_payload = unwrap_journal(journal / 'claim.txt')
     require(claim_payload.endswith(before), 'native claim is not bound to exact baseline')
     plan_payload = claim_payload[:-len(before)]
     claim = field_map(plan_payload)
+    native = field_map(unwrap_journal(journal / 'native.txt'))
     result = field_map(unwrap_journal(journal / 'result.txt'))
     require(claim.get('scope') == ['no-scan-directory'] and claim.get('run') == [record['run_id']] and
             claim.get('source') == [record['source_commit']] and claim.get('build') == [record['build_id']] and
@@ -307,16 +338,26 @@ def verify_native_pass(record, journal, observed=None):
     require(observation.get('image_count') == [str(len(images))] and len(images) > 0 and
             len(images) == len(observation.get('image_header', [])) == len(observation.get('image_slide', [])) and
             record['module_path'] in images, 'invalid image evidence')
+    require(native.get('scope') == ['no-scan-directory'] and
+            native.get('invoked') == ['1'] and native.get('completed') == ['1'] and
+            native.get('cleanup_ok') == ['1'] and native.get('strings_created') == ['2'] and
+            native.get('string_release_attempts') == ['2'] and
+            native.get('specs_created') == ['1'] and native.get('spec_release_attempts') == ['1'] and
+            native.get('retained_references') == ['3'],
+            'native directory lifecycle evidence mismatch')
     require(result.get('scope') == ['no-scan-directory'] and result.get('status') == ['PASS'] and
             result.get('stage') == ['complete'] and result.get('reason') == ['directory-roundtrip-release-only'] and
             result.get('claimed') == ['1'] and result.get('call_started') == ['1'] and
+            result.get('native_observed') == ['1'] and
             result.get('postflight_observed') == ['1'] and result.get('cleanup_ok') == ['1'],
             'native no-scan gate did not pass exactly')
     call_started = unwrap_journal(journal / 'call-started.txt')
     require(call_started == plan_payload + before, 'call marker is not bound to exact plan/baseline')
     return {'journal_files': sorted(NATIVE_NAMES),
-            'before_after_sha256': hashlib.sha256(before).hexdigest(),
-            'registry_count': len(effects), 'image_count': len(images),
+            'before_sha256': hashlib.sha256(before).hexdigest(),
+            'after_sha256': hashlib.sha256(after).hexdigest(),
+            'registry_count': len(effects), 'image_count_before': len(images),
+            'lazy_system_images': [image[0] for image in lazy_system_images],
             'project_revision': int(observation['revision'][0])}
 
 
