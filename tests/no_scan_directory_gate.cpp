@@ -69,9 +69,9 @@ int main() {
     };
     {
         auto [journal,directory]=fixture("pass"); Model m(journal,directory);
-        const auto r=m.run(); Check(r.status=="PASS" && r.stage=="complete" && r.cleanup_ok);
+        const auto r=m.run(); Check(r.status=="PASS" && r.stage=="complete" && r.cleanup_ok && r.native_observed);
         Check(m.calls==1 && m.observations==3 && m.directory_checks==3);
-        for (const auto& name : {"claim.txt","before.txt","call-started.txt","after.txt","result.txt"})
+        for (const auto& name : {"claim.txt","before.txt","call-started.txt","native.txt","after.txt","result.txt"})
             Check(fs::is_regular_file(journal/name));
         Check(Read(journal/"result.txt").find("no-scan-directory")!=std::string::npos);
         ++cases;
@@ -96,6 +96,15 @@ int main() {
         Check(r.status=="FAIL" && m.calls==1); ++cases;
     }
     {
+        auto [journal,directory]=fixture("system-lazy-image"); Model m(journal,directory);
+        m.on_call=[&]{m.base.images.push_back(
+            {"/System/Library/PrivateFrameworks/SafariPlatformSupport.framework/Versions/A/SafariPlatformSupport",
+             0x3000,0});};
+        const auto r=m.run();
+        Check(r.status=="PASS" && r.native_observed && m.calls==1);
+        ++cases;
+    }
+    {
         auto [journal,directory]=fixture("project"); Model m(journal,directory);
         m.on_call=[&]{++m.base.revision;}; const auto r=m.run();
         Check(r.status=="FAIL" && m.calls==1); ++cases;
@@ -113,8 +122,9 @@ int main() {
     {
         auto [journal,directory]=fixture("throw"); Model m(journal,directory);
         m.throw_call=true; const auto r=m.run();
-        Check(r.status=="FAIL" && r.call_started && r.postflight_observed && m.calls==1);
-        Check(fs::is_regular_file(journal/"result.txt")); ++cases;
+        Check(r.status=="FAIL" && r.call_started && !r.native_observed && r.postflight_observed && m.calls==1);
+        Check(fs::is_regular_file(journal/"result.txt"));
+        Check(!fs::exists(journal/"native.txt")); ++cases;
     }
     {
         auto [journal,directory]=fixture("timeout"); Model m(journal,directory);
