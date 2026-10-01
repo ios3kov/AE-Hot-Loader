@@ -9,6 +9,44 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
+## Second live no-scan result — PASS; Stage C0 closed
+
+The second authorized no-scan request ran from source
+**`182d058254203236414602acdd9901b8749d89cc`**, build
+`noscan-8f9cb9fea71c`, run
+`directory-probe-d097765fede949f5b9958b2897687df2`.
+
+Report ZIP SHA-256:
+`f767e891359a3e73dc41eefe4124fe63dc0cf4dde123c2d7efa7444cd35bc62a`.
+
+The uploaded report was independently rehashed and every archived payload was
+verified against `report-hashes.json`.
+
+Result: **PASS**.
+
+Exact native lifecycle evidence:
+
+- invoked = 1;
+- completed = 1;
+- cleanup_ok = 1;
+- strings created/released = 2/2;
+- specs created/released = 1/1;
+- retained provider references = 3.
+
+Before/after host evidence is byte-identical: project revision 1, runtime image
+count 1402, and complete registry count **785** all remained unchanged. No lazy
+system image appeared in this run. `plugin_scan_requested=false`.
+
+This closes the no-scan FILE ownership/binding gate: **Stage C0 = PASS**.
+
+See [NO_SCAN_DIRECTORY_LIVE_PASS_2026-10-01.md](NO_SCAN_DIRECTORY_LIVE_PASS_2026-10-01.md).
+
+Ordinary-effect late registration is still NOT fixed. The historical registration
+FAIL remains unchanged. The next development gate is Stage C1: a single-root
+resource-registration experiment, first prepared and reviewed offline. Any live
+private PLUG/resource-registration call requires fresh authorization; the second
+no-scan approval was consumed by this PASS.
+
 ## First live no-scan result — FAIL; evidence gap remediated offline
 
 The first real no-scan request ran from source
