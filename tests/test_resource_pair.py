@@ -21,6 +21,12 @@ class ResourcePairTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn('retired unsafe flat PiPL fixture', result.stderr)
 
+    def test_embedded_fixture_requires_clean_source(self):
+        self.assertTrue(pair.source_state_allowed('embedded', ''))
+        self.assertFalse(pair.source_state_allowed('embedded', ' M source.cpp\n'))
+        self.assertTrue(pair.source_state_allowed('dynamic', ' M source.cpp\n'))
+        self.assertTrue(pair.source_state_allowed('resource', ' M source.cpp\n'))
+
     def test_variants(self):
         self.assertEqual(pair.variants('resource'), [(0,'Rsrc','rsrc'),(0,'Flat','flat')])
         self.assertEqual(pair.variants('dynamic'), [(0,'PiPL','rsrc'),(1,'Dynamic','rsrc')])
