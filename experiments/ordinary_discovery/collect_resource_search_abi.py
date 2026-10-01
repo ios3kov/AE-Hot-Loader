@@ -96,7 +96,7 @@ def lldb_script(path, start, end):
         "settings set target.load-cwd-lldbinit false",
         "settings set target.load-script-from-symbol-file false",
         'target create --no-dependents --arch arm64 "' + value + '"',
-        "disassemble --start-address 0x%x --end-address 0x%x --force" % (start, end),
+        "disassemble --start-address 0x%x --end-address 0x%x" % (start, end),
         "quit",
         "",
     ])

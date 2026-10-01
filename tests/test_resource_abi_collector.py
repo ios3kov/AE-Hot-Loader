@@ -2,6 +2,9 @@
 from pathlib import Path
 import importlib.util
 import json
+import re
+import subprocess
+import sys
 import tempfile
 import unittest
 import zipfile
@@ -14,6 +17,30 @@ spec.loader.exec_module(collector)
 
 
 class ResourceAbiCollectorTests(unittest.TestCase):
+    @unittest.skipUnless(sys.platform == "darwin", "requires macOS arm64 file disassembly")
+    def test_real_lldb_disassembles_owned_bounded_window(self):
+        with tempfile.TemporaryDirectory(prefix="aehl-owned-abi-") as tmp:
+            folder = Path(tmp).resolve()
+            source = folder / "owned.s"
+            source.write_text(".text\n.globl _owned_abi_probe\n.p2align 2\n"
+                              "_owned_abi_probe:\n add w0, w0, #1\n ret\n")
+            binary = folder / "owned.bundle"
+            subprocess.run(["/usr/bin/xcrun", "clang", "-arch", "arm64", "-bundle",
+                            str(source), "-o", str(binary)], check=True,
+                           capture_output=True, timeout=45)
+            symbols = subprocess.check_output(["/usr/bin/nm", "-arch", "arm64", "-n",
+                                               str(binary)], text=True, timeout=15)
+            match = re.search(r"^([0-9a-fA-F]+)\s+T\s+_owned_abi_probe$", symbols, re.M)
+            self.assertIsNotNone(match, symbols)
+            start = int(match.group(1), 16)
+            script = folder / "inspect.lldb"
+            script.write_text(collector.lldb_script(binary, start, start + 8))
+            output, diagnostics = collector.run_tool(
+                ["/usr/bin/xcrun", "lldb", "--no-lldbinit", "--batch", "--source", str(script)])
+            self.assertNotIn("error:", (output + diagnostics).lower())
+            self.assertRegex(output, r"add\s+w0, w0, #0x1")
+            self.assertRegex(output, r"\bret\b")
+
     def test_profile_pins_agree_with_header(self):
         collector.profile_agrees()
 
@@ -21,7 +48,7 @@ class ResourceAbiCollectorTests(unittest.TestCase):
         path = Path("/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app/Contents/Frameworks/PLUG.dylib")
         script = collector.lldb_script(path, 0x8A6C, 0x8C20)
         self.assertIn("target create --no-dependents --arch arm64", script)
-        self.assertIn("disassemble --start-address 0x8a6c --end-address 0x8c20 --force", script)
+        self.assertIn("disassemble --start-address 0x8a6c --end-address 0x8c20\n", script)
         self.assertNotIn("process launch", script)
         self.assertNotIn("process attach", script)
         with self.assertRaisesRegex(ValueError, "bounded"):
