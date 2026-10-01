@@ -90,15 +90,36 @@ def private_directory(path, empty=False):
     return (info.st_dev, info.st_ino, info.st_uid, info.st_mode)
 
 
+class ProcBsdInfo(ctypes.Structure):
+    _fields_ = [
+        ('pbi_flags', ctypes.c_uint32), ('pbi_status', ctypes.c_uint32),
+        ('pbi_xstatus', ctypes.c_uint32), ('pbi_pid', ctypes.c_uint32),
+        ('pbi_ppid', ctypes.c_uint32), ('pbi_uid', ctypes.c_uint32),
+        ('pbi_gid', ctypes.c_uint32), ('pbi_ruid', ctypes.c_uint32),
+        ('pbi_rgid', ctypes.c_uint32), ('pbi_svuid', ctypes.c_uint32),
+        ('pbi_svgid', ctypes.c_uint32), ('rfu_1', ctypes.c_uint32),
+        ('pbi_comm', ctypes.c_char * 16), ('pbi_name', ctypes.c_char * 32),
+        ('pbi_nfiles', ctypes.c_uint32), ('pbi_pgid', ctypes.c_uint32),
+        ('pbi_pjobc', ctypes.c_uint32), ('e_tdev', ctypes.c_uint32),
+        ('e_tpgid', ctypes.c_uint32), ('pbi_nice', ctypes.c_int32),
+        ('pbi_start_tvsec', ctypes.c_uint64), ('pbi_start_tvusec', ctypes.c_uint64),
+    ]
+
+
 def process_identity(pid):
     library = ctypes.CDLL('/usr/lib/libproc.dylib')
     library.proc_pidpath.argtypes = [ctypes.c_int, ctypes.c_void_p, ctypes.c_uint32]
     library.proc_pidpath.restype = ctypes.c_int
+    library.proc_pidinfo.argtypes = [
+        ctypes.c_int, ctypes.c_int, ctypes.c_uint64, ctypes.c_void_p, ctypes.c_int]
+    library.proc_pidinfo.restype = ctypes.c_int
     buffer = ctypes.create_string_buffer(4096)
     require(library.proc_pidpath(pid, buffer, len(buffer)) > 0, 'test host is absent')
-    start = subprocess.check_output(['ps', '-p', str(pid), '-o', 'lstart='],
-                                    text=True, timeout=5).strip()
-    require(bool(start), 'test host start time unavailable')
+    info = ProcBsdInfo()
+    require(library.proc_pidinfo(pid, 3, 0, ctypes.byref(info), ctypes.sizeof(info)) ==
+            ctypes.sizeof(info) and info.pbi_pid == pid,
+            'test host start time unavailable')
+    start = str(info.pbi_start_tvsec) + '.' + str(info.pbi_start_tvusec)
     return {'pid': pid, 'executable': str(Path(os.fsdecode(buffer.value)).resolve()), 'start': start}
 
 
@@ -183,6 +204,8 @@ def prepare(manifest_path, expected_hash, pid, identity_fn=process_identity,
     require(observed['executable'] == str(host), 'PID is not the pinned After Effects host')
     ready = read(control / 'ready.txt', 16384)
     _, loaded_process_start = identity_from_ready(record, ready, pid)
+    require(loaded_process_start == observed['start'],
+            'loaded AEGP process-start differs from supervisor host identity')
     record['loaded_process_start'] = loaded_process_start
     require(Path(record['module_path']).is_file(), 'loaded module path is absent')
     providers = provider_verifier(record)
