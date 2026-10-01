@@ -326,7 +326,8 @@ A_Err EntryPointFunc(SPBasicSuite* suites, A_long, A_long, AEGP_PluginID id,
         Require(registration.value->AEGP_RegisterIdleHook(id, Idle, nullptr) == 0,
                 "idle hook registration failed");
         SaveControl(c.control_directory, "ready.txt", std::string(research_identity) +
-                    "\npid=" + std::to_string(getpid()) + "\nimage=" + ModulePath() + "\n");
+                    "\npid=" + std::to_string(getpid()) + "\nimage=" + ModulePath() +
+                    "\nstart=" + StartIdentity() + "\n");
     } catch (...) { consumed = true; return 1; }
     return 0;
 }
