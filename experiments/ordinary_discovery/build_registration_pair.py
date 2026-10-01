@@ -53,6 +53,11 @@ def pair_kind_allowed(kind, allow_retired_flat):
     return kind != 'resource' or allow_retired_flat
 
 
+def source_state_allowed(kind, source_state):
+    # Stage C1 embedded fixtures are candidate inputs, not ad-hoc diagnostics.
+    return kind != 'embedded' or source_state == ''
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--sdk', type=Path, required=True,
@@ -69,23 +74,30 @@ def main():
         parser.error('--sdk must contain Headers/AE_Effect.h')
     root = Path(__file__).resolve().parents[2]
     source = Path(__file__).with_name("RegistrationPair.cpp")
+    commit = run("git", "-C", str(root), "rev-parse", "HEAD").strip()
+    source_state = run("git", "-C", str(root), "status", "--porcelain=v1", "--untracked-files=all")
+    if not source_state_allowed(args.pair_kind, source_state):
+        parser.error('embedded Stage C1 fixture requires a clean Git source tree')
     run_id = uuid.uuid4().hex[:12]
     prefix = "embedded-fixture-" if args.pair_kind == 'embedded' else (
         "resource-pair-" if args.pair_kind == 'resource' else "registration-pair-")
     output = root / "build-ae-hot-loader" / (prefix + run_id)
-    output.mkdir(parents=True, exist_ok=False)
+    output.mkdir(parents=True, exist_ok=False, mode=0o700)
+    output.chmod(0o700)
     scan_root = output / "scan-root" if args.pair_kind == 'embedded' else output
     if args.pair_kind == 'embedded':
-        scan_root.mkdir()
+        scan_root.mkdir(mode=0o700)
+        scan_root.chmod(0o700)
     record = {
-        "run_id": run_id, "commit": run("git", "rev-parse", "HEAD").strip(),
-        "source_state": run("git", "status", "--porcelain"),
+        "run_id": run_id, "commit": commit,
+        "source_state": source_state,
         "compiler": run("clang++", "--version"),
         "sdk": run("xcrun", "--show-sdk-version").strip(),
         "ae_sdk_headers": str(headers),
         "ae_effect_header_sha256": hashlib.sha256((headers / 'AE_Effect.h').read_bytes()).hexdigest(),
         "scope": "registration only; do not apply or render", "probes": [],
         "pair_kind": args.pair_kind,
+        "fixture_scope": "single-owned-embedded-root" if args.pair_kind == 'embedded' else None,
         "scan_root": "scan-root" if args.pair_kind == 'embedded' else None,
     }
     for dynamic, label, representation in variants(args.pair_kind):
@@ -133,8 +145,11 @@ def main():
             "bundle": str(bundle.relative_to(output)), "command": command, "exports": exports,
             "files": {str(p.relative_to(bundle)): hashlib.sha256(p.read_bytes()).hexdigest()
                       for p in sorted(bundle.rglob("*")) if p.is_file()}})
-    (output / "manifest.json").write_text(json.dumps(record, indent=2) + "\n")
+    manifest = output / "manifest.json"
+    manifest.write_text(json.dumps(record, indent=2) + "\n")
+    manifest.chmod(0o600)
     print(output)
+    print("manifest_sha256=" + hashlib.sha256(manifest.read_bytes()).hexdigest())
 
 
 if __name__ == "__main__":
