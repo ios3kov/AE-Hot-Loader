@@ -9,6 +9,46 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
+## Live-ready one-shot launcher checkpoint
+
+Current live-launcher code/test head is **`3852192406da5af539b9100114393584642e9197`**.
+
+Added `RUN_LIVE_NO_SCAN_GATE.command`, a fail-closed one-shot launcher for the
+authorized Mac. It:
+
+- requires the research branch and a clean checkout;
+- fast-forwards only, never resets or overwrites local work;
+- refuses to touch an already-running After Effects session;
+- requires the reviewed AE 25.6 application path;
+- locates an already-extracted SDK or accepts `AEHL_SDK`;
+- builds the unique inert no-scan AEGP with the reviewed builder;
+- installs only that newly named helper into the user MediaCore root, never
+  replacing another plug-in;
+- verifies installed bytes/signature before AE launch;
+- launches After Effects exactly once with the one-shot activation token;
+- waits for exact helper-ready evidence;
+- invokes the existing supervisor exactly once with the approved private FILE
+  and provider-retention flags;
+- contains no `PLUG_Search`, old `ML::LoadPlugins` path or ordinary-effect scan.
+
+Dedicated launcher source-policy tests were added. The unified macOS research
+runner also syntax-checks all top-level `.command` files.
+
+Exact-head verification for `3852192`:
+
+- research CI **`36855482114`** — PASS;
+- full macOS CI **`36855482175`** — PASS.
+
+This makes the one-shot launcher **ready for the authorized Mac gate**, not a
+live AE PASS. No private FILE call, provider-reference retention or new helper
+installation was executed by CI.
+
+The user's explicit authorization in this chat covers this one no-scan gate:
+the unique helper installation / one AE launch if needed, the private FILE call,
+and retaining the three already-loaded FILE/U/dvacore references until process
+exit. It does not authorize a plug-in scan, ordinary-effect registration,
+additional retries or later Stage C1 operations.
+
 ## Current Stage C checkpoint — identity + final ZIP evidence hardened; CI green
 
 Current Stage C code/test head is **`c1e20e4ab4d4a4f6654f67df7dbb224f0790b5be`**.
