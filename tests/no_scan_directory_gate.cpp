@@ -71,11 +71,13 @@ int main() {
     };
     {
         auto [journal,directory]=fixture("pass"); Model m(journal,directory);
-        const auto r=m.run(); Check(r.status=="PASS" && r.stage=="complete" && r.cleanup_ok && r.native_observed);
-        Check(m.calls==1 && m.observations==3 && m.directory_checks==3);
-        for (const auto& name : {"claim.txt","before.txt","call-started.txt","native.txt","after.txt","result.txt"})
-            Check(fs::is_regular_file(journal/name));
-        Check(Read(journal/"result.txt").find("no-scan-directory")!=std::string::npos);
+        const auto r=m.run();
+        current_case="pass-result"; Check(r.status=="PASS" && r.stage=="complete" && r.cleanup_ok && r.native_observed);
+        current_case="pass-counts"; Check(m.calls==1 && m.observations==3 && m.directory_checks==3);
+        for (const auto& name : {"claim.txt","before.txt","call-started.txt","native.txt","after.txt","result.txt"}) {
+            current_case=std::string("pass-file-")+name; Check(fs::is_regular_file(journal/name));
+        }
+        current_case="pass-result-bytes"; Check(Read(journal/"result.txt").find("no-scan-directory")!=std::string::npos);
         ++cases;
     }
     {
