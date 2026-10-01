@@ -127,6 +127,18 @@ class NoScanSupervisorTests(unittest.TestCase):
                 self.assertNotIn('manifest.json', names)
                 self.assertNotIn('a' * 32, b''.join(z.read(n) for n in names).decode(errors='ignore'))
 
+    def test_package_report_keeps_adapter_stop_evidence(self):
+        with tempfile.TemporaryDirectory(prefix='aehl-noscan-supervisor-') as tmp:
+            f = Fixture(tmp)
+            stopped = f.control / 'adapter-stopped.txt'
+            stopped.write_text('status=FAIL\\nstage=directory-call\\n'); stopped.chmod(0o600)
+            report = f.base / 'stopped-report.zip'
+            archive = mod.package_report(f.record, f.control, f.journal, report)
+            self.assertEqual(archive, report)
+            import zipfile
+            with zipfile.ZipFile(report) as z:
+                self.assertIn('adapter-stopped.txt', set(z.namelist()))
+
     def test_timeout_is_fail_and_never_retries(self):
         with tempfile.TemporaryDirectory(prefix='aehl-noscan-supervisor-') as tmp:
             f = Fixture(tmp); prepared = f.prepared(); calls = []

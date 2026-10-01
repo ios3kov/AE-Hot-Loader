@@ -51,7 +51,7 @@ def main():
     build_id = 'noscan-' + uuid.uuid4().hex[:12]
     run_id = 'directory-probe-' + uuid.uuid4().hex
     output = repo / 'build-ae-hot-loader' / build_id
-    output.mkdir(mode=0o700)
+    output.mkdir(parents=True, mode=0o700)
     control = output / 'control'; journal = output / 'journal'; probe = output / 'probe-directory'
     for path in (control, journal, probe): path.mkdir(mode=0o700)
     stem = 'AEHLNoScan' + build_id.removeprefix('noscan-')

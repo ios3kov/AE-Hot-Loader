@@ -273,7 +273,8 @@ def package_report(record, control, journal, destination):
     sanitized = {k: v for k, v in record.items() if k not in ('activation_env', 'command')}
     sanitized_path = control / 'report-artifact.json'
     write_json_exclusive(sanitized_path, sanitized)
-    for path in [control / 'ready.txt', control / 'supervisor-claim.json', control / 'supervisor.json',
+    for path in [control / 'ready.txt', control / 'adapter-stopped.txt',
+                 control / 'supervisor-claim.json', control / 'supervisor.json',
                  sanitized_path, *sorted(journal.iterdir())]:
         if path.exists() and path.is_file(): report_files.append(path)
     hashes = {p.name if p.parent == control else 'journal/' + p.name:
