@@ -29,7 +29,10 @@ struct Model final : JournaledBackend {
     explicit Model(const fs::path& d) : JournaledBackend(d.string()), dir(d) {
         base.pid=123; base.process_start="synthetic-start"; base.executable=p.executable;
         base.version="25.6x101"; base.build=101; base.arch="arm64"; base.bridge_sha256=p.bridge_sha256;
-        base.images=p.images; base.main_thread=true; base.unsaved=true; base.dirty=false;
+        base.images=p.images;
+        base.runtime_images={{p.executable,0x1000,0},
+            {"/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app/Contents/Frameworks/PLUG.dylib",0x2000,16}};
+        base.main_thread=true; base.unsaved=true; base.dirty=false;
         base.rendering=false; base.revision=1; base.registry={"ADBE.A","ADBE.B"};
     }
     std::uint64_t now_ms() override { return clock++; }
@@ -63,8 +66,11 @@ int main(int argc, char** argv) {
                 const auto bytes=Read(f.path()); Check(bytes.rfind("AEHL-RESOURCE-JOURNAL-1\n",0)==0);
                 Check(bytes.size()>17 && bytes.substr(bytes.size()-17)=="\nEND-AEHL-RECORD\n");
             }
-            Check(names==std::set<std::string>{"claim.txt","before.txt","call-started.txt","after.txt","result.txt"});
+            Check(names==std::set<std::string>{"claim.txt","before.txt","call-started.txt","native.txt","after.txt","result.txt"});
             Check(Read(d/"claim.txt").find(b.p.root)!=std::string::npos);
+            Check(Read(d/"native.txt").find("scope=21:resource-registration\n")!=std::string::npos);
+            Check(Read(d/"native.txt").find("code=1:0\n")!=std::string::npos);
+            Check(Read(d/"result.txt").find("search_observed=1:1\n")!=std::string::npos);
             Check(Read(d/"result.txt").find("status=4:PASS\n")!=std::string::npos);
         });
         test("new-backend-cannot-replay-completed-run", [](const fs::path& d) {
