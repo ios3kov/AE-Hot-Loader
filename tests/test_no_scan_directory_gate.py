@@ -24,7 +24,7 @@ class NoScanDirectoryGateTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             self.assertEqual(result.stderr, '')
             self.assertEqual(result.stdout.strip(),
-                             'NO_SCAN_DIRECTORY_GATE_TESTS=11 PASS; Adobe calls=0')
+                             'NO_SCAN_DIRECTORY_GATE_TESTS=12 PASS; Adobe calls=0')
             print(result.stdout, end='')
 
 
