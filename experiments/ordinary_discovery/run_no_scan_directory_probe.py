@@ -130,14 +130,15 @@ def verify_providers(record):
 
 def identity_from_ready(record, ready, pid):
     lines = ready.decode('utf-8').splitlines()
-    require(len(lines) == 3 and lines[1] == 'pid=' + str(pid) and lines[2].startswith('image='),
-            'ready record PID/format mismatch')
+    require(len(lines) == 4 and lines[1] == 'pid=' + str(pid) and
+            lines[2].startswith('image=') and lines[3].startswith('start=') and lines[3][6:],
+            'ready record PID/start/format mismatch')
     identity = json.loads(lines[0])
     expected = {k: record[k] for k in (
         'build_id', 'source_commit', 'source_clean', 'target', 'kind', 'run_id')}
     require(identity == expected, 'loaded no-scan identity mismatch')
     require(lines[2][6:] == record['module_path'], 'loaded module path mismatch')
-    return identity
+    return identity, lines[3][6:]
 
 
 def expected_request(record, pid):
@@ -181,7 +182,8 @@ def prepare(manifest_path, expected_hash, pid, identity_fn=process_identity,
     observed = identity_fn(pid)
     require(observed['executable'] == str(host), 'PID is not the pinned After Effects host')
     ready = read(control / 'ready.txt', 16384)
-    identity_from_ready(record, ready, pid)
+    _, loaded_process_start = identity_from_ready(record, ready, pid)
+    record['loaded_process_start'] = loaded_process_start
     require(Path(record['module_path']).is_file(), 'loaded module path is absent')
     providers = provider_verifier(record)
     allowed = {'ready.txt'}
@@ -271,6 +273,8 @@ def verify_native_pass(record, journal, observed=None):
         require(int(observation['pid'][0]) == observed['pid'], 'native/supervisor PID mismatch')
     require(len(observation.get('start', [])) == 1 and observation['start'][0],
             'missing native process-start evidence')
+    require(observation['start'] == [record.get('loaded_process_start')],
+            'native process-start differs from loaded AEGP identity')
     require(len(observation.get('revision', [])) == 1 and observation['revision'][0].isdigit() and
             int(observation['revision'][0]) > 0, 'invalid project revision evidence')
     effects = observation.get('effect', [])
