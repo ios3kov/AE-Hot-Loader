@@ -148,6 +148,11 @@ def package(folder, record):
         require(check.testzip() is None, "collector ZIP integrity failed")
         require(set(check.namelist()) == {p.name for p in files},
                 "collector ZIP inventory mismatch")
+        archived = json.loads(check.read("SHA256.json"))
+        require(archived == hashes, "collector ZIP hash manifest mismatch")
+        for name, digest in hashes.items():
+            require(hashlib.sha256(check.read(name)).hexdigest() == digest,
+                    "collector ZIP payload hash mismatch")
     return archive
 
 
@@ -161,10 +166,13 @@ def main():
     try:
         commit = source_identity()
         profile_agrees()
-        parent = args.output_parent.resolve(strict=True)
-        require(ROOT not in parent.parents and parent != ROOT or
-                parent == (ROOT / "build-ae-hot-loader").resolve(strict=True),
-                "output parent is outside allowed owned build area")
+        parent = args.output_parent.absolute()
+        expected_parent = (ROOT / "build-ae-hot-loader").absolute()
+        require(parent == expected_parent, "output parent must be the owned build directory")
+        parent.mkdir(mode=0o700, exist_ok=True)
+        require(not parent.is_symlink() and parent.is_dir() and parent.stat().st_uid == os.getuid(),
+                "owned build directory is unsafe")
+        parent = parent.resolve(strict=True)
         observed = {name: validate_input(path, digest)
                     for name, (path, digest) in INPUTS.items()}
         folder = Path(tempfile.mkdtemp(prefix="resource-abi-" + uuid.uuid4().hex[:8] + "-",
