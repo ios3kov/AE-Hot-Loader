@@ -11,34 +11,27 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
-## Current Stage C1 — resident root binding prepared and tested on owned data
+## Current Stage C1 — bounded mapped reader verified
 
-Code/test head: **`0c4cd4c518b91240a386fcda522ddbcfe866dd77`**.
-ResidentDataRootBinding reuses exact resident path/hash/header/text verification,
-checks a reviewed writable zero-fill root extent and derives its candidate
-address from the checked header. No function is invoked or provider loaded by
-the binder. The test alone loads its own compiled library and proves exact root
-address/read plus absence/hash/UUID/section/range/thread refusals.
+Code/test head: **`6c666ca6877baac7d56717be4f9d9ec22a982cea`**.
+Current-process mapped reader validates exact non-executable readable span and
+compares mapping metadata before/after every copy. Fixed budgets, exact bytes,
+no retry and permanent refusal after failure. Verified against 29 nested cases,
+owned pages/guard/cross-boundary/address/thread refusals and sanitizers.
 
-This is a point-in-time diagnostic address binding, not a lifetime lock or
-complete observation. No real PLUG/MEE root was bound/read in AE. No automatic
-conversion supplies cleanup eligibility. Runtime heap allocation, callback effects
-and lifetime/quiescence remain UNKNOWN. Static PLUG slot → handle → sack and MEE
-vector provenance is preserved in the previous report.
+Clean full local PASS: 288 Python without skips, 62 Node, 22 stages; inventory
+unchanged. Research CI **36929256787 — PASS**; full macOS CI **36929256802 — PASS**.
+Evidence: [C1_MAPPED_MEMORY_READ_REVIEW_2026-10-01.md](C1_MAPPED_MEMORY_READ_REVIEW_2026-10-01.md).
+Resident roots remain point-in-time binding only; mapping metadata is not
+allocator ownership, lifetime, atomicity or a complete cleanup observation.
 
-Clean-source full local regression PASS: 287 Python without skips, 62 Node,
-22 stages; source inventory unchanged. Research CI **36928329962 — PASS**;
-full macOS CI **36928330044 — PASS**. Current evidence:
-[C1_RESIDENT_ROOT_BINDING_REVIEW_2026-10-01.md](C1_RESIDENT_ROOT_BINDING_REVIEW_2026-10-01.md).
-
-Next current-process mapped-range reader with verified Mach API/count contract,
-owned allocation/guard-page coverage and explicit diagnostic limitations. Then
-prepare a concrete scoped observer before live authorization. Continue all
-independent authorized development per the user's latest instruction, reporting
-stage statuses. Resource integration remains blocked by critical unknown state/
-behavior; C1 registration/apply/render NOT RUN. C0 retains recorded live PASS.
-Original checkout preserved; main/install/launch/private-call/release boundaries
-remain unchanged.
+Next compose the bounded diagnostic observer on owned data, then prepare an
+exact inert candidate and independent supervision. No real AE roots read, no
+private call or provider retain. Critical host state/repeat behavior still blocks
+resource integration; C1 registration/apply/render NOT RUN. C0 recorded PASS.
+Continue independent authorized development and stage reports per the user's
+latest instruction. Original checkout/main/install/launch/private-call/release
+boundaries remain preserved.
 
 ## Second live no-scan result — PASS; Stage C0 closed
 

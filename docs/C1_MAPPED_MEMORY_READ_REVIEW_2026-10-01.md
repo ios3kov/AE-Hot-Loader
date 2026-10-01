@@ -61,4 +61,17 @@ changes no mapping or protection. At most 24 reads / 16384 bytes / 4096 per chun
 with up to 16 query steps before and after a copy. Mapping records are diagnostics
 only and do not populate ResourcePassGate's complete/observed/digest fields.
 
-Exact clean-source regression/CI: NOT RUN before code checkpoint.
+Code/test source **6c666ca6877baac7d56717be4f9d9ec22a982cea**. Clean full local
+regression PASS: 288 Python without skips, 62 Node, 22 stages, unchanged inventory.
+Run 756b80356ace48c687828349ee8514d5; private ZIP
+AEHL-checks-b6cr9xba.zip SHA-256
+`67d6a90b1d11041bb0529de9f95825434d78c7a2222a52cf5fa9336d72dba7bf`.
+Exact manifest inventory/all 24 payloads independently verified.
+Research CI **36929256787 — PASS**; full macOS CI **36929256802 — PASS**.
+
+Clean-source code scanner completed for 256 supported files with no omissions.
+Exit 1 / review_required retains the known local argparse false positive at
+artifact_manifest.py:71. No other candidate; runtime/full security readiness
+is not assessed. Live AE roots NOT OBSERVED; C1 registration/apply/render NOT RUN.
+Next bounded diagnostic observer composition and concrete candidate preparation;
+no ResourcePassGate integration or renewed private-call authority.
