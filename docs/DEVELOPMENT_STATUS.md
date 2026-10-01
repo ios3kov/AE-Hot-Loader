@@ -1,93 +1,100 @@
 # AE Hot Loader — current development status
 
-Updated: 2026-09-30. Branch: `research/ordinary-plugin-discovery`.
-Stage **C of A–D**; registration, A/B/D and release gates remain open.
-AGENTS.md and PRODUCTION_PLAN apply. Shared rules were rechecked unchanged:
+Updated: 2026-10-01. Branch: `research/ordinary-plugin-discovery`.
+Stage **C of A–D**; core registration, A/B/D and release gates remain open.
+AGENTS.md and PRODUCTION_PLAN apply. Shared rules rechecked unchanged:
 `701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`.
-
 Previous status is preserved at
-[immutable checkpoint 1b6f072](https://github.com/ios3kov/AE-Hot-Loader/blob/1b6f072d38fc66e2b56cf0b98aeea9f5a82c6c8b/docs/DEVELOPMENT_STATUS.md).
-Dated evidence is unchanged; earlier instructions do not renew permissions.
+[immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
+Dated evidence is unchanged; previous instructions do not renew permissions.
 
-## Latest implementation — resident binding tested through three owned libraries
+## Latest result — U/dvacore checked; provider retention tested on macOS
 
-Added ResidentImageBinding.hpp and NativeDirectoryBinding.hpp. The resolver
-selects named direct exports from an already resident exact-path arm64 library,
-checks its file hash, UUID/header and code bytes, and wires the existing
-DirectorySpecAdapter. It does not load libraries, use dlsym, execute resolvers
-or invoke Adobe code. The fixed symbol profile is build data, not user/IPC input.
+The supplied U/dvacore archive was independently hashed. Both binaries agree
+with its matching before/after statements. Their actual producer/destructor and
+storage bodies match the directory adapter's representation for this exact build.
+The converter is ASCII-only, not UTF-8; non-ASCII probe paths remain blocked.
+The destructor recycles host-allocated storage and has a terminate path, so not
+every native failure is catchable. No Adobe binary was loaded or executed.
 
-The macOS integration test now traverses the complete binding through three
-separately compiled OWNED libraries, then creates a directory spec, verifies
-its path, releases two strings and disposes the spec once. Resident-image-list
-checks pass. The test libraries and allocator are ours, not Adobe's. A second
-set checks missing images, bad hashes, wrong thread and incomplete profiles.
+Added `AE256DirectoryProfile.hpp` with exact received FILE/U/dvacore digests,
+and `ResidentDirectorySession.hpp` with a controlled already-loaded-reference
+wrapper. Exact code commit: **`9ea7bcf57fffee2382c6890459dca89201345395`**.
+It validates providers, retains up to three RTLD_NOLOAD references, then rebinds
+under those references. Missing images are refused, never loaded as a fallback.
+There is no dlsym, startup replay, plugin scan or automatic AE entrypoint.
 
-Initial code **1422392 FAILED macOS compilation** due to const-qualified address
-conversion. It is corrected in **`31868ab019e58600bb0a79f260bcbe2fd69cad00`**,
-with explicit typed conversion and portable coverage. No checks were disabled.
-[Implementation, failure, source hashes, CI evidence and limits](RESIDENT_DIRECTORY_BINDING_2026-09-30.md).
+The wrapper intentionally keeps acquired references until process exit, including
+partial failure; it never unloads a provider. **This changes loader reference
+counts and must be included in future explicit host-test approval.** Its boolean
+is only a supervisor assertion, not verified consent or a durable claim. The
+existing disk journal and fresh host/project guards still have to be connected.
 
-## Checks for exact corrected code 31868ab
+The macOS test uses three OWNED libraries. After the wrapper retains them, the
+test closes all original references and successfully runs the directory lifecycle
+through the remaining references. Image-list, missing-image, bad-digest,
+permission-assertion, environment-override and repeat-attempt checks passed.
+This proves the tested owned-provider behavior, not execution of FILE/U/dvacore.
 
-| Gate | Result and scope |
+[Exact input identities, static findings, lifetime tradeoff, checks and limits](U_DVACORE_CONTRACT_2026-10-01.md).
+U/dvacore implementation availability is no longer the current blocker.
+
+## Checks for exact code 9ea7bcf
+
+| Check | Result and scope |
 |---|---|
-| Local unified Linux | PASS: 238 collected, 229 passed/nine macOS skips; Node 62 PASS |
-| Supplied FILE export parsing | PASS, four actual exports; file analysis only |
-| Local parser sanitizers and focused analysis | PASS/no diagnostics; not a complete product audit |
-| Research CI 36776672299 | PASS, both unified Linux and macOS jobs |
-| Downloaded macOS report | 21 stages PASS; Python 238/238, no skips; Node 62 and existing scoped guards 15 PASS |
-| Real resident binding -> directory lifecycle | PASS with three owned providers on macOS arm64; Adobe calls=0 |
-| Full macOS CI 36776672316 | PASS, all build/sign/package/smoke/archive-verification steps completed |
-| Downloaded unified source/report verification | PASS, both outer hashes, all inner manifest entries and five new source hashes |
-| Actual U/dvacore implementation/profile | BLOCKED: required original implementations/pins not available among inspected inputs |
-| No-scan AEGP entrypoint and live supervisor | NOT CONNECTED / NOT RUN |
-| AE resource registration/apply/render | NOT RUN; historical registration FAIL unchanged |
+| Received-file integrity and 24 structural assertions | PASS, six named windows / 529 instructions; not runtime tests |
+| Actual export parsing and compiled profile hashes | PASS; file-only, Adobe calls=0 |
+| Local unified Linux | PASS: 238 collected, 229 PASS/nine platform skips; Node 62 |
+| Research CI 36824300893 | PASS on Linux and macOS |
+| Downloaded macOS unified report | All 21 stages PASS; Python 238/238, Node 62 and existing scoped guards 15 |
+| Owned provider retention and directory lifecycle | PASS on macOS arm64, including calling after original references are closed |
+| Full product macOS CI 36824300983 | PASS, all build/sign/package/smoke/archive-verification steps completed |
+| Downloaded research reports and source identity | Both outer hashes, all inner entries and five changed source hashes verified |
+| Real AE no-scan AEGP/supervisor | NOT CONNECTED / NOT RUN |
+| Actual resource registration/apply-render | NOT RUN; historical registration FAIL unchanged |
 | Full static-security audit | NOT RUN again; five historical findings remain open |
 
-Only two Python cases were added. Their internal checks and earlier native
-cases are not counted again as extra Python tests. The local unified runner
-still does not build product packages; full macOS packaging CI is separate.
-No product ZIP was handed over or installed. Green CI does not clear known or
-unreviewed warnings. Documentation follows with [skip ci]; CI belongs to 31868ab.
+The Python count remains 238: the new retention scenario extends an existing
+test. Nested native cases are not counted again. Local parser ASan/UBSan passed
+with empty diagnostics, not a full audit or AE memory proof. The unified local
+runner still does not build the product; that separate workflow was checked.
+No product ZIP was installed or handed over. Green CI does not clear unreviewed
+warnings. Docs use [skip ci]; CI belongs to the exact code commit above.
 
-## Actual remaining blocker and next gate
+## Next concrete integration gate
 
-The binding requires reviewed U.dylib/dvacore producer/destructor behavior and
-actual binary pins before it can target Adobe. Exact symbol names from FILE's
-imports alone do not establish their native contracts. The linked record contains
-one tested file-copy request for BOTH original libraries; no SDK, FILE, PLUG or
-FLT recollection and no in-host scan are requested.
+Connect the reviewed binding/retention, directory adapter and durable journal
+to a separate inert-by-default no-scan AEGP and its external supervisor. This is
+still missing; existing scoped-discovery commands continue to run the old loader.
+No new user command or additional library collection is requested now.
 
-Image snapshots are point-in-time observations, not a dyld lock/lifetime lease.
-Concurrent remove/readd can escape comparisons. Resolve that lifetime boundary
-before any real call, then wire the no-scan operation to a separate identified
-one-shot research AEGP and external supervisor with fresh host/project/root
-checks. Hashes do not prove ABI compatibility or grant consent. No live profile,
-authorized probe artifact or automatic request path has been created.
+Before a live call, verify SDK build, inert entry, exact artifact/loaded identity,
+fresh blank/clean/idle host state, one owned ASCII directory, and separately
+specified authorization including provider-reference retention. Require exact
+path roundtrip, single successful release and unchanged PID/project/registry/
+module list. Do not treat the authorization flag or stored observations as consent
+or a fresh baseline. No automatic retries after uncertain native outcomes.
 
-A later resource pass still needs review of PLUG's end-of-pass callbacks and
-retained state. Do not replay startup/RequiredPreSearch, enumerate global roots,
-replace callbacks, bypass the cache predicate, force notification, fabricate host
-objects, clear caches, change the old bool or unload code. The previous installation
-and one-restart permissions remain consumed. All new risky host actions need
-separate explicit authorization. Existing scoped commands still run the old loader.
+The subsequent PLUG pass still needs end-of-pass callback and retained-state
+review. Do not invoke global-folder helpers, Birth/InitIterator/RequiredPreSearch,
+replace callbacks, bypass the cache predicate, clear caches, force notifications,
+change the old bool, unload code or repeat the unchanged scan. Previous installation
+and one-restart permissions are consumed. New risky actions need separate approval.
 
-## Preserved actual host results and scope
+## Preserved actual host results
 
 | Gate | Preserved result |
 |---|---|
-| Scoped embedded late registration | FAIL: 45de0c9 / scoped-0b8c8f122e80 / fixture88019a1a01a7; 785 unchanged identities |
-| RSMB startup-registered apply/render | PASS: historical identified one-frame smoke |
-| RSMB late registration | FAIL, separate from startup smoke |
-| Dynamic fixture application | PASS: historical add/remove; render NOT RUN |
-| Flat-resource failure | FAIL: historical crash evidence retained |
-| Current AE/project/resident identity | NOT OBSERVED; CI and file analysis are not a Mac baseline |
+| Scoped embedded late registration | FAIL: 45de0c9 / scoped-0b8c8f122e80 / fixture88019a1a01a7; 785 unchanged effects |
+| RSMB startup-registered apply/render | PASS: earlier identified one-frame smoke |
+| RSMB late registration | FAIL, retained separately |
+| Dynamic fixture application | PASS, earlier add/remove; render NOT RUN |
+| Flat-resource failure | FAIL, earlier crash evidence retained |
+| Current AE/project/resident identity | NOT OBSERVED; offline files and CI are not a live baseline |
 
-The [SDK audit](SDK25_6_REGISTRATION_REVIEW_2026-09-30.md) did not establish a
-supported public late-registration procedure. PICA availability/ordinary-effect
-publication remain unverified, not disproved. SDK and proprietary binaries stay
-private and out of Git. Reference installed product remains historical
-04fea706/native-36483421984-1 unless fresh evidence establishes otherwise.
-No product loader, installed Agent/shell/panel, third-party plugin, project,
-preferences or main changed. No merge, installation, restart or release occurred.
+The SDK review did not establish a public ordinary-effect late-registration
+procedure; PICA ordinary-effect publication remains unverified, not disproved.
+No product loader, installed Agent/shell/panel, third-party plugin, user project,
+preferences or main changed. No merge, release, installation, restart or live
+Adobe call. Proprietary inputs and raw dumps remain private, outside Git.
