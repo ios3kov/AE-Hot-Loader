@@ -104,13 +104,15 @@ It does **not** mean ordinary-effect late registration works.
 
 ## Stage C1 — resource-registration experiment
 
-Current offline checkpoint: [C1_RESOURCE_ABI_REVIEW_2026-10-01.md](C1_RESOURCE_ABI_REVIEW_2026-10-01.md).
-The real bounded collector is fixed, and argument/callback/return windows were
-reviewed against pinned files. PLUG_Search calls the default sack's installed
-cleanup list even for one root. Before implementation, identify the actual
-cleanup registrations and review their retained-state effects; neither a null
-progress callback nor one root removes this requirement. No native C1 backend
-or live request is ready yet.
+Current offline checkpoint: [C1_CLEANUP_REGISTRATION_REVIEW_2026-10-01.md](C1_CLEANUP_REGISTRATION_REVIEW_2026-10-01.md).
+The collector's cleanup mode reproduces eight complete pinned windows. FLT
+passes null cleanup; MEE registers a callback that traverses shared general-plugin
+state and can prepare/invoke retained procedures. One root or null progress
+does not isolate those effects. Before implementation, review repeated
+PLUG_PrepRoutine behavior and the general-plugin lifecycle, then design a
+read-only baseline for actual callback/state eligibility. Do not replay setup,
+invoke setdown or replace callbacks. No native C1 backend or live request is
+ready yet. The earlier search ABI review is preserved as a separate checkpoint.
 
 Only after C0 PASS:
 

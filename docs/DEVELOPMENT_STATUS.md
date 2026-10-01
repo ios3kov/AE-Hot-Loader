@@ -4,40 +4,43 @@ Updated: 2026-10-01. Branch: `research/ordinary-plugin-discovery`.
 Stage **C of A–D**; core registration, A/B/D and release gates remain open.
 Current continuation handoff: [CHAT_HANDOFF_2026-10-01_STAGE_C_CURRENT.md](CHAT_HANDOFF_2026-10-01_STAGE_C_CURRENT.md).
 AGENTS.md and PRODUCTION_PLAN apply. Current canonical rules:
-AE-Development-Rules `05bd9a8d71c11280d972b96caf64b776f2a075d7`, starting with
+AE-Development-Rules `f17c056b292631a0832b894050e204a3ca7bc2dd`, starting with
 AI_ENTRYPOINT.md. Older rule/permission/environment statements below belong
 to their named checkpoints and do not supersede this continuation.
 Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
-## Current Stage C1 — bounded ABI collection fixed and reviewed offline
+## Current Stage C1 — cleanup registrations and retained state reviewed offline
 
-Code/test head: **`5b88779b846d1e0dac5a50ef59f5fafc949d968f`**.
-The C1 collector previously failed on real LLDB because `--force` is not
-compatible with its start/end-address option set. The command is fixed and
-covered by real LLDB disassembly of an owned arm64 bundle.
+Code/test head: **`bf8a2cca9345df62e50bb69c144f9a2bbc93f34a`**.
+The collector now has a separate bounded `--review cleanup` mode: eight complete
+windows, **1390 decoded instructions**, PLUG/FLT/MEE hashes checked before/after.
+The default search-ABI mode also passed again: **105 + 367 instructions**.
+Real LLDB regression still uses an owned arm64 bundle. Adobe calls = 0.
 
-The collector now validates every decoded address in the complete bounded
-SearchStatFunc/Egg_PlugSearch and PLUG_Search windows: **105 + 367 instructions**.
-The two actual pinned Adobe input files matched their reviewed hashes before
-and after file-only collection. No Adobe code was executed.
+FLT's normal registration passes null cleanup. MEE registers a concrete
+PluginCleanupFunc into the default sack. That callback traverses shared
+GeneralPlugin records and can prepare their procedures, invoke saved entrypoints
+and mutate retained state. Null progress and one search root do not isolate
+these effects. Cleanup loops stop on a nonzero callback result.
 
-The additional bounded PLUG cleanup review establishes an important scope
-limit: even a one-root search invokes the sack's installed cleanup callbacks.
-Null progress callback does not disable those callbacks. Their actual registered
-targets and retained-state effects must be reviewed before connecting C1 to AE.
-Do not replace them, replay startup, or assume a single root makes all side
-effects local.
+Next discriminator: PLUG_PrepRoutine's repeated-preparation/error contract and
+the expected general-plugin lifecycle, followed by a read-only baseline design
+for actual callback/state eligibility. The running sack/vector remains
+NOT OBSERVED. No native C1 backend or live candidate is ready. Do not replace
+callbacks, replay setup, invoke setdown or assume idempotence.
 
-Local clean-head macOS regression: **PASS**, 264 Python tests, 62 Node tests,
-22 unified stages, unchanged source inventory. Exact-head research CI
-**36920890724 — PASS** on Linux/macOS. Full macOS CI **36920890645 — PASS**
-for the same code head, including build/sign/package/synthetic smoke. These
-are offline/build results, not a new live registration PASS.
+Local clean-head macOS regression: **PASS**, 266 Python tests, no skips;
+62 Node tests; 22 unified stages; unchanged source inventory. Exact-code
+research CI **36922542782 — PASS** and full macOS CI
+**36922542905 — PASS**, including build/sign/package/synthetic smoke.
+These are offline/build gates, not live registration.
 
-Review, exact argument evidence, hashes and remaining gate:
-[C1_RESOURCE_ABI_REVIEW_2026-10-01.md](C1_RESOURCE_ABI_REVIEW_2026-10-01.md).
+Current review, exact evidence, hashes and remaining gate:
+[C1_CLEANUP_REGISTRATION_REVIEW_2026-10-01.md](C1_CLEANUP_REGISTRATION_REVIEW_2026-10-01.md).
+The preceding [search ABI review](C1_RESOURCE_ABI_REVIEW_2026-10-01.md) remains
+a preserved checkpoint.
 C0 remains the recorded live PASS; C1 registration, apply and render are
 **NOT RUN**. The original user checkout was observed clean at `182d058`;
 development uses a separate working clone of the research branch. The current

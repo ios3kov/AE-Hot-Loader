@@ -3,7 +3,7 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [C1_RESOURCE_ABI_REVIEW_2026-10-01.md](C1_RESOURCE_ABI_REVIEW_2026-10-01.md).
+Current continuation: [C1_CLEANUP_REGISTRATION_REVIEW_2026-10-01.md](C1_CLEANUP_REGISTRATION_REVIEW_2026-10-01.md).
 The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
@@ -13,15 +13,15 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 - Repository: `ios3kov/AE-Hot-Loader`.
 - Branch: `research/ordinary-plugin-discovery`; never change `main`.
 - Current C1 code/test head:
-  **`5b88779b846d1e0dac5a50ef59f5fafc949d968f`**.
+  **`bf8a2cca9345df62e50bb69c144f9a2bbc93f34a`**.
 - Current canonical AE Development Rules source:
-  **`05bd9a8d71c11280d972b96caf64b776f2a075d7`**; read AI_ENTRYPOINT first.
+  **`f17c056b292631a0832b894050e204a3ca7bc2dd`**; read AI_ENTRYPOINT first.
 - Current Stage C no-scan core head:
   **`c1e20e4ab4d4a4f6654f67df7dbb224f0790b5be`**.
 - Current live-launcher code/test head:
   **`3852192406da5af539b9100114393584642e9197`**.
 - Current status documentation before this save:
-  `e3f577ef5781731a2055365f4bef94074d3584b7`.
+  `0e455db981f2c9d32c6ed0a1bcec081f5a8d2efb`.
 - Shared DEVELOPMENT_RULES blob:
   `701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`.
 - Stage: **C of A–D**. Ordinary-effect late registration is still NOT fixed.
@@ -190,7 +190,7 @@ resource-registration experiment. Any live resource-registration/private PLUG
 operation needs fresh authorization; the second no-scan approval is consumed.
 
 
-## Current Stage C1 offline checkpoint
+## Previous Stage C1 ABI checkpoint
 
 The collector's incompatible LLDB `--force` option is fixed and regression-tested
 on an owned arm64 bundle. Complete bounded ABI windows and a supplemental
@@ -203,6 +203,28 @@ PLUG_Search invokes the selected sack's installed cleanup list even for one
 root and even with null progress callback. Review the actual cleanup registrations
 and retained-state effects before creating a native resource-call backend.
 An address/signature match does not prove late-call safety.
+
+## Current Stage C1 cleanup checkpoint
+
+Code bf8a2cc adds a separate `--review cleanup` collection: eight complete
+windows / 1390 decoded instructions, matching PLUG/FLT/MEE before/after hashes,
+no Adobe execution. Default search mode also passed again (472 instructions).
+Local clean-source regression: PASS, 266 Python tests without skips, 62 Node
+tests, 22 stages. Exact-code research CI 36922542782 and full macOS CI
+36922542905 are PASS; the latter includes build/sign/package/synthetic smoke,
+not live AE execution.
+
+FLT registers no cleanup in its normal birth call. MEE registers
+PluginCleanupFunc; its body traverses shared GeneralPlugin state and can prepare
+procedures, invoke saved entrypoints and mutate records beyond the search root.
+Installed cleanup loops stop on nonzero returns. The running sack/vector and
+repeated preparation behavior remain unobserved. No native C1 candidate is ready.
+
+Continue with PLUG_PrepRoutine's repeated-preparation/error contract and the
+general-plugin lifecycle, then establish a read-only baseline design for actual
+callback/state eligibility. Do not replay SetupGeneralPluginScan, invoke
+SetdownGeneralPlugins, replace cleanup or forge a sack. C0 remains the recorded
+live PASS; C1 registration/apply/render are NOT RUN.
 
 ## Next gate — exact order
 
