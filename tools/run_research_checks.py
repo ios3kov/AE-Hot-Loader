@@ -119,15 +119,22 @@ def run_command(argv, root, log, timeout=120, limit=MAX_LOG):
         result['reason'] = 'Test process or bounded log failed; partial evidence retained'
     finally:
         if proc is not None:
-            if result['status'] != 'PASS' or proc.poll() is None:
-                # The group may outlive its direct child while holding our pipe.
-                try:
-                    os.killpg(proc.pid, signal.SIGKILL)
-                except ProcessLookupError:
-                    pass
-                proc.wait(timeout=5)
-            if proc.stdout is not None:
-                proc.stdout.close()
+            try:
+                if result['status'] != 'PASS' or proc.poll() is None:
+                    # The group may outlive its direct child while holding our pipe.
+                    try:
+                        os.killpg(proc.pid, signal.SIGKILL)
+                    except ProcessLookupError:
+                        pass
+                    except PermissionError:
+                        # macOS can deny signalling after the direct child exits.
+                        # Keep the existing FAIL; never ignore denial for a live child.
+                        if proc.poll() is None:
+                            raise
+                    proc.wait(timeout=5)
+            finally:
+                if proc.stdout is not None:
+                    proc.stdout.close()
         result['seconds'] = round(time.monotonic() - started, 3)
     return result
 

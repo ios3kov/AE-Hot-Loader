@@ -5,6 +5,7 @@ import importlib.util
 import io
 import json
 import os
+import signal
 from pathlib import Path
 import subprocess
 import sys
@@ -125,6 +126,44 @@ class UnifiedRunTests(unittest.TestCase):
         result = self.command("print('x' * 10000)", limit=128)
         self.assertEqual(result['status'], 'FAIL')
         self.assertEqual((self.output / 'owned.log').stat().st_size, 128)
+
+    def test_exited_child_permission_race_keeps_failed_bounded_result(self):
+        started = []
+        original = runner.subprocess.Popen
+        def spawn(*args, **kwargs):
+            proc = original(*args, **kwargs)
+            started.append(proc)
+            return proc
+        def denied(pid, sig):
+            self.assertEqual((pid, sig), (started[0].pid, signal.SIGKILL))
+            started[0].wait(timeout=5)
+            raise PermissionError('group signal denied after child exit')
+        with mock.patch.object(runner.subprocess, 'Popen', side_effect=spawn), \
+             mock.patch.object(runner.os, 'killpg', side_effect=denied):
+            result = self.command("print('x' * 10000)", limit=128)
+        self.assertEqual(result['status'], 'FAIL')
+        self.assertEqual((self.output / 'owned.log').stat().st_size, 128)
+        self.assertEqual(started[0].returncode, 0)
+        self.assertTrue(started[0].stdout.closed)
+
+    def test_live_child_permission_denial_is_not_ignored(self):
+        started = []
+        original = runner.subprocess.Popen
+        def spawn(*args, **kwargs):
+            proc = original(*args, **kwargs)
+            started.append(proc)
+            return proc
+        try:
+            with mock.patch.object(runner.subprocess, 'Popen', side_effect=spawn), \
+                 mock.patch.object(runner.os, 'killpg', side_effect=PermissionError('denied')):
+                with self.assertRaises(PermissionError):
+                    self.command("import time; print('x' * 10000, flush=True); time.sleep(15)", limit=128)
+            self.assertIsNone(started[0].poll())
+        finally:
+            if started:
+                os.killpg(started[0].pid, signal.SIGKILL)
+                started[0].wait(timeout=5)
+                started[0].stdout.close()
 
     def test_missing_tool_is_blocked(self):
         result = runner.run_command([str(self.base / 'absent')], self.repo, self.output / 'owned.log')
