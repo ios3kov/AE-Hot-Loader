@@ -44,6 +44,7 @@ class Fixture:
             'ae_launch_performed': False, 'host_mode': 'authorized-user-host',
             'host_executable': str(self.host), 'authorized_bundle': str(self.bundle),
             'module_path': str(binary), 'candidate_bundle': str(self.root / 'Candidate.plugin'),
+            'native_timeout_ms': 15000,
             'probe_directory': str(self.probe), 'control_directory': str(self.control),
             'journal_directory': str(self.journal), 'activation_env': {'AEHL_NOSCAN_GATE_TOKEN': 'a' * 32},
             'provider_profile': {'frameworks': '/owned/frameworks', 'FILE_sha256': '3' * 64,
@@ -146,14 +147,24 @@ class NoScanSupervisorTests(unittest.TestCase):
             with zipfile.ZipFile(report) as z:
                 self.assertIn('adapter-stopped.txt', set(z.namelist()))
 
+    def test_short_supervisor_timeout_is_rejected_before_publication(self):
+        with tempfile.TemporaryDirectory(prefix='aehl-noscan-supervisor-') as tmp:
+            f = Fixture(tmp); prepared = f.prepared(); calls = []
+            with self.assertRaisesRegex(ValueError, 'shorter than reviewed native deadline'):
+                mod.supervise(*prepared, 19, publish_fn=lambda *_: calls.append(1),
+                              report_path=f.base / 'must-not-exist.zip')
+            self.assertEqual(calls, [])
+            self.assertFalse((f.control / 'supervisor-claim.json').exists())
+            self.assertFalse((f.base / 'must-not-exist.zip').exists())
+
     def test_timeout_is_fail_and_never_retries(self):
         with tempfile.TemporaryDirectory(prefix='aehl-noscan-supervisor-') as tmp:
             f = Fixture(tmp); prepared = f.prepared(); calls = []
             def publish(control, request):
                 calls.append(request); (control / 'request.txt').write_bytes(request); (control / 'request.txt').chmod(0o600)
-            times = iter([0.0, 2.0])
+            times = iter([0.0, 21.0])
             report = f.base / 'timeout-report.zip'
-            result, archive = mod.supervise(*prepared, 1, identity_fn=f.identity_fn,
+            result, archive = mod.supervise(*prepared, 20, identity_fn=f.identity_fn,
                                             provider_verifier=f.provider_verifier, publish_fn=publish,
                                             clock=lambda: next(times), sleep=lambda _: None, report_path=report)
             self.assertEqual(result['status'], 'FAIL')

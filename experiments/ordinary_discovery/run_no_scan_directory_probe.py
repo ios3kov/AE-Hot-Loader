@@ -14,6 +14,8 @@ import zipfile
 
 MAGIC = b'AEHL-RESOURCE-JOURNAL-1\n'
 NATIVE_NAMES = {'claim.txt', 'before.txt', 'call-started.txt', 'after.txt', 'result.txt'}
+REVIEWED_NATIVE_TIMEOUT_MS = 15000
+SUPERVISOR_MARGIN_MS = 5000
 
 
 def require(condition, reason):
@@ -154,7 +156,8 @@ def prepare(manifest_path, expected_hash, pid, identity_fn=process_identity,
     record = json.loads(raw)
     require(record['source_clean'] is True and
             record['kind'] == 'research-only-no-scan-directory-aegp' and
-            record['installation_performed'] is False and record['ae_launch_performed'] is False,
+            record['installation_performed'] is False and record['ae_launch_performed'] is False and
+            record.get('native_timeout_ms') == REVIEWED_NATIVE_TIMEOUT_MS,
             'wrong research artifact')
     base = manifest_path.parent
     control = Path(record['control_directory']); journal = Path(record['journal_directory'])
@@ -324,6 +327,8 @@ def package_report(record, control, journal, destination):
 def supervise(record, control, journal, probe, observed, request, providers, timeout,
               identity_fn=process_identity, provider_verifier=verify_providers,
               publish_fn=publish, clock=time.monotonic, sleep=time.sleep, report_path=None):
+    require(timeout * 1000 >= record['native_timeout_ms'] + SUPERVISOR_MARGIN_MS,
+            'supervisor timeout shorter than reviewed native deadline')
     started = datetime.now(timezone.utc).isoformat()
     deadline = clock() + timeout
     status, reason, published = 'FAIL', 'request not published', False
@@ -374,7 +379,7 @@ def main():
     parser.add_argument('manifest', type=Path)
     parser.add_argument('--sha256', required=True)
     parser.add_argument('--pid', type=int, required=True)
-    parser.add_argument('--timeout', type=int, default=45, choices=range(1, 61), metavar='1..60')
+    parser.add_argument('--timeout', type=int, default=45, choices=range(20, 61), metavar='20..60')
     parser.add_argument('--authorized-host', type=Path)
     parser.add_argument('--authorized-bundle', type=Path)
     parser.add_argument('--authorize-private-file-call', action='store_true')

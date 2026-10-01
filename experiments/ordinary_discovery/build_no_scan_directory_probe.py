@@ -10,6 +10,7 @@ import subprocess
 import uuid
 
 EXPECTED_HOST = Path('/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app/Contents/MacOS/After Effects')
+NATIVE_TIMEOUT_MS = 15000
 
 
 def run(*command):
@@ -78,7 +79,7 @@ def main():
         try: str(value).encode('ascii')
         except UnicodeEncodeError: parser.error(label + ' must be ASCII for this reviewed contract')
     token = uuid.uuid4().hex
-    plan = [run_id, commit, build_id, str(host), str(expected_module), str(probe), 15000]
+    plan = [run_id, commit, build_id, str(host), str(expected_module), str(probe), NATIVE_TIMEOUT_MS]
     config = output / 'NoScanDirectoryConfig.hpp'
     config.write_text(
         '#pragma once\nstatic const no_scan_directory::Config research_config {\n    {' +
@@ -139,6 +140,7 @@ def main():
         'host_executable': str(host), 'module_path': str(expected_module),
         'host_mode': host_mode, 'authorized_bundle': str(installed_bundle) if args.authorized_host else None,
         'candidate_bundle': str(candidate), 'probe_directory': str(probe),
+        'native_timeout_ms': NATIVE_TIMEOUT_MS,
         'control_directory': str(control), 'journal_directory': str(journal),
         'activation_env': {'AEHL_NOSCAN_GATE_TOKEN': token},
         'provider_profile': {
