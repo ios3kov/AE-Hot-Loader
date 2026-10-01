@@ -51,7 +51,7 @@ jobs:
           CARGO_TARGET_DIR: ${{ github.workspace }}/target-dual-pipl-gen
         run: |
           set -euo pipefail
-          cargo build --locked \
+          cargo build \
             --manifest-path experiments/dual_pipl/piplgen/Cargo.toml \
             --release
           test -f experiments/dual_pipl/DualPiPL.rsrc
