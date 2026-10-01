@@ -28,14 +28,19 @@ struct Model final : Backend {
     bool claimed = false, marker = false, fail_create = false, fail_path = false;
     bool fail_marker = false, fail_search = false, release_ok = true, late = false;
     bool backclock = false, null_spec = false, mutate_fixture = false, fail_post = false;
-    bool fail_claim = false, fail_before_save = false, fail_after_save = false;
+    bool fail_claim = false, fail_before_save = false, fail_search_save = false, fail_after_save = false;
     SearchResult answer{0, 0, false};
     std::function<void(Observation&, int)> change = [](Observation&, int) {};
     std::vector<std::string> events;
     Model() {
         base.pid = 42; base.process_start = "new-process-start"; base.executable = p.executable;
         base.version = "25.6x101"; base.arch = "arm64"; base.bridge_sha256 = p.bridge_sha256;
-        base.images = p.images; base.build = 101; base.main_thread = true;
+        base.images = p.images;
+        base.runtime_images = {
+            {p.executable, 0x1000, 0},
+            {"/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app/Contents/Frameworks/PLUG.dylib", 0x2000, 16}
+        };
+        base.build = 101; base.main_thread = true;
         base.unsaved = true; base.dirty = false; base.rendering = false; base.revision = 1;
         base.registry = {"ADBE.A", "ADBE.B"};
     }
@@ -77,6 +82,10 @@ struct Model final : Backend {
         if (backclock) clock = 0;
         if (fail_search) throw std::runtime_error("private call failed with secret path");
         return answer;
+    }
+    void save_search_result(const SearchResult&) override {
+        events.push_back("native");
+        if (fail_search_save) throw std::runtime_error("search evidence failed");
     }
     bool release_spec(Spec s) noexcept override {
         if (s.value != this) return false;
@@ -138,6 +147,7 @@ int main() {
             {"before-save-failure", [](Model& m) { m.fail_before_save = true; }},
             {"call-marker-failure", [](Model& m) { m.fail_marker = true; }},
             {"search-exception", [](Model& m) { m.fail_search = true; }},
+            {"search-evidence-write-failure", [](Model& m) { m.fail_search_save = true; }},
             {"negative-search-result", [](Model& m) { m.answer.code = -1; }},
             {"positive-search-result", [](Model& m) { m.answer.code = 1; }},
             {"error-count", [](Model& m) { m.answer.errors = 1; }},
@@ -157,6 +167,10 @@ int main() {
             {"removed-effect", [](Model& m) { m.change = [](Observation& o, int n) { if (n == 3) o.registry.erase(o.registry.begin()); }; }},
             {"duplicate-target", [](Model& m) { m.change = [](Observation& o, int n) { if (n == 3) o.registry.push_back(o.registry.back()); }; }},
             {"module-changed-after-call", [](Model& m) { m.change = [](Observation& o, int n) { if (n == 3) o.images["MEE"][0] = '1'; }; }},
+            {"runtime-image-removed", [](Model& m) { m.change = [](Observation& o, int n) { if (n == 3) o.runtime_images.erase(o.runtime_images.begin()); }; }},
+            {"unrelated-runtime-image-added", [](Model& m) { m.change = [](Observation& o, int n) {
+                if (n == 3) o.runtime_images.push_back({"/Users/test/Unexpected.plugin/Contents/MacOS/Unexpected", 0x3000, 0});
+            }; }},
         };
         for (const auto& test : fails) {
             Model m; test.second(m); auto r = m.run();
@@ -167,12 +181,27 @@ int main() {
             passed(test.first);
         }
         Model good; auto r = good.run();
-        Check(r.status == "PASS" && r.claimed && r.call_started && r.postflight_observed && r.cleanup_ok);
+        Check(r.status == "PASS" && r.claimed && r.call_started && r.search_observed &&
+              r.postflight_observed && r.cleanup_ok);
         Check(good.searches == 1 && good.creates == 1 && good.releases == 1 && good.checks == 3);
-        Check(good.events == std::vector<std::string>{"observe", "claim", "before", "create", "observe", "marker", "search", "observe", "after"});
+        Check(good.events == std::vector<std::string>{"observe", "claim", "before", "create", "observe", "marker", "search", "native", "observe", "after"});
         passed("exact-success-and-operation-order");
         Check(good.run().status == "BLOCKED" && good.searches == 1 && good.creates == 1);
         passed("successful-request-cannot-replay");
+        Model system_lazy;
+        system_lazy.change = [](Observation& o, int n) {
+            if (n == 3) o.runtime_images.push_back({
+                "/System/Library/PrivateFrameworks/SafariPlatformSupport.framework/Versions/A/SafariPlatformSupport",
+                0x3000, 0});
+        };
+        Check(system_lazy.run().status == "PASS"); passed("system-lazy-runtime-image-allowed");
+        Model fixture_image;
+        fixture_image.change = [](Observation& o, int n) {
+            if (n == 3) o.runtime_images.push_back({
+                "/owned/fresh/scan-root/AEHLPairEmbedded.plugin/Contents/MacOS/AEHLPairEmbedded",
+                0x4000, 0});
+        };
+        Check(fixture_image.run().status == "PASS"); passed("fixture-runtime-image-allowed");
         Model missing_post; missing_post.fail_post = true; auto missing = missing_post.run();
         Check(missing.status == "FAIL" && !missing.postflight_observed && missing_post.observations == 3);
         passed("failed-postflight-not-retried");
