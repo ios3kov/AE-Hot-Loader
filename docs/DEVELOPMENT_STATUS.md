@@ -8,6 +8,17 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
+## Continuation checkpoint — 2026-10-01
+
+[CHAT_HANDOFF_2026-10-01.md](CHAT_HANDOFF_2026-10-01.md) is the restart point for
+the next chat. It preserves the exact code/CI identity, historical AE outcomes,
+consumed permissions, existing private-input inventory and remaining integration.
+This save changes documentation only. Code remains `9ea7bcf57fffee2382c6890459dca89201345395`;
+research CI `36824300893` and macOS CI `36824300983` were rechecked successful.
+No new tests or live AE operations were run. The no-scan AEGP and live supervisor
+are still not connected; registration remains unproven. Documentation uses [skip ci].
+The user's Mac checkout and current AE state were not inspected or updated.
+
 ## Latest result — U/dvacore checked; provider retention tested on macOS
 
 The supplied U/dvacore archive was independently hashed. Both binaries agree
