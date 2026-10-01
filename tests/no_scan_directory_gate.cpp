@@ -9,7 +9,8 @@
 using namespace no_scan_directory;
 namespace fs = std::filesystem;
 
-static void Check(bool value) { if (!value) throw std::runtime_error("assertion"); }
+static std::string current_case = "bootstrap";
+static void Check(bool value) { if (!value) throw std::runtime_error("assertion:" + current_case); }
 template<class F> static void Reject(F f) { bool failed=false; try { f(); } catch (...) { failed=true; } Check(failed); }
 static std::string Read(const fs::path& p) { std::ifstream f(p, std::ios::binary); return {std::istreambuf_iterator<char>(f), {}}; }
 static Plan TestPlan(const fs::path& directory) {
@@ -61,6 +62,7 @@ int main() {
     const fs::path root = fs::canonical(fs::path(made));
     int cases=0;
     auto fixture=[&](const std::string& name) {
+        current_case = name;
         const auto base=root/name; Check(fs::create_directory(base));
         const auto journal=base/"journal", directory=base/"probe-directory";
         Check(fs::create_directory(journal)); Check(fs::create_directory(directory));
