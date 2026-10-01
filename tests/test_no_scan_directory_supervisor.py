@@ -78,7 +78,7 @@ class Fixture:
                            identity_fn=self.identity_fn, authorized_host=self.host,
                            authorized_bundle=self.bundle, provider_verifier=self.provider_verifier)
 
-    def write_pass(self, request):
+    def write_pass(self, request, after_extra_image=None):
         (self.control / 'request.txt').write_bytes(request); (self.control / 'request.txt').chmod(0o600)
         before = (field('pid', 4321) + field('start', '123.456') + field('executable', self.record['host_executable']) +
                   field('module', self.record['module_path']) + field('version', '25.6x101') + field('arch', 'arm64') +
@@ -92,13 +92,24 @@ class Fixture:
                 field('directory', self.record['probe_directory']) + field('timeout_ms', 15000))
         claim = plan + before
         started = plan + before
+        after = before
+        if after_extra_image is not None:
+            after = (before.replace(field('image_count', 1), field('image_count', 2)) +
+                     field('image_path', after_extra_image) +
+                     field('image_header', 8192) + field('image_slide', 0))
+        native = (field('scope', 'no-scan-directory') + field('invoked', 1) +
+                  field('completed', 1) + field('cleanup_ok', 1) +
+                  field('strings_created', 2) + field('string_release_attempts', 2) +
+                  field('specs_created', 1) + field('spec_release_attempts', 1) +
+                  field('retained_references', 3))
         result = (field('scope', 'no-scan-directory') + field('status', 'PASS') + field('stage', 'complete') +
                   field('reason', 'directory-roundtrip-release-only') + field('claimed', 1) + field('call_started', 1) +
-                  field('postflight_observed', 1) + field('cleanup_ok', 1))
+                  field('native_observed', 1) + field('postflight_observed', 1) + field('cleanup_ok', 1))
         journal_file(self.journal / 'claim.txt', claim)
         journal_file(self.journal / 'before.txt', before)
         journal_file(self.journal / 'call-started.txt', started)
-        journal_file(self.journal / 'after.txt', before)
+        journal_file(self.journal / 'native.txt', native)
+        journal_file(self.journal / 'after.txt', after)
         journal_file(self.journal / 'result.txt', result)
 
 
@@ -142,6 +153,33 @@ class NoScanSupervisorTests(unittest.TestCase):
                 self.assertEqual(names, set(hashes) | {'report-hashes.json'})
                 for name, digest in hashes.items():
                     self.assertEqual(hashlib.sha256(z.read(name)).hexdigest(), digest)
+
+    def test_supervise_allows_system_lazy_image_only(self):
+        with tempfile.TemporaryDirectory(prefix='aehl-noscan-supervisor-') as tmp:
+            f = Fixture(tmp); prepared = f.prepared()
+            system_image = '/System/Library/PrivateFrameworks/SafariPlatformSupport.framework/Versions/A/SafariPlatformSupport'
+            def publish(control, request):
+                f.write_pass(request, after_extra_image=system_image)
+            report = f.base / 'system-lazy.zip'
+            result, archive = mod.supervise(*prepared, 20, identity_fn=f.identity_fn,
+                                            provider_verifier=f.provider_verifier, publish_fn=publish,
+                                            clock=lambda: 0.0, sleep=lambda _: None, report_path=report)
+            self.assertEqual(result['status'], 'PASS')
+            self.assertEqual(result['native']['lazy_system_images'], [system_image])
+            self.assertTrue(archive.is_file())
+
+    def test_supervise_rejects_non_system_image_addition(self):
+        with tempfile.TemporaryDirectory(prefix='aehl-noscan-supervisor-') as tmp:
+            f = Fixture(tmp); prepared = f.prepared()
+            def publish(control, request):
+                f.write_pass(request, after_extra_image='/Users/test/Unexpected.plugin/Contents/MacOS/Unexpected')
+            report = f.base / 'unexpected-image.zip'
+            result, archive = mod.supervise(*prepared, 20, identity_fn=f.identity_fn,
+                                            provider_verifier=f.provider_verifier, publish_fn=publish,
+                                            clock=lambda: 0.0, sleep=lambda _: None, report_path=report)
+            self.assertEqual(result['status'], 'FAIL')
+            self.assertIn('non-system runtime image added', result['reason'])
+            self.assertTrue(archive.is_file())
 
     def test_loaded_process_start_must_match_supervisor_before_publication(self):
         with tempfile.TemporaryDirectory(prefix='aehl-noscan-supervisor-') as tmp:
