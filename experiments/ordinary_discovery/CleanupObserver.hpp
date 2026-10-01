@@ -11,6 +11,7 @@ struct Diagnostic {
     bool success = false;
     std::string failure;
     Snapshot snapshot;
+    Frame global; // PLUG slot bytes for independent diagnostic chain verification
     std::vector<mapped_memory::ReadRecord> reads;
     std::vector<mapped_memory::ReadRecord> containment_only;
     std::size_t calls = 0, bytes = 0;
@@ -55,6 +56,7 @@ public:
                 return address;
             };
             const auto global = read(roots.plug_slot, 8);
+            result.global = {roots.plug_slot, global};
             const auto sack_slot = pointer(Word(global, 0, 8));
             const auto sack = pointer(Word(read(sack_slot, 8), 0, 8));
             const auto list_handle = pointer(Word(read(sack, 24), 16, 8));
