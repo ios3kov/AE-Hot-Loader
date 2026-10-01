@@ -11,7 +11,7 @@ record supersedes its "no-scan bridge not connected" statement.
 - Repository: `ios3kov/AE-Hot-Loader`.
 - Branch: `research/ordinary-plugin-discovery`; never change `main`.
 - Current Stage C code/test head:
-  **`c83ce4bd4726ec2058e5f113ccda1de962a0ec01`**.
+  **`c1e20e4ab4d4a4f6654f67df7dbb224f0790b5be`**.
 - Current status documentation before this save:
   `e3f577ef5781731a2055365f4bef94074d3584b7`.
 - Shared DEVELOPMENT_RULES blob:
@@ -65,10 +65,13 @@ supervisor and the AEGP:
 - mismatch is refused before request publication;
 - the native journal must retain that same start identity.
 
-Exact-head CI for `c83ce4b`:
+The final report ZIP is now self-checked against its archived hash manifest and
+the supervisor prints the final ZIP SHA-256.
 
-- research CI **`36853869703`** — PASS, Linux + macOS;
-- full macOS CI **`36853869976`** — PASS.
+Exact-head CI for `c1e20e4`:
+
+- research CI **`36854509313`** — PASS, Linux + macOS;
+- full macOS CI **`36854509275`** — PASS.
 
 The macOS workflow now watches `experiments/**`, so future Stage C experiment
 changes trigger the full macOS regression.
