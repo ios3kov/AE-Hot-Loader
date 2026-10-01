@@ -3,7 +3,7 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [C1_CLEANUP_REGISTRATION_REVIEW_2026-10-01.md](C1_CLEANUP_REGISTRATION_REVIEW_2026-10-01.md).
+Current continuation: [C1_REPEAT_PREPARATION_REVIEW_2026-10-01.md](C1_REPEAT_PREPARATION_REVIEW_2026-10-01.md).
 The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
@@ -13,15 +13,15 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 - Repository: `ios3kov/AE-Hot-Loader`.
 - Branch: `research/ordinary-plugin-discovery`; never change `main`.
 - Current C1 code/test head:
-  **`bf8a2cca9345df62e50bb69c144f9a2bbc93f34a`**.
+  **`52f4f802f6f3f1641f4109d93491b2e96d8ec3d5`**.
 - Current canonical AE Development Rules source:
-  **`f17c056b292631a0832b894050e204a3ca7bc2dd`**; read AI_ENTRYPOINT first.
+  **`b27f45467e0a9152fc82c1072438dfed07f0c36e`**; read AI_ENTRYPOINT first.
 - Current Stage C no-scan core head:
   **`c1e20e4ab4d4a4f6654f67df7dbb224f0790b5be`**.
 - Current live-launcher code/test head:
   **`3852192406da5af539b9100114393584642e9197`**.
 - Current status documentation before this save:
-  `0e455db981f2c9d32c6ed0a1bcec081f5a8d2efb`.
+  `02a1d975d1970d12311da8d481e7007b3381a854`.
 - Shared DEVELOPMENT_RULES blob:
   `701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`.
 - Stage: **C of A–D**. Ordinary-effect late registration is still NOT fixed.
@@ -204,7 +204,7 @@ root and even with null progress callback. Review the actual cleanup registratio
 and retained-state effects before creating a native resource-call backend.
 An address/signature match does not prove late-call safety.
 
-## Current Stage C1 cleanup checkpoint
+## Previous Stage C1 cleanup checkpoint
 
 Code bf8a2cc adds a separate `--review cleanup` collection: eight complete
 windows / 1390 decoded instructions, matching PLUG/FLT/MEE before/after hashes,
@@ -225,6 +225,30 @@ general-plugin lifecycle, then establish a read-only baseline design for actual
 callback/state eligibility. Do not replay SetupGeneralPluginScan, invoke
 SetdownGeneralPlugins, replace cleanup or forge a sack. C0 remains the recorded
 live PASS; C1 registration/apply/render are NOT RUN.
+
+## Current Stage C1 lifecycle/cleanup-state checkpoint
+
+Code 3e67046 adds bounded lifecycle code/data collection (891 instructions,
+96-byte vtable, confirmed fixup format) and a conservative cleanup-state gate.
+Current code/test head 52f4f80 additionally fixes a reproduced macOS runner
+signal/exit race. Clean current-source local tests: PASS, 270 Python without
+skips, 62 Node, 22 stages. Exact research CI 36925153427 is PASS; full macOS CI
+36925153460 is PASS (build/sign/package and synthetic smoke, no AE). The old 3e67046 macOS research run remains FAIL.
+
+KeepLoaded + already-prepared can return zero and let MEE call the saved
+operation-3 entrypoint again. Repeat safety remains UNKNOWN. The policy requires
+complete observed cleanup state with an exactly approved inventory digest and
+zero retained general-plugin records, checked again before and after the call;
+the journal retains those fields. Synthetic 82 gate / 32 journal cases are
+included within the Python count. There is no real state reader or C1 backend.
+
+LIST.dylib's two bounded getter bodies were inspected without calling them.
+Its new static hash is not a live-profile/resident identity. Continue only
+independent read-only observer preparation, with provider and memory-consistency
+bounds. Actual callback/vector state and third-party repeat behavior block
+native integration. Do not attach/call without a concrete reviewed scoped
+authorization, or replay setup/setdown/unprep to change the baseline.
+C0 remains its recorded PASS; C1 registration/apply/render remain NOT RUN.
 
 ## Next gate — exact order
 

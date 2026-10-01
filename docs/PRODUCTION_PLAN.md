@@ -104,15 +104,17 @@ It does **not** mean ordinary-effect late registration works.
 
 ## Stage C1 — resource-registration experiment
 
-Current offline checkpoint: [C1_CLEANUP_REGISTRATION_REVIEW_2026-10-01.md](C1_CLEANUP_REGISTRATION_REVIEW_2026-10-01.md).
-The collector's cleanup mode reproduces eight complete pinned windows. FLT
-passes null cleanup; MEE registers a callback that traverses shared general-plugin
-state and can prepare/invoke retained procedures. One root or null progress
-does not isolate those effects. Before implementation, review repeated
-PLUG_PrepRoutine behavior and the general-plugin lifecycle, then design a
-read-only baseline for actual callback/state eligibility. Do not replay setup,
-invoke setdown or replace callbacks. No native C1 backend or live request is
-ready yet. The earlier search ABI review is preserved as a separate checkpoint.
+Current offline checkpoint: [C1_REPEAT_PREPARATION_REVIEW_2026-10-01.md](C1_REPEAT_PREPARATION_REVIEW_2026-10-01.md).
+Repeated preparation can return success and let MEE invoke an existing saved
+entrypoint; IsPrepped does not establish repeat safety. The unbound policy now
+requires fresh complete cleanup state, a reviewed inventory digest and zero
+retained general-plugin records, rechecked before the call and at postflight.
+These are necessary restrictions, not proof that any real baseline is eligible.
+Next prepare/review a read-only observer, including LIST provider identity and
+consistent bounded list/vector reads. Actual runtime state and other callback
+effects remain UNKNOWN; dependent native integration is blocked. Do not replay
+setup, invoke setdown/unprep, relax the empty-state restriction or replace
+callbacks. No native C1 backend/live request is ready. Prior records are preserved.
 
 Only after C0 PASS:
 

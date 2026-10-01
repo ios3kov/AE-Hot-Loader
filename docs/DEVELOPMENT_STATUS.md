@@ -4,43 +4,49 @@ Updated: 2026-10-01. Branch: `research/ordinary-plugin-discovery`.
 Stage **C of A–D**; core registration, A/B/D and release gates remain open.
 Current continuation handoff: [CHAT_HANDOFF_2026-10-01_STAGE_C_CURRENT.md](CHAT_HANDOFF_2026-10-01_STAGE_C_CURRENT.md).
 AGENTS.md and PRODUCTION_PLAN apply. Current canonical rules:
-AE-Development-Rules `f17c056b292631a0832b894050e204a3ca7bc2dd`, starting with
+AE-Development-Rules `b27f45467e0a9152fc82c1072438dfed07f0c36e`, starting with
 AI_ENTRYPOINT.md. Older rule/permission/environment statements below belong
 to their named checkpoints and do not supersede this continuation.
 Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
-## Current Stage C1 — cleanup registrations and retained state reviewed offline
+## Current Stage C1 — repeat preparation reviewed; cleanup-state gate hardened
 
-Code/test head: **`bf8a2cca9345df62e50bb69c144f9a2bbc93f34a`**.
-The collector now has a separate bounded `--review cleanup` mode: eight complete
-windows, **1390 decoded instructions**, PLUG/FLT/MEE hashes checked before/after.
-The default search-ABI mode also passed again: **105 + 367 instructions**.
-Real LLDB regression still uses an owned arm64 bundle. Adobe calls = 0.
+Code/test head: **`52f4f802f6f3f1641f4109d93491b2e96d8ec3d5`**.
+Lifecycle collection: seven complete windows / **891 instructions**, one 96-byte
+serialized vtable window and confirmed PLUG fixup format. Collection source is
+3e67046; collector/gate bytes are unchanged at 52f4f80. Cleanup and search modes
+also passed again (1390 and 472 instructions). Owned LLDB code/data regression
+passes. Adobe calls = 0.
 
-FLT's normal registration passes null cleanup. MEE registers a concrete
-PluginCleanupFunc into the default sack. That callback traverses shared
-GeneralPlugin records and can prepare their procedures, invoke saved entrypoints
-and mutate retained state. Null progress and one search root do not isolate
-these effects. Cleanup loops stop on a nonzero callback result.
+PLUG_PrepRoutine's identified KeepLoaded/already-prepared path returns zero;
+MEE can then continue to the saved operation-3 entrypoint. IsPrepped is not a
+demonstrated repeat-call skip guard. Repeat safety for actual general plugins
+remains UNKNOWN. Unprep/teardown is not a permitted workaround.
 
-Next discriminator: PLUG_PrepRoutine's repeated-preparation/error contract and
-the expected general-plugin lifecycle, followed by a read-only baseline design
-for actual callback/state eligibility. The running sack/vector remains
-NOT OBSERVED. No native C1 backend or live candidate is ready. Do not replace
-callbacks, replay setup, invoke setdown or assume idempotence.
+The unbound ResourcePassGate now requires complete fresh cleanup observations,
+an exact reviewed callback-inventory digest and zero retained general-plugin
+records at baseline, immediately before the call and at successful postflight.
+Missing/incomplete/changed state blocks or fails the pass. Journal records retain
+that evidence. Empty state is necessary, not sufficient; no native reader/backend
+is connected. LIST.dylib's layout was separately inspected, but its identity is
+not yet adopted into the live profile. Actual callbacks/vector remain NOT OBSERVED.
 
-Local clean-head macOS regression: **PASS**, 266 Python tests, no skips;
-62 Node tests; 22 unified stages; unchanged source inventory. Exact-code
-research CI **36922542782 — PASS** and full macOS CI
-**36922542905 — PASS**, including build/sign/package/synthetic smoke.
+Local clean-head macOS regression: **PASS**, 270 Python tests, no skips;
+62 Node tests; 22 unified stages; unchanged source inventory. Exact-code research
+CI **36925153427 — PASS**; full macOS CI **36925153460 — PASS**, including build/sign/package and synthetic
+smoke without AE.
+The prior 3e67046 macOS research CI failure remains FAIL: the runner's exit/signal
+race was reproduced and fixed in 52f4f80, retaining output limits and FAIL status.
 These are offline/build gates, not live registration.
 
 Current review, exact evidence, hashes and remaining gate:
-[C1_CLEANUP_REGISTRATION_REVIEW_2026-10-01.md](C1_CLEANUP_REGISTRATION_REVIEW_2026-10-01.md).
-The preceding [search ABI review](C1_RESOURCE_ABI_REVIEW_2026-10-01.md) remains
-a preserved checkpoint.
+[C1_REPEAT_PREPARATION_REVIEW_2026-10-01.md](C1_REPEAT_PREPARATION_REVIEW_2026-10-01.md).
+Earlier ABI/cleanup records remain preserved checkpoints.
+The next prerequisite is a reviewed read-only state observer with complete
+provider identity and consistency bounds. Critical unknown state/behavior blocks
+native C1 integration; independent file-only preparation remains allowed.
 C0 remains the recorded live PASS; C1 registration, apply and render are
 **NOT RUN**. The original user checkout was observed clean at `182d058`;
 development uses a separate working clone of the research branch. The current
