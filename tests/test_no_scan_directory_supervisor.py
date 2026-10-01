@@ -5,6 +5,7 @@ import importlib.util
 import json
 import os
 import stat
+import sys
 import tempfile
 import unittest
 
@@ -58,7 +59,7 @@ class Fixture:
         (self.control / 'ready.txt').chmod(0o600)
         self.manifest = self.base / 'manifest.json'; self.manifest.write_text(json.dumps(self.record, sort_keys=True) + '\n'); self.manifest.chmod(0o600)
         self.manifest_hash = hashlib.sha256(self.manifest.read_bytes()).hexdigest()
-        self.identity = {'pid': 4321, 'executable': str(self.host), 'start': 'owned-start'}
+        self.identity = {'pid': 4321, 'executable': str(self.host), 'start': '123.456'}
         self.providers = {'FILE': '3' * 64, 'U': '4' * 64, 'dvacore': '5' * 64}
 
     def identity_fn(self, pid):
@@ -138,7 +139,7 @@ class NoScanSupervisorTests(unittest.TestCase):
                 self.assertNotIn('manifest.json', names)
                 self.assertNotIn('a' * 32, b''.join(z.read(n) for n in names).decode(errors='ignore'))
 
-    def test_native_process_start_must_match_loaded_aegp_ready_record(self):
+    def test_loaded_process_start_must_match_supervisor_before_publication(self):
         with tempfile.TemporaryDirectory(prefix='aehl-noscan-supervisor-') as tmp:
             f = Fixture(tmp)
             identity = {k: f.record[k] for k in (
@@ -147,17 +148,20 @@ class NoScanSupervisorTests(unittest.TestCase):
                 json.dumps(identity, sort_keys=True) + '\npid=4321\nimage=' +
                 f.record['module_path'] + '\nstart=999.000\n')
             (f.control / 'ready.txt').chmod(0o600)
-            prepared = f.prepared()
-            def publish(control, request):
-                f.write_pass(request)
-            report = f.base / 'start-mismatch.zip'
-            result, archive = mod.supervise(*prepared, 20, identity_fn=f.identity_fn,
-                                            provider_verifier=f.provider_verifier,
-                                            publish_fn=publish, clock=lambda: 0.0,
-                                            sleep=lambda _: None, report_path=report)
-            self.assertEqual(result['status'], 'FAIL')
-            self.assertIn('process-start differs', result['reason'])
-            self.assertTrue(archive.is_file())
+            with self.assertRaisesRegex(
+                    ValueError, 'loaded AEGP process-start differs from supervisor'):
+                f.prepared()
+            self.assertFalse((f.control / 'request.txt').exists())
+            self.assertFalse(any(f.journal.iterdir()))
+
+    @unittest.skipUnless(sys.platform == 'darwin', 'macOS libproc only')
+    def test_real_process_identity_uses_native_start_tuple(self):
+        first = mod.process_identity(os.getpid())
+        second = mod.process_identity(os.getpid())
+        self.assertEqual(first, second)
+        seconds, useconds = first['start'].split('.', 1)
+        self.assertTrue(seconds.isdigit() and useconds.isdigit())
+        self.assertEqual(first['pid'], os.getpid())
 
     def test_package_report_keeps_adapter_stop_evidence(self):
         with tempfile.TemporaryDirectory(prefix='aehl-noscan-supervisor-') as tmp:
