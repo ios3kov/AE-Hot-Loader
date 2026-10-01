@@ -2,15 +2,16 @@
 
 Updated: 2026-10-01. Branch: `research/ordinary-plugin-discovery`.
 Stage **C of A–D**; core registration, A/B/D and release gates remain open.
+Current continuation handoff: [CHAT_HANDOFF_2026-10-01_STAGE_C_CURRENT.md](CHAT_HANDOFF_2026-10-01_STAGE_C_CURRENT.md).
 AGENTS.md and PRODUCTION_PLAN apply. Shared rules rechecked unchanged:
 `701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`.
 Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
-## Current Stage C checkpoint — supervisor/native start identity unified; CI green
+## Current Stage C checkpoint — identity + final ZIP evidence hardened; CI green
 
-Current Stage C code/test head is **`c83ce4bd4726ec2058e5f113ccda1de962a0ec01`**.
+Current Stage C code/test head is **`c1e20e4ab4d4a4f6654f67df7dbb224f0790b5be`**.
 The external no-scan supervisor now reads the process start tuple through macOS
 `proc_pidinfo(PROC_PIDTBSDINFO)`, matching the exact `sec.usec` identity written
 by the AEGP. Preparation refuses a loaded-helper start identity that differs from
@@ -19,8 +20,12 @@ journal must still match that same AEGP start identity. A real macOS self-proces
 regression covers the libproc representation; Linux records that case as an
 explicit platform skip.
 
-Exact-head research CI **`36853869703`** completed successfully on Linux and
-macOS. Exact-head full macOS CI **`36853869976`** also completed successfully,
+The no-scan report packager now also verifies the final ZIP inventory and every
+archived payload against `report-hashes.json`, then prints the final report
+SHA-256. The request/token is still excluded from the report ZIP.
+
+Exact-head research CI **`36854509313`** completed successfully on Linux and
+macOS. Exact-head full macOS CI **`36854509275`** also completed successfully,
 including the Python/Node/no-scan regressions, existing product build/sign/package
 and smoke gates. These are still offline/build evidence only; no private Adobe
 function was executed by CI and no live AE registration result changed.
