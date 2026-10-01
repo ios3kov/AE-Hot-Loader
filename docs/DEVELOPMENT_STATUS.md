@@ -8,6 +8,12 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
+## Current branch head — timeout contract hardened; CI green; live host still NOT RUN
+
+Remote branch head is **`0e63156cbbbd3b1ec1c37ca6d8701af1cd5ed7e9`**. Four commits after `763c6e7` hardened the one-shot supervisor deadline: the native directory call remains bounded at 15000 ms, the external supervisor must allow at least a 5000 ms margin, and shorter timeouts are rejected before request publication. The final test-only adjustment aligns the PASS fixture with that reviewed floor. No plug-in scan or registration call was added.
+
+Exact-head CI is green: research run **`36835180596`** and full macOS run **`36835180654`** both completed successfully. These remain offline/build evidence only; dedicated SDK build on the user's Mac, local checkout identity, current AE/PID/project/module baseline, private FILE call, provider-reference retention and real folder lifecycle are still **NOT RUN / NOT OBSERVED** here. No installation, restart, live Adobe call, merge, release or `main` change was performed.
+
 ## Post-checkpoint result — no-scan bridge connected in source; live host still NOT RUN
 
 The separate inert-by-default no-scan AEGP and external one-shot supervisor are now
