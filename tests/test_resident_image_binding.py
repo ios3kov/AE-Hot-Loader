@@ -105,6 +105,11 @@ class ResidentBindingTests(unittest.TestCase):
                                '--profile', str(frameworks), str(directory)])
         self.assertIn(b'BOUND DIRECTORY own 3-provider create/roundtrip/release PASS', output)
         print(output.decode().strip())
+        output = self.command([str(self.binary), str(paths[0]), '_FILE_Dispose',
+                               '--retained-profile', str(frameworks), str(directory)])
+        self.assertIn(b'NOLOAD lifetime and one-shot/consent/environment/hash guards PASS', output)
+        self.assertIn(b'BOUND DIRECTORY own 3-provider create/roundtrip/release PASS', output)
+        print(output.decode().strip())
 
 
 if __name__ == '__main__':

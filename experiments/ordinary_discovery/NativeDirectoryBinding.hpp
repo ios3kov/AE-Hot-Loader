@@ -1,6 +1,8 @@
 // Research-only concrete binding seam; no entrypoint, auto-run or scan operation.
 // A profile MUST come from the reviewed immutable build, never request data.
-// Actual U/dvacore implementation review and their pins are still outstanding.
+// Supplied U/dvacore contracts/pins are recorded in AE256DirectoryProfile.hpp.
+// Raw Bind is a point-in-time check. Use the separately authorized retained
+// session before a future host call; no actual AE probe is connected here.
 #pragma once
 #include "DirectorySpecAdapter.hpp"
 #include "ResidentImageBinding.hpp"

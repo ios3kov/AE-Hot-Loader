@@ -1,6 +1,7 @@
 // Parser and resident-address checks. Never loads or executes an Adobe image.
 #include "../experiments/ordinary_discovery/ResidentImageBinding.hpp"
 #include "../experiments/ordinary_discovery/NativeDirectoryBinding.hpp"
+#include "../experiments/ordinary_discovery/ResidentDirectorySession.hpp"
 #include <fstream>
 #include <iostream>
 #include <iterator>
@@ -29,6 +30,9 @@ int main(int argc, char** argv) {
         catch (const std::exception&) { null_blocked = true; }
         Require(null_blocked);
         const auto bytes = Read(argv[1]); const std::string symbol = argv[2];
+        Require(ae256_directory::kFile[0] == 0xdf && ae256_directory::kFile[31] == 0x64 &&
+                ae256_directory::kUtility[0] == 0xae && ae256_directory::kUtility[31] == 0xaa &&
+                ae256_directory::kCore[0] == 0xcb && ae256_directory::kCore[31] == 0xb0);
         auto image = Parse(bytes, {symbol}); Require(image.exports.size() == 1);
         Fail(Bytes{}, {symbol}); Fail(bytes, {symbol, symbol}); Fail(bytes, {"_AEHL_NOT_PRESENT"});
         auto bad = bytes; bad[image.slice + 4] = 0; Fail(bad, {symbol});
@@ -44,23 +48,64 @@ int main(int argc, char** argv) {
             std::cout << "FILE four named exports agree; Adobe calls=0\n"; return 0;
         }
 #if defined(__APPLE__) && defined(__aarch64__) && !defined(__arm64e__)
-        if (argc == 6 && std::string(argv[3]) == "--profile") {
+        if (argc == 6 && (std::string(argv[3]) == "--profile" ||
+                         std::string(argv[3]) == "--retained-profile")) {
             const std::string root = argv[4];
             const std::array<std::string, 3> paths{root + "/FILE.dylib", root + "/U.dylib",
                 root + "/dvacore.framework/Versions/A/dvacore"};
             native_directory::Profile profile{root, Hash(Read(paths[0].c_str())),
                 Hash(Read(paths[1].c_str())), Hash(Read(paths[2].c_str()))};
             std::array<void*, 3> handles{};
+            if (std::string(argv[3]) == "--retained-profile") {
+                const auto absent_before = Snapshot();
+                bool rejected = false;
+                try { (void)native_directory::BindRetainedOnce(profile, true); }
+                catch (const std::exception&) { rejected = true; }
+                Require(rejected && native_directory::RetainedDirectoryReferences() == 0 &&
+                        absent_before == Snapshot());
+            }
             for (std::size_t i = 0; i < paths.size(); ++i) {
                 handles[i] = dlopen(paths[i].c_str(), RTLD_NOW | RTLD_LOCAL); Require(handles[i]);
             }
             const auto before = Snapshot();
-            const auto table = native_directory::Bind(profile);
+            const bool retain = std::string(argv[3]) == "--retained-profile";
+            if (retain) {
+                bool rejected = false;
+                try { (void)native_directory::BindRetainedOnce(profile); }
+                catch (const std::exception&) { rejected = true; }
+                Require(rejected && native_directory::RetainedDirectoryReferences() == 0);
+                Require(::setenv("DYLD_AEHL_OWNED_TEST", "1", 1) == 0);
+                rejected = false;
+                try { (void)native_directory::BindRetainedOnce(profile, true); }
+                catch (const std::exception&) { rejected = true; }
+                Require(::unsetenv("DYLD_AEHL_OWNED_TEST") == 0);
+                Require(rejected && native_directory::RetainedDirectoryReferences() == 0);
+                auto bad = profile; bad.utility[0] ^= 1;
+                rejected = false;
+                try { (void)native_directory::BindRetainedOnce(bad, true); }
+                catch (const std::exception&) { rejected = true; }
+                Require(rejected && native_directory::RetainedDirectoryReferences() == 0);
+            }
+            const auto table = retain ? native_directory::BindRetainedOnce(profile, true)
+                                      : native_directory::Bind(profile);
+            if (retain) {
+                Require(native_directory::RetainedDirectoryReferences() == 3);
+                // Drop the TEST's original references. The new NOLOAD references
+                // must keep all three owned producers alive for the call below.
+                for (auto& handle : handles) { Require(dlclose(handle) == 0); handle = nullptr; }
+                Require(before == Snapshot());
+                bool rejected = false;
+                try { (void)native_directory::BindRetainedOnce(profile, true); }
+                catch (const std::exception&) { rejected = true; }
+                Require(rejected && native_directory::RetainedDirectoryReferences() == 3);
+            }
             const auto result = directory_spec::CreateRoundtripRelease(table, argv[5]);
             Require(result.completed && result.cleanup_ok && result.strings_created == 2 &&
                 result.string_release_attempts == 2 && result.specs_created == 1 && result.spec_release_attempts == 1);
             Require(before == Snapshot());
-            for (auto i = handles.rbegin(); i != handles.rend(); ++i) Require(dlclose(*i) == 0);
+            for (auto i = handles.rbegin(); i != handles.rend(); ++i)
+                if (*i) Require(dlclose(*i) == 0);
+            if (retain) std::cout << "NOLOAD lifetime and one-shot/consent/environment/hash guards PASS; retained=3 until process exit\n";
             std::cout << "BOUND DIRECTORY own 3-provider create/roundtrip/release PASS; Adobe calls=0\n";
         }
         if (argc == 4 && std::string(argv[3]) == "--resident") {
