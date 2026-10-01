@@ -123,6 +123,41 @@ installation / one AE launch if required, private FILE call and provider-referen
 retention. That approval is scoped only to the folder create → path roundtrip →
 single release gate and does not extend to later plug-in registration.
 
+## First live no-scan attempt
+
+The first authorized live request is now consumed.
+
+Preserved result:
+
+- source `161b180714a734baf71f8c8cb58440e73f8dcd23`;
+- build `noscan-f0aa4a3bd54a`;
+- report SHA-256
+  `727a65d7ba64be8371c40025a4fc2196785216cc77299941d0978a71eb0cff5a`;
+- final status **FAIL**, stage `postflight`;
+- effect registry stayed 785;
+- PID/start/project revision stayed unchanged;
+- only new runtime image was Apple
+  `SafariPlatformSupport.framework` under `/System/Library/`.
+
+The old format lacked durable native lifecycle counters before postflight, so
+the FILE roundtrip itself is not promoted to PASS.
+
+Remediation code head:
+**`dadd884b4758a351fbc725969ed49d2f9a912781`**.
+
+Exact-head CI:
+
+- research `36857286317` — PASS;
+- full macOS `36857286194` — PASS.
+
+The new gate persists `native.txt` before postflight and tolerates only new
+`/System/Library/` images while requiring all pre-existing images to remain
+exact. New Adobe/user/plug-in images still fail.
+
+A second live no-scan request requires fresh authorization. General
+"continue" instructions do not authorize that retry.
+
+
 ## Next gate — exact order
 
 1. Reconcile the user's local checkout
