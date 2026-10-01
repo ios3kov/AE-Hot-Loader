@@ -348,6 +348,13 @@ def package_report(record, control, journal, destination):
     os.chmod(destination, 0o600)
     with zipfile.ZipFile(destination) as check:
         require(check.testzip() is None, 'report ZIP integrity failed')
+        require(set(check.namelist()) == set(hashes) | {'report-hashes.json'},
+                'report ZIP inventory mismatch')
+        archived_hashes = json.loads(check.read('report-hashes.json'))
+        require(archived_hashes == hashes, 'report ZIP hash manifest mismatch')
+        for name, digest in hashes.items():
+            require(hashlib.sha256(check.read(name)).hexdigest() == digest,
+                    'report ZIP payload hash mismatch')
     return destination
 
 
@@ -427,6 +434,7 @@ def main():
     result, archive = supervise(*prepared, args.timeout)
     print(json.dumps(result, indent=2, sort_keys=True))
     print('Report: ' + str(archive))
+    print('Report SHA-256: ' + sha(archive))
     raise SystemExit(0 if result['status'] == 'PASS' else 1)
 
 
