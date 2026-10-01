@@ -31,8 +31,9 @@ effect being loaded.
 | Scoped embedded late registration | **FAIL**: source `45de0c9`, Build ID `scoped-0b8c8f122e80`; 785 unchanged effect identities |
 | RSMB startup-registered apply/render | **PASS**, separate startup baseline |
 | RSMB late registration | **FAIL**, separate historical result |
-| Current live no-scan folder lifecycle | **NOT RUN** |
-| Current AE/PID/project/loaded helper | **NOT OBSERVED** |
+| First live no-scan folder lifecycle | **FAIL** at strict postflight image equality; preserved separately |
+| Second live no-scan folder lifecycle | **PASS**: source `182d058`, build `noscan-8f9cb9fea71c` |
+| Ordinary-effect late registration | **NOT RUN again**; historical FAIL unchanged |
 
 Do not merge these results or relabel startup success as late-registration
 success.
@@ -156,6 +157,31 @@ exact. New Adobe/user/plug-in images still fail.
 
 A second live no-scan request requires fresh authorization. General
 "continue" instructions do not authorize that retry.
+
+
+## Second live no-scan attempt — PASS
+
+The second authorized no-scan request closed Stage C0.
+
+- source: `182d058254203236414602acdd9901b8749d89cc`;
+- build: `noscan-8f9cb9fea71c`;
+- run: `directory-probe-d097765fede949f5b9958b2897687df2`;
+- report SHA-256:
+  `f767e891359a3e73dc41eefe4124fe63dc0cf4dde123c2d7efa7444cd35bc62a`;
+- final status: **PASS**;
+- native counts: strings 2/2, spec 1/1, retained refs 3;
+- registry: 785 before/after;
+- runtime images: 1402 before/after;
+- project revision: 1 before/after;
+- plug-in scan requested: false.
+
+The uploaded ZIP and all inner hashes were independently verified.
+
+**Stage C0 = PASS.** Do not repeat the no-scan run.
+
+Next work is Stage C1 offline review/preparation of the single-root
+resource-registration experiment. Any live resource-registration/private PLUG
+operation needs fresh authorization; the second no-scan approval is consumed.
 
 
 ## Next gate — exact order
