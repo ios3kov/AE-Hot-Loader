@@ -46,7 +46,15 @@ malformed counts/strides/pointers, missing roots and consumed-attempt refusals P
 ASan/UBSan synthetic and actual owned resident chain runs PASS without diagnostics.
 Code-profile scanner completed; only the known artifact_manifest.py:71 local
 argparse false positive remains (exit 1 / review_required, not release approval).
-Full clean-source regression and exact CI NOT RUN before code checkpoint.
+Exact code/test source **1a4201c46202588a53aee25ea8d0ec1dd7dad079**.
+Full clean-source local regression PASS: 290 Python without skips, 62 Node,
+22 stages, unchanged inventory. Run 8d6a728493b9461bb82baa4649be2917; private
+AEHL-checks-_fgikz72.zip SHA-256
+`03513f9fb16bc44fb916c12b335f8fa3336ac159248dddf6046eec62df664e86`.
+Exact ZIP inventory and all 24 payload hashes independently verified.
+Research CI **36929802910 — PASS**; full macOS CI **36929802970 — PASS**.
+Clean-source code scanner inventoried 258 supported files with no omissions;
+sole known argparse candidate, exit 1/review_required retained.
 At most 20 copies (24-reader limit), 12688 bytes for 256 callbacks (16384 limit),
 4096-byte chunk limit; retained record containment adds two mapping queries only.
 No AE memory read/private call/install/launch or ResourcePassGate integration.

@@ -3,7 +3,7 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [C1_MAPPED_MEMORY_READ_REVIEW_2026-10-01.md](C1_MAPPED_MEMORY_READ_REVIEW_2026-10-01.md).
+Current continuation: [C1_CLEANUP_OBSERVER_REVIEW_2026-10-01.md](C1_CLEANUP_OBSERVER_REVIEW_2026-10-01.md).
 The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
@@ -13,7 +13,7 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 - Repository: `ios3kov/AE-Hot-Loader`.
 - Branch: `research/ordinary-plugin-discovery`; never change `main`.
 - Current C1 code/test head:
-  **`6c666ca6877baac7d56717be4f9d9ec22a982cea`**.
+  **`1a4201c46202588a53aee25ea8d0ec1dd7dad079`**.
 - Current canonical AE Development Rules source:
   **`b27f45467e0a9152fc82c1072438dfed07f0c36e`**; read AI_ENTRYPOINT first.
 - Current Stage C no-scan core head:
@@ -21,7 +21,7 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 - Current live-launcher code/test head:
   **`3852192406da5af539b9100114393584642e9197`**.
 - Current status documentation before this save:
-  `09b3f7d`.
+  `aa4d8ba`.
 - Shared DEVELOPMENT_RULES blob:
   `701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`.
 - Stage: **C of A–D**. Ordinary-effect late registration is still NOT fixed.
@@ -311,6 +311,20 @@ inert candidate with external supervision before scoped live authorization.
 No AE roots read, provider retained or native resource pass invoked. Mapping
 identity/byte equality is not complete cleanup, allocator ownership or eligibility.
 Continue autonomously with stage statuses; C1 registration/apply/render NOT RUN.
+
+## Current Stage C1 observer checkpoint
+
+Code 1a4201c composes a consumed-on-attempt diagnostic bootstrap/capture with
+exact resident identities and clipped mapped reads. Bootstrap/capture/global/
+record mapping changes refuse; nonzero records remain diagnostics, never gate
+eligibility. Synthetic 27 cases and actual owned two-provider chain + sanitizers
+PASS. Full clean local 290 Python/no skips, 62 Node, 22 stages and both exact
+CI 36929802910/36929802970 PASS. Private ZIP manifest/inventory verified.
+Next separate inert diagnostic AEGP, one-shot journal/supervisor and exact SDK
+build/sign/hash/inert checks before scoped live operation. No real AE root read,
+callback invocation, retained provider or native registration backend. Preserve
+NOT OBSERVED/NOT RUN for current live registration/apply/render; C0 remains PASS.
+Continue independent work without milestone stops as explicitly requested.
 
 ## Next gate — exact order
 

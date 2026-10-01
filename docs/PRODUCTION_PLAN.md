@@ -104,7 +104,7 @@ It does **not** mean ordinary-effect late registration works.
 
 ## Stage C1 — resource-registration experiment
 
-Current offline checkpoint: [C1_MAPPED_MEMORY_READ_REVIEW_2026-10-01.md](C1_MAPPED_MEMORY_READ_REVIEW_2026-10-01.md).
+Current offline checkpoint: [C1_CLEANUP_OBSERVER_REVIEW_2026-10-01.md](C1_CLEANUP_OBSERVER_REVIEW_2026-10-01.md).
 The isolated sampler captures ordered callback pairs and retained record count
 within caller-supplied regions, comparing two bounded captures without calls or
 retries. It does not create a complete observation or connect the C1 backend.
@@ -114,8 +114,9 @@ Static root provenance is verified in exact pinned PLUG/MEE zero-fill sections;
 PLUG requires slot → handle → sack, not direct slot → sack. Resident root binding
 is now verified on owned data and is only a point-in-time identity/address check.
 Current-process mapped-range reads now pass owned-page/boundary/mutation checks
-and exact clean-source CI. Next bounded diagnostic observer composition and
-concrete candidate preparation; heap ownership and host lifetime/quiescence remain unresolved. Repeat preparation can still invoke saved entrypoints;
+and exact clean-source CI. One-shot diagnostic observer composition now passes synthetic and actual owned
+provider/heap-chain checks and exact CI. Next concrete inert diagnostic AEGP/
+supervisor candidate preparation; heap ownership and host lifetime/quiescence remain unresolved. Repeat preparation can still invoke saved entrypoints;
 the ResourcePassGate must continue requiring complete reviewed cleanup state
 and zero retained general-plugin records. These are necessary restrictions,
 not proof that a real baseline is eligible. Actual state/other callback effects

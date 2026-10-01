@@ -11,27 +11,28 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
-## Current Stage C1 — bounded mapped reader verified
+## Current Stage C1 — one-shot diagnostic observer verified on owned data
 
-Code/test head: **`6c666ca6877baac7d56717be4f9d9ec22a982cea`**.
-Current-process mapped reader validates exact non-executable readable span and
-compares mapping metadata before/after every copy. Fixed budgets, exact bytes,
-no retry and permanent refusal after failure. Verified against 29 nested cases,
-owned pages/guard/cross-boundary/address/thread refusals and sanitizers.
+Code/test head: **`1a4201c46202588a53aee25ea8d0ec1dd7dad079`**.
+Observer composes resident root binding, bounded mapped reads, clipped bootstrap
+spans and two matching captures. Bootstrap and final global/mapping checks detect
+changes across the observation; any failed attempt is consumed. Callback order/
+values and retained record count are diagnostic only; no callbacks invoked or
+record bodies copied. No complete/observed/approval or gate conversion exists.
 
-Clean full local PASS: 288 Python without skips, 62 Node, 22 stages; inventory
-unchanged. Research CI **36929256787 — PASS**; full macOS CI **36929256802 — PASS**.
-Evidence: [C1_MAPPED_MEMORY_READ_REVIEW_2026-10-01.md](C1_MAPPED_MEMORY_READ_REVIEW_2026-10-01.md).
-Resident roots remain point-in-time binding only; mapping metadata is not
-allocator ownership, lifetime, atomicity or a complete cleanup observation.
+Focused synthetic/actual two-owned-provider chain, absence/thread/malformed state
+and sanitizer checks PASS. Clean full local PASS: 290 Python without skips,
+62 Node, 22 stages; inventory unchanged. Research CI **36929802910 — PASS**;
+full macOS CI **36929802970 — PASS**. Evidence:
+[C1_CLEANUP_OBSERVER_REVIEW_2026-10-01.md](C1_CLEANUP_OBSERVER_REVIEW_2026-10-01.md).
 
-Next compose the bounded diagnostic observer on owned data, then prepare an
-exact inert candidate and independent supervision. No real AE roots read, no
-private call or provider retain. Critical host state/repeat behavior still blocks
-resource integration; C1 registration/apply/render NOT RUN. C0 recorded PASS.
-Continue independent authorized development and stage reports per the user's
-latest instruction. Original checkout/main/install/launch/private-call/release
-boundaries remain preserved.
+Next prepare separate inert diagnostic AEGP, durable journal and independent
+one-shot supervisor; build/sign/hash/inert-test an exact candidate before live
+operation. Actual AE roots and current host remain NOT OBSERVED. Lifetime/
+quiescence/repeat behavior blocks resource integration; C1 registration/apply/
+render NOT RUN. C0 recorded PASS. Continue all independent authorized work and
+stage reports per latest instruction; original checkout/main/private-call/
+install/launch/release boundaries remain preserved.
 
 ## Second live no-scan result — PASS; Stage C0 closed
 
