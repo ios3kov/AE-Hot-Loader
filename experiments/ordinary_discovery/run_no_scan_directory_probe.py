@@ -47,6 +47,36 @@ def sha(path):
     return hashlib.sha256(read(path, 256 * 1024 * 1024)).hexdigest()
 
 
+def trusted_binary_stat(info):
+    return (stat.S_ISREG(info.st_mode) and info.st_uid in (0, os.getuid()) and
+            info.st_nlink == 1 and not (info.st_mode & (stat.S_IWGRP | stat.S_IWOTH)))
+
+
+def read_trusted_binary(path, limit=256 * 1024 * 1024):
+    path = Path(path)
+    no_links(path)
+    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    try:
+        before = os.fstat(fd)
+        require(trusted_binary_stat(before) and 0 <= before.st_size <= limit,
+                'invalid trusted binary')
+        with os.fdopen(fd, 'rb', closefd=False) as stream:
+            data = stream.read(limit + 1)
+        after = os.fstat(fd)
+        require(len(data) == before.st_size and
+                (before.st_dev, before.st_ino, before.st_uid, before.st_mode,
+                 before.st_nlink, before.st_size) ==
+                (after.st_dev, after.st_ino, after.st_uid, after.st_mode,
+                 after.st_nlink, after.st_size), 'trusted binary changed during read')
+        return data
+    finally:
+        os.close(fd)
+
+
+def sha_trusted_binary(path):
+    return hashlib.sha256(read_trusted_binary(path)).hexdigest()
+
+
 def private_directory(path, empty=False):
     path = Path(path)
     no_links(path)
@@ -92,7 +122,7 @@ def verify_providers(record):
         root / 'dvacore.framework/Versions/A/dvacore': profile['dvacore_sha256'],
     }
     for path, digest in expected.items():
-        require(sha(path) == digest, 'provider bytes differ from reviewed profile')
+        require(sha_trusted_binary(path) == digest, 'provider bytes differ from reviewed profile')
     return {str(path): digest for path, digest in expected.items()}
 
 

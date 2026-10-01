@@ -4,6 +4,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import stat
 import tempfile
 import unittest
 
@@ -98,6 +99,12 @@ class Fixture:
 
 
 class NoScanSupervisorTests(unittest.TestCase):
+    def test_trusted_provider_policy_allows_root_readonly_but_not_writable(self):
+        readonly = os.stat_result((stat.S_IFREG | 0o755, 1, 1, 1, 0, 0, 1, 0, 0, 0))
+        writable = os.stat_result((stat.S_IFREG | 0o777, 1, 1, 1, 0, 0, 1, 0, 0, 0))
+        self.assertTrue(mod.trusted_binary_stat(readonly))
+        self.assertFalse(mod.trusted_binary_stat(writable))
+
     def test_prepare_is_read_only_and_binds_exact_request(self):
         with tempfile.TemporaryDirectory(prefix='aehl-noscan-supervisor-') as tmp:
             f = Fixture(tmp)
