@@ -122,7 +122,7 @@ class NoScanSupervisorTests(unittest.TestCase):
             def publish(control, request):
                 self.assertEqual(control, f.control); f.write_pass(request)
             report = f.base / 'one-report.zip'
-            result, archive = mod.supervise(*prepared, 5, identity_fn=f.identity_fn,
+            result, archive = mod.supervise(*prepared, 20, identity_fn=f.identity_fn,
                                             provider_verifier=f.provider_verifier, publish_fn=publish,
                                             clock=lambda: 0.0, sleep=lambda _: None, report_path=report)
             self.assertEqual(result['status'], 'PASS')
