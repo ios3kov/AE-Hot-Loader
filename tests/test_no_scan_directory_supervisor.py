@@ -138,6 +138,10 @@ class NoScanSupervisorTests(unittest.TestCase):
                 self.assertNotIn('request.txt', names)
                 self.assertNotIn('manifest.json', names)
                 self.assertNotIn('a' * 32, b''.join(z.read(n) for n in names).decode(errors='ignore'))
+                hashes = json.loads(z.read('report-hashes.json'))
+                self.assertEqual(names, set(hashes) | {'report-hashes.json'})
+                for name, digest in hashes.items():
+                    self.assertEqual(hashlib.sha256(z.read(name)).hexdigest(), digest)
 
     def test_loaded_process_start_must_match_supervisor_before_publication(self):
         with tempfile.TemporaryDirectory(prefix='aehl-noscan-supervisor-') as tmp:
