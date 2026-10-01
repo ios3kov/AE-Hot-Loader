@@ -15,7 +15,7 @@ static Plan TestPlan() {
     p.executable = "/owned/host/After Effects";
     p.root = "/owned/fresh/scan-root";
     p.match = "AEHL.Embedded.123456789abc";
-    for (const auto& key : {"AfterEffects", "FILE", "FLT", "MEE", "PLUG", "PluginSupport", "aelib"})
+    for (const auto& key : {"AfterEffects", "FILE", "U", "dvacore", "FLT", "MEE", "PLUG", "PluginSupport", "aelib"})
         p.images[key] = std::string(64, '5');
     return p;
 }
@@ -106,6 +106,8 @@ int main() {
         {"different-approved-source", [](Model& m) { m.a.scope.source_commit[0] = '1'; }},
         {"different-approved-deadline", [](Model& m) { ++m.a.scope.timeout_ms; }},
         {"missing-file-image-pin", [](Model& m) { m.p.images.erase("FILE"); }},
+        {"missing-utility-image-pin", [](Model& m) { m.p.images.erase("U"); }},
+        {"missing-dvacore-image-pin", [](Model& m) { m.p.images.erase("dvacore"); }},
         {"malformed-image-pin", [](Model& m) { m.p.images["FILE"] = "unknown"; }},
         {"traversal-root", [](Model& m) { m.p.root = "/owned/../scan-root"; }},
         {"shared-root", [](Model& m) { m.p.root = "/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore"; }},
