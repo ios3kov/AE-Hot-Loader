@@ -8,9 +8,29 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
-## Current branch head — timeout contract hardened; CI green; live host still NOT RUN
+## Current code head — native/supervisor process identity cross-bound; CI green
 
-Remote branch head is **`0e63156cbbbd3b1ec1c37ca6d8701af1cd5ed7e9`**. Four commits after `763c6e7` hardened the one-shot supervisor deadline: the native directory call remains bounded at 15000 ms, the external supervisor must allow at least a 5000 ms margin, and shorter timeouts are rejected before request publication. The final test-only adjustment aligns the PASS fixture with that reviewed floor. No plug-in scan or registration call was added.
+Current code head is **`a0d08f46c45c56b2695b82d2ff71d7e5da08a6c1`**. The existing
+no-scan folder-object gate now writes the native process start identity into
+`ready.txt`, and the external supervisor requires the later native journal to
+contain that exact same start identity. PID equality alone can no longer satisfy
+the cross-process evidence check. A negative owned-fixture test proves that a
+mismatched start identity fails the run and still preserves the one ZIP report.
+
+This is a hardening of the already connected no-scan gate, not a new Adobe call,
+plug-in scan or registration path. The change adds no private API, no provider
+load, no installation and no restart.
+
+Exact-head research CI **`36842766751`** completed successfully. Exact-head full
+macOS CI **`36842766786`** also completed successfully for the same code head.
+The macOS product pipeline remained synthetic/build-only; its packaged panel
+regression reported 51/51 Node tests. Live AE, private FILE execution, retained
+Adobe provider references, dedicated user-Mac SDK candidate build and the real
+folder lifecycle remain **NOT RUN / NOT OBSERVED** here.
+
+## Previous code checkpoint — timeout contract hardened; CI green; live host still NOT RUN
+
+Previous code head was **`0e63156cbbbd3b1ec1c37ca6d8701af1cd5ed7e9`**. Four commits after `763c6e7` hardened the one-shot supervisor deadline: the native directory call remains bounded at 15000 ms, the external supervisor must allow at least a 5000 ms margin, and shorter timeouts are rejected before request publication. The final test-only adjustment aligns the PASS fixture with that reviewed floor. No plug-in scan or registration call was added.
 
 Exact-head CI is green: research run **`36835180596`** and full macOS run **`36835180654`** both completed successfully. These remain offline/build evidence only; dedicated SDK build on the user's Mac, local checkout identity, current AE/PID/project/module baseline, private FILE call, provider-reference retention and real folder lifecycle are still **NOT RUN / NOT OBSERVED** here. No installation, restart, live Adobe call, merge, release or `main` change was performed.
 
