@@ -8,7 +8,46 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
-## Continuation checkpoint — 2026-10-01
+## Post-checkpoint result — no-scan bridge connected in source; live host still NOT RUN
+
+The separate inert-by-default no-scan AEGP and external one-shot supervisor are now
+connected in source. The implementation was introduced at `422abba40644216ae9076ed4f148172ae9fe72c0`;
+macOS CI then exposed test-fixture paths traversing the platform `/tmp`/`/var`
+symlinks. Production path guards were not weakened. The fixtures were canonicalized
+at `bdbb98940f8daab64332ec517ef0052e5793775d`, and the current code was hardened at
+**`763c6e7e2fa73ef58fa38353c9ac41b21f26b02c`** so a clean checkout can create the
+build parent and `adapter-stopped.txt` is retained in the single failure ZIP.
+
+The AEGP has no plug-in scan/registration call in this probe path. Without the exact
+startup token, exact host/module identity and private owned directories it returns
+inert. After a separately published exact one-shot request, the native operation is
+limited to one newly owned directory object, exact path roundtrip and one release.
+The supervisor publishes at most one request, never retries an uncertain native
+outcome, and packages one sanitized report ZIP. These are source/offline properties;
+they do not prove execution inside After Effects.
+
+Research CI **`36833660016`** passed on Linux and macOS. Full macOS CI
+**`36833660022`** passed for exact code `763c6e7`: Python 243 tests, no-scan gate
+11 cases, owned directory 28/28, resource gate 63, resource journal 32 and existing
+scoped guards 15; product build/sign/package/smoke/archive checks also completed.
+The dedicated no-scan AEGP SDK build and any live AE call were **NOT RUN** by these
+workflows. Green CI therefore remains offline evidence only.
+
+The user's Mac checkout and current AE/PID/project/resident-module state are still
+**NOT OBSERVED** in this chat; the previously reported local `ce5d80d` state has not
+been confirmed or updated here. No installation, AE launch/restart, private Adobe
+call, provider-reference retention in AE, project/preferences change, third-party
+plug-in change, merge, release or `main` change was performed.
+
+Fresh live authorization is still required for the private FILE call and retaining
+three already-loaded provider references until process exit. Previous install/restart
+permission remains consumed. The first live gate remains folder lifecycle only;
+`PLUG_Search` and ordinary-effect registration are explicitly outside that run.
+
+## Historical continuation checkpoint — 2026-10-01
+
+This records the state saved at checkpoint `90c257c`; the post-checkpoint section
+above is the current continuation state.
 
 [CHAT_HANDOFF_2026-10-01.md](CHAT_HANDOFF_2026-10-01.md) is the restart point for
 the next chat. It preserves the exact code/CI identity, historical AE outcomes,
@@ -50,7 +89,26 @@ This proves the tested owned-provider behavior, not execution of FILE/U/dvacore.
 [Exact input identities, static findings, lifetime tradeoff, checks and limits](U_DVACORE_CONTRACT_2026-10-01.md).
 U/dvacore implementation availability is no longer the current blocker.
 
-## Checks for exact code 9ea7bcf
+## Checks for exact code 763c6e7
+
+| Check | Result and scope |
+|---|---|
+| Research CI 36833660016 | PASS, Linux + macOS; unified offline result explicitly says full AE pipeline BLOCKED |
+| Full product macOS CI 36833660022 | PASS; Python 243, no-scan gate 11, owned directory 28/28, resource gate 63, resource journal 32, scoped guards 15 |
+| No-scan source integration | PRESENT: inert entry, one-shot journal/supervisor, one ZIP, no plug-in scan in this probe path |
+| Dedicated no-scan AEGP SDK build | NOT RUN in the cited workflows |
+| Real AE folder-object lifecycle | NOT RUN; private FILE/provider-retention authorization still required |
+| Ordinary-effect late registration/apply-render | NOT RUN; historical registration FAIL unchanged |
+| User Mac checkout / current AE state | NOT OBSERVED in this chat |
+| Full static-security audit | NOT RUN again; five historical findings remain open |
+
+Commit `422abba` initially failed macOS automation only because new security tests
+used temporary paths whose parents are symlinks on macOS. The code now canonicalizes
+only those owned test fixtures; the production no-symlink checks remain strict.
+Commit `763c6e7` additionally fixes clean-build parent creation and preserves the
+AEGP stop marker in failure reports. No live Adobe evidence is inferred from CI.
+
+## Preserved checks for exact code 9ea7bcf
 
 | Check | Result and scope |
 |---|---|
@@ -75,10 +133,16 @@ warnings. Docs use [skip ci]; CI belongs to the exact code commit above.
 
 ## Next concrete integration gate
 
-Connect the reviewed binding/retention, directory adapter and durable journal
-to a separate inert-by-default no-scan AEGP and its external supervisor. This is
-still missing; existing scoped-discovery commands continue to run the old loader.
-No new user command or additional library collection is requested now.
+The source connection is complete; the next gate is the exact SDK build plus
+preparation/inert verification on the authorized Mac, followed by exactly one live
+folder-object run only after fresh authorization for the private FILE call and
+provider-reference retention. The live run must still begin from a fresh blank,
+clean, idle AE 25.6 host and produce one report ZIP without any plug-in scan.
+
+This chat cannot inspect or update `/Users/os3kov/Documents/AE-Hot-Loader/` or the
+running AE process, so local checkout synchronization, SDK build identity, loaded
+artifact identity and live baseline remain blocked on access to that Mac. No new
+library collection or repeat of the unchanged ordinary plug-in scan is justified.
 
 Before a live call, verify SDK build, inert entry, exact artifact/loaded identity,
 fresh blank/clean/idle host state, one owned ASCII directory, and separately
