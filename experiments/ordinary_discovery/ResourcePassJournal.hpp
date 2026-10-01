@@ -161,7 +161,8 @@ public:
         poisoned_ = true; // any exception consumes this instance; partial files remain
         const bool first = entries_.empty();
         Need((first && name == "claim.txt") || (!first && name != "claim.txt" &&
-             (name == "before.txt" || name == "call-started.txt" || name == "after.txt" || name == "result.txt")),
+             (name == "before.txt" || name == "call-started.txt" || name == "native.txt" ||
+              name == "after.txt" || name == "result.txt")),
              "journal-invalid-record-order-or-name");
         Need(entries_.find(name) == entries_.end(), "journal-record-already-written");
         Need(payload.size() <= journal_detail::max_record, "journal-record-too-large");
