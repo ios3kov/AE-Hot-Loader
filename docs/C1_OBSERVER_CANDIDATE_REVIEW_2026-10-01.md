@@ -55,5 +55,64 @@ Real SDK 25.6 syntax check PASS for the separate AEGP. Public result/error handl
 and suite releases are checked on successful paths; a failed SDK operation does
 not produce diagnostic PASS. Fixed C++/Python root profile consistency PASS.
 Code scanner completed; sole known local argparse false positive, exit 1 retained.
-Exact clean-source full regression, SDK build/sign/hash/inert candidate and CI
-NOT RUN before code checkpoint. No installable/live-ready handoff yet.
+Exact code/test source **7c983c5b5adfde0300f2370e5772ed757ab6b613**.
+Clean full local regression PASS: 298 Python without skips, 62 Node, 22 stages,
+unchanged inventory. Run b1252653c54f45fd8c9d75a7d778d25c; private
+AEHL-checks-qe2usswj.zip SHA-256
+`967ec7e32a6ba846b1fa4f6088633189a9850aab01dc5dc26d321c07980aeff9`.
+Exact ZIP inventory and every payload hash independently verified.
+Research CI **36931094055 — PASS**; full macOS CI **36931094195 — PASS**.
+ASan/UBSan gate run: 21 synthetic transport cases PASS without diagnostics.
+Clean code scanner: 264 supported files/no omissions, sole known local argparse
+false positive at artifact_manifest.py:71, exit 1/review_required retained.
+
+## Exact candidate prepared, not installed
+
+Build **observe-d548b007e316**, run
+**cleanup-observer-04b0a1783d0d4cb7bb17f9efe70f85aa**. Clean source as above; AE SDK 25.6 GeneralPlug
+header matches the recorded source hash, compiler uses macOS SDK 27.0.
+Real SDK build/sign/strict-signature/export/identity/inert checks PASS.
+Three inert entrypoint cases: SDK suites=0, root_reads=0. Four bundle payloads
+independently rehashed and exact inventory verified. Candidate imports no dlopen,
+dlsym, task_for_pid, kill, mach_vm_write/protect, vm_protect, task_suspend or
+termination operation. Source review remains necessary; import absence alone
+is not a behavioral proof.
+
+Private manifest SHA-256:
+`9f305a648b43a6569ccb70165169c2ed021d7977ddfbd9b84f3725d0bbdff100`.
+Final native binary SHA-256:
+`cfbfa87038d2640a558ca0e30ca5c5d8b171aef8d8be4934f5c25f281950be56`.
+Prospective unique bundle: AEHLCleanupd548b007e316.plugin in the user's existing
+MediaCore directory. Builder wrote only its ignored owned build/evidence folder;
+no token or executable payload is committed or handed off as a release.
+
+## Live boundary and next concrete step
+
+Two read-only process-list checks found no running After Effects session at the
+check time. This is not a blank-project or resident-module observation.
+Actual live root capture **NOT RUN**. No helper installed, AE launched, request
+published, provider retained, private Adobe function or callback invoked.
+
+A separately reviewed local orchestration was prepared for only this exact
+candidate: exclusive unique-helper copy, installed-byte/signature verification,
+refusal if any AE already runs, one launch, exact ready/PID/start verification,
+one read-only supervisor request and one private report. No kill/restart/retry,
+existing-plugin overwrite or project/prefs changes. This orchestration was
+**rejected before execution by automatic approval review**: installation into
+the user's Adobe plugin directory, AE launch and sensitive internal-state reads
+lack explicit user authorization for these concrete live side effects. No
+workaround or indirect execution was attempted. Generic autonomous development
+instruction was not accepted by the reviewer as that scoped approval.
+
+Required next authority is narrowly scoped to this unique helper installation,
+one test AE launch only if no session is running, and one read-only diagnostic
+capture. It does not authorize private FILE/PLUG/resource calls or retention,
+registration, callback replay, teardown or disturbing a working project.
+Only after that approval and fresh safe runtime baseline may this exact one-shot
+candidate run. Preserve all evidence and AE state on refusal/failure/timeout.
+
+ResourcePassGate still requires actual complete reviewed cleanup observation
+and zero retained general-plugin records. Diagnostic PASS supplies neither;
+actual allocation/lifetime/quiescence and repeat behavior remain unresolved.
+Native C1 registration backend NOT READY; registration/apply/render NOT RUN.
+C0 remains recorded PASS; historical ordinary late-registration FAIL unchanged.

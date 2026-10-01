@@ -11,28 +11,31 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
-## Current Stage C1 — one-shot diagnostic observer verified on owned data
+## Current Stage C1 — exact diagnostic candidate ready; live authority blocked
 
-Code/test head: **`1a4201c46202588a53aee25ea8d0ec1dd7dad079`**.
-Observer composes resident root binding, bounded mapped reads, clipped bootstrap
-spans and two matching captures. Bootstrap and final global/mapping checks detect
-changes across the observation; any failed attempt is consumed. Callback order/
-values and retained record count are diagnostic only; no callbacks invoked or
-record bodies copied. No complete/observed/approval or gate conversion exists.
+Code/test head: **`7c983c5b5adfde0300f2370e5772ed757ab6b613`**.
+Separate inert AEGP, durable one-shot diagnostic transaction and independent
+supervisor are prepared. Exact clean local PASS: 298 Python/no skips, 62 Node,
+22 stages; research CI **36931094055 — PASS**; full macOS CI **36931094195 — PASS**.
+SDK build/sign/export/identity and three inert cases PASS for
+**observe-d548b007e316**. Candidate inventory/all hashes independently verified.
+Evidence: [C1_OBSERVER_CANDIDATE_REVIEW_2026-10-01.md](C1_OBSERVER_CANDIDATE_REVIEW_2026-10-01.md).
 
-Focused synthetic/actual two-owned-provider chain, absence/thread/malformed state
-and sanitizer checks PASS. Clean full local PASS: 290 Python without skips,
-62 Node, 22 stages; inventory unchanged. Research CI **36929802910 — PASS**;
-full macOS CI **36929802970 — PASS**. Evidence:
-[C1_CLEANUP_OBSERVER_REVIEW_2026-10-01.md](C1_CLEANUP_OBSERVER_REVIEW_2026-10-01.md).
+The proposed unique-helper installation / one test AE launch / one sensitive
+read-only capture was rejected **before execution by automatic approval review**
+for lack of explicit user authority for those exact live actions. No install,
+launch, request, native root read, provider retain or private Adobe call occurred.
+No bypass attempted. Process-list checks found no AE at their check time; current
+project/resident state remains NOT OBSERVED.
 
-Next prepare separate inert diagnostic AEGP, durable journal and independent
-one-shot supervisor; build/sign/hash/inert-test an exact candidate before live
-operation. Actual AE roots and current host remain NOT OBSERVED. Lifetime/
-quiescence/repeat behavior blocks resource integration; C1 registration/apply/
-render NOT RUN. C0 recorded PASS. Continue all independent authorized work and
-stage reports per latest instruction; original checkout/main/private-call/
-install/launch/release boundaries remain preserved.
+Next obtain approval for only this exact diagnostic candidate and safe test
+scope, then execute once with fresh process/project/module baseline. Continue
+independent authorized work; generic development scope does not bypass the
+reviewer's decision. Complete cleanup, allocation/lifetime/quiescence and
+repeat behavior remain unproven; no ResourcePassGate integration. Native C1
+registration backend NOT READY; registration/apply/render NOT RUN. C0 recorded
+PASS; historical registration FAIL preserved. Original checkout/main/release
+boundaries remain intact.
 
 ## Second live no-scan result — PASS; Stage C0 closed
 

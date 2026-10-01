@@ -3,7 +3,7 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [C1_CLEANUP_OBSERVER_REVIEW_2026-10-01.md](C1_CLEANUP_OBSERVER_REVIEW_2026-10-01.md).
+Current continuation: [C1_OBSERVER_CANDIDATE_REVIEW_2026-10-01.md](C1_OBSERVER_CANDIDATE_REVIEW_2026-10-01.md).
 The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
@@ -13,7 +13,7 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 - Repository: `ios3kov/AE-Hot-Loader`.
 - Branch: `research/ordinary-plugin-discovery`; never change `main`.
 - Current C1 code/test head:
-  **`1a4201c46202588a53aee25ea8d0ec1dd7dad079`**.
+  **`7c983c5b5adfde0300f2370e5772ed757ab6b613`**.
 - Current canonical AE Development Rules source:
   **`b27f45467e0a9152fc82c1072438dfed07f0c36e`**; read AI_ENTRYPOINT first.
 - Current Stage C no-scan core head:
@@ -21,7 +21,7 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 - Current live-launcher code/test head:
   **`3852192406da5af539b9100114393584642e9197`**.
 - Current status documentation before this save:
-  `aa4d8ba`.
+  `7987b2d`.
 - Shared DEVELOPMENT_RULES blob:
   `701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`.
 - Stage: **C of A–D**. Ordinary-effect late registration is still NOT fixed.
@@ -325,6 +325,27 @@ build/sign/hash/inert checks before scoped live operation. No real AE root read,
 callback invocation, retained provider or native registration backend. Preserve
 NOT OBSERVED/NOT RUN for current live registration/apply/render; C0 remains PASS.
 Continue independent work without milestone stops as explicitly requested.
+
+## Current Stage C1 diagnostic candidate checkpoint
+
+Code 7c983c5: separate inert AEGP, one-shot durable journal and independent
+supervisor. Clean local 298 Python/no skips, 62 Node, 22 stages and both exact
+CI 36931094055/36931094195 PASS. Real SDK build/sign/hash/inert candidate
+observe-d548b007e316 PASS; binary SHA cfbfa87038d2640a558ca0e30ca5c5d8b171aef8d8be4934f5c25f281950be56,
+private manifest SHA 9f305a648b43a6569ccb70165169c2ed021d7977ddfbd9b84f3725d0bbdff100.
+Inventory/payloads rehashed. Token stays private. See exact candidate report.
+
+Live install/one test launch/sensitive read was rejected BEFORE execution by
+automatic approval review: no explicit authority for those concrete actions.
+No install/launch/request/read/private call/retention occurred; no workaround.
+Next obtain explicit approval for only this unique helper and one read-only
+capture on a fresh blank clean idle test host; preserve existing sessions and
+all state on uncertainty. Fresh authorization must come from the user, not this
+checkpoint. Generic autonomous-development request was not accepted by review.
+Independent work is complete for this diagnostic preparation; dependent native
+registration remains blocked by critical complete-state/lifetime/repeat unknowns.
+No diagnostic → ResourcePassGate eligibility conversion; C1 registration/apply/
+render NOT RUN, C0 recorded PASS. Do not repeat consumed C0 or old registration scan.
 
 ## Next gate — exact order
 
