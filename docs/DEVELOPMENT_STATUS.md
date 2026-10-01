@@ -9,6 +9,48 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
+## First live no-scan result — FAIL; evidence gap remediated offline
+
+The first real no-scan request ran from source
+**`161b180714a734baf71f8c8cb58440e73f8dcd23`**, build
+`noscan-f0aa4a3bd54a`, run
+`directory-probe-11f0a9c60dc44fcea98579536234fd34`.
+
+Report ZIP SHA-256:
+`727a65d7ba64be8371c40025a4fc2196785216cc77299941d0978a71eb0cff5a`.
+
+Result: **FAIL at postflight**. The single request was published; call-started,
+postflight and cleanup evidence were present. PID/process-start, project
+revision and the full effect registry stayed unchanged at **785** effects.
+
+The only before/after image delta was one new Apple system framework,
+`/System/Library/PrivateFrameworks/SafariPlatformSupport.framework/Versions/A/SafariPlatformSupport`.
+No image was removed and no Adobe/user/plug-in image was added.
+
+The old gate required byte-identical image lists, so the system lazy load caused
+the FAIL. The old journal also did not persist the complete native lifecycle
+counts before postflight, so this report cannot prove the FILE
+create/roundtrip/single-release acceptance even though cleanup was reported
+successful. No retry was performed.
+
+Offline remediation is complete at code head
+**`dadd884b4758a351fbc725969ed49d2f9a912781`**:
+
+- `native.txt` is durably written immediately after the private call;
+- PASS requires exact string/spec/release/retention counts;
+- existing runtime images must remain exact;
+- only newly loaded `/System/Library/` images may be tolerated;
+- new Adobe/user/plug-in images still fail;
+- the external supervisor independently checks the same contract.
+
+Exact-head research CI **`36857286317`** — PASS.  
+Exact-head full macOS CI **`36857286194`** — PASS.
+
+See [NO_SCAN_DIRECTORY_LIVE_FAIL_2026-10-01.md](NO_SCAN_DIRECTORY_LIVE_FAIL_2026-10-01.md).
+
+A second live request is **NOT RUN** and needs fresh authorization because the
+first one-shot approval was consumed.
+
 ## Live-ready one-shot launcher checkpoint
 
 Current live-launcher code/test head is **`3852192406da5af539b9100114393584642e9197`**.
