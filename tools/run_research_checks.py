@@ -179,7 +179,7 @@ def package_report(folder, record):
     write_json(folder / 'report.json', record)
     text = ('AE HOT LOADER: OFFLINE RESEARCH CHECKS\n'
             'Offline result: ' + record['offline_status'] + '\n'
-            'Full pipeline: BLOCKED (live backend not connected)\n'
+            'Full pipeline: BLOCKED (no-scan AEGP/live host gate not executed)\n'
             'No AE operation was requested by this runner.\n'
             'Product build/sign/package: NOT RUN by this runner; separate macOS CI.\n'
             'Historical results are not rerun or relabelled by this report.\n\n')
@@ -219,8 +219,9 @@ def run(root, parent, expected=None):
               'product_package_status': 'NOT RUN', 'macos_native_status': 'NOT RUN',
               'platform': platform.platform(),
               'python_version': platform.python_version(), 'steps': [],
-              'unavailable_gates': ['native FILE adapter', 'fresh AE baseline', 'late registration',
-                                    'apply/render', 'repeat/lifecycle', 'release acceptance']}
+              'unavailable_gates': ['no-scan AEGP SDK build/live host gate', 'fresh AE baseline',
+                                    'late registration', 'apply/render', 'repeat/lifecycle',
+                                    'release acceptance']}
     plan = []
     try:
         if os.name != 'posix' or sys.platform not in ('linux', 'darwin'):

@@ -163,6 +163,12 @@ int main() {
         Trial("output-release-fails-no-retry", "output-destroy-throw", long_path, false, 2, 1, 1, false);
         Trial("dispose-error-no-retry", "dispose-error", long_path, false, 2, 1, 1, false);
         Trial("dispose-throws-no-retry", "dispose-throw", long_path, false, 2, 1, 1, false);
+
+        s = State{}; s.mode = "isdir-throw";
+        const auto minimal = CreateRoundtripRelease(API(), long_path, false);
+        Check(minimal.completed && minimal.cleanup_ok && minimal.spec_release_attempts == 1 &&
+              s.trace == std::vector<std::string>{"input", "new", "destroy", "output", "destroy", "dispose"});
+        ++cases; std::puts("PASS no-scan-minimal-path-roundtrip-skips-directory-query");
         s = State{};
         const auto unbound = CreateRoundtripRelease(Functions{}, long_path);
         Check(!unbound.completed && !unbound.invoked && s.trace.empty());

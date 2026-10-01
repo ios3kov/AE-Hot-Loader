@@ -97,7 +97,8 @@ inline bool MatchesAscii(const void* object, const std::string& expected,
 // registry operation is expressible through this adapter. The binder must use
 // the exact inspected FILE_New constructor, not one acquiring a plugin module.
 // Caller MUST surround this with claim/identity/scope/postflight/supervisor gates.
-inline Result CreateRoundtripRelease(const Functions& supplied, const std::string& supplied_path) {
+inline Result CreateRoundtripRelease(const Functions& supplied, const std::string& supplied_path,
+                                     bool verify_is_directory = true) {
     const Functions f = supplied; // freeze callbacks against mutation during calls
     const std::string path = supplied_path;
     Result r;
@@ -134,8 +135,10 @@ inline Result CreateRoundtripRelease(const Functions& supplied, const std::strin
         r.stage = "release-input";
         destroy(input_live, input.data());
         Need(r.cleanup_ok);
-        r.stage = "is-directory";
-        Need(f.is_dir(spec));
+        if (verify_is_directory) {
+            r.stage = "is-directory";
+            Need(f.is_dir(spec));
+        }
         r.stage = "path-result";
         f.indirect(f.inquire_path, spec, output.data());
         output_live = true;

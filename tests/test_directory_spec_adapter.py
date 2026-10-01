@@ -36,8 +36,8 @@ class DirectorySpecAdapterTests(unittest.TestCase):
                 ran = subprocess.run([str(binary)], capture_output=True, timeout=15)
                 self.assertEqual(ran.returncode, 0, (ran.stdout + ran.stderr).decode(errors='replace'))
                 self.assertEqual(ran.stderr, b'')
-                self.assertIn(b'27/27 OWNED DIRECTORY CASES PASS; Adobe calls=0', ran.stdout)
-                self.assertEqual(sum(line.startswith(b'PASS ') for line in ran.stdout.splitlines()), 27)
+                self.assertIn(b'28/28 OWNED DIRECTORY CASES PASS; Adobe calls=0', ran.stdout)
+                self.assertEqual(sum(line.startswith(b'PASS ') for line in ran.stdout.splitlines()), 28)
                 if native:
                     self.assertIn(b'SELF READER invalid-pointer/bounds PASS', ran.stdout)
                 print(('arm64 thunk/self reader' if native else 'portable owned adapter') +
