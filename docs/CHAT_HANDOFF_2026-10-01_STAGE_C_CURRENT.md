@@ -10,8 +10,10 @@ record supersedes its "no-scan bridge not connected" statement.
 
 - Repository: `ios3kov/AE-Hot-Loader`.
 - Branch: `research/ordinary-plugin-discovery`; never change `main`.
-- Current Stage C code/test head:
+- Current Stage C no-scan core head:
   **`c1e20e4ab4d4a4f6654f67df7dbb224f0790b5be`**.
+- Current live-launcher code/test head:
+  **`3852192406da5af539b9100114393584642e9197`**.
 - Current status documentation before this save:
   `e3f577ef5781731a2055365f4bef94074d3584b7`.
 - Shared DEVELOPMENT_RULES blob:
@@ -103,6 +105,23 @@ still NOT RUN**. See `STATIC_AUDIT_CLOSEOUT_2026-10-01.md`.
 - `DEVELOPMENT_STATUS.md` is the source of current verified state.
 - Historical dated documents remain evidence for their own commits and must not
   be rewritten as current results.
+
+
+## One-shot Mac launcher
+
+`RUN_LIVE_NO_SCAN_GATE.command` is now the only intended entrypoint for the
+first live gate. Exact-head research CI `36855482114` and full macOS CI
+`36855482175` are PASS for launcher head `3852192`.
+
+The launcher refuses an already-running AE session, preserves dirty/local Git
+work, installs only its unique helper, launches AE once with the one-shot token
+and publishes exactly one authorized no-scan request. It does not invoke the old
+scan path.
+
+The user explicitly authorized this one gate in the current chat: helper
+installation / one AE launch if required, private FILE call and provider-reference
+retention. That approval is scoped only to the folder create → path roundtrip →
+single release gate and does not extend to later plug-in registration.
 
 ## Next gate — exact order
 
