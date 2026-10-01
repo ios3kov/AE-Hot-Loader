@@ -117,7 +117,7 @@ class DiskJournal {
                 if (!entry) { Need(errno == 0, "journal-directory-read-failed"); break; }
                 const std::string name(entry->d_name);
                 if (name != "." && name != "..") names.insert(name);
-                Need(names.size() <= 5, "journal-unexpected-entries");
+                Need(names.size() <= 6, "journal-unexpected-entries");
             }
         } catch (...) { ::closedir(listing); throw; }
         Need(::closedir(listing) == 0, "journal-directory-close-failed");
