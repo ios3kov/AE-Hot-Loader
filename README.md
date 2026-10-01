@@ -1,86 +1,96 @@
 # AE Hot Loader
 
-Research-stage ScriptUI panel and native Agent for discovering newly installed
-After Effects effects without restarting AE. This is **not yet a universal
-third-party plug-in loader or a release-approved product**.
+Research-stage **tool** for discovering/registering ordinary After Effects effects
+without restarting AE. The user-facing product direction is a panel/tool; native
+AEGP modules are internal helpers where code must run inside After Effects.
 
-Current state: [DEVELOPMENT_STATUS](docs/DEVELOPMENT_STATUS.md).
-Next gates: [PRODUCTION_PLAN](docs/PRODUCTION_PLAN.md).
+This is **not yet a universal third-party plug-in loader or a release-approved
+product**.
+
+Current verified state: [DEVELOPMENT_STATUS](docs/DEVELOPMENT_STATUS.md).  
+Current gates: [PRODUCTION_PLAN](docs/PRODUCTION_PLAN.md).  
 Development requirements: [AGENTS](AGENTS.md).
 
-## Current workflow
+## Current Stage C
 
-`Window → AE Hot Loader → Reload Plugins`
+The core unresolved problem is ordinary-effect late registration.
 
-Every Reload first checks the resident Agent's compiled identity against the
-panel's generated package identity. Missing or mismatched Build ID, commit,
-clean state, target or version blocks the scan. **Diagnostics** performs only
-that check and displays the observed builds; it does not scan or read the project.
+Preserved live evidence:
 
-After a valid handshake, the Agent scans plug-in roots through the version-gated
-native loader. The panel copies installed effect **match names** immediately
-before the scan and compares them after the matching, identity-checked reply.
-It reports observed registry additions/removals, an unchanged registry or errors.
-A loaded-binary count is not registration evidence; registry presence is not
-proof that an effect applies or renders.
+- scoped embedded late registration: **FAIL** — source `45de0c9`,
+  Build ID `scoped-0b8c8f122e80`, 785 effect identities unchanged;
+- RSMB startup-registered apply/render: **PASS**, separate startup baseline;
+- RSMB late registration: **FAIL**.
 
-The panel does not apply effects, modify the project or purge caches. A scan
-timeout does not cancel the Agent or prove that no work occurred.
-Protocol details: [BRIDGE_PROTOCOL](docs/BRIDGE_PROTOCOL.md).
+A loaded image or successful native loader return is not registration evidence.
+Registry presence, effect application and rendering are separate claims.
 
-## Evidence and limits
+### No-scan safety gate
 
-| Area | Status and exact scope |
-|---|---|
-| Historical ordinary discovery | One modern probe registered, applied and rendered in AE 25.6.0 arm64 without restart |
-| Historical paired registration test | Dynamic-entrypoint fixture registered; PiPL-only fixture did not; no apply/render test in that pair |
-| RSMB | Late registration FAIL; controlled cold-start and subsequent apply/render NOT RUN |
-| Current panel | 51/51 host-mock tests PASS, including tests of exact generated ZIP payload; not yet tested inside AE |
-| Build/tooling | 38/38 Python tests, full macOS arm64 build/sign/package, 7/7 standalone native shell gates PASS |
-| Packaged Agent identity | Exact extracted Agent's metadata/path getters PASS in standalone macOS process, not AE |
-| Compatibility | Only AE 25.6.0/macOS Apple Silicon is the research target; other configurations unverified |
+Before another registration experiment, the repository now contains a separate
+research-only, inert-by-default AEGP plus an external one-shot supervisor.
 
-Current exact source, Build ID, hashes, log caveat and test evidence:
-[CI_CHECKPOINT_04fea70](docs/CI_CHECKPOINT_04fea70.md).
-Historical native results remain in
-[the original status](docs/DEVELOPMENT_STATUS_2026-09-28.md) and
-[the paired test](docs/TEST_REGISTRATION_PAIR_2026-09-28.md).
-Old AE results must not be presented as verification of the updated panel.
+That gate performs **no plug-in scan and no ordinary-effect registration**. Its
+only intended live operation is:
 
-## Separate Control Shell work
+1. create one newly owned directory specification;
+2. roundtrip the exact path;
+3. release it exactly once;
+4. prove the same AE process/project/registry/image set remained unchanged;
+5. preserve one report ZIP.
 
-The generic stable-shell/implementation architecture is retained. Its historical
-control test demonstrated implementation A→B→C, busy-render rejection and rollback
-without AE restart. This requires a prepared shell and does not prove arbitrary
-ordinary plug-in support. The current panel button invokes ordinary discovery,
-not shell implementation reload. [Shell ABI](docs/SHELL_ABI.md).
+The no-scan source connection and owned/offline tests are implemented. The real
+AE folder-object lifecycle is still **NOT RUN**. It requires a fresh exact host
+baseline and separate authorization for the private FILE call and retention of
+three already-loaded provider references.
 
-## Development checks and generated panel
+The helper being an AEGP `.plugin` does **not** make AE Hot Loader an effect
+plug-in product. It is an internal host-side component of the tool.
 
-```sh
-node --test tests/panel.test.cjs
-python3 -m unittest discover -s tests -p 'test_*.py' -v
-```
+## Current workflow vs historical workflow
 
-The repository JSX is an **unstamped source template**, intentionally unable to
-scan. Packaging uses `tools/build_panel.py` to generate it from clean Git source
-with the same package Build ID as the Agent. Do not install the raw template or
-mix panel/Agent files from different packages. The generated file is tested again
-after extracting the final ZIP, without modifying its embedded identity.
+The existing ScriptUI panel/Agent ordinary-discovery path and Control Shell work
+remain in the repository as research/product history. Existing install/staging
+commands do **not** represent the current no-scan Stage C gate and must not be
+used as substitutes for it.
 
-Both Cargo locks and Rust 1.98.1 are pinned. Full-package Cargo builds use
-`--locked`; CI retains environment/source records, final archive and payload
-hashes, signed-payload checks and exact packaged Agent identity reports.
-These are development artifacts, not installation or release approvals.
+The generic Control Shell historically demonstrated implementation A→B→C reload,
+busy-render rejection and rollback without AE restart. That prepared-shell result
+does not prove arbitrary ordinary plug-in registration.
 
-Real AE clean-install/runtime identity, ScriptUI/Agent roundtrip, project safety,
-repeat/timeout/ownership and applicable release regression remain mandatory.
-Existing installation helpers do not imply that a new candidate passed them.
+## Development evidence
+
+The research branch uses:
+
+- unified Linux/macOS offline checks;
+- full macOS build/sign/package regression for the existing product path;
+- owned native directory/binding/journal tests;
+- one-shot supervisor tests and source/runtime identity checks.
+
+Green CI is build/offline evidence only. It does not prove a private Adobe call
+or late registration inside AE.
+
+The exact current code/CI identities and remaining gates are recorded in
+[DEVELOPMENT_STATUS](docs/DEVELOPMENT_STATUS.md).
+
+## Safety boundaries
+
+Do not infer authorization from source flags or old test permissions.
+
+Without a separately approved live gate, do not:
+
+- install/restart or terminate AE;
+- delete preferences, projects or third-party plug-ins;
+- replay startup lifecycle functions;
+- run the unchanged broad plug-in scan;
+- unload Adobe providers;
+- clear caches or force notifications;
+- execute private FILE/PLUG calls.
+
+`main` remains unchanged during Stage C research.
 
 ## Historical documentation
 
-The previous [README](docs/archive/README_6037df8.md),
-[production plan](docs/archive/PRODUCTION_PLAN_6037df8.md) and
-[code audit](docs/archive/CODE_AUDIT_2026-09-28_6037df8.md) are retained verbatim
-from `6037df8`. Their claims and relative links belong to that historical snapshot,
-not current release approval.
+Historical reports are preserved under `docs/` and `docs/archive/`. They
+describe the source and evidence at their recorded commits and must not be
+relabelled as verification of the current candidate.
