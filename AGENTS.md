@@ -3,7 +3,7 @@
 Start with [AE Development Rules AI_ENTRYPOINT](https://github.com/ios3kov/AE-Development-Rules/blob/main/AI_ENTRYPOINT.md)
 and select the applicable canonical modules before each significant stage.
 Reviewed on 2026-10-01: AE-Development-Rules source
-`05bd9a8d71c11280d972b96caf64b776f2a075d7`.
+`f17c056b292631a0832b894050e204a3ca7bc2dd`.
 Historical FSTR-Line rule identities in dated evidence remain historical.
 State the current project
 stage before each significant step; do not invent a completion percentage.

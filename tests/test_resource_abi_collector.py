@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -54,6 +55,35 @@ class ResourceAbiCollectorTests(unittest.TestCase):
 
     def test_profile_pins_agree_with_header(self):
         collector.profile_agrees()
+
+    def test_review_scope_rejects_invalid_windows(self):
+        self.assertEqual(collector.review_windows("search-abi"),
+                         tuple((name, name, *bounds) for name, bounds in collector.WINDOWS.items()))
+        windows = collector.review_windows("cleanup")
+        self.assertEqual({name for _, name, _, _ in windows}, {"PLUG", "FLT", "MEE"})
+        self.assertEqual(sum((end - start) // 4 for _, _, start, end in windows), 1390)
+        for bad, reason in (
+            ((('same', 'PLUG', 0x1000, 0x1008),) * 2, 'duplicate'),
+            ((('../escape', 'PLUG', 0x1000, 0x1008),), 'identity'),
+            ((('owned', 'unknown', 0x1000, 0x1008),), 'identity'),
+            ((('owned', 'PLUG', 0x1000, 0x3000),), 'bounded'),
+        ):
+            with mock.patch.dict(collector.REVIEWS, {'invalid': bad}):
+                with self.subTest(windows=bad), self.assertRaisesRegex(ValueError, reason):
+                    collector.review_windows('invalid')
+        with self.assertRaisesRegex(ValueError, 'unknown'):
+            collector.review_windows('unbounded')
+
+    def test_cleanup_symbol_selection_excludes_search_scope(self):
+        text = '\n'.join(('external __Z16PLUG_InstallScan',
+                          'non-external __ZL17PluginCleanupFunc',
+                          'external __Z24CleanupGeneralPluginScan',
+                          'external __Z11PLUG_Search', 'external _Unrelated'))
+        selected = collector.select_symbols(text, 'cleanup')
+        self.assertIn('PLUG_InstallScan', selected)
+        self.assertIn('PluginCleanupFunc', selected)
+        self.assertNotIn('PLUG_Search', selected)
+        self.assertNotIn('Unrelated', selected)
 
     def test_lldb_script_is_bounded_and_offline(self):
         path = Path("/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app/Contents/Frameworks/PLUG.dylib")

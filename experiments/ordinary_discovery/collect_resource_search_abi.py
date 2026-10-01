@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Collect only the missing Stage C1 PLUG_Search ABI evidence from pinned files.
+"""Collect bounded Stage C1 search ABI or cleanup evidence from pinned files.
 
 Offline/file-only: never launches or attaches to After Effects and never loads
-Adobe code. Captures two bounded arm64 disassembly windows plus selected symbols.
+Adobe code. Captures fixed arm64 disassembly windows plus selected symbols.
 """
 import argparse
 import hashlib
@@ -26,6 +26,19 @@ WINDOWS = {
     "aelib": (0x638CC, 0x63A70),
     "PLUG": (0x8A6C, 0x9028),
 }
+REVIEWS = {
+    "search-abi": tuple((name, name, *bounds) for name, bounds in WINDOWS.items()),
+    "cleanup": (
+        ("PLUG-install", "PLUG", 0x87E4, 0x8A6C),
+        ("PLUG-cleanup", "PLUG", 0xEB20, 0xEC1C),
+        ("FLT-birth", "FLT", 0xD7AC, 0xDAE0),
+        ("MEE-setup", "MEE", 0x36C58, 0x36DA4),
+        ("MEE-scan", "MEE", 0x36DA4, 0x376EC),
+        ("MEE-callback", "MEE", 0x376EC, 0x37A00),
+        ("MEE-finish", "MEE", 0x37EEC, 0x37F34),
+        ("MEE-setdown", "MEE", 0x37F34, 0x38044),
+    ),
+}
 INPUTS = {
     "aelib": (
         APP / "Contents/Frameworks/aelib.framework/Versions/A/aelib",
@@ -35,8 +48,33 @@ INPUTS = {
         APP / "Contents/Frameworks/PLUG.dylib",
         "12f2493892c915dae2361beb2982d8e2c66022574f148cc0097df6966e941b22",
     ),
+    "FLT": (
+        APP / "Contents/Frameworks/FLT.dylib",
+        "227f0688d4272b1c0be2b2066d53b702e2363fca6002f873ea0acdc6a4d01256",
+    ),
+    "MEE": (
+        APP / "Contents/Frameworks/MEE.dylib",
+        "18579ae84d541df7d08eda4507a5d3ceed78f2c4385f07c8a222f02255ec7344",
+    ),
 }
-SYMBOL_WANTED = re.compile(r"(PLUG_Search|Egg_PlugSearch|SearchStatFunc)")
+SYMBOL_WANTED = {
+    "search-abi": re.compile(r"(PLUG_Search|Egg_PlugSearch|SearchStatFunc)"),
+    "cleanup": re.compile(r"(PLUG_InstallScan|PLUGp_DoCleanups|FLT_Birth|"
+                          r"SetupGeneralPluginScan|PluginScanFunc|PluginCleanupFunc|"
+                          r"CleanupGeneralPluginScan|SetdownGeneralPlugins)"),
+}
+
+
+def review_windows(review):
+    require(review in REVIEWS, "unknown review scope")
+    windows = REVIEWS[review]
+    require(len({label for label, *_ in windows}) == len(windows),
+            "duplicate review window label")
+    for label, name, start, end in windows:
+        require(name in INPUTS and re.fullmatch(r"[A-Za-z0-9-]+", label),
+                "invalid review window identity")
+        lldb_script(INPUTS[name][0], start, end)
+    return windows
 
 
 def require(value, reason):
@@ -115,8 +153,8 @@ def run_tool(argv, *, input_text=None, timeout=45):
     return result.stdout, result.stderr
 
 
-def select_symbols(text):
-    selected = [line for line in text.splitlines() if SYMBOL_WANTED.search(line)]
+def select_symbols(text, review="search-abi"):
+    selected = [line for line in text.splitlines() if SYMBOL_WANTED[review].search(line)]
     require(selected, "expected resource-search symbols were not found")
     return "\n".join(selected) + "\n"
 
@@ -171,14 +209,17 @@ def package(folder, record):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--review", choices=tuple(REVIEWS), default="search-abi")
     parser.add_argument("--output-parent", type=Path,
                         default=ROOT / "build-ae-hot-loader")
     args = parser.parse_args()
     if sys.platform != "darwin":
-        parser.exit(2, "BLOCKED: Stage C1 ABI collector requires macOS.\n")
+        parser.exit(2, "BLOCKED: Stage C1 resource collector requires macOS.\n")
     try:
         commit = source_identity()
         profile_agrees()
+        windows = review_windows(args.review)
+        names = tuple(dict.fromkeys(name for _, name, _, _ in windows))
         parent = args.output_parent.absolute()
         expected_parent = (ROOT / "build-ae-hot-loader").absolute()
         require(parent == expected_parent, "output parent must be the owned build directory")
@@ -186,50 +227,52 @@ def main():
         require(not parent.is_symlink() and parent.is_dir() and parent.stat().st_uid == os.getuid(),
                 "owned build directory is unsafe")
         parent = parent.resolve(strict=True)
-        observed = {name: validate_input(path, digest)
-                    for name, (path, digest) in INPUTS.items()}
-        folder = Path(tempfile.mkdtemp(prefix="resource-abi-" + uuid.uuid4().hex[:8] + "-",
+        observed = {name: validate_input(*INPUTS[name]) for name in names}
+        prefix = "resource-abi-" if args.review == "search-abi" else "resource-cleanup-"
+        folder = Path(tempfile.mkdtemp(prefix=prefix + uuid.uuid4().hex[:8] + "-",
                                        dir=parent))
         os.chmod(folder, 0o700)
         outputs = {}
-        for name in ("aelib", "PLUG"):
+        for name in names:
             path, _ = INPUTS[name]
             nm, nm_err = run_tool(["/usr/bin/nm", "-arch", "arm64", "-n", "-m", str(path)])
             require(not nm_err.strip(), "nm produced unexpected diagnostics")
-            symbols = select_symbols(nm)
+            symbols = select_symbols(nm, args.review)
             write_exclusive(folder / (name + "-symbols.txt"), symbols)
-            start, end = WINDOWS[name]
+        for label, name, start, end in windows:
+            path, _ = INPUTS[name]
             script = lldb_script(path, start, end)
-            write_exclusive(folder / (name + "-inspect.lldb"), script)
+            write_exclusive(folder / (label + "-inspect.lldb"), script)
             disassembly, diagnostics = run_tool(
                 ["/usr/bin/xcrun", "lldb", "--no-lldbinit", "--batch",
-                 "--source", str(folder / (name + "-inspect.lldb"))],
+                 "--source", str(folder / (label + "-inspect.lldb"))],
                 timeout=60)
             lowered = (disassembly + diagnostics).lower()
             require("error:" not in lowered and "fatal:" not in lowered,
                     "lldb reported an inspection error")
             instruction_count = validate_disassembly(disassembly, start, end)
-            write_exclusive(folder / (name + "-disassembly.txt"), disassembly)
+            write_exclusive(folder / (label + "-disassembly.txt"), disassembly)
             if diagnostics:
-                write_exclusive(folder / (name + "-stderr.txt"), diagnostics)
-            outputs[name] = {
+                write_exclusive(folder / (label + "-stderr.txt"), diagnostics)
+            outputs[label] = {
                 "path": str(path), "sha256_before": observed[name],
                 "window_start": hex(start), "window_end": hex(end),
                 "decoded_instructions": instruction_count,
             }
-        after = {name: validate_input(path, digest)
-                 for name, (path, digest) in INPUTS.items()}
+        after = {name: validate_input(*INPUTS[name]) for name in names}
         require(observed == after, "input files changed during collection")
         record = {
             "schema": "AEHL-C1-RESOURCE-ABI-1",
-            "scope": "offline-bounded-resource-search-abi-only",
+            "scope": ("offline-bounded-resource-search-abi-only" if args.review == "search-abi"
+                      else "offline-bounded-resource-cleanup-only"),
+            "review": args.review,
             "source_commit": commit,
             "live_ae_operation": "NOT RUN",
             "plugin_scan": "NOT RUN",
             "inputs": outputs,
         }
         archive = package(folder, record)
-        print("PASS: bounded offline ABI evidence only; Adobe calls=0")
+        print("PASS: bounded offline " + args.review + " evidence only; Adobe calls=0")
         print("Report: " + str(archive))
         print("Report SHA-256: " + sha256(archive))
     except (OSError, ValueError, subprocess.SubprocessError, zipfile.BadZipFile) as error:
