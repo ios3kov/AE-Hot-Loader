@@ -40,6 +40,17 @@ class ResourceAbiCollectorTests(unittest.TestCase):
             self.assertNotIn("error:", (output + diagnostics).lower())
             self.assertRegex(output, r"add\s+w0, w0, #0x1")
             self.assertRegex(output, r"\bret\b")
+            self.assertEqual(collector.validate_disassembly(output, start, start + 8), 2)
+
+    def test_disassembly_requires_exact_decoded_coverage(self):
+        text = "owned[0x1000] <+0>: add w0, w0, #0x1\nowned[0x1004] <+4>: ret\n"
+        self.assertEqual(collector.validate_disassembly(text, 0x1000, 0x1008), 2)
+        for bad in ("", text.splitlines()[0], text + text,
+                    text.replace("0x1004", "0x1008")):
+            with self.subTest(output=bad), self.assertRaisesRegex(ValueError, "bounds"):
+                collector.validate_disassembly(bad, 0x1000, 0x1008)
+        with self.assertRaisesRegex(ValueError, "undecoded"):
+            collector.validate_disassembly(text.replace("ret", ".long 0"), 0x1000, 0x1008)
 
     def test_profile_pins_agree_with_header(self):
         collector.profile_agrees()

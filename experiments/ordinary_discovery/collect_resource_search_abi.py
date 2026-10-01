@@ -21,8 +21,10 @@ APP = Path("/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app"
 PROFILE = ROOT / "experiments/ordinary_discovery/AE256ResourceProfile.hpp"
 MAX_OUTPUT = 2 * 1024 * 1024
 WINDOWS = {
-    "aelib": (0x63914, 0x63A70),
-    "PLUG": (0x8A6C, 0x8C20),
+    # SearchStatFunc + Egg_PlugSearch, and all of PLUG_Search through its
+    # return/unwind paths. Ends are the next defined text symbols in these pins.
+    "aelib": (0x638CC, 0x63A70),
+    "PLUG": (0x8A6C, 0x9028),
 }
 INPUTS = {
     "aelib": (
@@ -119,6 +121,17 @@ def select_symbols(text):
     return "\n".join(selected) + "\n"
 
 
+def validate_disassembly(text, start, end):
+    """Require one decoded arm64 instruction at every address in the window."""
+    instructions = re.findall(r"^.*\[0x([0-9a-fA-F]+)\]\s+<[^>]*>:\s+(\S+)", text, re.M)
+    addresses = [int(address, 16) for address, _ in instructions]
+    require(addresses == list(range(start, end, 4)),
+            "disassembly window is incomplete or outside reviewed bounds")
+    require(all(op not in (".long", ".word", ".inst", "<unknown>")
+                for _, op in instructions), "disassembly contains undecoded instructions")
+    return len(instructions)
+
+
 def write_exclusive(path, data):
     flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW
     fd = os.open(path, flags, 0o600)
@@ -195,12 +208,14 @@ def main():
             lowered = (disassembly + diagnostics).lower()
             require("error:" not in lowered and "fatal:" not in lowered,
                     "lldb reported an inspection error")
+            instruction_count = validate_disassembly(disassembly, start, end)
             write_exclusive(folder / (name + "-disassembly.txt"), disassembly)
             if diagnostics:
                 write_exclusive(folder / (name + "-stderr.txt"), diagnostics)
             outputs[name] = {
                 "path": str(path), "sha256_before": observed[name],
                 "window_start": hex(start), "window_end": hex(end),
+                "decoded_instructions": instruction_count,
             }
         after = {name: validate_input(path, digest)
                  for name, (path, digest) in INPUTS.items()}
