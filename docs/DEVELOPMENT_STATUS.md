@@ -8,7 +8,56 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
-## Current code head — native/supervisor process identity cross-bound; CI green
+## Current Stage C checkpoint — supervisor/native start identity unified; CI green
+
+Current Stage C code/test head is **`c83ce4bd4726ec2058e5f113ccda1de962a0ec01`**.
+The external no-scan supervisor now reads the process start tuple through macOS
+`proc_pidinfo(PROC_PIDTBSDINFO)`, matching the exact `sec.usec` identity written
+by the AEGP. Preparation refuses a loaded-helper start identity that differs from
+the supervisor's host identity **before request publication**. The later native
+journal must still match that same AEGP start identity. A real macOS self-process
+regression covers the libproc representation; Linux records that case as an
+explicit platform skip.
+
+Exact-head research CI **`36853869703`** completed successfully on Linux and
+macOS. Exact-head full macOS CI **`36853869976`** also completed successfully,
+including the Python/Node/no-scan regressions, existing product build/sign/package
+and smoke gates. These are still offline/build evidence only; no private Adobe
+function was executed by CI and no live AE registration result changed.
+
+CI coverage was also corrected at **`6009c18552c5d6be0e64b7af7e0f315fac840c0e`**:
+changes under `experiments/**` now trigger the full macOS workflow instead of
+only the research workflow.
+
+The five previously recorded static-scanner candidates were revisited. Four real
+workflow-policy issues in `dual-pipl.yml` were fixed/classified through
+`54eb513dc3526f75f1446e3a80223fa3a06eea7c` and
+`da5d3a8e5a69b9cb719997ddba835e1a56f5d896`; all current workflow `uses:`
+references are SHA-pinned and every checkout disables credential persistence.
+The fifth historical candidate remains the previously reviewed local-argparse
+false positive. **Known five candidates are resolved/classified; a new full
+static-security audit is still NOT RUN.** See
+[STATIC_AUDIT_CLOSEOUT_2026-10-01.md](STATIC_AUDIT_CLOSEOUT_2026-10-01.md).
+
+README and the current production plan now describe AE Hot Loader as a **tool**
+with internal AEGP helpers and distinguish the no-scan safety helper from the
+ordinary effect being researched.
+
+Live AE remains **NOT RUN / NOT OBSERVED** for this checkpoint. The user's
+`/Users/os3kov/Documents/AE-Hot-Loader/` checkout, current AE PID/project and
+installed/loaded no-scan helper are still not accessible from this environment.
+The real folder-object gate therefore remains pending.
+
+Before that live gate, the exact no-scan AEGP still needs a dedicated SDK build,
+sign/hash/inert verification and installed/loaded identity on the authorized Mac.
+Because the AEGP must be present in AE, any new installation and AE launch/restart
+also require fresh authorization if needed. Separately, publishing the one-shot
+request requires explicit approval for the private FILE call and retaining the
+three already-loaded FILE/U/dvacore references until process exit. The first live
+run remains folder create → path roundtrip → single release only, with **no plug-in
+scan or ordinary-effect registration**.
+
+## Previous code checkpoint — ready/journal process identity binding; CI green
 
 Current code head is **`a0d08f46c45c56b2695b82d2ff71d7e5da08a6c1`**. The existing
 no-scan folder-object gate now writes the native process start identity into
