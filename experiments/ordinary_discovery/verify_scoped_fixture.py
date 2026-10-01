@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import re
 
 
 def sha256(path):
@@ -19,9 +20,21 @@ def verify(manifest_path, owned_base):
         raise ValueError("fixture is not a direct, non-symlink child of the owned base")
     if manifest_path.is_symlink() or not manifest_path.is_file():
         raise ValueError("manifest must be a regular file")
+    manifest_stat = manifest_path.stat()
+    if manifest_stat.st_uid != __import__('os').getuid() or manifest_stat.st_nlink != 1 or \
+            (manifest_stat.st_mode & 0o777) != 0o600:
+        raise ValueError("manifest must be owned/private")
+    fixture_stat = manifest_path.parent.stat()
+    if fixture_stat.st_uid != __import__('os').getuid() or (fixture_stat.st_mode & 0o777) != 0o700:
+        raise ValueError("fixture directory must be owned/private")
     record = json.loads(manifest_path.read_text())
-    if record.get("pair_kind") != "embedded" or record.get("scan_root") != "scan-root":
+    if (record.get("pair_kind") != "embedded" or record.get("scan_root") != "scan-root" or
+            record.get("fixture_scope") != "single-owned-embedded-root"):
         raise ValueError("not a single embedded fixture manifest")
+    if not re.fullmatch(r"[0-9a-f]{12}", str(record.get("run_id", ""))):
+        raise ValueError("invalid fresh fixture run id")
+    if not re.fullmatch(r"[0-9a-f]{40}", str(record.get("commit", ""))):
+        raise ValueError("invalid fixture source commit")
     if record.get("source_state"):
         raise ValueError("fixture was built from a dirty source tree")
     probes = record.get("probes")
@@ -33,6 +46,9 @@ def verify(manifest_path, owned_base):
     root = manifest_path.parent / "scan-root"
     if root.is_symlink() or not root.is_dir():
         raise ValueError("scan root is missing or is a symlink")
+    root_stat = root.stat()
+    if root_stat.st_uid != __import__('os').getuid() or (root_stat.st_mode & 0o777) != 0o700:
+        raise ValueError("scan root must be owned/private")
     bundle_name = probe.get("bundle")
     if not isinstance(bundle_name, str) or bundle_name != "scan-root/" + Path(bundle_name).name or not bundle_name.endswith(".plugin"):
         raise ValueError("bundle path escapes the scan root")
@@ -49,6 +65,11 @@ def verify(manifest_path, owned_base):
             actual[str(path.relative_to(bundle))] = sha256(path)
         elif not path.is_dir():
             raise ValueError("non-regular fixture entry")
+    match = probe.get("match")
+    if (not isinstance(match, str) or
+            not re.fullmatch(r"AEHL\.Embedded\.[0-9a-f]{12}", match) or
+            match == "AEHL.Embedded.88019a1a01a7"):
+        raise ValueError("fixture identity is not fresh embedded identity")
     expected = probe.get("files")
     if not isinstance(expected, dict) or actual != expected:
         raise ValueError("fixture file inventory or SHA-256 mismatch")
