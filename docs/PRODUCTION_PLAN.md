@@ -33,7 +33,18 @@ claims.
 
 Do not repeat the unchanged historical scan merely to reproduce this baseline.
 
-## Stage C0 — no-scan FILE ownership gate
+## Stage C0 — no-scan FILE ownership gate — PASS
+
+Live PASS evidence: [NO_SCAN_DIRECTORY_LIVE_PASS_2026-10-01.md](NO_SCAN_DIRECTORY_LIVE_PASS_2026-10-01.md).
+
+Source `182d058254203236414602acdd9901b8749d89cc`, build
+`noscan-8f9cb9fea71c`, report SHA-256
+`f767e891359a3e73dc41eefe4124fe63dc0cf4dde123c2d7efa7444cd35bc62a`.
+
+The exact directory lifecycle completed with 2/2 host-string releases, 1/1
+spec create/release, three retained provider references, unchanged project,
+unchanged 785-effect registry and unchanged runtime image set. No plug-in scan
+was requested.
 
 ### Implemented in source/offline tests
 
@@ -84,7 +95,9 @@ PASS means only:
 - owned host strings/specification have the reviewed release counts;
 - exactly three approved provider references were retained;
 - cleanup completed;
-- host/project/registry/image evidence is byte-equivalent before/after.
+- all pre-existing host/project/registry/runtime-image evidence remains exact;
+- only newly loaded immutable `/System/Library/` images are tolerated by the
+  remediated policy; the successful run added none.
 
 It does **not** mean ordinary-effect late registration works.
 
