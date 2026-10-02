@@ -3,13 +3,14 @@
 Updated: 2026-10-02. Branch: `research/ordinary-plugin-discovery`.
 
 Source of current verified state: [DEVELOPMENT_STATUS](DEVELOPMENT_STATUS.md).
-Accepted standard: **6.0.0**, `v6.0.0` peeled to
-`bb8b769404ddd5b97462812a4e6b430e8bfefe13`, adopted on 2026-10-02.
-Canonical [AI_ENTRYPOINT](https://github.com/ios3kov/AE-Development-Rules/blob/bb8b769404ddd5b97462812a4e6b430e8bfefe13/AI_ENTRYPOINT.md)
+Accepted standard: **6.2.0**, `v6.2.0` peeled to
+`d966078a9e45fee7ec9ad14f211a9da753d64b8a`, adopted on 2026-10-02.
+Canonical [AI_ENTRYPOINT](https://github.com/ios3kov/AE-Development-Rules/blob/d966078a9e45fee7ec9ad14f211a9da753d64b8a/AI_ENTRYPOINT.md)
 and its selected AE Development Rules modules, plus `AGENTS.md`, apply.
 Historical plans/evidence remain preserved and must not
 be treated as current approval.
-Migration scope/evidence: [rules adoption](RULES_ADOPTION_6_0_0_2026-10-02.md).
+Migration scope/evidence: [rules adoption](RULES_ADOPTION_6_2_0_2026-10-02.md).
+Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
 ## Product scope
 

@@ -10,8 +10,8 @@ product**.
 Current verified state: [DEVELOPMENT_STATUS](docs/DEVELOPMENT_STATUS.md).  
 Current gates: [PRODUCTION_PLAN](docs/PRODUCTION_PLAN.md).  
 Development requirements: [AGENTS](AGENTS.md).
-Accepted rules baseline: **AE Development Rules 6.0.0**; see
-[adoption record](docs/RULES_ADOPTION_6_0_0_2026-10-02.md).
+Accepted rules baseline: **AE Development Rules 6.2.0**; see
+[adoption record](docs/RULES_ADOPTION_6_2_0_2026-10-02.md).
 
 ## Current Stage C
 

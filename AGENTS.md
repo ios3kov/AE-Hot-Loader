@@ -1,11 +1,11 @@
 # AE Hot Loader development instructions
 
-Start with [AE Development Rules AI_ENTRYPOINT](https://github.com/ios3kov/AE-Development-Rules/blob/bb8b769404ddd5b97462812a4e6b430e8bfefe13/AI_ENTRYPOINT.md)
+Start with [AE Development Rules AI_ENTRYPOINT](https://github.com/ios3kov/AE-Development-Rules/blob/d966078a9e45fee7ec9ad14f211a9da753d64b8a/AI_ENTRYPOINT.md)
 and select the applicable canonical modules before each significant stage.
 Adopted on 2026-10-02 at the user's explicit migration request:
-AE-Development-Rules **6.0.0**, tag `v6.0.0`, peeled source
-`bb8b769404ddd5b97462812a4e6b430e8bfefe13`.
-See [adoption and migration](docs/RULES_ADOPTION_6_0_0_2026-10-02.md).
+AE-Development-Rules **6.2.0**, tag `v6.2.0`, peeled source
+`d966078a9e45fee7ec9ad14f211a9da753d64b8a`.
+See [adoption and migration](docs/RULES_ADOPTION_6_2_0_2026-10-02.md).
 Before a significant step, select risk/component/delivery rules and relevant
 feature overlays (IPC, diagnostics, testing, distribution). Do not silently
 replace this accepted source with the latest main. Older baseline
@@ -47,7 +47,7 @@ user-validation question does not block an otherwise safe identified test build;
 missing mandatory safety checks or actual live-operation authority still block
 the affected action. Full Release evaluates all applicable required checks.
 
-Apply v6.0.0 MAC-001 to the macOS distributable: exact artifact integrity,
+Apply v6.2.0 MAC-001 to the macOS distributable: exact artifact integrity,
 documented installation, actual host loading and selected-channel evidence.
 Unsigned or locally ad-hoc-signed artifacts may qualify after these checks.
 Do not require paid accounts, distribution certificates or remote signing/

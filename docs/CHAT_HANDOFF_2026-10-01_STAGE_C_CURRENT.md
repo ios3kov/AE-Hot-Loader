@@ -4,7 +4,7 @@ Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
 Current continuation: [live diagnostic PASS](C1_DIAGNOSTIC_LIVE_PASS_2026-10-02.md),
-[rules adoption](RULES_ADOPTION_6_0_0_2026-10-02.md),
+[rules adoption](RULES_ADOPTION_6_2_0_2026-10-02.md),
 [supervisor deadline review](C1_SUPERVISOR_DEADLINE_REVIEW_2026-10-02.md) and
 [prepared native candidate](C1_OBSERVER_CANDIDATE_REVIEW_2026-10-01.md).
 The current C1 section and next-gate order below supersede historical no-scan
@@ -23,7 +23,7 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 - Prepared native candidate source:
   **`7c983c5b5adfde0300f2370e5772ed757ab6b613`**; native bytes unchanged.
 - Current canonical AE Development Rules source:
-  **6.0.0 / `bb8b769404ddd5b97462812a4e6b430e8bfefe13`**; read pinned AI_ENTRYPOINT first.
+  **6.2.0 / `d966078a9e45fee7ec9ad14f211a9da753d64b8a`**; read pinned AI_ENTRYPOINT first.
 - Historical Stage C no-scan core head:
   **`c1e20e4ab4d4a4f6654f67df7dbb224f0790b5be`**.
 - Historical live-launcher code/test head:
