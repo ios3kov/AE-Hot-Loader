@@ -47,6 +47,13 @@ REVIEWS = {
         ("MEE-callback", "MEE", 0x376EC, 0x37A00),
         ("MEE-setdown", "MEE", 0x37F34, 0x38044),
     ),
+    "ownership": (
+        ("MEE-setup", "MEE", 0x36C58, 0x36DA4),
+        ("MEE-scan", "MEE", 0x36DA4, 0x376EC),
+        ("MEE-callback", "MEE", 0x376EC, 0x37A00),
+        ("MEE-finish", "MEE", 0x37EEC, 0x37F34),
+        ("MEE-setdown", "MEE", 0x37F34, 0x38044),
+    ),
 }
 DATA_WINDOWS = {"lifecycle": (("PLUG-vtable", "PLUG", 0x14920, 12),)}
 INPUTS = {
@@ -74,7 +81,71 @@ SYMBOL_WANTED = {
                           r"CleanupGeneralPluginScan|SetdownGeneralPlugins)"),
     "lifecycle": re.compile(r"(PLUG_PrepRoutine|PLUG_UnprepRoutine|PLUGp_UnprepRoutine|"
                             r"PLUG_RoutineDescPriv|PluginCleanupFunc|SetdownGeneralPlugins)"),
+    "ownership": re.compile(r"(SetupGeneralPluginScan|PluginScanFunc|PluginCleanupFunc|"
+                            r"CleanupGeneralPluginScan|SetdownGeneralPlugins|vectorI13GeneralPlugin)"),
 }
+
+# Addressed instruction checks corroborate the pinned file's ownership flow;
+# they never certify actual record identity, lifetime or safe repeated invocation.
+OWNERSHIP_ANCHORS = {
+    "MEE-setup": {
+        0x36c7c: ('adrp', 'x8,217'), 0x36c80: ('add', 'x8,x8,#0xd70'),
+        0x36c84: ('ldp', 'x21,x22,[x8]'), 0x36c98: ('sub', 'x22,x22,#0xb0'),
+        0x36ccc: ('ldaddal', 'w23,w8,[x8]'), 0x36ce4: ('blr', 'x8'),
+        0x36cec: ('ldaddal', 'w23,w8,[x8]'), 0x36d04: ('blr', 'x8'),
+        0x36d10: ('str', 'x21,[x8,#0xd78]'),
+    },
+    "MEE-scan": {
+        0x37108: ('bl', '0x9ed98'), 0x371ec: ('adrp', 'x9,216'),
+        0x371f0: ('add', 'x9,x9,#0xd78'), 0x371f4: ('ldp', 'x24,x9,[x9]'),
+        0x37200: ('str', 'x8,[x24]'), 0x37208: ('str', 'x8,[x24,#0x8]'),
+        0x37214: ('mov', 'w9,#0x1'), 0x37218: ('ldadd', 'w9,w8,[x8]'),
+        0x3723c: ('add', 'x0,x24,#0x90'), 0x3726c: ('bl', '0x40614'),
+        0x3730c: ('strb', 'w8,[x24,#0xa8]'), 0x37310: ('add', 'x0,x24,#0xb0'),
+        0x37318: ('str', 'x0,[x27,#0xd78]'),
+    },
+    "MEE-callback": {
+        0x37724: ('adrp', 'x8,216'), 0x37728: ('add', 'x8,x8,#0xd70'),
+        0x3772c: ('ldp', 'x21,x24,[x8]'), 0x37768: ('add', 'x21,x21,#0xb0'),
+        0x3779c: ('bl', '0x9e900'), 0x377a0: ('cbnz', 'w0,0x37768'),
+        0x377a4: ('strb', 'w25,[x21,#0xa8]'), 0x377c0: ('mov', 'x22,x21'),
+        0x377c4: ('movi.2d', 'v0,#0000000000000000'),
+        0x377c8: ('str', 'q0,[x22,#0x10]!'), 0x377d0: ('stp', 'q0,q0,[x21,#0x20]'),
+        0x377d4: ('stp', 'q0,q0,[x21,#0x40]'), 0x377d8: ('stp', 'q0,q0,[x21,#0x60]'),
+        0x377dc: ('str', 'q0,[x21,#0x80]'), 0x377f0: ('mov', 'w0,#0x3'),
+        0x377fc: ('mov', 'x4,x22'), 0x37800: ('blr', 'x8'),
+    },
+    "MEE-finish": {
+        0x37ef8: ('adrp', 'x8,216'), 0x37efc: ('add', 'x8,x8,#0xd70'),
+        0x37f00: ('ldp', 'x19,x20,[x8]'), 0x37f08: ('add', 'x19,x19,#0xb0'),
+        0x37f14: ('ldr', 'x8,[x19,#0x80]'), 0x37f1c: ('ldr', 'x0,[x19,#0x10]'),
+        0x37f20: ('blr', 'x8'),
+    },
+    "MEE-setdown": {
+        0x37f50: ('ldr', 'x19,[x8,#0x360]'), 0x37f54: ('ldr', 'x20,[x8,#0x368]'),
+        0x37f70: ('ldr', 'x8,[x19,#0x58]'), 0x37f7c: ('blr', 'x8'),
+        0x37f80: ('ldrb', 'w8,[x19,#0xa8]'), 0x37f88: ('strb', 'wzr,[x19,#0xa8]'),
+        0x37f90: ('bl', '0x9eb10'), 0x37f9c: ('add', 'x8,x8,#0xd70'),
+        0x37fa0: ('ldp', 'x19,x21,[x8]'), 0x37fb4: ('sub', 'x21,x21,#0xb0'),
+        0x37fe8: ('ldaddal', 'w22,w8,[x8]'), 0x38000: ('blr', 'x8'),
+        0x38008: ('ldaddal', 'w22,w8,[x8]'), 0x38020: ('blr', 'x8'),
+        0x3802c: ('str', 'x19,[x8,#0xd78]'),
+    },
+}
+
+
+def verify_ownership(text, label, start, end):
+    require((label, 'MEE', start, end) in REVIEWS['ownership'], 'unreviewed ownership window')
+    count = validate_disassembly(text, start, end)
+    rows = {}
+    for address, op, operands in re.findall(
+            r'^.*\[0x([0-9a-fA-F]+)\]\s+<[^>]*>:[ \t]+(\S+)[ \t]*([^\n]*)', text, re.M):
+        rows[int(address, 16)] = (op, re.sub(r'\s+', '', operands.split(';')[0]))
+    expected = OWNERSHIP_ANCHORS[label]
+    require(all(rows.get(address) == pair for address, pair in expected.items()),
+            'MEE ownership structural anchors differ')
+    return {'decoded_instructions': count, 'structural_anchors': len(expected),
+            'claim': 'file-only-ownership-flow-not-runtime-or-repeat-safety-proof'}
 
 
 def review_windows(review):
@@ -266,6 +337,7 @@ def main():
                                        dir=parent))
         os.chmod(folder, 0o700)
         outputs = {}
+        ownership = {}
         for name in names:
             path, _ = INPUTS[name]
             nm, nm_err = run_tool(["/usr/bin/nm", "-arch", "arm64", "-n", "-m", str(path)])
@@ -284,6 +356,8 @@ def main():
             require("error:" not in lowered and "fatal:" not in lowered,
                     "lldb reported an inspection error")
             instruction_count = validate_disassembly(disassembly, start, end)
+            if args.review == 'ownership':
+                ownership[label] = verify_ownership(disassembly, label, start, end)
             write_exclusive(folder / (label + "-disassembly.txt"), disassembly)
             if diagnostics:
                 write_exclusive(folder / (label + "-stderr.txt"), diagnostics)
@@ -328,6 +402,11 @@ def main():
             "inputs": outputs,
             "data_windows": data_outputs,
         }
+        if args.review == 'ownership':
+            record['ownership_evidence'] = ownership
+            record['actual_record_identities'] = 'NOT OBSERVED'
+            record['allocation_lifetime_quiescence'] = 'NOT PROVEN'
+            record['safe_repeat_invocation'] = 'NOT PROVEN'
         archive = package(folder, record)
         print("PASS: bounded offline " + args.review + " evidence only; Adobe calls=0")
         print("Report: " + str(archive))

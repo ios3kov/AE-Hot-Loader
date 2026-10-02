@@ -144,6 +144,17 @@ remain UNKNOWN; dependent native integration is blocked. Do not replay setup,
 setdown/unprep, relax the restriction or replace callbacks. No native C1
 backend/live request is ready. Prior records are preserved.
 
+## C1 MEE ownership evidence — prepared
+
+The file-only collector now reproduces five MEE ownership/lifecycle windows,
+960 decoded instructions and 61 addressed anchors. Focused 13-test collector
+suite PASS, including owned arm64 file inspection; saved MEE windows pass the
+new checks. Retention, state overwrite/repeated saved entrypoint call, finish
+callbacks and separate teardown release are distinguished. Actual seven-record
+identity and lifetime/repeat safety remain unproven. No new live operation,
+native profile or gate change. Next exact clean-source collection/regression/CI.
+See [MEE ownership review](C1_MEE_OWNERSHIP_REVIEW_2026-10-02.md).
+
 ## C1 PIN file collector — exact local PASS
 
 Reproducible exact-file collector/source c01fb89 completed PASS: 58 instructions,

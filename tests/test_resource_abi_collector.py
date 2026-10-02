@@ -114,6 +114,34 @@ class ResourceAbiCollectorTests(unittest.TestCase):
         self.assertNotIn('PLUG_Search', selected)
         self.assertNotIn('Unrelated', selected)
 
+    def test_ownership_review_has_exact_mapped_windows_and_no_registration_call(self):
+        windows = collector.review_windows('ownership')
+        self.assertEqual({name for _, name, _, _ in windows}, {'MEE'})
+        self.assertEqual(sum((end - start) // 4 for _, _, start, end in windows), 960)
+        self.assertEqual({label for label, *_ in windows}, set(collector.OWNERSHIP_ANCHORS))
+        for label, name, start, end in windows:
+            script = collector.lldb_script(collector.INPUTS[name][0], start, end)
+            self.assertNotIn('process attach', script)
+            self.assertNotIn('process launch', script)
+
+    def test_decoded_ownership_window_cannot_pass_with_wrong_state_operations(self):
+        text = ''.join('owned[0x%x] <+%d>: nop\n' % (a, a - 0x37eec)
+                       for a in range(0x37eec, 0x37f34, 4))
+        with self.assertRaisesRegex(ValueError, 'structural'):
+            collector.verify_ownership(text, 'MEE-finish', 0x37eec, 0x37f34)
+        with self.assertRaisesRegex(ValueError, 'bounds'):
+            collector.verify_ownership(text.splitlines()[0], 'MEE-finish', 0x37eec, 0x37f34)
+        with self.assertRaisesRegex(ValueError, 'unreviewed'):
+            collector.verify_ownership(text, 'MEE-finish', 0x37eec, 0x37f30)
+
+    def test_ownership_symbol_scope_excludes_ordinary_resource_search(self):
+        selected = collector.select_symbols('external _SetupGeneralPluginScan\n'
+            'external _PluginCleanupFunc\nexternal _PLUG_Search\nexternal _Other', 'ownership')
+        self.assertIn('SetupGeneralPluginScan', selected)
+        self.assertIn('PluginCleanupFunc', selected)
+        self.assertNotIn('PLUG_Search', selected)
+        self.assertNotIn('Other', selected)
+
     def test_lldb_script_is_bounded_and_offline(self):
         path = Path("/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app/Contents/Frameworks/PLUG.dylib")
         script = collector.lldb_script(path, 0x8A6C, 0x8C20)
