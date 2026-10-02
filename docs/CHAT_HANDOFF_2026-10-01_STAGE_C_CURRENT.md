@@ -473,6 +473,17 @@ or further live operation. Seven-record blocker unchanged. Next retained-state/
 lifetime and PIN comparator/synchronization review. See
 [bounded PIN review](C1_PIN_CLEANUP_REVIEW_2026-10-02.md).
 
+## C1 retained identity transaction — focused owned-data PASS
+
+The transaction core now refuses wrong-run/process/provider/root/project data,
+consumes invalid and concurrent attempts without retry, and enforces a monotonic
+15-second deadline around the diagnostic boundaries. Focused retained family:
+14 Python tests PASS, including 101 nested transaction cases. Actual capture core
+is exercised on owned bytes; no Adobe call, install, launch or sensitive host read.
+Native/disk adapter and independent host supervisor are still unconnected; this
+is not a live-ready candidate. Full clean regression/static review/CI pending.
+See [transaction acceptance and review](C1_RETAINED_TRANSACTION_REVIEW_2026-10-02.md).
+
 ## C1 retained identity journal — exact-source PASS
 
 Code/test source **59becab0056fae08b450cbb4471466b427427744**.
