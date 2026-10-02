@@ -32,8 +32,9 @@ claims.
 - RSMB startup-registered apply/render: **PASS**, startup baseline only.
 - RSMB late registration: **FAIL**.
 - Supported public SDK late-registration procedure: **NOT ESTABLISHED**.
-- Current user's Mac checkout and current AE runtime identity: **NOT OBSERVED**
-  from this environment.
+- Original user checkout remains preserved; latest owned test AE runtime
+  identity/project/registry were verified by the C1 read-only diagnostic.
+  This is not live registration/apply/render evidence.
 
 Do not repeat the unchanged historical scan merely to reproduce this baseline.
 
@@ -114,9 +115,9 @@ in both diagnostic and no-scan supervisors. Final source f4f84aa local regressio
 PASS (302 Python/no skips, 62 Node, 22 stages), bounded code scan completed with
 sole known false-positive. Exact-source research CI 37024297435 and full macOS
 CI 37024297373 PASS. This offline remediation is complete. Native candidate
-unchanged and uninstalled. Diagnostic authority is now granted, but the existing
-AE session blocks safe execution; complete-state gates remain open. See
-[C1 diagnostic preflight](C1_DIAGNOSTIC_PREFLIGHT_BLOCKED_2026-10-02.md).
+unchanged. The later authorized diagnostic installed/launched/captured once and
+passed; complete-state gates remain open. See
+[C1 live diagnostic](C1_DIAGNOSTIC_LIVE_PASS_2026-10-02.md).
 
 Current offline checkpoint: [C1_OBSERVER_CANDIDATE_REVIEW_2026-10-01.md](C1_OBSERVER_CANDIDATE_REVIEW_2026-10-01.md).
 The isolated sampler captures ordered callback pairs and retained record count
@@ -133,9 +134,9 @@ provider/heap-chain checks and exact CI. The separate inert diagnostic AEGP/supe
 and verified at clean 7c983c5, exact CI PASS. Live installation/launch/sensitive
 read approval was initially rejected before execution by automatic review.
 The user has now explicitly approved the concrete observe-d548b007e316 scope.
-Preflight refused the existing AE session before installation/launch/read.
-Wait for the user to close that session normally and explicitly resume, then
-recheck the unused exact candidate and fresh safe host baseline; heap ownership and host lifetime/quiescence remain unresolved. Repeat preparation can still invoke saved entrypoints;
+Preflight initially preserved the existing AE session. After the user closed
+it, the one authorized diagnostic completed PASS and consumed its authority.
+Actual baseline has two callbacks and seven retained general-plugin records; heap ownership and host lifetime/quiescence remain unresolved. Repeat preparation can still invoke saved entrypoints;
 the ResourcePassGate must continue requiring complete reviewed cleanup state
 and zero retained general-plugin records. These are necessary restrictions,
 not proof that a real baseline is eligible. Actual state/other callback effects
@@ -221,9 +222,9 @@ C0 gate on the authorized Mac.
 The user explicitly requested release publication on 2026-10-02. Publication
 permission is recorded; the mandatory readiness conditions below remain open.
 No release/tag is created while those conditions are unverified. The separately
-requested concrete diagnostic scope is now explicitly authorized. Its safe
-environment preflight is BLOCKED by an existing AE session; that session must
-be preserved. Publication authority does not waive any release requirement.
+requested concrete diagnostic completed PASS under explicit authority; that
+one-shot scope is consumed. Seven retained general-plugin records prevent the
+current resource-pass gate. Publication authority does not waive any release requirement.
 
 No merge to `main` or final release until all applicable
 mandatory checks pass for the exact candidate:

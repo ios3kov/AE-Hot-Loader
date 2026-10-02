@@ -3,7 +3,7 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [authorized diagnostic preflight](C1_DIAGNOSTIC_PREFLIGHT_BLOCKED_2026-10-02.md),
+Current continuation: [live diagnostic PASS](C1_DIAGNOSTIC_LIVE_PASS_2026-10-02.md),
 [rules adoption](RULES_ADOPTION_6_0_0_2026-10-02.md),
 [supervisor deadline review](C1_SUPERVISOR_DEADLINE_REVIEW_2026-10-02.md) and
 [prepared native candidate](C1_OBSERVER_CANDIDATE_REVIEW_2026-10-01.md).
@@ -435,6 +435,27 @@ Diagnostic permission is already granted; do not ask for it again. Private calls
 provider retention and registration are outside this permission. See
 [full scoped evidence](C1_DIAGNOSTIC_PREFLIGHT_BLOCKED_2026-10-02.md).
 Registration/apply/render and release gates remain open; C0 is not repeated.
+
+## Latest C1 live diagnostic — PASS, resource baseline ineligible
+
+User closed AE and confirmed full exit. Exact candidate observe-d548b007e316
+(native source 7c983c5) installed/launched once under explicit authority, using
+reviewed supervisor f4f84aa, clean execution HEAD b3a8536. One read-only request
+PASS; authority consumed. ZIP SHA
+54976e137d928861a5cffd8288e4dccc10a3b347f95b766dab89f297554b16f4;
+independent archive/native-evidence verification PASS. Two callbacks, seven
+retained general-plugin records, unchanged blank/clean/idle project, PID/start,
+785 effects and resident images. No private call/retention/retry/shutdown.
+AE/consumed helper preserved. Earlier environment blocker is superseded.
+
+Current ResourcePassGate cannot accept this baseline (requires zero records plus
+complete reviewed cleanup). File-only callback attribution: MEE PluginCleanupFunc;
+PINp_CleanupFunc tail-branches into PINp_SortModules (host global sorting).
+Runtime PIN UUID/content and full lifetime/quiescence remain unresolved.
+Next bounded file-only PIN review and retained-state contract; no gate weakening,
+setdown/startup replay, callback replacement or additional live capture under
+consumed authority. See [full evidence](C1_DIAGNOSTIC_LIVE_PASS_2026-10-02.md).
+Registration/apply/render/release still open; C0 unchanged PASS.
 
 ## Next gate — exact order
 

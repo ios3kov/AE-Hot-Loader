@@ -26,22 +26,29 @@ their original scope. This migration does not close live, registration or releas
 gates. Final documentation consistency/pinned-source/local-link checks PASS;
 documentation/policy migration complete. No runtime behavior changed.
 
-## Current Stage C1 — diagnostic authorized, existing AE session blocks execution
+## Current Stage C1 — authorized read-only diagnostic PASS
 
-The user's explicit «разрешаю» grants the concrete observe-d548b007e316
-installation / one conditional AE launch / one read-only diagnostic scope.
-The reviewed one-shot orchestration passed artifact/source/provider preflight,
-then refused an already-running AE session (PID 84352) before any installation,
-launch, request or internal-state read. Destination absent; control/journal
-empty; native request unconsumed. No retry or session/project changes.
-See [preflight evidence and next step](C1_DIAGNOSTIC_PREFLIGHT_BLOCKED_2026-10-02.md).
+After the user closed the prior AE session and confirmed full exit, the exact
+unused observe-d548b007e316 helper was installed, AE launched once, and one
+read-only capture completed **PASS**. External supervisor source f4f84aa and
+native source 7c983c5 remain independently pinned. Report SHA-256
+`54976e137d928861a5cffd8288e4dccc10a3b347f95b766dab89f297554b16f4`;
+independent archive/hash/token/native-evidence verification PASS.
 
-**BLOCKED on environment safety**, not permission. The user must save and close
-that session normally, then explicitly resume; do not terminate AE or
-repeat automatically. Recheck the exact unused candidate and safe baseline on
-resumption. Complete-state/lifetime/repeat and registration/release gates remain
-open. The older pending-authority/rejection records below are historical and
-are superseded only for this exact diagnostic scope.
+Actual state: **two cleanup callbacks, seven retained general-plugin records**;
+20 bounded copies / 496 bytes. Blank/unsaved/clean/idle project, PID/start,
+registry (785) and resident images remained unchanged. No private Adobe call,
+provider retention, registration, retry or AE termination. Diagnostic authority
+and request consumed. AE and the consumed helper are preserved.
+See [live result and bounded attribution](C1_DIAGNOSTIC_LIVE_PASS_2026-10-02.md).
+
+MEE callback matches PluginCleanupFunc; file-only PIN attribution matches
+PINp_CleanupFunc → PINp_SortModules, a host global sorting path. Loaded PIN UUID/
+content and full lifetime/quiescence remain unproven. The actual retained count
+violates ResourcePassGate's zero-record requirement; do not weaken the gate or
+invoke teardown. Next independent work: reproducible bounded PIN file review,
+then retained-state/lifetime contract. Registration/apply/render and release
+remain blocked. Earlier environment/authority records are historical.
 
 ## Current Stage C1 — supervisor deadline bug fixed offline
 
