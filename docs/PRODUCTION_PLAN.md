@@ -1,6 +1,6 @@
 # AE Hot Loader — current development and release plan
 
-Updated: 2026-10-01. Branch: `research/ordinary-plugin-discovery`.
+Updated: 2026-10-02. Branch: `research/ordinary-plugin-discovery`.
 
 Source of current verified state: [DEVELOPMENT_STATUS](DEVELOPMENT_STATUS.md).
 Canonical [AI_ENTRYPOINT](https://github.com/ios3kov/AE-Development-Rules/blob/main/AI_ENTRYPOINT.md)
@@ -178,6 +178,12 @@ After C succeeds:
 - compatibility matrix for the actually supported AE/macOS/architecture scope;
 - full static/security review;
 - Regression Level 2.
+
+Offline code-profile scan at clean `5a74fd8` on 2026-10-02 is complete for its
+bounded text scope: 265 supported files, no omissions, sole reviewed local CLI
+false-positive (raw exit 1 retained). It does not close the full static/security
+review or dependency/runtime checks above. Exact report identity is recorded in
+DEVELOPMENT_STATUS; historical closeout evidence remains unchanged.
 
 ## CI and artifact requirements
 

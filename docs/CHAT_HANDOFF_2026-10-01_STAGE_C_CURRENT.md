@@ -328,6 +328,19 @@ Continue independent work without milestone stops as explicitly requested.
 
 ## Current Stage C1 diagnostic candidate checkpoint
 
+Continuation 2026-10-02: clean head 5a74fd8, unchanged candidate/code source
+7c983c5. Offline code-profile scan v2.0.0 completed at
+2026-10-02T08:54:03.224551+00:00: 265 supported files/no omissions, four workflows;
+raw exit 1/review_required, sole known local argparse false-positive at
+tools/artifact_manifest.py:71 re-reviewed. Private report SHA-256
+b16f7d24decb13af96a6f20e2804766f5abeab91e9be6770ab78cb7f5b802aa8.
+This is bounded source scanning, not full security/AE/release evidence. No new
+behavior, candidate or live operation. Explicit exact diagnostic approval was
+requested again with the concrete install/one launch/read-only scope; pending.
+The latest generic continuation is not used to bypass the prior automatic-review
+rejection. Next dependent step remains that one diagnostic after actual approval
+and fresh runtime verification. Do not repeat C0 or an unchanged registration scan.
+
 Code 7c983c5: separate inert AEGP, one-shot durable journal and independent
 supervisor. Clean local 298 Python/no skips, 62 Node, 22 stages and both exact
 CI 36931094055/36931094195 PASS. Real SDK build/sign/hash/inert candidate
