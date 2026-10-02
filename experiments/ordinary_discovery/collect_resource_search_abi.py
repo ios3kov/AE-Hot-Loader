@@ -47,6 +47,21 @@ REVIEWS = {
         ("MEE-callback", "MEE", 0x376EC, 0x37A00),
         ("MEE-setdown", "MEE", 0x37F34, 0x38044),
     ),
+    "publication": (
+        ("PLUG-file", "PLUG", 0xF6C0, 0xFA1C),
+        ("PLUG-path", "PLUG", 0x6FA8, 0x7150),
+        ("FLT-scan", "FLT", 0x8CF98, 0x8D250),
+        ("FLT-setup-a", "FLT", 0x8D250, 0x8E250),
+        ("FLT-setup-b", "FLT", 0x8E250, 0x8EF8C),
+        ("FLT-add-a", "FLT", 0x8B2D4, 0x8C2D4),
+        ("FLT-add-b", "FLT", 0x8C2D4, 0x8CC70),
+        ("FLT-registry", "FLT", 0x5014, 0x53F0),
+        ("FLT-postsetup", "FLT", 0x9284C, 0x92AB8),
+        ("FLT-ready", "FLT", 0x146C8, 0x14838),
+        ("FLT-lazy-globals", "FLT", 0x5E504, 0x5E764),
+        ("FLT-register-lazy", "FLT", 0x99268, 0x993A4),
+        ("FLT-if-missing", "FLT", 0x993A4, 0x997E4),
+    ),
     "ownership": (
         ("MEE-setup", "MEE", 0x36C58, 0x36DA4),
         ("MEE-scan", "MEE", 0x36DA4, 0x376EC),
@@ -81,6 +96,9 @@ SYMBOL_WANTED = {
                           r"CleanupGeneralPluginScan|SetdownGeneralPlugins)"),
     "lifecycle": re.compile(r"(PLUG_PrepRoutine|PLUG_UnprepRoutine|PLUGp_UnprepRoutine|"
                             r"PLUG_RoutineDescPriv|PluginCleanupFunc|SetdownGeneralPlugins)"),
+    "publication": re.compile(r"(PLUGp_ScanFile|PLUG_RegisterRoutine|FLT_PLUGScanFunc|"
+                              r"FLTp_FiltSetup|FLTp_AddEffect|RegisterNewFilter|"
+                              r"FiltPostSetup|ScReadyFilter|DoLazyGlobals|RegisterEffectIfMissing)"),
     "ownership": re.compile(r"(SetupGeneralPluginScan|PluginScanFunc|PluginCleanupFunc|"
                             r"CleanupGeneralPluginScan|SetdownGeneralPlugins|vectorI13GeneralPlugin)"),
 }
@@ -132,6 +150,136 @@ OWNERSHIP_ANCHORS = {
         0x3802c: ('str', 'x19,[x8,#0xd78]'),
     },
 }
+
+
+# File-only publication anchors. The "if missing" entry creates a MissingEffect
+# placeholder; none of these checks certifies a usable native registration ABI.
+PUBLICATION_ANCHORS = {
+    'PLUG-file': {
+        0xf750: ('blr', 'x8'),
+        0xf770: ('tbnz', 'w26,#0x0,0xf93c'),
+        0xf910: ('ldr', 'x2,[sp,#0x30]'),
+        0xf91c: ('blr', 'x8'),
+    },
+    'PLUG-path': {
+        0x7010: ('bl', '0xcd74'),
+        0x7054: ('add', 'x20,x20,#0x488'),
+        0x70b8: ('bl', '0x8560'),
+    },
+    'FLT-scan': {
+        0x8cfb4: ('bl', '0x4208'),
+        0x8cfc0: ('cmp', 'w8,#0xe99'),
+        0x8cfd0: ('cmp', 'w8,#0xe99'),
+        0x8cfe0: ('bl', '0xa5b68'),
+        0x8d028: ('bl', '0xa5844'),
+        0x8d05c: ('bl', '0xa5b08'),
+        0x8d078: ('mov', 'x3,#0x0'),
+        0x8d07c: ('mov', 'x4,#0x0'),
+        0x8d080: ('mov', 'x5,#0x0'),
+        0x8d084: ('bl', '0x8d250'),
+    },
+    'FLT-setup-a': {
+        0x8d2cc: ('bl', '0x5cc60'),
+        0x8d300: ('blr', 'x8'),
+        0x8d304: ('mov', 'w8,#0x4b54'),
+        0x8d308: ('movk', 'w8,#0x6546,lsl#16'),
+        0x8d310: ('b.ne', '0x8ddec'),
+        0x8df08: ('bl', '0x4a24'),
+        0x8df2c: ('tbz', 'w24,#0x0,0x8dfa0'),
+        0x8df30: ('cbz', 'x28,0x8eb4c'),
+        0x8e05c: ('bl', '0x8b2d4'),
+    },
+    'FLT-setup-b': {
+        0x8e288: ('bl', '0xa5b80'),
+        0x8e388: ('bl', '0x5e26c'),
+        0x8e3e4: ('bl', '0x9284c'),
+        0x8e404: ('bl', '0x8b2d4'),
+        0x8e4e0: ('bl', '0xa5b74'),
+        0x8e610: ('bl', '0x5e26c'),
+        0x8e66c: ('bl', '0x9284c'),
+        0x8e68c: ('bl', '0x8b2d4'),
+        0x8e70c: ('bl', '0x146c8'),
+        0x8e73c: ('bl', '0x9a204'),
+        0x8e74c: ('cbnz', 'w19,0x8ec5c'),
+    },
+    'FLT-add-a': {
+        0x8b81c: ('bl', '0x6ea8'),
+        0x8b820: ('cbz', 'w0,0x8b834'),
+        0x8b82c: ('bl', '0x71a4'),
+        0x8b850: ('bl', '0x4c4c'),
+        0x8bd80: ('cbz', 'w21,0x8c200'),
+        0x8bd8c: ('bl', '0x5014'),
+        0x8c04c: ('bl', '0x5854'),
+        0x8c06c: ('bl', '0x9a258'),
+        0x8c0f4: ('bl', '0x9a258'),
+    },
+    'FLT-add-b': {
+        0x8cc04: ('bl', '0xa5820'),
+    },
+    'FLT-registry': {
+        0x5054: ('bl', '0xa6d44'),
+        0x5058: ('ldp', 'x8,x9,[x20,#0x38]'),
+        0x5068: ('str', 'x9,[x8]'),
+        0x5080: ('ldadd', 'w10,w9,[x9]'),
+        0x5094: ('bl', '0x1571c'),
+        0x5098: ('str', 'x0,[x20,#0x38]'),
+        0x50a8: ('blr', 'x8'),
+        0x5254: ('bl', '0x15970'),
+        0x52e4: ('b.eq', '0x5338'),
+        0x5300: ('strh', 'w8,[x9,#0x218]'),
+        0x530c: ('bl', '0x5480'),
+        0x5350: ('stp', 'x9,x8,[x21,#0x38]'),
+    },
+    'FLT-postsetup': {
+        0x9287c: ('blr', 'x8'),
+        0x92880: ('tbz', 'w0,#0xa,0x928f0'),
+        0x9288c: ('bl', '0x5d0dc'),
+        0x9289c: ('blr', 'x8'),
+    },
+    'FLT-ready': {
+        0x14704: ('bl', '0x983c8'),
+        0x1475c: ('cbnz', 'w21,0x147e0'),
+        0x147f8: ('bl', '0xa71dc'),
+    },
+    'FLT-lazy-globals': {
+        0x5e518: ('bl', '0xa5b5c'),
+        0x5e520: ('bl', '0xa60e4'),
+        0x5e524: ('cbz', 'x0,0x5e538'),
+        0x5e540: ('bl', '0x99fb4'),
+    },
+    'FLT-register-lazy': {
+        0x992b8: ('bl', '0x993a4'),
+        0x992c0: ('bl', '0x5e504'),
+        0x9934c: ('bl', '0x5c34'),
+        0x99354: ('bl', '0x5e504'),
+    },
+    'FLT-if-missing': {
+        0x99544: ('bl', '0x4a24'),
+        0x99564: ('tbnz', 'w21,#0x0,0x99748'),
+        0x99574: ('bl', '0x5cc60'),
+        0x99588: ('add', 'x0,x0,#0x6ba'),
+        0x996cc: ('add', 'x1,x1,#0xb74'),
+        0x996d0: ('bl', '0x5d0f8'),
+        0x996dc: ('bl', '0x5dfd8'),
+        0x996e8: ('bl', '0x5decc'),
+        0x996f4: ('bl', '0x5014'),
+    },
+}
+
+
+def verify_publication(text, label, start, end):
+    require((label, 'PLUG' if label.startswith('PLUG-') else 'FLT', start, end)
+            in REVIEWS['publication'], 'unreviewed publication window')
+    count = validate_disassembly(text, start, end)
+    rows = {}
+    for address, op, operands in re.findall(
+            r'^.*\[0x([0-9a-fA-F]+)\]\s+<[^>]*>:[ \t]+(\S+)[ \t]*([^\n]*)', text, re.M):
+        rows[int(address, 16)] = (op, re.sub(r'\s+', '', operands.split(';')[0]))
+    expected = PUBLICATION_ANCHORS[label]
+    require(all(rows.get(address) == pair for address, pair in expected.items()),
+            'publication structural anchors differ')
+    return {'decoded_instructions': count, 'structural_anchors': len(expected),
+            'claim': 'file-only-conditional-publication-not-safe-runtime-ABI'}
 
 
 def verify_ownership(text, label, start, end):
@@ -274,6 +422,20 @@ def validate_disassembly(text, start, end):
     return len(instructions)
 
 
+def verify_lldb_disassembly(text, diagnostics, start, end):
+    """Reject tool errors, but not C++ exception names in decoded comments."""
+    count = validate_disassembly(text, start, end)
+    # Only verified addressed instruction lines may have their symbol comment
+    # removed. Commands, other output and stderr retain the fail-closed check.
+    transcript = re.sub(
+        r'(^.*\[0x[0-9a-fA-F]+\]\s+<[^>]*>:[ \t]+[^;\n]*);[^\n]*',
+        r'\1', text, flags=re.M)
+    lowered = (transcript + diagnostics).lower()
+    require('error:' not in lowered and 'fatal:' not in lowered,
+            'lldb reported an inspection error')
+    return count
+
+
 def write_exclusive(path, data):
     flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW
     fd = os.open(path, flags, 0o600)
@@ -338,6 +500,7 @@ def main():
         os.chmod(folder, 0o700)
         outputs = {}
         ownership = {}
+        publication = {}
         for name in names:
             path, _ = INPUTS[name]
             nm, nm_err = run_tool(["/usr/bin/nm", "-arch", "arm64", "-n", "-m", str(path)])
@@ -352,10 +515,9 @@ def main():
                 ["/usr/bin/xcrun", "lldb", "--no-lldbinit", "--batch",
                  "--source", str(folder / (label + "-inspect.lldb"))],
                 timeout=60)
-            lowered = (disassembly + diagnostics).lower()
-            require("error:" not in lowered and "fatal:" not in lowered,
-                    "lldb reported an inspection error")
-            instruction_count = validate_disassembly(disassembly, start, end)
+            instruction_count = verify_lldb_disassembly(disassembly, diagnostics, start, end)
+            if args.review == 'publication':
+                publication[label] = verify_publication(disassembly, label, start, end)
             if args.review == 'ownership':
                 ownership[label] = verify_ownership(disassembly, label, start, end)
             write_exclusive(folder / (label + "-disassembly.txt"), disassembly)
@@ -402,6 +564,12 @@ def main():
             "inputs": outputs,
             "data_windows": data_outputs,
         }
+        if args.review == 'publication':
+            record['publication_evidence'] = publication
+            record['missing_effect_route'] = 'placeholder-only-not-real-plugin-loading'
+            record['native_registration_ABI'] = 'UNKNOWN'
+            record['isolation_from_general_plugin_state'] = 'NOT PROVEN'
+            record['registration_apply_render'] = 'NOT RUN'
         if args.review == 'ownership':
             record['ownership_evidence'] = ownership
             record['actual_record_identities'] = 'NOT OBSERVED'

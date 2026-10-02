@@ -85,6 +85,59 @@ class ResourceAbiCollectorTests(unittest.TestCase):
     def test_profile_pins_agree_with_header(self):
         collector.profile_agrees()
 
+    def test_cpp_exception_comment_is_not_a_tool_error(self):
+        text = ('owned[0x1000] <+0>: bl 0x2000 ; std::runtime_error::runtime_error(char const*)\n'
+                'owned[0x1004] <+4>: ret\n')
+        self.assertEqual(collector.verify_lldb_disassembly(text, '', 0x1000, 0x1008), 2)
+        for output, diagnostics in ((text + 'error: command failed\n', ''),
+                                    (text, 'error: target failed\n'),
+                                    (text + 'fatal: invalid image\n', ''),
+                                    (text, 'fatal: invalid image\n')):
+            with self.subTest(output=output, diagnostics=diagnostics):
+                with self.assertRaisesRegex(ValueError, 'inspection error'):
+                    collector.verify_lldb_disassembly(output, diagnostics, 0x1000, 0x1008)
+
+    def test_tool_comment_handling_does_not_accept_bad_decode(self):
+        text = ('owned[0x1000] <+0>: nop ; error: harmless instruction comment\n'
+                'owned[0x1004] <+4>: .long 0 ; error: undecoded\n')
+        with self.assertRaisesRegex(ValueError, 'undecoded'):
+            collector.verify_lldb_disassembly(text, '', 0x1000, 0x1008)
+        with self.assertRaisesRegex(ValueError, 'bounds'):
+            collector.verify_lldb_disassembly(text.splitlines()[0], '', 0x1000, 0x1008)
+        text = text.replace('.long 0', 'error: target failed')
+        with self.assertRaisesRegex(ValueError, 'inspection error'):
+            collector.verify_lldb_disassembly(text, '', 0x1000, 0x1008)
+
+    def test_publication_review_covers_complete_split_functions(self):
+        windows = collector.review_windows('publication')
+        self.assertEqual({name for _, name, _, _ in windows}, {'PLUG', 'FLT'})
+        self.assertEqual({label for label, *_ in windows}, set(collector.PUBLICATION_ANCHORS))
+        for labels, start, end in ((('FLT-setup-a', 'FLT-setup-b'), 0x8d250, 0x8ef8c),
+                                  (('FLT-add-a', 'FLT-add-b'), 0x8b2d4, 0x8cc70)):
+            selected = [(s, e) for label, _, s, e in windows if label in labels]
+            self.assertEqual(selected[0][0], start)
+            self.assertEqual(selected[-1][1], end)
+            self.assertEqual(selected[0][1], selected[1][0])
+
+    def test_placeholder_procedure_cannot_be_relabelled_as_real_effect(self):
+        start, end = 0x993a4, 0x997e4
+        text = ''.join('owned[0x%x] <+%d>: nop\n' % (a, a - start)
+                       for a in range(start, end, 4))
+        with self.assertRaisesRegex(ValueError, 'structural'):
+            collector.verify_publication(text, 'FLT-if-missing', start, end)
+        with self.assertRaisesRegex(ValueError, 'unreviewed'):
+            collector.verify_publication(text, 'FLT-if-missing', start, end - 4)
+
+    def test_publication_symbol_scope_does_not_select_general_plugin_setup(self):
+        selected = collector.select_symbols('external _FLT_RegisterEffectIfMissing\n'
+            'external _FLTp_FiltSetup\nexternal _PLUG_RegisterRoutine\n'
+            'external _SetupGeneralPluginScan\nexternal _PLUG_Search', 'publication')
+        self.assertIn('FLT_RegisterEffectIfMissing', selected)
+        self.assertIn('FLTp_FiltSetup', selected)
+        self.assertIn('PLUG_RegisterRoutine', selected)
+        self.assertNotIn('SetupGeneralPluginScan', selected)
+        self.assertNotIn('PLUG_Search', selected)
+
     def test_review_scope_rejects_invalid_windows(self):
         self.assertEqual(collector.review_windows("search-abi"),
                          tuple((name, name, *bounds) for name, bounds in collector.WINDOWS.items()))

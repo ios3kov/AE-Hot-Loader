@@ -11,6 +11,17 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
+## C1 ordinary-effect publication review — prepared, verification pending
+
+After the retained-name live PASS, file-only research distinguishes the ordinary
+resource/FLT publication route from the Missing Effect placeholder path. The
+collector adds 13 complete bounded windows/83 static anchors and corrects a
+reproduced C++ exception-comment diagnostic false positive. Focused 18 tests PASS;
+clean-source collection/regression/CI are pending. Native profiles/helpers and
+ResourcePassGate unchanged; no new AE operation. See [publication review and
+acceptance](C1_EFFECT_PUBLICATION_REVIEW_2026-10-02.md). Native backend NOT READY;
+registration/apply/render/release gates remain open.
+
 ## Latest C1 retained-name diagnostic — live PASS
 
 The user explicitly approved the exact `identity-d5480a2a4090` install/one-launch/
