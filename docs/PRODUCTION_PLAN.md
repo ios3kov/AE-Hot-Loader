@@ -144,6 +144,15 @@ remain UNKNOWN; dependent native integration is blocked. Do not replay setup,
 setdown/unprep, relax the restriction or replace callbacks. No native C1
 backend/live request is ready. Prior records are preserved.
 
+## C1 retained-record decoder — focused owned-fixture PASS
+
+Owned-buffer identity decoding is implemented and passes 38 nested strict C++17
+cases without host/record calls. Full clean-source regression/static review/CI
+pending. Actual seven live names remain NOT RUN. Next prepare a separately
+identified bounded diagnostic adapter/journal/supervisor before requesting its
+operation authority; preserve the consumed observer and zero-record gate.
+See [requirements and remaining diagnostic contract](C1_RETAINED_IDENTITY_DECODER_2026-10-02.md).
+
 ## C1 MEE ownership evidence — exact-source PASS
 
 File-only collector source 095a219 reproduces five MEE ownership/lifecycle

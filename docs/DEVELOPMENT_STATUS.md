@@ -50,6 +50,16 @@ invoke teardown. Next independent work: reproducible bounded PIN file review,
 then retained-state/lifetime contract. Registration/apply/render and release
 remain blocked. Earlier environment/authority records are historical.
 
+## C1 retained-record decoder — focused owned-fixture PASS
+
+Prepared a portable owned-buffer decoder: exact bounded record/name inventory,
+raw identity fields/name bytes, preserved order/duplicates and refusal on
+incoherent external-name copies. Strict C++17 focused suite PASS: 38 nested cases,
+zero host/record calls. Full clean regression, static review and exact-source CI
+pending. No live read, new native helper or gate change. Actual seven names
+remain unknown; future diagnostic adapter/journal/supervisor and fresh operation
+authority remain prerequisites. See [decoder contract](C1_RETAINED_IDENTITY_DECODER_2026-10-02.md).
+
 ## C1 MEE ownership evidence — exact-source PASS
 
 File-only collector source 095a219 reproduces five MEE ownership/lifecycle

@@ -470,6 +470,16 @@ or further live operation. Seven-record blocker unchanged. Next retained-state/
 lifetime and PIN comparator/synchronization review. See
 [bounded PIN review](C1_PIN_CLEANUP_REVIEW_2026-10-02.md).
 
+## C1 retained-record decoder — focused owned-fixture PASS
+
+Portable owned-buffer decoder and 38 nested strict C++17 fixture cases PASS.
+Exact record/name inventory, integer-only fields, raw names and coherent overlaps
+are checked. Full clean-source regression/static review/CI pending. No new host
+operation or native helper/profile/gate change; actual seven live names remain
+unknown. Next prepare the separate one-shot diagnostic adapter/journal/supervisor
+with capture/report verification before any new operation authority request.
+See [decoder contract](C1_RETAINED_IDENTITY_DECODER_2026-10-02.md).
+
 ## C1 MEE ownership evidence — exact-source PASS
 
 File-only collector source 095a219 reproduces five MEE ownership/lifecycle
