@@ -104,6 +104,12 @@ It does **not** mean ordinary-effect late registration works.
 
 ## Stage C1 — resource-registration experiment
 
+Independent external-supervisor deadline remediation on 2026-10-02:
+[C1_SUPERVISOR_DEADLINE_REVIEW](C1_SUPERVISOR_DEADLINE_REVIEW_2026-10-02.md).
+Reproduced premature request publication and late PASS acceptance are fixed;
+focused checks PASS, full clean-source regression/CI pending. Native candidate
+unchanged and uninstalled; live authority/complete-state gates still open.
+
 Current offline checkpoint: [C1_OBSERVER_CANDIDATE_REVIEW_2026-10-01.md](C1_OBSERVER_CANDIDATE_REVIEW_2026-10-01.md).
 The isolated sampler captures ordered callback pairs and retained record count
 within caller-supplied regions, comparing two bounded captures without calls or

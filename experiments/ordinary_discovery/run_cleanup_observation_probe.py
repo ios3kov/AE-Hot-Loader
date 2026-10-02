@@ -218,6 +218,7 @@ def supervise(record, control, journal, observed, request, providers, timeout,
     try:
         require(identity_fn(observed['pid']) == observed, 'host changed before request')
         require(provider_verifier(record) == providers, 'provider changed before request')
+        require(clock() < deadline, 'timeout before publication; attempt consumed; no retry')
         publish_fn(control, request); published = True
         while clock() < deadline:
             require(identity_fn(observed['pid']) == observed, 'host exited/changed')
@@ -226,6 +227,7 @@ def supervise(record, control, journal, observed, request, providers, timeout,
                 native = verify_native_pass(record, journal, observed)
                 require(identity_fn(observed['pid']) == observed and provider_verifier(record) == providers, 'identity changed after capture')
                 require(common.bundle_hashes(record['authorized_bundle']) == record['files'], 'installed helper changed')
+                require(clock() < deadline, 'timeout during verification; native state preserved; no retry')
                 status, reason = 'PASS', 'matching diagnostic only; registration/complete cleanup NOT PROVEN'; break
             sleep(0.2)
         else: reason = 'timeout; native state preserved; no retry'

@@ -154,6 +154,43 @@ class ObserverSupervisorTests(unittest.TestCase):
         self.assertEqual(out['status'], 'FAIL'); self.assertIn('timeout', out['reason']); self.assertEqual(len(published), 1)
         self.assertFalse(out['process_stopped']); self.assertFalse(out['installation_performed'])
 
+    def test_expired_preflight_does_not_publish_and_consumes_attempt(self):
+        prepared = self.prepare(); published = []; now = [0]
+        def providers(_):
+            now[0] = 20
+            return {'owned': 'bytes'}
+        out, archive = runner.supervise(*prepared, 20, identity_fn=lambda _: self.observed,
+            provider_verifier=providers, publish_fn=lambda c, r: published.append(r),
+            clock=lambda: now[0], sleep=lambda _: None)
+        self.assertEqual(published, [])
+        self.assertEqual(out['status'], 'FAIL'); self.assertIn('timeout', out['reason'])
+        self.assertFalse(out['request_published']); self.assertTrue(archive.is_file())
+        self.assertTrue((self.control / 'supervisor-claim.json').is_file())
+        with self.assertRaises(FileExistsError):
+            runner.supervise(*prepared, 20, identity_fn=lambda _: self.observed,
+                provider_verifier=providers, publish_fn=lambda c, r: published.append(r),
+                clock=lambda: now[0], sleep=lambda _: None)
+        self.assertEqual(published, [])
+
+    def test_verification_at_deadline_cannot_report_pass(self):
+        prepared = self.prepare(); published = []; now = [0]; checks = []
+        def providers(_):
+            checks.append(True)
+            if len(checks) == 2: now[0] = 20
+            return {'owned': 'bytes'}
+        def publish(control, request):
+            published.append(request)
+            (control / 'request.txt').write_bytes(request)
+            self.native()
+        out, archive = runner.supervise(*prepared, 20, identity_fn=lambda _: self.observed,
+            provider_verifier=providers, publish_fn=publish,
+            clock=lambda: now[0], sleep=lambda _: None)
+        self.assertEqual(out['status'], 'FAIL'); self.assertIn('timeout', out['reason'])
+        self.assertEqual(len(published), 1); self.assertTrue(out['request_published'])
+        self.assertIsNotNone(out['native']); self.assertTrue(archive.is_file())
+        self.assertEqual({p.name for p in self.journal.iterdir()}, runner.NATIVE_NAMES)
+        self.assertFalse(out['process_stopped'])
+
 
 if __name__ == '__main__':
     unittest.main()

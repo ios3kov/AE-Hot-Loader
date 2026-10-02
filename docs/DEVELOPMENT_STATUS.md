@@ -11,7 +11,19 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
-## Current Stage C1 — exact diagnostic candidate ready; live authority blocked
+## Current Stage C1 — supervisor deadline bug fixed offline
+
+Two reproduced deadline defects are fixed in the external diagnostic
+supervisor: expired preflight cannot publish a request, and verification that
+reaches the deadline cannot return PASS. Both consume/preserve the attempt and
+evidence without retry or host termination. Focused seven-test suite PASS;
+full clean-source regression and exact-code CI pending. Native candidate bytes
+are unchanged; no installation/launch/read performed. See
+[deadline review](C1_SUPERVISOR_DEADLINE_REVIEW_2026-10-02.md).
+Concrete live authority and actual complete-state/lifetime/repeat evidence still
+block dependent registration; ordinary registration/apply/render NOT RUN.
+
+## Prepared diagnostic candidate — live authority blocked
 
 Latest user direction on 2026-10-02: publish a release ("релиз делай").
 Publication is now explicitly requested; do not ask for that permission again
