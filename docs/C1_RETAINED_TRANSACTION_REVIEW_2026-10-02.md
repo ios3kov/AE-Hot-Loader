@@ -62,7 +62,31 @@ failure reasons remain bounded/sanitized. A final save that exhausts the deadlin
 cannot return PASS; its already-persisted result is provisional and must be
 rejected by the future independent supervisor's elapsed-deadline check.
 
-Full clean regression, separate static/source review and exact-source CI pending.
+Code/test source **836c29d3ef18b93a563e1b271198faf1a4eb473f**. Full clean local
+regression PASS: 324 Python/no skips, 62 Node, 22 offline stages. Independent ZIP
+inventory/member hashes/CRC and tracked-source recheck PASS; source unchanged.
+Private report SHA-256
+`45c6f54655170ed27f83bdd0678390aee6cd1a5823093795927614c46cff27e1`.
+Separate source review covered plan/authority immutability, consumed concurrency,
+binding/project/registry/image checks, monotonic deadline/overflow, provisional
+result trust, at-most-once recovery and failure preservation. Bounded static audit
+completed at exact clean source: 322 supported files, zero omissions within scope,
+all selected checks completed. Native C++ reviewed separately; unsupported types
+are outside scanner claims. Raw exit 1 retains only the known
+`vibe.no_ratelimit_auth` at `tools/artifact_manifest.py:71`: rechecked local argparse
+mode, not an HTTP/auth route. Private audit SHA-256
+`74299418d8c023d56327b74e3ee8547ba6a689c1ffc97eac23a62e28ba8c5d3c`.
+Exact-source [research CI 37047951971](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37047951971)
+and [full macOS CI 37047951931](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37047951931)
+both completed/success at 836c29d3ef18b93a563e1b271198faf1a4eb473f.
 Actual AE record identities remain NOT RUN. Next durable transaction evidence and
 independent host verification/external supervision, then a separately identified
 inert native candidate. Consumed observe-d548b007e316 authority stays consumed.
+
+
+Documentation-only closeout changes no tested code/candidate. Changed local
+links and diff whitespace check PASS. Existing process-start formatting was
+rechecked in the prior native observer: decimal seconds + dot + unpadded decimal
+microseconds, matching this core's process-start comparison. Integration must
+measure scope afresh in each host observation rather than copy approval fields;
+separate exact SDK/native binding review and authorization remain prerequisites.

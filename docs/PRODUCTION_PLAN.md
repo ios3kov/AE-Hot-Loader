@@ -145,7 +145,7 @@ remain UNKNOWN; dependent native integration is blocked. Do not replay setup,
 setdown/unprep, relax the restriction or replace callbacks. No native C1
 backend/live request is ready. Prior records are preserved.
 
-## C1 retained identity transaction — focused owned-data PASS
+## C1 retained identity transaction — exact-source PASS
 
 The transaction core now refuses wrong-run/process/provider/root/project data,
 consumes invalid and concurrent attempts without retry, and enforces a monotonic
@@ -153,7 +153,12 @@ consumes invalid and concurrent attempts without retry, and enforces a monotonic
 14 Python tests PASS, including 101 nested transaction cases. Actual capture core
 is exercised on owned bytes; no Adobe call, install, launch or sensitive host read.
 Native/disk adapter and independent host supervisor are still unconnected; this
-is not a live-ready candidate. Full clean regression/static review/CI pending.
+is not a live-ready candidate. Code/test source 836c29d3ef18b93a563e1b271198faf1a4eb473f:
+full clean local regression PASS (324 Python/no skips, 62 Node, 22 stages), report
+hash/inventory/source recheck PASS. Bounded static review retains only the known
+local-argparse false-positive. Exact-source [research CI 37047951971](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37047951971)
+and [full macOS CI 37047951931](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37047951931)
+both completed/success at 836c29d3ef18b93a563e1b271198faf1a4eb473f.
 See [transaction acceptance and review](C1_RETAINED_TRANSACTION_REVIEW_2026-10-02.md).
 
 ## C1 retained identity journal — exact-source PASS

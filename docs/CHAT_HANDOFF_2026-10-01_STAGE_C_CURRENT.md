@@ -15,7 +15,8 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
 - Repository: `ios3kov/AE-Hot-Loader`.
 - Branch: `research/ordinary-plugin-discovery`; never change `main`.
-- Latest retained identity journal/verifier/code/test head: **59becab0056fae08b450cbb4471466b427427744**.
+- Latest retained identity transaction/code/test head: **836c29d3ef18b93a563e1b271198faf1a4eb473f**.
+- Prior retained identity journal/verifier/code/test head: **59becab0056fae08b450cbb4471466b427427744**.
 - Prior retained identity capture/code/test head: **eb559edac5d9bf5d3861d5673d9df47e9de1f5e8**.
 - Prior retained-record decoder/code/test head: **15c528f6d7dabad83e7203970fc8a09bb2b7e710**.
 - Prior MEE ownership collector/code/test head: **095a219253bf86bea82fa06fc00ac6c87e6f0b05**.
@@ -473,7 +474,7 @@ or further live operation. Seven-record blocker unchanged. Next retained-state/
 lifetime and PIN comparator/synchronization review. See
 [bounded PIN review](C1_PIN_CLEANUP_REVIEW_2026-10-02.md).
 
-## C1 retained identity transaction — focused owned-data PASS
+## C1 retained identity transaction — exact-source PASS
 
 The transaction core now refuses wrong-run/process/provider/root/project data,
 consumes invalid and concurrent attempts without retry, and enforces a monotonic
@@ -481,7 +482,12 @@ consumes invalid and concurrent attempts without retry, and enforces a monotonic
 14 Python tests PASS, including 101 nested transaction cases. Actual capture core
 is exercised on owned bytes; no Adobe call, install, launch or sensitive host read.
 Native/disk adapter and independent host supervisor are still unconnected; this
-is not a live-ready candidate. Full clean regression/static review/CI pending.
+is not a live-ready candidate. Code/test source 836c29d3ef18b93a563e1b271198faf1a4eb473f:
+full clean local regression PASS (324 Python/no skips, 62 Node, 22 stages), report
+hash/inventory/source recheck PASS. Bounded static review retains only the known
+local-argparse false-positive. Exact-source [research CI 37047951971](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37047951971)
+and [full macOS CI 37047951931](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37047951931)
+both completed/success at 836c29d3ef18b93a563e1b271198faf1a4eb473f.
 See [transaction acceptance and review](C1_RETAINED_TRANSACTION_REVIEW_2026-10-02.md).
 
 ## C1 retained identity journal — exact-source PASS
