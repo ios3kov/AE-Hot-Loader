@@ -12,6 +12,17 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
+## Latest C1 readiness and descriptor ownership — prepared
+
+The new bounded file-only mode separates the actual readiness/lazy-global bodies
+from their delegates and the path-constructor thunk from its implementation.
+Nine complete windows / 1136 instructions / 79 anchors; 21 focused collector
+tests PASS. Preparation/global setup change retained state and are not a proved
+rollback transaction. No native helper/profile/ResourcePassGate or AE operation.
+Clean-source collection, independent evidence, full regression/static review and
+exact-source CI are pending. See [readiness review](C1_EFFECT_READINESS_REVIEW_2026-10-02.md).
+Native backend NOT READY; registration/apply/render/release gates remain open.
+
 ## Latest C1 ordinary-effect publication review — offline PASS
 
 Code/test source **db4799e2d964a68be761d71924bc5c693d13dea3**. File-only

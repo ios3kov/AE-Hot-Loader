@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Collect bounded Stage C1 search, cleanup or lifecycle evidence from pinned files.
+"""Collect bounded Stage C1 search, ownership and effect evidence from pinned files.
 
 Offline/file-only: never launches or attaches to After Effects and never loads
 Adobe code. Captures fixed arm64 disassembly windows plus selected symbols.
@@ -62,6 +62,17 @@ REVIEWS = {
         ("FLT-register-lazy", "FLT", 0x99268, 0x993A4),
         ("FLT-if-missing", "FLT", 0x993A4, 0x997E4),
     ),
+    "effect-readiness": (
+        ("FLT-ready-body", "FLT", 0x5CEA8, 0x5D0DC),
+        ("FLT-lazy-setup", "FLT", 0x5D328, 0x5D644),
+        ("FLT-unready", "FLT", 0x5D104, 0x5D328),
+        ("FLT-setdown", "FLT", 0x5D644, 0x5D7DC),
+        ("FLT-global-dispatch", "FLT", 0x906C4, 0x90B7C),
+        ("FLT-std-params", "FLT", 0x539EC, 0x53A24),
+        ("PLUG-path-ctor", "PLUG", 0xC9B4, 0xCC9C),
+        ("PLUG-classref", "PLUG", 0xCC9C, 0xCD74),
+        ("PLUG-path-thunk", "PLUG", 0xCD74, 0xCD78),
+    ),
     "ownership": (
         ("MEE-setup", "MEE", 0x36C58, 0x36DA4),
         ("MEE-scan", "MEE", 0x36DA4, 0x376EC),
@@ -99,6 +110,9 @@ SYMBOL_WANTED = {
     "publication": re.compile(r"(PLUGp_ScanFile|PLUG_RegisterRoutine|FLT_PLUGScanFunc|"
                               r"FLTp_FiltSetup|FLTp_AddEffect|RegisterNewFilter|"
                               r"FiltPostSetup|ScReadyFilter|DoLazyGlobals|RegisterEffectIfMissing)"),
+    "effect-readiness": re.compile(r"(ReadyFilter|UnreadyFilter|DoLazyGlobalSetup|"
+                                   r"DoGlobalSetdown|FLTp_DoGlobal|FLTp_GetStdParams|"
+                                   r"PLUG_RoutineDescPriv|CreateClassRef)"),
     "ownership": re.compile(r"(SetupGeneralPluginScan|PluginScanFunc|PluginCleanupFunc|"
                             r"CleanupGeneralPluginScan|SetdownGeneralPlugins|vectorI13GeneralPlugin)"),
 }
@@ -265,6 +279,122 @@ PUBLICATION_ANCHORS = {
         0x996f4: ('bl', '0x5014'),
     },
 }
+
+
+# Preparation/global setup are stateful and can fail after mutation. These
+# addressed file checks deliberately make no runtime receiver/rollback claim.
+READINESS_ANCHORS = {
+    'FLT-ready-body': {
+        0x5cec0: ('add', 'x20,x0,#0x170'),
+        0x5cee0: ('bl', '0xa6d44'),
+        0x5cee8: ('ldaddal', 'w21,w8,[x8]'),
+        0x5ceec: ('cbz', 'w8,0x5cf1c'),
+        0x5cf1c: ('ldp', 'x21,x20,[x19,#0xc0]'),
+        0x5cf74: ('cbz', 'x21,0x5cef0'),
+        0x5cfa0: ('bl', '0xa59dc'),
+        0x5cff8: ('cbz', 'w20,0x5d020'),
+        0x5d008: ('swpalh', 'w9,w8,[x8]'),
+        0x5d014: ('ldaddal', 'w9,w8,[x8]'),
+        0x5d018: ('mov', 'w20,#0x1902'),
+        0x5d034: ('ldr', 'x8,[x8,#0x8]'),
+        0x5d03c: ('swpal', 'x8,x8,[x10]'),
+        0x5d090: ('swpal', 'x8,x8,[x9]'),
+        0x5d0bc: ('bl', '0xa5820'),
+    },
+    'FLT-lazy-setup': {
+        0x5d374: ('bl', '0xa6d44'),
+        0x5d380: ('strb', 'w8,[x20]'),
+        0x5d38c: ('tbnz', 'w8,#0x1,0x5d490'),
+        0x5d474: ('mov', 'w1,#0x1'),
+        0x5d47c: ('bl', '0x906c4'),
+        0x5d48c: ('cbnz', 'w22,0x5d4a4'),
+        0x5d498: ('bl', '0x539ec'),
+        0x5d4b0: ('swpalh', 'w9,w8,[x8]'),
+        0x5d4bc: ('strb', 'wzr,[x20]'),
+        0x5d4c8: ('strb', 'w9,[x19]'),
+        0x5d4cc: ('tbz', 'w8,#0x0,0x5d530'),
+        0x5d548: ('bl', '0xa71dc'),
+        0x5d5f0: ('bl', '0x498c'),
+        0x5d61c: ('bl', '0xa5c7c'),
+        0x5d63c: ('bl', '0xa5820'),
+    },
+    'FLT-unready': {
+        0x5d13c: ('bl', '0xa6d44'),
+        0x5d148: ('ldaddal', 'w9,w8,[x8]'),
+        0x5d150: ('b.ne', '0x5d234'),
+        0x5d1d8: ('bl', '0xa5acc'),
+        0x5d2a8: ('swpal', 'xzr,x8,[x8]'),
+        0x5d2ac: ('cbz', 'w20,0x5d2bc'),
+        0x5d2b8: ('ldaddal', 'w9,w8,[x8]'),
+        0x5d308: ('bl', '0xa5820'),
+    },
+    'FLT-setdown': {
+        0x5d664: ('tbnz', 'w8,#0x1,0x5d684'),
+        0x5d6a4: ('bl', '0x983c8'),
+        0x5d6fc: ('cbnz', 'w20,0x5d66c'),
+        0x5d704: ('mov', 'w1,#0x3'),
+        0x5d70c: ('bl', '0x906c4'),
+        0x5d730: ('bl', '0x983d0'),
+        0x5d790: ('csel', 'w20,w20,w19,eq'),
+    },
+    'FLT-global-dispatch': {
+        0x90768: ('bl', '0x7e014'),
+        0x907e0: ('mov', 'x4,x22'),
+        0x907e8: ('bl', '0x98494'),
+        0x907f0: ('cbnz', 'w0,0x90b3c'),
+        0x907f8: ('b.eq', '0x90b30'),
+        0x90814: ('stp', 'w1,w8,[x21]'),
+        0x90820: ('bl', '0x5ce90'),
+        0x90854: ('bl', '0x8cc70'),
+        0x908dc: ('orr', 'w1,w0,#0x2'),
+        0x908e4: ('bl', '0x5ce9c'),
+        0x90b38: ('bl', '0x5e1bc'),
+    },
+    'FLT-std-params': {
+        0x539fc: ('bl', '0x546bc'),
+        0x53a00: ('cbz', 'x0,0x53a14'),
+        0x53a20: ('b', '0x535ac'),
+    },
+    'PLUG-path-ctor': {
+        0xca18: ('str', 'x8,[x19]'),
+        0xca2c: ('str', 'x8,[x20,#0x30]!'),
+        0xca50: ('ldadd', 'x11,x10,[x10]'),
+        0xca58: ('stp', 'x8,x9,[x19,#0x38]'),
+        0xcab4: ('cbz', 'x8,0xcbd8'),
+        0xcac0: ('bl', '0xcc9c'),
+        0xcaec: ('blr', 'x8'),
+        0xcb04: ('str', 'q0,[x19,#0x50]'),
+        0xcb08: ('str', 'x0,[x19,#0x48]'),
+        0xcbb0: ('bl', '0x11260'),
+        0xcbd4: ('bl', '0x1111c'),
+        0xcc00: ('blr', 'x8'),
+        0xcc08: ('strb', 'w8,[x19,#0x60]'),
+        0xcc98: ('bl', '0x110a4'),
+    },
+    'PLUG-classref': {
+        0xccac: ('mov', 'x19,x8'),
+        0xccb8: ('bl', '0xe040'),
+        0xccd0: ('bl', '0x112cc'),
+        0xccf4: ('stp', 'xzr,xzr,[sp,#0x8]'),
+        0xccf8: ('stp', 'x8,x9,[x19,#0x8]'),
+    },
+    'PLUG-path-thunk': {0xcd74: ('b', '0xc9b4')},
+}
+
+
+def verify_readiness(text, label, start, end):
+    require((label, 'PLUG' if label.startswith('PLUG-') else 'FLT', start, end)
+            in REVIEWS['effect-readiness'], 'unreviewed effect readiness window')
+    count = validate_disassembly(text, start, end)
+    rows = {}
+    for address, op, operands in re.findall(
+            r'^.*\[0x([0-9a-fA-F]+)\]\s+<[^>]*>:[ \t]+(\S+)[ \t]*([^\n]*)', text, re.M):
+        rows[int(address, 16)] = (op, re.sub(r'\s+', '', operands.split(';')[0]))
+    expected = READINESS_ANCHORS[label]
+    require(all(rows.get(address) == pair for address, pair in expected.items()),
+            'effect readiness structural anchors differ')
+    return {'decoded_instructions': count, 'structural_anchors': len(expected),
+            'claim': 'file-only-state-and-ownership-not-safe-runtime-ABI'}
 
 
 def verify_publication(text, label, start, end):
@@ -501,6 +631,7 @@ def main():
         outputs = {}
         ownership = {}
         publication = {}
+        readiness = {}
         for name in names:
             path, _ = INPUTS[name]
             nm, nm_err = run_tool(["/usr/bin/nm", "-arch", "arm64", "-n", "-m", str(path)])
@@ -518,6 +649,8 @@ def main():
             instruction_count = verify_lldb_disassembly(disassembly, diagnostics, start, end)
             if args.review == 'publication':
                 publication[label] = verify_publication(disassembly, label, start, end)
+            if args.review == 'effect-readiness':
+                readiness[label] = verify_readiness(disassembly, label, start, end)
             if args.review == 'ownership':
                 ownership[label] = verify_ownership(disassembly, label, start, end)
             write_exclusive(folder / (label + "-disassembly.txt"), disassembly)
@@ -569,6 +702,12 @@ def main():
             record['missing_effect_route'] = 'placeholder-only-not-real-plugin-loading'
             record['native_registration_ABI'] = 'UNKNOWN'
             record['isolation_from_general_plugin_state'] = 'NOT PROVEN'
+            record['registration_apply_render'] = 'NOT RUN'
+        if args.review == 'effect-readiness':
+            record['readiness_evidence'] = readiness
+            record['native_registration_ABI'] = 'UNKNOWN'
+            record['receiver_thread_and_provider_lifetime'] = 'NOT PROVEN'
+            record['failure_atomicity_and_safe_rollback'] = 'NOT PROVEN'
             record['registration_apply_render'] = 'NOT RUN'
         if args.review == 'ownership':
             record['ownership_evidence'] = ownership

@@ -26,6 +26,17 @@ Primary Stage C goal:
 Loaded binaries, registry publication, application and rendering are separate
 claims.
 
+## Latest C1 readiness and descriptor ownership — prepared
+
+The new bounded file-only mode separates the actual readiness/lazy-global bodies
+from their delegates and the path-constructor thunk from its implementation.
+Nine complete windows / 1136 instructions / 79 anchors; 21 focused collector
+tests PASS. Preparation/global setup change retained state and are not a proved
+rollback transaction. No native helper/profile/ResourcePassGate or AE operation.
+Clean-source collection, independent evidence, full regression/static review and
+exact-source CI are pending. See [readiness review](C1_EFFECT_READINESS_REVIEW_2026-10-02.md).
+Native backend NOT READY; registration/apply/render/release gates remain open.
+
 ## Preserved baseline
 
 - Scoped embedded late registration: **FAIL**

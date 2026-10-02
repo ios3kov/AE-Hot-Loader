@@ -119,6 +119,51 @@ class ResourceAbiCollectorTests(unittest.TestCase):
             self.assertEqual(selected[-1][1], end)
             self.assertEqual(selected[0][1], selected[1][0])
 
+    def test_effect_readiness_scope_separates_constructor_and_delegate(self):
+        windows = collector.review_windows('effect-readiness')
+        self.assertEqual({label for label, *_ in windows}, set(collector.READINESS_ANCHORS))
+        self.assertEqual(sum((end - start) // 4 for _, _, start, end in windows), 1136)
+        selected = {label: (name, start, end) for label, name, start, end in windows}
+        self.assertEqual(selected['PLUG-path-ctor'], ('PLUG', 0xc9b4, 0xcc9c))
+        self.assertEqual(selected['PLUG-classref'], ('PLUG', 0xcc9c, 0xcd74))
+        self.assertEqual(selected['PLUG-path-thunk'], ('PLUG', 0xcd74, 0xcd78))
+        self.assertEqual(selected['FLT-ready-body'], ('FLT', 0x5cea8, 0x5d0dc))
+        self.assertEqual(selected['FLT-lazy-setup'], ('FLT', 0x5d328, 0x5d644))
+        self.assertNotIn('FLT-lazy-globals', selected)
+
+    def test_effect_readiness_rejects_each_changed_state_or_ownership_anchor(self):
+        for label, _, start, end in collector.review_windows('effect-readiness'):
+            anchors = collector.READINESS_ANCHORS[label]
+            def transcript(overrides):
+                return ''.join('owned[0x%x] <+%d>: %s %s\n' %
+                    (a, a - start, *overrides.get(a, anchors.get(a, ('nop', ''))))
+                    for a in range(start, end, 4))
+            text = transcript({})
+            result = collector.verify_readiness(text, label, start, end)
+            self.assertEqual(result['structural_anchors'], len(anchors))
+            self.assertIn('not-safe-runtime-ABI', result['claim'])
+            for address in anchors:
+                with self.subTest(label=label, address=hex(address)):
+                    with self.assertRaisesRegex(ValueError, 'structural'):
+                        collector.verify_readiness(transcript({address: ('nop', '')}),
+                                                   label, start, end)
+            with self.assertRaisesRegex(ValueError, 'bounds'):
+                collector.verify_readiness(text + text.splitlines()[0] + '\n', label, start, end)
+            with self.assertRaisesRegex(ValueError, 'unreviewed'):
+                collector.verify_readiness(text, label, start, end + 4)
+
+    def test_effect_readiness_does_not_select_placeholder_or_global_scan(self):
+        selected = collector.select_symbols('external ReadyFilter\nexternal DoLazyGlobalSetup\n'
+            'external DoLazyGlobals\nexternal FLTp_DoGlobal\nexternal FLTp_GetStdParams\n'
+            'external PLUG_RoutineDescPriv\nexternal CreateClassRef\n'
+            'external FLT_RegisterEffectIfMissing\nexternal SetupGeneralPluginScan\n',
+            'effect-readiness')
+        for name in ('ReadyFilter', 'DoLazyGlobalSetup', 'FLTp_DoGlobal',
+                     'FLTp_GetStdParams', 'PLUG_RoutineDescPriv', 'CreateClassRef'):
+            self.assertIn(name, selected)
+        for name in ('DoLazyGlobals', 'FLT_RegisterEffectIfMissing', 'SetupGeneralPluginScan'):
+            self.assertNotIn(name, selected)
+
     def test_placeholder_procedure_cannot_be_relabelled_as_real_effect(self):
         start, end = 0x993a4, 0x997e4
         text = ''.join('owned[0x%x] <+%d>: nop\n' % (a, a - start)
