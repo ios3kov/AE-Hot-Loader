@@ -63,14 +63,19 @@ invoke teardown. Next independent work: reproducible bounded PIN file review,
 then retained-state/lifetime contract. Registration/apply/render and release
 remain blocked. Earlier environment/authority records are historical.
 
-## C1 retained identity journal — focused owned-evidence PASS
+## C1 retained identity journal — exact-source PASS
 
+Code/test source **59becab0056fae08b450cbb4471466b427427744**.
 A bounded journal now saves completed raw copy frames from both captures. A
 separate Python verifier reconstructs names/read order and refuses incomplete,
 inconsistent or wrong-run evidence. Focused journal suite PASS: 11 Python tests,
 17 nested C++ journal cases. Native helper/profile, copied-byte/read budgets and
-ResourcePassGate unchanged; actual AE names still NOT RUN. Full clean regression,
-static review and exact-source CI pending. Next separate host transaction/
+ResourcePassGate unchanged; actual AE names still NOT RUN. Full clean local regression PASS:
+323 Python/no skips, 62 Node, 22 stages; archive/hash/source verification PASS.
+Bounded static review retains only the known local-argparse false-positive.
+Exact-source [research CI 37046241769](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37046241769)
+and [full macOS CI 37046241807](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37046241807)
+both PASS. Next separate host transaction/
 supervisor and inert candidate, with actual binding/pre/postflight and authority.
 See [journal/verifier review](C1_RETAINED_JOURNAL_REVIEW_2026-10-02.md).
 

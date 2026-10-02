@@ -15,7 +15,8 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
 - Repository: `ios3kov/AE-Hot-Loader`.
 - Branch: `research/ordinary-plugin-discovery`; never change `main`.
-- Latest retained identity capture/code/test head: **eb559edac5d9bf5d3861d5673d9df47e9de1f5e8**.
+- Latest retained identity journal/verifier/code/test head: **59becab0056fae08b450cbb4471466b427427744**.
+- Prior retained identity capture/code/test head: **eb559edac5d9bf5d3861d5673d9df47e9de1f5e8**.
 - Prior retained-record decoder/code/test head: **15c528f6d7dabad83e7203970fc8a09bb2b7e710**.
 - Prior MEE ownership collector/code/test head: **095a219253bf86bea82fa06fc00ac6c87e6f0b05**.
 - Prior PIN collector/code/test head: **c01fb89d7b1842a145bb7c66681a045fa6b12a82**.
@@ -472,14 +473,19 @@ or further live operation. Seven-record blocker unchanged. Next retained-state/
 lifetime and PIN comparator/synchronization review. See
 [bounded PIN review](C1_PIN_CLEANUP_REVIEW_2026-10-02.md).
 
-## C1 retained identity journal — focused owned-evidence PASS
+## C1 retained identity journal — exact-source PASS
 
+Code/test source **59becab0056fae08b450cbb4471466b427427744**.
 A bounded journal now saves completed raw copy frames from both captures. A
 separate Python verifier reconstructs names/read order and refuses incomplete,
 inconsistent or wrong-run evidence. Focused journal suite PASS: 11 Python tests,
 17 nested C++ journal cases. Native helper/profile, copied-byte/read budgets and
-ResourcePassGate unchanged; actual AE names still NOT RUN. Full clean regression,
-static review and exact-source CI pending. Next separate host transaction/
+ResourcePassGate unchanged; actual AE names still NOT RUN. Full clean local regression PASS:
+323 Python/no skips, 62 Node, 22 stages; archive/hash/source verification PASS.
+Bounded static review retains only the known local-argparse false-positive.
+Exact-source [research CI 37046241769](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37046241769)
+and [full macOS CI 37046241807](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37046241807)
+both PASS. Next separate host transaction/
 supervisor and inert candidate, with actual binding/pre/postflight and authority.
 See [journal/verifier review](C1_RETAINED_JOURNAL_REVIEW_2026-10-02.md).
 

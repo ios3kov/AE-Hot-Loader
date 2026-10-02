@@ -72,7 +72,36 @@ producer-only/failed PASS, binding mismatches, corruption of either capture or
 vector rechecks, name/mapping/budget/field errors, malformed framing, missing
 files, symlinks/hardlinks/FIFOs/modes, entry changes and directory replacement.
 Related capture/decoder focused tests also PASS. Full clean-source regression,
-static review and CI pending. Mandatory acceptance was defined before editing. Current actual seven names remain NOT RUN; ordinary-effect
+static review and exact-source CI are recorded below. Mandatory acceptance was defined before editing. Current actual seven names remain NOT RUN; ordinary-effect
 late registration/apply/render and release remain blocked. Next after this stage:
 separate host transaction/supervisor and an exact inert native candidate, then its
 reviewed validation packet and operation authority.
+
+
+## Exact-source verification
+
+Code/test source **59becab0056fae08b450cbb4471466b427427744**.
+Full clean local regression PASS: 323 Python/no skips, 62 Node, 22 offline stages;
+tracked source remained unchanged. Nested C++ cases are not added to Python count.
+Private offline report SHA-256
+`952466d4399da3ced6a898729b8795374b20855188062b1c729f8dfe623dc84e`.
+Independent archive inventory/member hashes/CRC and current tracked-source hashes
+PASS. No live operation requested; full AE pipeline remains BLOCKED.
+
+Separate review covered bounded serialization/field framing, raw trace ownership,
+expected-scope origin, two-pass reconstruction, fixed journal ordering/poisoning,
+no-follow directory traversal and file/directory rechecks. Bounded static audit
+completed at exact clean source: 320 supported files, zero omissions in that
+scope, all selected checks completed. Native code reviewed separately; unsupported
+file types remain outside scanner claims. Raw exit 1 retains the sole known
+`vibe.no_ratelimit_auth` at `tools/artifact_manifest.py:71`: verified local argparse
+mode option, not an HTTP/auth route. Reviewed false-positive; no new finding.
+Private audit SHA-256
+`b4b92a815013d71def7a9d6388b64c9534e5a44da82eb83feee3f0530480e32f`.
+[Research CI 37046241769](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37046241769)
+and [full macOS CI 37046241807](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37046241807)
+both completed/success at that exact source. Changed local documentation links
+and `git diff --check` PASS. This documentation-only closeout does not change the
+tested code or any native candidate. Existing native profiles, old journals and
+ResourcePassGate are unchanged. Retained capture-core changes only add bounded
+copied-frame evidence storage; the new journal/verifier are separate.
