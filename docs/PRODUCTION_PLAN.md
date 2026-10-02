@@ -26,16 +26,23 @@ Primary Stage C goal:
 Loaded binaries, registry publication, application and rendering are separate
 claims.
 
-## Latest C1 effect dispatch — implementation checkpoint
+## Latest C1 effect dispatch and parameter failure — offline PASS
 
-Eight complete pinned FLT windows / 1939 instructions / 86 anchors are prepared.
-Canonical registration precedes PARAMS_SETUP; diagnostic/handle cleanup does not
-establish canonical rollback. Host dispatch reaches the saved procedure through
-a crash-context wrapper; receiver/provider lifetime and safe ABI remain unknown.
-See [dispatch review](C1_EFFECT_DISPATCH_REVIEW_2026-10-02.md).
-Clean-source full regression, collection and CI are pending the implementation
-commit. No native helper/profile changes or live AE operation. Backend NOT READY;
-registration/apply/render/release stay open. Next: provider and factory retention.
+Code/test source **8aec890b95e0eea0216582f43bee0109c31700f3**. Eight complete
+FLT bodies / 1939 instructions / 86 anchors; all seven archives independently
+PASS, with 377 raw direct branches and three raw indirect-call sites checked.
+Canonical registration is called before PARAMS_SETUP; local diagnostic/handle
+cleanup does not establish canonical rollback or provider lifetime.
+
+Full local regression **364 Python/no skips, 62 Node, 22 stages PASS**.
+Research CI 37060170220 and macOS CI 37060170144 completed/success at exact
+8aec890. Bounded source/static review complete; sole known local argparse scanner
+false positive retained. See [dispatch evidence](C1_EFFECT_DISPATCH_REVIEW_2026-10-02.md).
+Native helpers/profiles/ResourcePassGate unchanged; no live AE operation.
+Next: file-only PluginSupport PluginImpl preparation/retention and TDB canonical
+factory retention/error paths, with new exact file pins before any body review.
+Backend NOT READY; registration/apply/render/release remain open. This supersedes
+the prepared checkpoint, without changing historical late-registration FAIL.
 
 ## Latest C1 readiness and descriptor ownership — offline PASS
 
