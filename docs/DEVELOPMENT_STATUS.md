@@ -50,15 +50,19 @@ invoke teardown. Next independent work: reproducible bounded PIN file review,
 then retained-state/lifetime contract. Registration/apply/render and release
 remain blocked. Earlier environment/authority records are historical.
 
-## C1 retained-record decoder — focused owned-fixture PASS
+## C1 retained-record decoder — exact-source PASS
 
-Prepared a portable owned-buffer decoder: exact bounded record/name inventory,
-raw identity fields/name bytes, preserved order/duplicates and refusal on
-incoherent external-name copies. Strict C++17 focused suite PASS: 38 nested cases,
-zero host/record calls. Full clean regression, static review and exact-source CI
-pending. No live read, new native helper or gate change. Actual seven names
-remain unknown; future diagnostic adapter/journal/supervisor and fresh operation
-authority remain prerequisites. See [decoder contract](C1_RETAINED_IDENTITY_DECODER_2026-10-02.md).
+Code/test source **15c528f6d7dabad83e7203970fc8a09bb2b7e710**. Portable owned-buffer
+decoder preserves ordered raw fields/names and rejects bounded inventory or
+alias/overlap inconsistencies. Strict C++17 focused suite PASS: 38 nested cases,
+zero host/record calls. Full clean local regression PASS: 311 Python/no skips,
+62 Node, 22 stages; independent archive/hash/source verification PASS. Bounded
+static review completed with the sole known local-argparse false-positive.
+Exact-source research CI 37042066391 and full macOS CI 37042066540 both PASS.
+Actual seven live names remain unknown; no host read, native helper/profile or
+ResourcePassGate change. Next prepare the separately identified one-shot
+record/name capture adapter, journal/supervisor and verification before its
+operation authority request. See [decoder contract](C1_RETAINED_IDENTITY_DECODER_2026-10-02.md).
 
 ## C1 MEE ownership evidence — exact-source PASS
 

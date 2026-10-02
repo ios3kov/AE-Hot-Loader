@@ -97,3 +97,31 @@ even successful name capture would not prove repeat initialization safe. Current
 ResourcePassGate retains the zero-record requirement. C0 PASS; ordinary effect
 registration/apply/render NOT RUN; release BLOCKED. PIN comparator/global
 synchronization, lifetime, repeat behavior and Stage C2 remain open.
+
+
+## Exact-source local verification
+
+Code/test source **15c528f6d7dabad83e7203970fc8a09bb2b7e710**.
+Full clean local available regression PASS: 311 Python tests, no skips,
+62 Node tests and 22 offline stages. The 38 nested decoder cases are not added
+to the Python count. Tracked source remained unchanged after the run.
+Private regression archive SHA-256:
+`76bbc259bcdedc01d22f36c8fdbe6d27d819cf6d32867cad07cecaa4970fcf4a`.
+Independent exact ZIP inventory, member hashes, CRC and current tracked-source
+hash comparison PASS.
+
+Separate implementation review covered bounds arithmetic, byte assembly, exact
+copy binding, alias/overlap consistency, output ownership and host/gate isolation.
+Bounded static audit completed: 313 supported files, zero omissions, all selected
+checks completed, exact clean source 15c528f. Raw exit 1 is retained for the sole
+`vibe.no_ratelimit_auth` finding at `tools/artifact_manifest.py:71`; current source
+is a local argparse `mode` option, not an HTTP/auth route. It remains a reviewed
+false-positive, not hidden or treated as runtime certification. Private audit
+SHA-256 `2d130ef9370e13590e71288ef2f47e385b8bfd958b55324d8a442b4f38cc7c8b`.
+Exact-source research CI
+[37042066391](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37042066391)
+and full macOS CI
+[37042066540](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37042066540)
+both completed/success at that full source SHA. The later documentation-only
+closeout does not change tested code or create another native candidate. Native helper/profile,
+product package, private host operations and ResourcePassGate are unchanged.

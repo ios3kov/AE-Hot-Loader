@@ -144,14 +144,19 @@ remain UNKNOWN; dependent native integration is blocked. Do not replay setup,
 setdown/unprep, relax the restriction or replace callbacks. No native C1
 backend/live request is ready. Prior records are preserved.
 
-## C1 retained-record decoder — focused owned-fixture PASS
+## C1 retained-record decoder — exact-source PASS
 
-Owned-buffer identity decoding is implemented and passes 38 nested strict C++17
-cases without host/record calls. Full clean-source regression/static review/CI
-pending. Actual seven live names remain NOT RUN. Next prepare a separately
-identified bounded diagnostic adapter/journal/supervisor before requesting its
-operation authority; preserve the consumed observer and zero-record gate.
-See [requirements and remaining diagnostic contract](C1_RETAINED_IDENTITY_DECODER_2026-10-02.md).
+Code/test source **15c528f6d7dabad83e7203970fc8a09bb2b7e710**. Portable owned-buffer
+decoder preserves ordered raw fields/names and rejects bounded inventory or
+alias/overlap inconsistencies. Strict C++17 focused suite PASS: 38 nested cases,
+zero host/record calls. Full clean local regression PASS: 311 Python/no skips,
+62 Node, 22 stages; independent archive/hash/source verification PASS. Bounded
+static review completed with the sole known local-argparse false-positive.
+Exact-source research CI 37042066391 and full macOS CI 37042066540 both PASS.
+Actual seven live names remain unknown; no host read, native helper/profile or
+ResourcePassGate change. Next prepare the separately identified one-shot
+record/name capture adapter, journal/supervisor and verification before its
+operation authority request. See [decoder contract](C1_RETAINED_IDENTITY_DECODER_2026-10-02.md).
 
 ## C1 MEE ownership evidence — exact-source PASS
 
