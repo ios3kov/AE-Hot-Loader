@@ -88,7 +88,7 @@ A_Err Idle(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long* max_sleep) {
         const auto binary = retained_probe::ApproveRequest(c, getpid(), StartIdentity(),
             ReadControl(c.control, "request.txt", 4096));
         LiveBackend backend(c, binary);
-        const retained_transaction::Plan plan{backend.measure().scope,
+        const retained_transaction::Plan plan{backend.observe().measured,
             c.executable, c.module, c.journal, 15000};
         retained_transaction::Transaction transaction;
         const auto result = transaction.run(plan, {plan, true, true}, backend);

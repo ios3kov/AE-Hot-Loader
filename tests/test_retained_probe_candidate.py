@@ -42,6 +42,7 @@ class RetainedProbeCandidateTests(unittest.TestCase):
         self.assertIn('resident_data_root::Bind(ae256_cleanup::Profile(ae256_cleanup::kMee))', native)
         self.assertIn('transaction.run(plan, {plan, true, true}, backend)', native)
         self.assertIn('mapped_memory::SelfBackend memory', native)
+        self.assertIn('const retained_transaction::Plan plan{backend.observe().measured,', native)
         # Public SDK snapshot is byte-for-byte the already reviewed project safety script.
         old = (EXPERIMENT / 'CleanupObservationProbe.cpp').read_text()
         def script(text):

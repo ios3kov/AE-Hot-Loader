@@ -128,7 +128,7 @@ def main():
         'candidate_bundle': str(candidate), 'control_directory': str(control), 'journal_directory': str(journal),
         'native_timeout_ms': 15000, 'activation_env': {'AEHL_RETAINED_IDENTITY_TOKEN': token}, 'provider_profile': providers,
         'checks': {'build_sign_exports': 'PASS', 'identity_getter': 'PASS', 'inert_entrypoint': 'PASS', 'live_ae': 'NOT RUN'},
-        'inert_entrypoint_output': inert_result, 'external_supervisor': 'NOT CONNECTED', 'installation_performed': False, 'ae_launch_performed': False,
+        'inert_entrypoint_output': inert_result, 'external_supervisor': 'AVAILABLE-NOT-RUN', 'installation_performed': False, 'ae_launch_performed': False,
         'files': {str(p.relative_to(candidate)): sha(p) for p in sorted(candidate.rglob('*')) if p.is_file()}}
     manifest = output / 'manifest.json'; manifest.write_text(json.dumps(record, indent=2, sort_keys=True) + '\n'); os.chmod(manifest, 0o600)
     print(output); print('manifest_sha256=' + sha(manifest)); print(inert_result.strip())
