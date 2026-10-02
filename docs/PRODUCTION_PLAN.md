@@ -145,6 +145,52 @@ remain UNKNOWN; dependent native integration is blocked. Do not replay setup,
 setdown/unprep, relax the restriction or replace callbacks. No native C1
 backend/live request is ready. Prior records are preserved.
 
+## C1 retained-name native adapter and supervisor — preparation PASS
+
+Code/test source **0204ab83212d68b19d85b78d0c7239511f301b7b** connects the
+separate helper to actual loaded self/MEE measurement, bounded capture, five-file
+journal and external one-shot request/independent verification. Safe public SDK
+project snapshot precedes initial binding; scope/images are rebound around capture.
+The controller derives expected root from fixed MEE layout plus loaded-image
+header/base/slide, and checks a separate 15-second operation budget started before
+its claim/publication. On failure/unknown outcome, evidence/process/helper stay
+preserved; no automatic retry, private call, ordinary-effect registration or provider retention.
+
+Full clean local regression PASS: **353 Python/no skips, 62 Node, 22 stages**.
+Focused candidate/supervisor: 16 Python tests; native binding/capture fixture has
+41 nested cases. Independent ZIP/member/inventory/source verification PASS.
+Local report SHA-256
+`dab580b0db0a15bbce5f2a1c6c264f9cdbc06bdbec41a19d83fbd9da9153c645`.
+Bounded source/static review completed: 332 supported files/no omissions, all
+selected checks complete; raw exit 1 retains only the rechecked known local
+argparse false positive, no whole-security certification. Static report SHA-256
+`ab6ae2988e749c62a0add0251648d4c53c126e9d3d4a41b07564db2369ef1ad4`.
+
+Exact new candidate **identity-d5480a2a4090**: real SDK 25.6 build, local signing/
+strict verification, two exports, compiled identity and three inert entry cases
+PASS (SDK suites=0/root reads=0). Actual loaded self binding in an owned child
+PASS; wrong signed-file hash refused. Four bundle payloads, 74 SDK inputs and
+fixed provider files independently verified. Final binary SHA-256
+`5e87b628434775d702da2c04475d8121d7ad0ecdddb0b28d23582fcb7510c530`;
+private manifest SHA-256
+`b0ed7a0f1e51d3949a279b94f02faa6b508cb1f127fa5af448eea24836b85968`.
+
+Exact-source [research CI 37052270787](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37052270787)
+and [full macOS CI 37052270804](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37052270804)
+both completed/success at 0204ab83212d68b19d85b78d0c7239511f301b7b.
+This candidate is **NOT INSTALLED / AE NOT LAUNCHED / REQUEST NOT PUBLISHED**.
+Actual seven names **NOT RUN**. Prior installed/consumed observe-d548b007e316 and
+AE session are preserved; its previous one-shot authority is consumed. The
+whole-journal verifier retains host_execution_verified=false; source/owned tests
+and safe artifact preparation do not prove real host execution or lifetime.
+
+See [native candidate review](C1_RETAINED_NATIVE_CANDIDATE_REVIEW_2026-10-02.md),
+[supervisor review](C1_RETAINED_SUPERVISOR_REVIEW_2026-10-02.md), and
+[exact diagnostic scope](C1_RETAINED_LIVE_SCOPE_2026-10-02.md). Next: fresh
+candidate-specific installation/one-launch/read-only permission
+and fully closed AE before safe blank-session preflight. Registration/apply/render
+and release remain blocked.
+
 ## C1 retained host journal — exact-source PASS
 
 All three host observations and both copied-byte captures are now saved in a

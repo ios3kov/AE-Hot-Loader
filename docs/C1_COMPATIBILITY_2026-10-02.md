@@ -13,6 +13,7 @@ Compatibility Status; do not infer a supported AE range from a single build.
 | Record/name journal + independent verifier | [owned evidence review](C1_RETAINED_JOURNAL_REVIEW_2026-10-02.md), no host candidate | Full available owned-data regression and both CI PASS at 59becab; AE NOT RUN | UNKNOWN for AE; journal structure does not attest to host execution |
 | Record/name transaction core, injected boundary | [transaction review](C1_RETAINED_TRANSACTION_REVIEW_2026-10-02.md), exact source 836c29d, no native/disk adapter | Full available owned-data regression and both CI PASS at 836c29d; AE NOT RUN | UNKNOWN for AE; injected binding/approval inputs do not attest to runtime or authorize operations |
 | Host journal + independent transaction verifier | [owned evidence review](C1_RETAINED_HOST_JOURNAL_REVIEW_2026-10-02.md), no native candidate | Full available owned-data regression and both CI PASS at dfa78e0; AE NOT RUN | UNKNOWN for AE; supplied host observations are not live attestation |
+| New native name adapter + independent supervisor, AE 25.6x101 arm64 prospective scope | [native review](C1_RETAINED_NATIVE_CANDIDATE_REVIEW_2026-10-02.md), [controller](C1_RETAINED_SUPERVISOR_REVIEW_2026-10-02.md), source 0204ab8, identity-d5480a2a4090 | 353 local Python/no skips, 62 Node, SDK build/sign/hash/identity/inert PASS; both exact-source CI PASS; AE NOT RUN | UNKNOWN for live AE; exact candidate preparation does not prove allocation lifetime or broader versions |
 | Full tool, other AE builds/versions/platforms | no complete exact distributed-candidate/runtime evidence | NOT RUN | UNKNOWN; no minimum/current endpoint interpolation |
 
 ## Relevant API/layout inventory and omissions
@@ -58,3 +59,14 @@ do not install every AE locally or promise an untested range.
 
 Current product release remains BLOCKED on C1/C2/registration/apply/render and
 remaining acceptance. Successful count/name observation cannot waive these gates.
+
+## Latest candidate preparation supersedes earlier no-candidate statements
+
+The rows above for earlier portable checkpoints keep their historical scope.
+An exact separate diagnostic native candidate and external controller now exist
+at 0204ab8, with final bytes and planned operation documented in
+[C1 retained live scope](C1_RETAINED_LIVE_SCOPE_2026-10-02.md). Public SDK API
+reuse, indirect resident/Mach binding paths, native exports and SDK input hashes
+are recorded in the native/controller reviews. This is a bounded C1 inventory;
+full product audit/other versions/actual host loading remain omitted and block
+release. No live authority is inferred from completed build preparation.

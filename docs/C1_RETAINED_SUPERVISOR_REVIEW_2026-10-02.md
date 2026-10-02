@@ -83,3 +83,37 @@ replay, unknown publication, partial evidence, before/after-verification expiry,
 late final file check and backwards clock refuse. Fixed ZIP inventory/CRC/member
 hashes and no activation token verified. Code-level inspection caught and fixed
 a missing ready-start recheck before publication; its regression now passes.
+
+## Exact source/candidate preparation evidence
+
+Code/test source 0204ab83212d68b19d85b78d0c7239511f301b7b. Full clean local
+regression: 353 Python/no skips, 62 Node, 22 stages PASS; source unchanged.
+Report SHA `dab580b0db0a15bbce5f2a1c6c264f9cdbc06bdbec41a19d83fbd9da9153c645`;
+ZIP CRC/inventory/every member SHA/current tracked source independently verified.
+Bounded static audit completed: 332 supported files/no omissions; raw exit 1
+retains sole known local argparse false positive at artifact_manifest.py:71,
+rechecked separately. Audit SHA
+`ab6ae2988e749c62a0add0251648d4c53c126e9d3d4a41b07564db2369ef1ad4`.
+Native code separately reviewed; unsupported scanner types outside audit claims.
+
+Exact identity-d5480a2a4090 SDK 25.6 build/sign/strict verification/exports/identity/
+inert entry + real self binding/wrong-hash refusal PASS. Four bundle payloads,
+74 SDK input hashes and provider profile/file identities independently rechecked.
+Candidate binary and private manifest hashes, prospective install/launch scope,
+remaining CI status and mandatory authority boundary are recorded in
+[C1 retained live scope](C1_RETAINED_LIVE_SCOPE_2026-10-02.md). No install/AE launch
+or request publication. Actual seven names NOT RUN; no full release claim.
+
+## Closeout
+
+Exact-source [research CI 37052270787](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37052270787)
+and [full macOS CI 37052270804](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37052270804)
+both completed/success at 0204ab83212d68b19d85b78d0c7239511f301b7b.
+ASan/UBSan strict owned binding/capture fixture: 41 cases PASS, no sanitizer
+diagnostics. Leak detection NOT RUN: detect_leaks unsupported by this Darwin
+runtime (initial requested leak-enabled run refused before fixture execution).
+This adds no live/native lifetime claim. Documentation-only closeout changes no
+tested code or candidate bytes; local links/whitespace and unchanged code inventory
+checks PASS. RIS-001–006 are closed within the prepared/owned/injected scope.
+Actual host diagnostic and installation/loading remain NOT RUN pending fresh
+exact authority; registration/apply/render/release remain blocked.

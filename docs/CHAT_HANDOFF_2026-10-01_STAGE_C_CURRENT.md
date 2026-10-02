@@ -11,11 +11,59 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
+## C1 retained-name native adapter and supervisor — preparation PASS
+
+Code/test source **0204ab83212d68b19d85b78d0c7239511f301b7b** connects the
+separate helper to actual loaded self/MEE measurement, bounded capture, five-file
+journal and external one-shot request/independent verification. Safe public SDK
+project snapshot precedes initial binding; scope/images are rebound around capture.
+The controller derives expected root from fixed MEE layout plus loaded-image
+header/base/slide, and checks a separate 15-second operation budget started before
+its claim/publication. On failure/unknown outcome, evidence/process/helper stay
+preserved; no automatic retry, private call, ordinary-effect registration or provider retention.
+
+Full clean local regression PASS: **353 Python/no skips, 62 Node, 22 stages**.
+Focused candidate/supervisor: 16 Python tests; native binding/capture fixture has
+41 nested cases. Independent ZIP/member/inventory/source verification PASS.
+Local report SHA-256
+`dab580b0db0a15bbce5f2a1c6c264f9cdbc06bdbec41a19d83fbd9da9153c645`.
+Bounded source/static review completed: 332 supported files/no omissions, all
+selected checks complete; raw exit 1 retains only the rechecked known local
+argparse false positive, no whole-security certification. Static report SHA-256
+`ab6ae2988e749c62a0add0251648d4c53c126e9d3d4a41b07564db2369ef1ad4`.
+
+Exact new candidate **identity-d5480a2a4090**: real SDK 25.6 build, local signing/
+strict verification, two exports, compiled identity and three inert entry cases
+PASS (SDK suites=0/root reads=0). Actual loaded self binding in an owned child
+PASS; wrong signed-file hash refused. Four bundle payloads, 74 SDK inputs and
+fixed provider files independently verified. Final binary SHA-256
+`5e87b628434775d702da2c04475d8121d7ad0ecdddb0b28d23582fcb7510c530`;
+private manifest SHA-256
+`b0ed7a0f1e51d3949a279b94f02faa6b508cb1f127fa5af448eea24836b85968`.
+
+Exact-source [research CI 37052270787](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37052270787)
+and [full macOS CI 37052270804](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37052270804)
+both completed/success at 0204ab83212d68b19d85b78d0c7239511f301b7b.
+This candidate is **NOT INSTALLED / AE NOT LAUNCHED / REQUEST NOT PUBLISHED**.
+Actual seven names **NOT RUN**. Prior installed/consumed observe-d548b007e316 and
+AE session are preserved; its previous one-shot authority is consumed. The
+whole-journal verifier retains host_execution_verified=false; source/owned tests
+and safe artifact preparation do not prove real host execution or lifetime.
+
+See [native candidate review](C1_RETAINED_NATIVE_CANDIDATE_REVIEW_2026-10-02.md),
+[supervisor review](C1_RETAINED_SUPERVISOR_REVIEW_2026-10-02.md), and
+[exact diagnostic scope](C1_RETAINED_LIVE_SCOPE_2026-10-02.md). Next: fresh
+candidate-specific installation/one-launch/read-only permission
+and fully closed AE before safe blank-session preflight. Registration/apply/render
+and release remain blocked.
+
 ## Exact starting point
 
+- Latest retained native adapter/supervisor source: **0204ab83212d68b19d85b78d0c7239511f301b7b**.
+- Prepared unused name candidate: **identity-d5480a2a4090**, not installed, live authority pending.
 - Repository: `ios3kov/AE-Hot-Loader`.
 - Branch: `research/ordinary-plugin-discovery`; never change `main`.
-- Latest retained host journal/verifier/code/test head: **dfa78e04d8a1e3f7cae64262a9f13a147aa4a5a3**.
+- Prior retained host journal/verifier/code/test head: **dfa78e04d8a1e3f7cae64262a9f13a147aa4a5a3**.
 - Prior retained identity transaction/code/test head: **836c29d3ef18b93a563e1b271198faf1a4eb473f**.
 - Prior retained identity journal/verifier/code/test head: **59becab0056fae08b450cbb4471466b427427744**.
 - Prior retained identity capture/code/test head: **eb559edac5d9bf5d3861d5673d9df47e9de1f5e8**.
@@ -24,7 +72,7 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 - Prior PIN collector/code/test head: **c01fb89d7b1842a145bb7c66681a045fa6b12a82**.
 - Reviewed external supervisor code/test head:
   **`f4f84aa5a41fd86cc76ee2d702fe61e9b61d16e2`** (external supervisors).
-- Prepared native candidate source:
+- Historical count-observer native candidate source:
   **`7c983c5b5adfde0300f2370e5772ed757ab6b613`**; native bytes unchanged.
 - Current canonical AE Development Rules source:
   **6.2.0 / `d966078a9e45fee7ec9ad14f211a9da753d64b8a`**; read pinned AI_ENTRYPOINT first.

@@ -73,3 +73,25 @@ real inline raw-byte name capture, scope and image changes, pre/post binding
 exceptions, preserved completed frames on refusal, partial read failure, invalid
 plan, reentrancy/replay and exact request mutations. Real SDK 25.6 native syntax
 check PASS with warnings treated as errors. No runtime AE observation.
+
+## Closed native preparation and subsequent controller connection
+
+Native code/test checkpoint 5d9e3e8011321b996c641fd2e7a32885ccee13e6 passed
+full clean local regression: 340 Python/no skips, 62 Node, 22 stages. Report SHA
+`1f4e7b81b38d856961a7e4556112846d90987460155a02657965038445d1d0e2`,
+independent ZIP/source inventory/member hash/CRC verified. Bounded audit: 329
+supported files/no omissions; sole known local argparse false positive, raw
+exit 1 retained. Audit SHA
+`80abbda606a72f0b886f8687d59cb47dd4f7d4497870dd1081efbd0f8b2e045f`.
+Exact [research CI 37051429027](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37051429027)
+and [full macOS CI 37051429101](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37051429101)
+both completed/success. First inert candidate identity-340ea065a0c3 built/signed/
+verified but was never installed; it is superseded by the connected candidate.
+
+The subsequent [controller stage](C1_RETAINED_SUPERVISOR_REVIEW_2026-10-02.md)
+at 0204ab83212d68b19d85b78d0c7239511f301b7b connects the external request and
+root/deadline verification previously missing above. Initial native preparation
+now snapshots safe project state before loaded self/MEE binding. Full local
+regression and exact candidate build preparation pass; latest CI and live boundary
+are recorded in the [operation scope](C1_RETAINED_LIVE_SCOPE_2026-10-02.md).
+RIN-001–006 are closed within native preparation/owned-data limits, not live AE.
