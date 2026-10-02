@@ -12,7 +12,30 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
-## C1 retained-name native adapter and supervisor — preparation PASS
+## Latest C1 retained-name diagnostic — live PASS
+
+The user explicitly approved the exact `identity-d5480a2a4090` install/one-launch/
+read-only scope. Fresh AE-absence preflight, unique installation, loaded identity,
+blank project and one request PASS; that authority is now consumed. Seven raw
+names identify driver, Photoshop import/export and keyframe-assistant state.
+Bounded current-file callback correspondence and seven static signature checks
+PASS; full loaded-provider identity/lifetime/repeat safety remains unproven.
+
+Registry **786** and project revision **1** stayed unchanged in this session.
+Images **1407 → 1408 → 1408**: one permitted system framework addition, no
+removed/replaced existing image. **8 copies / 2578 bytes**. Private report SHA
+`c0cb5db1e2682e2b7d31e98c916c76f4a447889a4d3689e759790d37c11ce1a8`;
+independent archive/hash/semantic checks PASS. No registration/private call/retry/
+teardown/project edit/AE termination. At operation closeout PID 28774 and the
+consumed helper were preserved; do not infer current process state from this log.
+
+See [exact live result and evidence limits](C1_RETAINED_NAMES_LIVE_PASS_2026-10-02.md).
+ResourcePassGate unchanged; current baseline remains ineligible. Next authorized
+work is file-only ordinary-effect publication/isolation research without replaying
+existing general-plugin initialization. C1 registration/C2 apply-render and release
+remain blocked. Earlier NOT RUN/permission statements below are checkpoint history.
+
+## Historical C1 retained-name native adapter and supervisor — preparation PASS
 
 Code/test source **0204ab83212d68b19d85b78d0c7239511f301b7b** connects the
 separate helper to actual loaded self/MEE measurement, bounded capture, five-file
@@ -45,18 +68,17 @@ private manifest SHA-256
 Exact-source [research CI 37052270787](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37052270787)
 and [full macOS CI 37052270804](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37052270804)
 both completed/success at 0204ab83212d68b19d85b78d0c7239511f301b7b.
-This candidate is **NOT INSTALLED / AE NOT LAUNCHED / REQUEST NOT PUBLISHED**.
-Actual seven names **NOT RUN**. Prior installed/consumed observe-d548b007e316 and
-AE session are preserved; its previous one-shot authority is consumed. The
-whole-journal verifier retains host_execution_verified=false; source/owned tests
-and safe artifact preparation do not prove real host execution or lifetime.
+At the preparation checkpoint this candidate was not installed/launched/requested.
+The subsequently authorized [live diagnostic](C1_RETAINED_NAMES_LIVE_PASS_2026-10-02.md)
+now identifies the seven names; its one-shot scope is consumed. The verifier
+retains host_execution_verified=false and does not prove allocation lifetime.
 
 See [native candidate review](C1_RETAINED_NATIVE_CANDIDATE_REVIEW_2026-10-02.md),
 [supervisor review](C1_RETAINED_SUPERVISOR_REVIEW_2026-10-02.md), and
-[exact diagnostic scope](C1_RETAINED_LIVE_SCOPE_2026-10-02.md). Next: fresh
-candidate-specific installation/one-launch/read-only permission
-and fully closed AE before safe blank-session preflight. Registration/apply/render
-and release remain blocked.
+[exact diagnostic scope and execution](C1_RETAINED_LIVE_SCOPE_2026-10-02.md).
+Next: file-only ordinary-effect publication/isolation research. Registration/
+apply/render and release remain blocked; no further live action is authorized
+by this consumed diagnostic scope.
 
 ## Current rules baseline migration — 6.2.0
 
@@ -69,7 +91,7 @@ See [migration](RULES_ADOPTION_6_2_0_2026-10-02.md) and
 [bounded C1 compatibility](C1_COMPATIBILITY_2026-10-02.md).
 No runtime/helper/profile change or renewal of consumed diagnostic authority.
 Migration checkpoint is closed; current native/supervisor preparation and next
-operation boundary are recorded above. Actual seven names remain unknown.
+operation boundary are recorded above. Actual seven names are now recorded in the live result.
 
 ## Historical rules baseline migration — 6.0.0
 
@@ -85,7 +107,7 @@ their original scope. This migration does not close live, registration or releas
 gates. Final documentation consistency/pinned-source/local-link checks PASS;
 documentation/policy migration complete. No runtime behavior changed.
 
-## Current Stage C1 — authorized read-only diagnostic PASS
+## Historical Stage C1 count diagnostic — authorized read-only PASS
 
 After the user closed the prior AE session and confirmed full exit, the exact
 unused observe-d548b007e316 helper was installed, AE launched once, and one

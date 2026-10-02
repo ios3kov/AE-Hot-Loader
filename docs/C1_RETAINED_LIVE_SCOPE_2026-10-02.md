@@ -1,4 +1,4 @@
-# Exact proposed retained-name diagnostic — NOT AUTHORIZED / NOT RUN
+# Exact retained-name diagnostic — executed PASS; scope consumed
 
 Purpose: read the raw stored names in the seven previously observed legacy MEE
 GeneralPlugin records, to guide further lifetime/registration research. This
@@ -20,8 +20,8 @@ does not register/apply/render an effect and does not prove cleanup eligibility.
   UUID 74a30dbaa08b367bbd9915d6d77e9d52, __DATA/__bss root_vm 0x10fd70,
   size 16, image_base_vm 0. Profile never auto-selected for other files/versions.
 
-Candidate lives only in the ignored owned build folder; private activation data
-is not in Git/report/user-visible commands. Prior preparation-only candidate
+At preparation, candidate lived only in the ignored owned build folder; private
+activation data is not in Git/report/user-visible commands. Prior preparation-only candidate
 identity-340ea065a0c3 is superseded and was never installed.
 
 ## Mandatory preparation safety checks
@@ -32,11 +32,12 @@ checks PASS. Exact-source [research CI 37052270787](https://github.com/ios3kov/A
 and [full macOS CI 37052270804](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37052270804)
 both completed/success at 0204ab83212d68b19d85b78d0c7239511f301b7b.
 Native/controller reviews record source/API/lifetime limits.
-Actual installed/loaded identity and blank-project preflight are NOT RUN.
+Installed/loaded identity and blank-project preflight subsequently PASS in the
+[authorized live execution](C1_RETAINED_NAMES_LIVE_PASS_2026-10-02.md).
 
-## Proposed operation requiring fresh scope permission
+## Reviewed one-shot operation (executed; no renewed authority)
 
-1. Human confirms AE is fully quit; freshly verify absence of running AE before
+1. Require AE fully quit; freshly verify absence of running AE before
    any copy. Never terminate a user process or close/alter a non-owned project.
 2. Verify private manifest/final candidate bytes/signature and source evidence,
    ensure unique destination absent. Copy only this new bundle to that reviewed
@@ -81,3 +82,16 @@ Release remains blocked on actual supported late registration, C1/C2
 apply/render, lifecycle safety, product integration and remaining release checks.
 Prior one-shot observe-d548b007e316 permission is consumed and covers none of the
 new operation. A general continuation/release command does not renew that scope.
+
+## Execution closeout, 2026-10-02
+
+The user replied «делай» to the exact candidate-specific install/one-launch/
+read-only prompt. Fresh process-absence checks PASS before install and launch.
+One installation/launch/request completed PASS; seven names captured, 8 copies/
+2578 bytes, project revision 1 and registry 786 unchanged. One allowed system
+image addition (1407 → 1408 → 1408) is explicitly recorded. All previous helpers
+unchanged. Report SHA `c0cb5db1e2682e2b7d31e98c916c76f4a447889a4d3689e759790d37c11ce1a8`.
+This scope is consumed. Preserve the installed inert helper/session/evidence.
+No new AE read, launch, retry, termination, removal, private invocation, provider
+retention or registration is covered. See [complete live evidence and next
+file-only discriminator](C1_RETAINED_NAMES_LIVE_PASS_2026-10-02.md).

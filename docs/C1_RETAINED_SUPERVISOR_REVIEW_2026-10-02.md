@@ -117,3 +117,13 @@ tested code or candidate bytes; local links/whitespace and unchanged code invent
 checks PASS. RIS-001–006 are closed within the prepared/owned/injected scope.
 Actual host diagnostic and installation/loading remain NOT RUN pending fresh
 exact authority; registration/apply/render/release remain blocked.
+
+## Subsequent authorized live execution
+
+The exact final identity-d5480a2a4090 candidate/controller at source 0204ab8
+completed one explicitly authorized install/launch/read-only diagnostic PASS.
+[Live closeout](C1_RETAINED_NAMES_LIVE_PASS_2026-10-02.md) supersedes preparation
+NOT RUN statements for that bounded question: seven names, unchanged project/
+registry and one explicitly permitted system-image addition. Original private ABI,
+provider lifetime and verifier attestation limitations remain. Authority consumed;
+ResourcePassGate unchanged; registration/apply/render/release gates remain open.

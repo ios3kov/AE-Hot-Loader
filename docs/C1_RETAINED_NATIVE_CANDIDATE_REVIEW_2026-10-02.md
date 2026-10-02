@@ -95,3 +95,13 @@ now snapshots safe project state before loaded self/MEE binding. Full local
 regression and exact candidate build preparation pass; latest CI and live boundary
 are recorded in the [operation scope](C1_RETAINED_LIVE_SCOPE_2026-10-02.md).
 RIN-001–006 are closed within native preparation/owned-data limits, not live AE.
+
+## Subsequent authorized live execution
+
+The exact final identity-d5480a2a4090 candidate/controller at source 0204ab8
+completed one explicitly authorized install/launch/read-only diagnostic PASS.
+[Live closeout](C1_RETAINED_NAMES_LIVE_PASS_2026-10-02.md) supersedes preparation
+NOT RUN statements for that bounded question: seven names, unchanged project/
+registry and one explicitly permitted system-image addition. Original private ABI,
+provider lifetime and verifier attestation limitations remain. Authority consumed;
+ResourcePassGate unchanged; registration/apply/render/release gates remain open.
