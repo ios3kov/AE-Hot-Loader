@@ -26,6 +26,17 @@ Primary Stage C goal:
 Loaded binaries, registry publication, application and rendering are separate
 claims.
 
+## Latest C1 effect dispatch — implementation checkpoint
+
+Eight complete pinned FLT windows / 1939 instructions / 86 anchors are prepared.
+Canonical registration precedes PARAMS_SETUP; diagnostic/handle cleanup does not
+establish canonical rollback. Host dispatch reaches the saved procedure through
+a crash-context wrapper; receiver/provider lifetime and safe ABI remain unknown.
+See [dispatch review](C1_EFFECT_DISPATCH_REVIEW_2026-10-02.md).
+Clean-source full regression, collection and CI are pending the implementation
+commit. No native helper/profile changes or live AE operation. Backend NOT READY;
+registration/apply/render/release stay open. Next: provider and factory retention.
+
 ## Latest C1 readiness and descriptor ownership — offline PASS
 
 Code/test source **986adb36e2b127c44608ec0a5e30ff165cb6f47d**. Nine complete

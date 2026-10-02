@@ -73,6 +73,16 @@ REVIEWS = {
         ("PLUG-classref", "PLUG", 0xCC9C, 0xCD74),
         ("PLUG-path-thunk", "PLUG", 0xCD74, 0xCD78),
     ),
+    "effect-dispatch": (
+        ("FLT-params-setup", "FLT", 0x535AC, 0x539EC),
+        ("FLT-dispatch", "FLT", 0x98494, 0x98C80),
+        ("FLT-host-dispatch", "FLT", 0x38D60, 0x394A4),
+        ("FLT-dispatch-ctor", "FLT", 0x3ACA4, 0x3ADFC),
+        ("FLT-dispatch-optional", "FLT", 0x3B080, 0x3B268),
+        ("FLT-dispatch-hardware", "FLT", 0x3B268, 0x3B2A8),
+        ("FLT-dispatch-machine", "FLT", 0x3B2A8, 0x3B804),
+        ("FLT-dispatch-crash", "FLT", 0x3B804, 0x3BA04),
+    ),
     "ownership": (
         ("MEE-setup", "MEE", 0x36C58, 0x36DA4),
         ("MEE-scan", "MEE", 0x36DA4, 0x376EC),
@@ -113,6 +123,8 @@ SYMBOL_WANTED = {
     "effect-readiness": re.compile(r"(ReadyFilter|UnreadyFilter|DoLazyGlobalSetup|"
                                    r"DoGlobalSetdown|FLTp_DoGlobal|FLTp_GetStdParams|"
                                    r"PLUG_RoutineDescPriv|CreateClassRef)"),
+    "effect-dispatch": re.compile(r"(DispatchFilter|FLTp_DoParamsSetup|"
+                                  r"U_GenericPluginDispatch|GetCanonicalEffect)"),
     "ownership": re.compile(r"(SetupGeneralPluginScan|PluginScanFunc|PluginCleanupFunc|"
                             r"CleanupGeneralPluginScan|SetdownGeneralPlugins|vectorI13GeneralPlugin)"),
 }
@@ -382,6 +394,129 @@ READINESS_ANCHORS = {
 }
 
 
+# These checks include the actual indirect procedure instructions and the
+# earlier canonical publication, without certifying their runtime recipients.
+DISPATCH_ANCHORS = {
+    'FLT-params-setup': {
+        0x535d8: ('bl', '0xa5b5c'),
+        0x53650: ('bl', '0x7e014'),
+        0x536b0: ('bl', '0x5ce2c'),
+        0x536b4: ('tbz', 'w0,#0x0,0x536dc'),
+        0x536d4: ('bl', '0x34744'),
+        0x536f8: ('bl', '0x5b95c'),
+        0x53758: ('bl', '0xa60f0'),
+        0x53854: ('cbz', 'x0,0x538c4'),
+        0x53890: ('mov', 'w4,#0x4'),
+        0x53898: ('bl', '0x98494'),
+        0x538a0: ('cbnz', 'w0,0x53928'),
+        0x538b0: ('b.ne', '0x538cc'),
+        0x538b8: ('bl', '0x97d1c'),
+        0x538c4: ('mov', 'w21,#0x4'),
+        0x53924: ('mov', 'w21,#0x3'),
+        0x53930: ('bl', '0xa573c'),
+        0x539b8: ('bl', '0xa5c7c'),
+        0x539e8: ('bl', '0xa5820'),
+    },
+    'FLT-dispatch': {
+        0x984ec: ('b.hi', '0x98a50'),
+        0x98518: ('bl', '0xa5b38'),
+        0x98558: ('bl', '0x5e1d4'),
+        0x985b0: ('bl', '0x580a8'),
+        0x98618: ('csel', 'x1,xzr,x8,eq'),
+        0x98624: ('csel', 'x2,xzr,x8,eq'),
+        0x98630: ('mov', 'x3,x19'),
+        0x98640: ('bl', '0x38d60'),
+        0x98658: ('blr', 'x8'),
+        0x9869c: ('blr', 'x8'),
+        0x98c50: ('bl', '0xa5c7c'),
+        0x98c60: ('bl', '0xa5820'),
+    },
+    'FLT-host-dispatch': {
+        0x38db8: ('str', 'x8,[x5,#0x28]'),
+        0x38dc0: ('str', 'x27,[x5,#0x38]'),
+        0x38dd0: ('ldr', 'x8,[x8,#0x10]'),
+        0x38dd4: ('blr', 'x8'),
+        0x38ddc: ('str', 'x0,[sp,#0x50]'),
+        0x38e50: ('bl', '0x3aca4'),
+        0x38e9c: ('bl', '0xa71e8'),
+        0x38eb0: ('bl', '0x35a78'),
+        0x38f20: ('mov', 'w1,#0x0'),
+        0x38f24: ('bl', '0x3b080'),
+        0x38f6c: ('bl', '0x35fa4'),
+        0x38f78: ('bl', '0x35c40'),
+        0x38fb0: ('cbz', 'x8,0x39154'),
+        0x393ac: ('bl', '0x394a4'),
+        0x39440: ('bl', '0xa5c7c'),
+    },
+    'FLT-dispatch-ctor': {
+        0x3accc: ('ldp', 'q0,q1,[x1]'),
+        0x3acd0: ('ldr', 'q2,[x1,#0x20]'),
+        0x3acd8: ('str', 'x8,[x0,#0x30]'),
+        0x3acdc: ('stp', 'q1,q2,[x0,#0x10]'),
+        0x3ace0: ('str', 'q0,[x0]'),
+        0x3ad44: ('str', 'w23,[x20,#0x68]'),
+    },
+    'FLT-dispatch-optional': {
+        0x3b0d4: ('bl', '0xa6408'),
+        0x3b0dc: ('str', 'q0,[x19,#0x70]'),
+        0x3b0e0: ('cbz', 'w27,0x3b110'),
+        0x3b108: ('bl', '0x3b2a8'),
+        0x3b134: ('bl', '0x3b804'),
+        0x3b1c8: ('mov', 'w20,#0xe'),
+        0x3b1d0: ('bl', '0xa6414'),
+        0x3b218: ('bl', '0xa6414'),
+    },
+    'FLT-dispatch-hardware': {
+        0x3b280: ('bl', '0xa5a54'),
+        0x3b284: ('ldr', 'x1,[x19,#0x70]'),
+        0x3b288: ('cbz', 'x1,0x3b29c'),
+        0x3b298: ('br', 'x1'),
+    },
+    'FLT-dispatch-machine': {
+        0x3b510: ('bl', '0xa72d8'),
+        0x3b518: ('cbnz', 'w0,0x3b5c4'),
+        0x3b51c: ('ldr', 'x8,[x21]'),
+        0x3b520: ('ldr', 'w0,[x21,#0x8]'),
+        0x3b524: ('ldp', 'x1,x2,[x21,#0x10]'),
+        0x3b528: ('ldp', 'x3,x4,[x21,#0x20]'),
+        0x3b52c: ('ldr', 'x5,[x21,#0x30]'),
+        0x3b530: ('blr', 'x8'),
+        0x3b548: ('bl', '0xa67f8'),
+        0x3b708: ('cbnz', 'w0,0x3b764'),
+        0x3b754: ('mov', 'w19,#0xe'),
+        0x3b794: ('bl', '0xa6810'),
+        0x3b800: ('bl', '0xa5820'),
+    },
+    'FLT-dispatch-crash': {
+        0x3b89c: ('bl', '0xa6690'),
+        0x3b8cc: ('ldr', 'x8,[x19]'),
+        0x3b8d0: ('ldr', 'w0,[x19,#0x8]'),
+        0x3b8d4: ('ldp', 'x1,x2,[x19,#0x10]'),
+        0x3b8d8: ('ldp', 'x3,x4,[x19,#0x20]'),
+        0x3b8dc: ('ldr', 'x5,[x19,#0x30]'),
+        0x3b8e0: ('blr', 'x8'),
+        0x3b8e8: ('bl', '0xa6684'),
+        0x3b99c: ('bl', '0xa6684'),
+        0x3b9e8: ('bl', '0xa5820'),
+    },
+}
+
+
+def verify_dispatch(text, label, start, end):
+    require((label, 'FLT', start, end) in REVIEWS['effect-dispatch'],
+            'unreviewed effect dispatch window')
+    count = validate_disassembly(text, start, end)
+    rows = {}
+    for address, op, operands in re.findall(
+            r'^.*\[0x([0-9a-fA-F]+)\]\s+<[^>]*>:[ \t]+(\S+)[ \t]*([^\n]*)', text, re.M):
+        rows[int(address, 16)] = (op, re.sub(r'\s+', '', operands.split(';')[0]))
+    expected = DISPATCH_ANCHORS[label]
+    require(all(rows.get(address) == pair for address, pair in expected.items()),
+            'effect dispatch structural anchors differ')
+    return {'decoded_instructions': count, 'structural_anchors': len(expected),
+            'claim': 'file-only-dispatch-and-failure-paths-not-safe-runtime-ABI'}
+
+
 def verify_readiness(text, label, start, end):
     require((label, 'PLUG' if label.startswith('PLUG-') else 'FLT', start, end)
             in REVIEWS['effect-readiness'], 'unreviewed effect readiness window')
@@ -632,6 +767,7 @@ def main():
         ownership = {}
         publication = {}
         readiness = {}
+        dispatch = {}
         for name in names:
             path, _ = INPUTS[name]
             nm, nm_err = run_tool(["/usr/bin/nm", "-arch", "arm64", "-n", "-m", str(path)])
@@ -651,6 +787,8 @@ def main():
                 publication[label] = verify_publication(disassembly, label, start, end)
             if args.review == 'effect-readiness':
                 readiness[label] = verify_readiness(disassembly, label, start, end)
+            if args.review == 'effect-dispatch':
+                dispatch[label] = verify_dispatch(disassembly, label, start, end)
             if args.review == 'ownership':
                 ownership[label] = verify_ownership(disassembly, label, start, end)
             write_exclusive(folder / (label + "-disassembly.txt"), disassembly)
@@ -708,6 +846,13 @@ def main():
             record['native_registration_ABI'] = 'UNKNOWN'
             record['receiver_thread_and_provider_lifetime'] = 'NOT PROVEN'
             record['failure_atomicity_and_safe_rollback'] = 'NOT PROVEN'
+            record['registration_apply_render'] = 'NOT RUN'
+        if args.review == 'effect-dispatch':
+            record['dispatch_evidence'] = dispatch
+            record['native_registration_ABI'] = 'UNKNOWN'
+            record['actual_procedure_and_provider_identity'] = 'NOT OBSERVED'
+            record['canonical_state_rollback'] = 'NOT PROVEN'
+            record['receiver_thread_and_provider_lifetime'] = 'NOT PROVEN'
             record['registration_apply_render'] = 'NOT RUN'
         if args.review == 'ownership':
             record['ownership_evidence'] = ownership

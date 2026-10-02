@@ -173,6 +173,51 @@ class ResourceAbiCollectorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unreviewed'):
             collector.verify_publication(text, 'FLT-if-missing', start, end - 4)
 
+    def test_dispatch_scope_includes_both_procedure_lanes_and_parameter_body(self):
+        windows = collector.review_windows('effect-dispatch')
+        self.assertEqual({label for label, *_ in windows}, set(collector.DISPATCH_ANCHORS))
+        self.assertEqual({name for _, name, *_ in windows}, {'FLT'})
+        self.assertEqual(sum((end-start)//4 for _, _, start, end in windows), 1939)
+        for _, image, start, end in windows:
+            script = collector.lldb_script(collector.INPUTS[image][0], start, end)
+            self.assertNotIn('process attach', script)
+            self.assertNotIn('process launch', script)
+        self.assertEqual(collector.DISPATCH_ANCHORS['FLT-dispatch-crash'][0x3b8e0],
+                         ('blr', 'x8'))
+        self.assertEqual(collector.DISPATCH_ANCHORS['FLT-dispatch-machine'][0x3b530],
+                         ('blr', 'x8'))
+
+    def test_dispatch_rejects_every_changed_call_or_state_anchor(self):
+        for label, _, start, end in collector.review_windows('effect-dispatch'):
+            anchors = collector.DISPATCH_ANCHORS[label]
+            def transcript(overrides):
+                return ''.join('owned[0x%x] <+%d>: %s %s\n' %
+                    (a, a-start, *overrides.get(a, anchors.get(a, ('nop', ''))))
+                    for a in range(start, end, 4))
+            text = transcript({})
+            result = collector.verify_dispatch(text, label, start, end)
+            self.assertEqual(result['structural_anchors'], len(anchors))
+            self.assertIn('not-safe-runtime-ABI', result['claim'])
+            for address in anchors:
+                with self.subTest(label=label, address=hex(address)):
+                    with self.assertRaisesRegex(ValueError, 'structural'):
+                        collector.verify_dispatch(transcript({address: ('nop', '')}),
+                                                  label, start, end)
+            with self.assertRaisesRegex(ValueError, 'bounds'):
+                collector.verify_dispatch(text + text.splitlines()[0]+'\n', label, start, end)
+            with self.assertRaisesRegex(ValueError, 'unreviewed'):
+                collector.verify_dispatch(text, label, start, end+4)
+
+    def test_dispatch_symbol_scope_excludes_scan_and_registration(self):
+        text = 'external FLTp_DispatchFilter\nexternal FLTp_DoParamsSetup\n' \
+               'external U_GenericPluginDispatch\nexternal PLUG_Search\n' \
+               'external FLT_RegisterEffectIfMissing\nexternal FLTp_FiltSetup\n'
+        selected = collector.select_symbols(text, 'effect-dispatch')
+        for name in ('FLTp_DispatchFilter', 'FLTp_DoParamsSetup', 'U_GenericPluginDispatch'):
+            self.assertIn(name, selected)
+        for name in ('PLUG_Search', 'FLT_RegisterEffectIfMissing', 'FLTp_FiltSetup'):
+            self.assertNotIn(name, selected)
+
     def test_publication_symbol_scope_does_not_select_general_plugin_setup(self):
         selected = collector.select_symbols('external _FLT_RegisterEffectIfMissing\n'
             'external _FLTp_FiltSetup\nexternal _PLUG_RegisterRoutine\n'
