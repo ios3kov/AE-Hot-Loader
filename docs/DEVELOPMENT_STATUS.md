@@ -13,11 +13,13 @@ Dated evidence is unchanged; previous instructions do not renew permissions.
 
 ## Current Stage C1 — supervisor deadline bug fixed offline
 
-Two reproduced deadline defects are fixed in the external diagnostic
-supervisor: expired preflight cannot publish a request, and verification that
+Two reproduced deadline defects are fixed in the external diagnostic and
+no-scan supervisors: expired preflight cannot publish a request, and verification that
 reaches the deadline cannot return PASS. Both consume/preserve the attempt and
-evidence without retry or host termination. Focused seven-test suite PASS;
-full clean-source regression and exact-code CI pending. Native candidate bytes
+evidence without retry or host termination. Initial diagnostic focused suite and
+clean 81adde7 full regression PASS (300 Python/no skips, 62 Node, 22 stages);
+same defects reproduced and fixed in its no-scan sibling, combined verification
+pending. Native candidate bytes
 are unchanged; no installation/launch/read performed. See
 [deadline review](C1_SUPERVISOR_DEADLINE_REVIEW_2026-10-02.md).
 Concrete live authority and actual complete-state/lifetime/repeat evidence still

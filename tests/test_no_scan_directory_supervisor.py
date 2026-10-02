@@ -232,7 +232,7 @@ class NoScanSupervisorTests(unittest.TestCase):
             f = Fixture(tmp); prepared = f.prepared(); calls = []
             def publish(control, request):
                 calls.append(request); (control / 'request.txt').write_bytes(request); (control / 'request.txt').chmod(0o600)
-            times = iter([0.0, 21.0])
+            times = iter([0.0, 0.0, 21.0])
             report = f.base / 'timeout-report.zip'
             result, archive = mod.supervise(*prepared, 20, identity_fn=f.identity_fn,
                                             provider_verifier=f.provider_verifier, publish_fn=publish,
@@ -240,6 +240,43 @@ class NoScanSupervisorTests(unittest.TestCase):
             self.assertEqual(result['status'], 'FAIL')
             self.assertIn('no retry', result['reason']); self.assertEqual(len(calls), 1)
             self.assertTrue(archive.is_file())
+
+    def test_expired_preflight_never_publishes_or_reuses_claim(self):
+        with tempfile.TemporaryDirectory(prefix='aehl-noscan-supervisor-') as tmp:
+            f = Fixture(tmp); prepared = f.prepared(); calls = []; now = [0]
+            def providers(record):
+                now[0] = 20
+                return f.provider_verifier(record)
+            result, archive = mod.supervise(*prepared, 20, identity_fn=f.identity_fn,
+                provider_verifier=providers, publish_fn=lambda *_: calls.append(1),
+                clock=lambda: now[0], sleep=lambda _: None)
+            self.assertEqual(calls, [])
+            self.assertEqual(result['status'], 'FAIL'); self.assertIn('timeout', result['reason'])
+            self.assertFalse(result['request_published']); self.assertTrue(archive.is_file())
+            self.assertTrue((f.control / 'supervisor-claim.json').is_file())
+            with self.assertRaises(FileExistsError):
+                mod.supervise(*prepared, 20, identity_fn=f.identity_fn,
+                    provider_verifier=providers, publish_fn=lambda *_: calls.append(1),
+                    clock=lambda: now[0], sleep=lambda _: None)
+            self.assertEqual(calls, [])
+
+    def test_final_verification_at_deadline_keeps_journal_but_fails(self):
+        with tempfile.TemporaryDirectory(prefix='aehl-noscan-supervisor-') as tmp:
+            f = Fixture(tmp); prepared = f.prepared(); calls = []; now = [0]; checks = []
+            def providers(record):
+                checks.append(1)
+                if len(checks) == 2: now[0] = 20
+                return f.provider_verifier(record)
+            def publish(control, request):
+                calls.append(request); f.write_pass(request)
+            result, archive = mod.supervise(*prepared, 20, identity_fn=f.identity_fn,
+                provider_verifier=providers, publish_fn=publish,
+                clock=lambda: now[0], sleep=lambda _: None)
+            self.assertEqual(result['status'], 'FAIL'); self.assertIn('timeout', result['reason'])
+            self.assertEqual(len(calls), 1); self.assertTrue(result['request_published'])
+            self.assertIsNotNone(result['native']); self.assertTrue(archive.is_file())
+            self.assertEqual({p.name for p in f.journal.iterdir()}, mod.NATIVE_NAMES)
+            self.assertFalse(result['process_stopped'])
 
 
 if __name__ == '__main__':

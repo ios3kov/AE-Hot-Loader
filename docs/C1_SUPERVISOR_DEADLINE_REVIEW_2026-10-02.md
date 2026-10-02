@@ -38,8 +38,28 @@ all six native journal files retained after late verification. Existing
 identity/tamper/count/order/success/timeout tests remain PASS. These are offline
 synthetic evidence only, not live AE observations.
 
-Full clean-source regression and exact-code CI: **NOT RUN** at this code
-checkpoint; run next and append exact revision/report identity before closeout.
+First code checkpoint `81adde7b815f6a95752d45177e78ce8a35e58397` passed full
+clean local regression: 300 Python/no skips, 62 Node, 22 stages; private report
+run `c27c5a6d482e4c63a8d324a862cf2e1e`, ZIP SHA-256
+`8af6fea338eadedbb32690240f89a7c3093592751e783cb0316659ce3523c724`.
+Inventory and all archived hashes independently verified. That checkpoint's
+scan covered 266 supported files/no omissions; raw exit 1, sole known local
+argparse false-positive. It does not verify the follow-up change below.
+
+## Same defect in the no-scan sibling
+
+Review identified the same missing deadline checks in the C0 supervisor, which
+is also the diagnostic supervisor's common helper module. Two additional
+synthetic tests reproduced both failures there (12-test suite, two failures
+before fix). Apply the same SD-001/002 contract to this sibling: checks before
+publication and before PASS, with no host action or historical-evidence rewrite.
+The existing post-publication timeout fixture now supplies the additional
+pre-publication clock observation; its one-publication/no-retry assertion is
+unchanged. C0 is not rerun and its historical live evidence remains identified
+at its original source. The defect reproduction here is offline transport only.
+
+Final combined focused regression and clean full-source/CI checks: **NOT RUN**
+at this follow-up checkpoint; run next and append exact identity before closeout.
 The older `observe-d548b007e316` artifact was not changed or installed. Its
 native source and historic build evidence remain `7c983c5`; they do not verify
 this newer external supervisor or establish live C1 eligibility. A future

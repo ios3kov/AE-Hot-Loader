@@ -416,6 +416,7 @@ def supervise(record, control, journal, probe, observed, request, providers, tim
         require(identity_fn(observed['pid']) == observed, 'host changed before publication')
         require(provider_verifier(record) == providers, 'provider bytes changed before publication')
         private_directory(probe, empty=True)
+        require(clock() < deadline, 'timeout before publication; attempt consumed; no retry')
         publish_fn(control, request); published = True
         while clock() < deadline:
             require(identity_fn(observed['pid']) == observed, 'host exited or changed')
@@ -428,6 +429,7 @@ def supervise(record, control, journal, probe, observed, request, providers, tim
                 require(bundle_hashes(Path(record['authorized_bundle'])) == record['files'],
                         'installed no-scan bundle changed during run')
                 private_directory(probe, empty=True)
+                require(clock() < deadline, 'timeout during verification; native state preserved; no retry')
                 status, reason = 'PASS', 'exact no-scan directory lifecycle; same host/providers/bundle'
                 break
             sleep(0.2)
