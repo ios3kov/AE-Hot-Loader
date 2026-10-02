@@ -83,3 +83,31 @@ would identify diagnostic labels only; descriptor/provider attribution and priva
 repeat/lifetime/quiescence still need evidence. Zero-record ResourcePassGate stays
 unchanged. C0 PASS; registration/apply/render NOT RUN; release BLOCKED. No teardown,
 startup replay, retained-reference clearing, broad scan or gate relaxation.
+
+
+## Exact-source local verification
+
+Code/test source **eb559edac5d9bf5d3861d5673d9df47e9de1f5e8**.
+Full clean available local regression PASS: 312 Python/no skips, 62 Node and
+22 stages. Source remained unchanged after execution. Private report SHA-256
+`d583545f10337f103a2bb3294c18abc4dc938a45a7cae55f23848c82e975cd5f`.
+Independent exact archive inventory/member hashes/CRC and current tracked-source
+hash comparison PASS. No live operation requested; full AE pipeline BLOCKED.
+
+Separate review covered budget arithmetic, byte-copy ownership, end-exclusive
+range overlap, pre-read retarget checks, cross-read mapping comparison, failure
+output and atomic attempt consumption. Bounded static audit completed on exact
+clean source: 317 supported files, zero omissions in that scope, all selected
+checks completed. Native code was reviewed separately; scanner output is not
+runtime or whole-product certification. Raw exit 1 retains the sole known
+`vibe.no_ratelimit_auth` finding at `tools/artifact_manifest.py:71`: current code
+is local argparse, not an HTTP/auth route. Reviewed false-positive; no new finding.
+Private audit SHA-256
+`2f626286b1fde28a80e3381e66b249a83b8b0b5e6e8d8a54e6e39bea75730beb`.
+Exact-source research CI
+[37043790769](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37043790769)
+and full macOS CI
+[37043790324](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37043790324)
+both completed/success at that full source SHA. Later documentation closeout
+changes no tested code or native candidate. This owned-data capture-core stage
+is closed; host integration/serialization and actual names remain NOT RUN.

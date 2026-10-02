@@ -40,12 +40,13 @@ At the exact clean standard source above:
   Node/POSIX/macOS behavioral/native checks ran. No model/product/AE runtime
   certification is inferred from these checks.
 - Generated applicability map `--check` PASS.
-- Actual migration and C1 research router contexts PASS; selected rules match
+- Actual migration, C1 research and implementation router contexts PASS; selected rules match
   manifest/canonical sections, including API-SOURCES and diagnostics/testing/IPC.
 - Standard checkout remains clean. No standard code/tool schema changes copied
   into product; project-owned journals remain separate protocols.
 - Active product baseline headers/entry links updated to this immutable source;
-  dated native reports are not rewritten. Final link/diff checks recorded in Git.
+  dated native reports are not rewritten. Final active-header consistency,
+  51 local documentation links and `git diff --check` PASS.
 
 Native helper/profile/product bytes are unchanged by adoption. Prior decoder code
 `15c528f6d7dabad83e7203970fc8a09bb2b7e710` retains its separately identified local

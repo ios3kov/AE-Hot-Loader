@@ -15,7 +15,8 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
 - Repository: `ios3kov/AE-Hot-Loader`.
 - Branch: `research/ordinary-plugin-discovery`; never change `main`.
-- Latest retained-record decoder/code/test head: **15c528f6d7dabad83e7203970fc8a09bb2b7e710**.
+- Latest retained identity capture/code/test head: **eb559edac5d9bf5d3861d5673d9df47e9de1f5e8**.
+- Prior retained-record decoder/code/test head: **15c528f6d7dabad83e7203970fc8a09bb2b7e710**.
 - Prior MEE ownership collector/code/test head: **095a219253bf86bea82fa06fc00ac6c87e6f0b05**.
 - Prior PIN collector/code/test head: **c01fb89d7b1842a145bb7c66681a045fa6b12a82**.
 - Reviewed external supervisor code/test head:
@@ -471,13 +472,17 @@ or further live operation. Seven-record blocker unchanged. Next retained-state/
 lifetime and PIN comparator/synchronization review. See
 [bounded PIN review](C1_PIN_CLEANUP_REVIEW_2026-10-02.md).
 
-## C1 retained identity capture — focused owned-chain PASS
+## C1 retained identity capture — exact-source PASS
 
+Code/test source **eb559edac5d9bf5d3861d5673d9df47e9de1f5e8**.
 Separate one-shot capture core is implemented under rules 6.2.0. Strict C++17
 focused regression PASS: 46 nested synthetic cases plus actual macOS arm64 owned
 heap/main-thread-refusal smoke. Two bounded matching captures, atomic consumed
 claim, no retarget/retry; maximum 22 copies / 6,976 bytes. No Adobe calls or
-callback invocations. Full clean regression/static review/exact-source CI pending.
+callback invocations. Full clean local regression PASS: 312 Python/no skips, 62 Node, 22 stages;
+independent report/hash/source verification PASS. Bounded static review retains
+only the known local-argparse false-positive. Exact-source research CI
+37043790769 and full macOS CI 37043790324 both PASS.
 No native helper/profile or ResourcePassGate change; actual seven live names
 remain unknown. Next snapshot journal/independent verifier/supervisor and a
 separately identified inert candidate before its operation authority request.
