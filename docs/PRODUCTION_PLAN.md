@@ -3,10 +3,13 @@
 Updated: 2026-10-02. Branch: `research/ordinary-plugin-discovery`.
 
 Source of current verified state: [DEVELOPMENT_STATUS](DEVELOPMENT_STATUS.md).
-Canonical [AI_ENTRYPOINT](https://github.com/ios3kov/AE-Development-Rules/blob/main/AI_ENTRYPOINT.md)
+Accepted standard: **6.0.0**, `v6.0.0` peeled to
+`bb8b769404ddd5b97462812a4e6b430e8bfefe13`, adopted on 2026-10-02.
+Canonical [AI_ENTRYPOINT](https://github.com/ios3kov/AE-Development-Rules/blob/bb8b769404ddd5b97462812a4e6b430e8bfefe13/AI_ENTRYPOINT.md)
 and its selected AE Development Rules modules, plus `AGENTS.md`, apply.
 Historical plans/evidence remain preserved and must not
 be treated as current approval.
+Migration scope/evidence: [rules adoption](RULES_ADOPTION_6_0_0_2026-10-02.md).
 
 ## Product scope
 
@@ -217,7 +220,7 @@ No release/tag is created while those conditions are unverified. The separately
 requested concrete live diagnostic scope remains pending after automatic-review
 rejection; publication authorization is not used to bypass that decision.
 
-No merge to `main`, release or installable handoff until all applicable
+No merge to `main` or final release until all applicable
 mandatory checks pass for the exact candidate:
 
 - clean identified source;
@@ -233,3 +236,26 @@ mandatory checks pass for the exact candidate:
 
 Historical Control Shell success remains useful research but is not evidence of
 arbitrary ordinary-effect late registration.
+
+## Validation handoff and platform distribution under 6.0.0
+
+A diagnostic Validation Build has its own stated question and pre-handoff
+prerequisites (candidate identity/integrity, bounded inert/refusal behavior,
+reviewed safe scope, instructions/limitations and required live authority).
+The intended user-validation answer can be pending after these prerequisites
+pass; this does not waive a missing internal safety prerequisite. Full product
+registration/apply/render acceptance remains mandatory for final Release.
+This phase clarification is not approval to install/launch/read in the user's AE.
+
+For the macOS distributable, MAC-001 requires identified final bytes, structure/
+architecture/dependencies, the selected delivery channel, documented installation,
+actual loaded Build ID and applicable smoke/update/uninstall/data-preservation
+checks. Unsigned or locally ad-hoc-signed artifacts may qualify after those
+checks. Paid accounts, distribution certificates and remote signing/notarization
+services are not prerequisites. Local signing stays in the current reviewed
+build profile; its result does not prove host loading. Do not promise warning-free
+installation or alter general system security/quarantine automatically.
+
+WIN-001 is outside the current Mac-only native research scope. A future Windows
+scope must separately establish package/architecture/dependency/install/AE-load
+evidence; successful macOS CI creates no Windows compatibility claim.

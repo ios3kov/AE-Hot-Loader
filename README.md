@@ -10,6 +10,8 @@ product**.
 Current verified state: [DEVELOPMENT_STATUS](docs/DEVELOPMENT_STATUS.md).  
 Current gates: [PRODUCTION_PLAN](docs/PRODUCTION_PLAN.md).  
 Development requirements: [AGENTS](AGENTS.md).
+Accepted rules baseline: **AE Development Rules 6.0.0**; see
+[adoption record](docs/RULES_ADOPTION_6_0_0_2026-10-02.md).
 
 ## Current Stage C
 
@@ -39,10 +41,13 @@ only intended live operation is:
 4. prove the same AE process/project/registry/image set remained unchanged;
 5. preserve one report ZIP.
 
-The no-scan source connection and owned/offline tests are implemented. The real
-AE folder-object lifecycle is still **NOT RUN**. It requires a fresh exact host
-baseline and separate authorization for the private FILE call and retention of
-three already-loaded provider references.
+The no-scan Stage C0 folder-object lifecycle is **PASS** at its identified
+historical source; see [live evidence](docs/NO_SCAN_DIRECTORY_LIVE_PASS_2026-10-01.md).
+That consumed one-shot gate must not be repeated. Current Stage C1 is a separate
+read-only cleanup-state diagnostic, followed by a resource-registration
+experiment only when its safety contract is proven. Diagnostic installation/
+launch/read authority is pending; ordinary-effect registration/apply/render
+remain unverified. C0 permission and evidence do not authorize those later steps.
 
 The helper being an AEGP `.plugin` does **not** make AE Hot Loader an effect
 plug-in product. It is an internal host-side component of the tool.

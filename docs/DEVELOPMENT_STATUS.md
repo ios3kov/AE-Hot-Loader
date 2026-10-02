@@ -4,12 +4,27 @@ Updated: 2026-10-02. Branch: `research/ordinary-plugin-discovery`.
 Stage **C of A–D**; core registration, A/B/D and release gates remain open.
 Current continuation handoff: [CHAT_HANDOFF_2026-10-01_STAGE_C_CURRENT.md](CHAT_HANDOFF_2026-10-01_STAGE_C_CURRENT.md).
 AGENTS.md and PRODUCTION_PLAN apply. Current canonical rules:
-AE-Development-Rules `b27f45467e0a9152fc82c1072438dfed07f0c36e`, starting with
+AE-Development-Rules **6.0.0**, tag `v6.0.0`, peeled commit
+`bb8b769404ddd5b97462812a4e6b430e8bfefe13`, adopted on 2026-10-02, starting with
 AI_ENTRYPOINT.md. Older rule/permission/environment statements below belong
 to their named checkpoints and do not supersede this continuation.
 Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
+
+## Rules baseline migration — 6.0.0
+
+User-requested migration from accepted b27f454 is recorded in
+[RULES_ADOPTION_6_0_0](RULES_ADOPTION_6_0_0_2026-10-02.md). Published tag/commit,
+applicability map/router and full available standard self-test PASS (132 files,
+43 executed test cases; two Windows-only skipped, PowerShell NOT RUN locally).
+Distribution now requires exact artifact integrity, documented installation and
+actual host loading; paid accounts/certificates/remote signing services are not
+release prerequisites. Relevant phase/IPC/feature-selection guidance is adopted.
+Product runtime/candidate bytes unchanged; historical b27f454 reports retain
+their original scope. This migration does not close live, registration or release
+gates. Final documentation consistency/pinned-source/local-link checks PASS;
+documentation/policy migration complete. No runtime behavior changed.
 
 ## Current Stage C1 — supervisor deadline bug fixed offline
 

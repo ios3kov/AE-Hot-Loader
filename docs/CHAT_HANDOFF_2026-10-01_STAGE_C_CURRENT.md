@@ -1,9 +1,11 @@
-# AE Hot Loader — current Stage C handoff, 2026-10-01
+# AE Hot Loader — current Stage C handoff, updated 2026-10-02
 
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [C1_OBSERVER_CANDIDATE_REVIEW_2026-10-01.md](C1_OBSERVER_CANDIDATE_REVIEW_2026-10-01.md).
+Current continuation: [rules adoption](RULES_ADOPTION_6_0_0_2026-10-02.md),
+[supervisor deadline review](C1_SUPERVISOR_DEADLINE_REVIEW_2026-10-02.md) and
+[prepared native candidate](C1_OBSERVER_CANDIDATE_REVIEW_2026-10-01.md).
 The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
@@ -13,16 +15,18 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 - Repository: `ios3kov/AE-Hot-Loader`.
 - Branch: `research/ordinary-plugin-discovery`; never change `main`.
 - Current C1 code/test head:
-  **`7c983c5b5adfde0300f2370e5772ed757ab6b613`**.
+  **`f4f84aa5a41fd86cc76ee2d702fe61e9b61d16e2`** (external supervisors).
+- Prepared native candidate source:
+  **`7c983c5b5adfde0300f2370e5772ed757ab6b613`**; native bytes unchanged.
 - Current canonical AE Development Rules source:
-  **`b27f45467e0a9152fc82c1072438dfed07f0c36e`**; read AI_ENTRYPOINT first.
-- Current Stage C no-scan core head:
+  **6.0.0 / `bb8b769404ddd5b97462812a4e6b430e8bfefe13`**; read pinned AI_ENTRYPOINT first.
+- Historical Stage C no-scan core head:
   **`c1e20e4ab4d4a4f6654f67df7dbb224f0790b5be`**.
-- Current live-launcher code/test head:
+- Historical live-launcher code/test head:
   **`3852192406da5af539b9100114393584642e9197`**.
-- Current status documentation before this save:
-  `7987b2d`.
-- Shared DEVELOPMENT_RULES blob:
+- Status documentation before this migration:
+  `c8c56fa`.
+- Historical shared DEVELOPMENT_RULES blob:
   `701a8c1ae3acb4dbfe1d7eda94acbf8095b88608`.
 - Stage: **C of A–D**. Ordinary-effect late registration is still NOT fixed.
 
@@ -326,7 +330,27 @@ callback invocation, retained provider or native registration backend. Preserve
 NOT OBSERVED/NOT RUN for current live registration/apply/render; C0 remains PASS.
 Continue independent work without milestone stops as explicitly requested.
 
-## Current Stage C1 supervisor deadline checkpoint
+## Current accepted rules — 6.0.0 migration
+
+On 2026-10-02 the user explicitly accepted the proposed rules migration.
+Current baseline: 6.0.0 / published v6.0.0, peeled commit
+bb8b769404ddd5b97462812a4e6b430e8bfefe13. Tag/version/source, applicability map
+and routing contexts verified; full available standard self-test PASS, 132 files,
+43 executed test cases, two Windows-only skipped; PowerShell NOT RUN locally.
+AGENTS/plan/status/README now identify the pinned source and v6 MAC-001 integrity/
+install/host-load policy, without paid-account/certificate/service prerequisites.
+Validation phases and applicable IPC/diagnostics/testing overlays are explicit.
+No vendored legacy wrapper callers; no runtime/tooling byte change required.
+See RULES_ADOPTION_6_0_0_2026-10-02.md; final documentation consistency, pinned
+source and 25 local-link checks PASS. Documentation/policy migration complete.
+
+Older b27f454 records remain historical. No new artifact, AE action, permission,
+registration evidence, main change or product release is produced by adoption.
+Next C1 step retains the concrete diagnostic authority and runtime-safety gates.
+Preserve the user's existing final-publication authorization when release gates
+eventually pass; the baseline record itself grants no live permission.
+
+## Stage C1 supervisor deadline checkpoint
 
 Code/test source f4f84aa5a41fd86cc76ee2d702fe61e9b61d16e2, accepted rules b27f454.
 Four synthetic reproductions proved the same two expiry bugs in the diagnostic
