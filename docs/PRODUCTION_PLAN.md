@@ -202,6 +202,12 @@ C0 gate on the authorized Mac.
 
 ## Release gate
 
+The user explicitly requested release publication on 2026-10-02. Publication
+permission is recorded; the mandatory readiness conditions below remain open.
+No release/tag is created while those conditions are unverified. The separately
+requested concrete live diagnostic scope remains pending after automatic-review
+rejection; publication authorization is not used to bypass that decision.
+
 No merge to `main`, release or installable handoff until all applicable
 mandatory checks pass for the exact candidate:
 

@@ -13,6 +13,14 @@ Dated evidence is unchanged; previous instructions do not renew permissions.
 
 ## Current Stage C1 — exact diagnostic candidate ready; live authority blocked
 
+Latest user direction on 2026-10-02: publish a release ("релиз делай").
+Publication is now explicitly requested; do not ask for that permission again
+after the mandatory exact-candidate gates pass. This does not close or waive
+the release gate, authorize an unverified build as production-ready, or supply
+the separate install/AE-launch/sensitive-read scope rejected by automatic review.
+Release execution remains BLOCKED on Stage C1/C2, integration and Level 2
+evidence. No tag, release, merge or main change was performed.
+
 Independent continuation check on 2026-10-02: clean documentation head
 `5a74fd8d78bc28fab633e8abbc43cd8cdea60578`, unchanged code/test head below.
 Offline code-profile static scan completed all selected checks: 265 supported

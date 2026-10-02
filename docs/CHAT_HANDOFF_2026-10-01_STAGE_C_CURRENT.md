@@ -328,6 +328,13 @@ Continue independent work without milestone stops as explicitly requested.
 
 ## Current Stage C1 diagnostic candidate checkpoint
 
+Latest direction 2026-10-02: user explicitly requests release publication
+("релиз делай"). Preserve this authorization for the finished verified release;
+do not repeat the publication-permission question. Mandatory project release
+gates are still open; no release/tag/merge/main change. The concrete diagnostic
+install/one AE launch/sensitive-read approval remains pending and is not inferred
+from publication scope to bypass the earlier automatic-review rejection.
+
 Continuation 2026-10-02: clean head 5a74fd8, unchanged candidate/code source
 7c983c5. Offline code-profile scan v2.0.0 completed at
 2026-10-02T08:54:03.224551+00:00: 265 supported files/no omissions, four workflows;
