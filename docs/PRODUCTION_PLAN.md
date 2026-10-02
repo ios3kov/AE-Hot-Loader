@@ -26,16 +26,22 @@ Primary Stage C goal:
 Loaded binaries, registry publication, application and rendering are separate
 claims.
 
-## Latest C1 readiness and descriptor ownership — prepared
+## Latest C1 readiness and descriptor ownership — offline PASS
 
-The new bounded file-only mode separates the actual readiness/lazy-global bodies
-from their delegates and the path-constructor thunk from its implementation.
-Nine complete windows / 1136 instructions / 79 anchors; 21 focused collector
-tests PASS. Preparation/global setup change retained state and are not a proved
-rollback transaction. No native helper/profile/ResourcePassGate or AE operation.
-Clean-source collection, independent evidence, full regression/static review and
-exact-source CI are pending. See [readiness review](C1_EFFECT_READINESS_REVIEW_2026-10-02.md).
-Native backend NOT READY; registration/apply/render/release gates remain open.
+Code/test source **986adb36e2b127c44608ec0a5e30ff165cb6f47d**. Nine complete
+file windows / 1136 instructions / 79 anchors; all six mode archives and 146 raw
+direct B/BL checks independently PASS. Preparation/global setup change retained
+state; a zero preparation return alone does not prove a usable plugin entrypoint,
+and safe rollback is unproven. Native helpers/profiles/ResourcePassGate unchanged.
+
+Full clean local regression **361 Python/no skips, 62 Node, 22 stages PASS**.
+Static review complete; the sole known local argparse scanner false positive is
+retained. Research CI 37057799645 and full macOS CI 37057799722 both
+completed/success at exact 986adb3. See [readiness evidence](C1_EFFECT_READINESS_REVIEW_2026-10-02.md).
+Next: file-only inner host dispatch, parameter/canonical-stream failure paths
+and PluginImpl provider lifetime. Preliminary downstream windows are preserved.
+No new live packet/AE operation. Backend NOT READY; registration/apply/render/
+release gates remain open. This supersedes the earlier prepared checkpoint.
 
 ## Preserved baseline
 
