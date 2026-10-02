@@ -16,10 +16,14 @@ Dated evidence is unchanged; previous instructions do not renew permissions.
 Two reproduced deadline defects are fixed in the external diagnostic and
 no-scan supervisors: expired preflight cannot publish a request, and verification that
 reaches the deadline cannot return PASS. Both consume/preserve the attempt and
-evidence without retry or host termination. Initial diagnostic focused suite and
-clean 81adde7 full regression PASS (300 Python/no skips, 62 Node, 22 stages);
-same defects reproduced and fixed in its no-scan sibling, combined verification
-pending. Native candidate bytes
+evidence without retry or host termination. Final code/test source
+**f4f84aa5a41fd86cc76ee2d702fe61e9b61d16e2**. Focused supervisor family
+27 tests PASS; full clean local regression **302 Python/no skips, 62 Node,
+22 stages PASS**, inventory/report hashes independently verified. Exact-source
+research CI **37024297435 PASS** and full macOS CI **37024297373 PASS**, both
+completed/success at that full SHA. Bounded code scan
+completed (266 supported files/no omissions), raw exit 1 retained for the sole
+known local argparse false-positive. Native candidate bytes
 are unchanged; no installation/launch/read performed. See
 [deadline review](C1_SUPERVISOR_DEADLINE_REVIEW_2026-10-02.md).
 Concrete live authority and actual complete-state/lifetime/repeat evidence still

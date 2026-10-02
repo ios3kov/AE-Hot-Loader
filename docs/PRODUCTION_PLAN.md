@@ -107,8 +107,10 @@ It does **not** mean ordinary-effect late registration works.
 Independent external-supervisor deadline remediation on 2026-10-02:
 [C1_SUPERVISOR_DEADLINE_REVIEW](C1_SUPERVISOR_DEADLINE_REVIEW_2026-10-02.md).
 Reproduced premature request publication and late PASS acceptance are fixed
-in both diagnostic and no-scan supervisors. Initial diagnostic-only full local
-regression PASS; final combined clean-source regression/CI pending. Native candidate
+in both diagnostic and no-scan supervisors. Final source f4f84aa local regression
+PASS (302 Python/no skips, 62 Node, 22 stages), bounded code scan completed with
+sole known false-positive. Exact-source research CI 37024297435 and full macOS
+CI 37024297373 PASS. This offline remediation is complete. Native candidate
 unchanged and uninstalled; live authority/complete-state gates still open.
 
 Current offline checkpoint: [C1_OBSERVER_CANDIDATE_REVIEW_2026-10-01.md](C1_OBSERVER_CANDIDATE_REVIEW_2026-10-01.md).

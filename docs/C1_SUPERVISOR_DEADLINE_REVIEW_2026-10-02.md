@@ -58,8 +58,40 @@ pre-publication clock observation; its one-publication/no-retry assertion is
 unchanged. C0 is not rerun and its historical live evidence remains identified
 at its original source. The defect reproduction here is offline transport only.
 
-Final combined focused regression and clean full-source/CI checks: **NOT RUN**
-at this follow-up checkpoint; run next and append exact identity before closeout.
+## Final combined verification
+
+Exact code/test source **f4f84aa5a41fd86cc76ee2d702fe61e9b61d16e2**.
+Focused supervisor family: **PASS, 27 Python tests**, including the four new
+expiry regressions in two supervisors and the existing scoped supervisor.
+Clean full local regression **PASS: 302 Python, no skips; 62 Node; 22 stages**.
+Run `1d131fb00e3c4749b3c0504911781381`, macOS 26.6.2 arm64/Python 3.14.2.
+Private ZIP `AEHL-checks-egdtk4_4.zip` SHA-256
+`dd7e0777ea95999857bce874050fb9cc02725fb7fe80dbd617fc20d265e264ca`.
+Complete ZIP inventory, every archived payload hash and unchanged clean source
+inventory independently verified. Source inventory SHA-256
+`b457704d3c26611c1fbe0d5d92770d4665a9943e6982c303e566bce0c61315b2`.
+
+Offline code-profile scanner completed at the same clean source: 266 supported
+files, no omissions; raw exit **1** / `review_required`, sole previously reviewed
+`vibe.no_ratelimit_auth` false-positive at local `tools/artifact_manifest.py:71`.
+Private scan JSON SHA-256
+`14267d7f10e2c65915c55d775647c8bb7f275e2c3b5e48ad42e1b4ef59373bb9`.
+This bounded text scan does not assess overall security or release readiness.
+
+Exact-source research CI **37024297435** and full macOS CI **37024297373**
+are both **completed / success (PASS)**, verified against the full source SHA
+above. Research CI covers Linux/macOS offline checks; macOS product CI includes
+build/sign/package and synthetic regression. Neither runs the actual live C1
+diagnostic or proves ordinary-effect late registration. This scoped offline
+deadline remediation is complete; live authority/registration gates remain open.
+
+Separate diff review confirms changes are the two external deadline checks per
+supervisor, four regression tests and the corresponding extra clock observation
+in the old timeout fixture. No timeout values, native source, SDK contract,
+provider profile, host eligibility or release policy were weakened. A deadline
+failure after native completion may retain a valid native result, but overall
+supervisor status stays FAIL and cannot authorize the next gate.
+
 The older `observe-d548b007e316` artifact was not changed or installed. Its
 native source and historic build evidence remain `7c983c5`; they do not verify
 this newer external supervisor or establish live C1 eligibility. A future

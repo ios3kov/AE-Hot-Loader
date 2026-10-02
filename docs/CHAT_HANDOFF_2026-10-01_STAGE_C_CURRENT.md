@@ -326,7 +326,32 @@ callback invocation, retained provider or native registration backend. Preserve
 NOT OBSERVED/NOT RUN for current live registration/apply/render; C0 remains PASS.
 Continue independent work without milestone stops as explicitly requested.
 
-## Current Stage C1 diagnostic candidate checkpoint
+## Current Stage C1 supervisor deadline checkpoint
+
+Code/test source f4f84aa5a41fd86cc76ee2d702fe61e9b61d16e2, accepted rules b27f454.
+Four synthetic reproductions proved the same two expiry bugs in the diagnostic
+and no-scan supervisors. Both now check the absolute monotonic deadline just
+before publication and before PASS acceptance. Expiry preserves the consumed
+attempt/journal/report, without retry or host stop. Historical C0 is not rerun.
+27 focused supervisor tests and clean full local 302 Python/no skips, 62 Node,
+22 stages PASS. ZIP dd7e0777ea95999857bce874050fb9cc02725fb7fe80dbd617fc20d265e264ca
+and complete archived inventory/payloads verified; exact-source research CI
+37024297435 and full macOS CI 37024297373 both completed/success (PASS) at
+the exact full source SHA above. Bounded scanner completed
+(266 supported/no omissions), sole known local argparse false-positive/raw exit 1.
+See C1_SUPERVISOR_DEADLINE_REVIEW_2026-10-02.md for identities and limitations.
+
+No native source or candidate-byte change. Earlier native artifact source 7c983c5
+does not identify the updated external supervisor; pin both identities before a
+future authorized combined live run. No installation, launch, request or AE root
+read occurred. Concrete diagnostic scope remains pending; the previous automatic
+review rejection is not bypassed. Dependent registration/backend/apply/render
+remain NOT READY/NOT RUN; exact complete-state/lifetime/repeat questions remain
+open. Preserve publication authorization after release gates pass. This offline
+block is closed. Next is the separately approved one-shot diagnostic with fresh
+safe runtime and exact independent supervisor/native-candidate identities.
+
+## Prepared Stage C1 diagnostic candidate checkpoint
 
 Latest direction 2026-10-02: user explicitly requests release publication
 ("релиз делай"). Preserve this authorization for the finished verified release;
