@@ -144,6 +144,14 @@ remain UNKNOWN; dependent native integration is blocked. Do not replay setup,
 setdown/unprep, relax the restriction or replace callbacks. No native C1
 backend/live request is ready. Prior records are preserved.
 
+## C1 PIN file collector — prepared
+
+Reproducible exact-file cleanup/sort collector and five negative-input test groups
+are prepared. Focused tests and validation against the captured local file windows
+PASS. No native profile/helper change or further live operation. Clean-source
+regression and source-bound collection are next. See
+[bounded PIN review](C1_PIN_CLEANUP_REVIEW_2026-10-02.md).
+
 Only after C0 PASS:
 
 1. review PLUG end-of-pass callbacks and retained state;

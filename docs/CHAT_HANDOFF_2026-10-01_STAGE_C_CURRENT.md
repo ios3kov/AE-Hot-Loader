@@ -457,6 +457,14 @@ setdown/startup replay, callback replacement or additional live capture under
 consumed authority. See [full evidence](C1_DIAGNOSTIC_LIVE_PASS_2026-10-02.md).
 Registration/apply/render/release still open; C0 unchanged PASS.
 
+## C1 PIN file collector — prepared
+
+Reproducible exact-file cleanup/sort collector and five negative-input test groups
+are prepared. Focused tests and validation against the captured local file windows
+PASS. No native profile/helper change or further live operation. Clean-source
+regression and source-bound collection are next. See
+[bounded PIN review](C1_PIN_CLEANUP_REVIEW_2026-10-02.md).
+
 ## Next gate — exact order
 
 1. Review root/provider identity, memory-range provenance and host lifetime/

@@ -50,6 +50,14 @@ invoke teardown. Next independent work: reproducible bounded PIN file review,
 then retained-state/lifetime contract. Registration/apply/render and release
 remain blocked. Earlier environment/authority records are historical.
 
+## C1 PIN file collector — prepared
+
+Reproducible exact-file cleanup/sort collector and five negative-input test groups
+are prepared. Focused tests and validation against the captured local file windows
+PASS. No native profile/helper change or further live operation. Clean-source
+regression and source-bound collection are next. See
+[bounded PIN review](C1_PIN_CLEANUP_REVIEW_2026-10-02.md).
+
 ## Current Stage C1 — supervisor deadline bug fixed offline
 
 Two reproduced deadline defects are fixed in the external diagnostic and
