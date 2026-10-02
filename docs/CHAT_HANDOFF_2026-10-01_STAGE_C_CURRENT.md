@@ -471,6 +471,18 @@ or further live operation. Seven-record blocker unchanged. Next retained-state/
 lifetime and PIN comparator/synchronization review. See
 [bounded PIN review](C1_PIN_CLEANUP_REVIEW_2026-10-02.md).
 
+## C1 retained identity capture — focused owned-chain PASS
+
+Separate one-shot capture core is implemented under rules 6.2.0. Strict C++17
+focused regression PASS: 46 nested synthetic cases plus actual macOS arm64 owned
+heap/main-thread-refusal smoke. Two bounded matching captures, atomic consumed
+claim, no retarget/retry; maximum 22 copies / 6,976 bytes. No Adobe calls or
+callback invocations. Full clean regression/static review/exact-source CI pending.
+No native helper/profile or ResourcePassGate change; actual seven live names
+remain unknown. Next snapshot journal/independent verifier/supervisor and a
+separately identified inert candidate before its operation authority request.
+See [capture review](C1_RETAINED_CAPTURE_REVIEW_2026-10-02.md).
+
 ## C1 retained-record decoder — exact-source PASS
 
 Code/test source **15c528f6d7dabad83e7203970fc8a09bb2b7e710**. Portable owned-buffer
