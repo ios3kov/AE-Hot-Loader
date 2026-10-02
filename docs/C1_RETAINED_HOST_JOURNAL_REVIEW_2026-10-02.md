@@ -36,7 +36,7 @@ publishing its sole request and preserve the attempt on timeout/unknown outcome.
 Verifier PASS always has `host_execution_verified: false`; even origin ae-diagnostic
 cannot attest to live execution by itself. No hostile same-UID/power-loss guarantee.
 
-The existing five-record journal container is reused, without changing its
+The existing disk container is reused for five records, without changing its
 resource-registration contract or ResourcePassGate. Two matching snapshots do
 not prove atomicity, allocation lifetime, quiescence, repeat safety or plugin
 registration. Existing installed/consumed observe-d548b007e316 is preserved and
@@ -72,5 +72,30 @@ Expired/backwards deadlines refuse before IO, after semantics and after final IO
 identity rechecks. A late persisted producer PASS is explicitly provisional and
 rejected by the independent deadline.
 
-Full clean regression, separate source/static review and exact-source CI pending.
+Code/test source **dfa78e04d8a1e3f7cae64262a9f13a147aa4a5a3**. Full clean local
+regression PASS: 337 Python/no skips, 62 Node, 22 offline stages. Nested C++ cases
+are not added to Python counts. Independent report ZIP inventory/member hashes/
+CRC and current tracked-source verification PASS; source remained unchanged.
+Private report SHA-256
+`4de49af465eddd31a8c5f72ba11784865886273eef877af5bc5da1677dddd63a`.
+
+Separate source review covered immutable bindings, claim/marker/partial-final
+ordering, poison/no-retry, raw byte/path/name encoding, native reconstruction reuse,
+host inventory/safety/change checks, expected-directory binding, independent clock
+before/after semantics and final IO, and shared reader preservation. Bounded static
+audit completed at exact clean source: 325 supported files, zero omissions in
+scope, all selected checks completed. Native C++ reviewed separately; unsupported
+file types are outside scanner claims. Raw exit 1 retains only the known
+`vibe.no_ratelimit_auth` at `tools/artifact_manifest.py:71`, rechecked local argparse
+mode rather than an HTTP/auth route. Private audit SHA-256
+`77dd4d2158c9dfb0c47133a83d4811aa4435a950fb3da09f1ea5b382318029f5`.
+Exact-source [research CI 37049587798](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37049587798)
+and [full macOS CI 37049587807](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37049587807)
+both completed/success at dfa78e04d8a1e3f7cae64262a9f13a147aa4a5a3.
 Actual seven names NOT RUN; registration/apply/render and release remain blocked.
+
+
+Documentation-only closeout changes no tested source/candidate. Changed local
+documentation links and diff whitespace check PASS. Acceptance RIH-001–006 is
+verified within the owned/injected boundary scope above; measured live AE/native
+binding and external one-shot request execution remain separate prerequisites.

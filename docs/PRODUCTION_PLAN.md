@@ -145,7 +145,7 @@ remain UNKNOWN; dependent native integration is blocked. Do not replay setup,
 setdown/unprep, relax the restriction or replace callbacks. No native C1
 backend/live request is ready. Prior records are preserved.
 
-## C1 retained host journal — focused owned-data PASS
+## C1 retained host journal — exact-source PASS
 
 All three host observations and both copied-byte captures are now saved in a
 private one-shot journal and independently checked. Expected run/candidate/host/
@@ -153,7 +153,12 @@ provider/root/paths are bound; changed project/registry/images, malformed or
 partial files and an independent expired/backwards deadline refuse. Focused
 retained family: 27 Python PASS, including 13 new verifier tests and 19 nested
 C++ disk-producer cases. No AE operation or native helper/profile/gate change.
-Full clean regression/static review/CI pending. Measured native binding and
+Code/test source dfa78e04d8a1e3f7cae64262a9f13a147aa4a5a3. Full clean local
+regression PASS: 337 Python/no skips, 62 Node, 22 stages; independent report/hash/
+source verification PASS. Bounded static review retains only known local-argparse
+false-positive. Exact-source [research CI 37049587798](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37049587798)
+and [full macOS CI 37049587807](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37049587807)
+both completed/success at dfa78e04d8a1e3f7cae64262a9f13a147aa4a5a3. Measured native binding and
 external request supervision remain unconnected; actual seven names NOT RUN.
 See [host journal/verification review](C1_RETAINED_HOST_JOURNAL_REVIEW_2026-10-02.md).
 
