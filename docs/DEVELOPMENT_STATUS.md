@@ -50,12 +50,15 @@ invoke teardown. Next independent work: reproducible bounded PIN file review,
 then retained-state/lifetime contract. Registration/apply/render and release
 remain blocked. Earlier environment/authority records are historical.
 
-## C1 PIN file collector — prepared
+## C1 PIN file collector — exact local PASS
 
-Reproducible exact-file cleanup/sort collector and five negative-input test groups
-are prepared. Focused tests and validation against the captured local file windows
-PASS. No native profile/helper change or further live operation. Clean-source
-regression and source-bound collection are next. See
+Reproducible exact-file collector/source c01fb89 completed PASS: 58 instructions,
+11 structural anchors. Full clean local regression PASS: 307 Python/no skips,
+62 Node, 22 stages. Report inventories/hashes independently verified; bounded
+static scan retains sole known local-argparse false-positive. Research CI
+37036763724 and full macOS 37036763790 both exact-source PASS. No native profile/helper change
+or further live operation. Seven-record blocker unchanged. Next retained-state/
+lifetime and PIN comparator/synchronization review. See
 [bounded PIN review](C1_PIN_CLEANUP_REVIEW_2026-10-02.md).
 
 ## Current Stage C1 — supervisor deadline bug fixed offline

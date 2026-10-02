@@ -62,6 +62,11 @@ and raw addresses stay in the owned local evidence folder, not the public repo.
 The supervisor's `installation_performed=false` / `ae_launch_performed=false`
 describe that supervisor's own operations. The separately retained orchestration
 record correctly records both as **true** for the combined authorized run.
+Its SHA-256 is
+`a41006db54705bbdc9f5ed4b43df7930c24a2bf75b94f32a8b816bee83a60fe1`;
+executed private orchestration source SHA-256 is
+`420cc6f8079cb938e09c64a1cb5e80fb3084e7f352e3a1a621143495c571b45d`.
+These independently bind the installation/launch record outside the original ZIP.
 
 ## Bounded file-only callback attribution
 

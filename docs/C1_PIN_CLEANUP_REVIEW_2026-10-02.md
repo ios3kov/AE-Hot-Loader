@@ -61,3 +61,31 @@ repeat startup. Next review retained-state ownership/lifetime and PIN comparator
 synchronization semantics from files before designing another live question.
 Additional live authority is not inferred from the consumed diagnostic scope.
 Registration/apply/render and release remain blocked; C0 remains PASS.
+
+## Clean-source verification closeout
+
+Collector/code/test source **c01fb89d7b1842a145bb7c66681a045fa6b12a82**.
+Actual exact-file collection PASS: 58 decoded instructions, 11 structural anchors,
+no Adobe calls. Source-bound collector ZIP SHA-256:
+`2775abb63e95c5e3bb5de4e753ce86d248d3621a46433f9faf67306bf9bccb3d`.
+Independent inventory/payload hash verification PASS. Collector record explicitly
+retains runtime PIN identity and lifetime/quiescence as NOT PROVEN.
+
+Full clean local regression **PASS: 307 Python tests, no skips; 62 Node tests;
+22 stages**, source unchanged after execution. Private regression ZIP SHA-256:
+`a8ea86007f5c0016154e52531510e20bcb135bc95313609e96d280c580010150`.
+Independent archive inventory/CRC/payload hash verification PASS.
+
+Bounded code-profile scanner completed all selected checks: 293 supported text
+files, no candidate omissions; raw exit **1** / `review_required` retained for
+sole known local-argparse false-positive at `tools/artifact_manifest.py:71`.
+Reinspection confirms no auth/network handler there. Static scope digest
+`6cc84901876f40b7f02577311e58b2917db078ec7cc6a003f3967816f82c621f`;
+private audit report SHA-256
+`2b21c45a1e3662e39700bd4cc82d3fd29b1c7acd946a8049522fd0d48d19b079`.
+This bounded scan does not assess release readiness or unavailable security domains.
+
+Research CI **37036763724 PASS** and full macOS CI **37036763790 PASS**:
+both verified completed/success at exact source
+`c01fb89d7b1842a145bb7c66681a045fa6b12a82`. Native adapter/profile bytes were not changed by this
+collector. The seven-record live blocker is unchanged.

@@ -15,7 +15,8 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
 - Repository: `ios3kov/AE-Hot-Loader`.
 - Branch: `research/ordinary-plugin-discovery`; never change `main`.
-- Current C1 code/test head:
+- Latest file-only collector/code/test head: **c01fb89d7b1842a145bb7c66681a045fa6b12a82**.
+- Reviewed external supervisor code/test head:
   **`f4f84aa5a41fd86cc76ee2d702fe61e9b61d16e2`** (external supervisors).
 - Prepared native candidate source:
   **`7c983c5b5adfde0300f2370e5772ed757ab6b613`**; native bytes unchanged.
@@ -457,12 +458,15 @@ setdown/startup replay, callback replacement or additional live capture under
 consumed authority. See [full evidence](C1_DIAGNOSTIC_LIVE_PASS_2026-10-02.md).
 Registration/apply/render/release still open; C0 unchanged PASS.
 
-## C1 PIN file collector — prepared
+## C1 PIN file collector — exact local PASS
 
-Reproducible exact-file cleanup/sort collector and five negative-input test groups
-are prepared. Focused tests and validation against the captured local file windows
-PASS. No native profile/helper change or further live operation. Clean-source
-regression and source-bound collection are next. See
+Reproducible exact-file collector/source c01fb89 completed PASS: 58 instructions,
+11 structural anchors. Full clean local regression PASS: 307 Python/no skips,
+62 Node, 22 stages. Report inventories/hashes independently verified; bounded
+static scan retains sole known local-argparse false-positive. Research CI
+37036763724 and full macOS 37036763790 both exact-source PASS. No native profile/helper change
+or further live operation. Seven-record blocker unchanged. Next retained-state/
+lifetime and PIN comparator/synchronization review. See
 [bounded PIN review](C1_PIN_CLEANUP_REVIEW_2026-10-02.md).
 
 ## Next gate — exact order
