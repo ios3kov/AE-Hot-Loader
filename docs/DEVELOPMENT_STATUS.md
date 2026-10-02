@@ -26,6 +26,23 @@ their original scope. This migration does not close live, registration or releas
 gates. Final documentation consistency/pinned-source/local-link checks PASS;
 documentation/policy migration complete. No runtime behavior changed.
 
+## Current Stage C1 — diagnostic authorized, existing AE session blocks execution
+
+The user's explicit «разрешаю» grants the concrete observe-d548b007e316
+installation / one conditional AE launch / one read-only diagnostic scope.
+The reviewed one-shot orchestration passed artifact/source/provider preflight,
+then refused an already-running AE session (PID 84352) before any installation,
+launch, request or internal-state read. Destination absent; control/journal
+empty; native request unconsumed. No retry or session/project changes.
+See [preflight evidence and next step](C1_DIAGNOSTIC_PREFLIGHT_BLOCKED_2026-10-02.md).
+
+**BLOCKED on environment safety**, not permission. The user must save and close
+that session normally, then explicitly resume; do not terminate AE or
+repeat automatically. Recheck the exact unused candidate and safe baseline on
+resumption. Complete-state/lifetime/repeat and registration/release gates remain
+open. The older pending-authority/rejection records below are historical and
+are superseded only for this exact diagnostic scope.
+
 ## Current Stage C1 — supervisor deadline bug fixed offline
 
 Two reproduced deadline defects are fixed in the external diagnostic and
@@ -41,10 +58,10 @@ completed (266 supported files/no omissions), raw exit 1 retained for the sole
 known local argparse false-positive. Native candidate bytes
 are unchanged; no installation/launch/read performed. See
 [deadline review](C1_SUPERVISOR_DEADLINE_REVIEW_2026-10-02.md).
-Concrete live authority and actual complete-state/lifetime/repeat evidence still
-block dependent registration; ordinary registration/apply/render NOT RUN.
+The later diagnostic authorization is recorded above; actual complete-state/
+lifetime/repeat evidence still blocks dependent registration; ordinary registration/apply/render NOT RUN.
 
-## Prepared diagnostic candidate — live authority blocked
+## Historical preparation — diagnostic authority was initially blocked
 
 Latest user direction on 2026-10-02: publish a release ("релиз делай").
 Publication is now explicitly requested; do not ask for that permission again
@@ -86,8 +103,8 @@ launch, request, native root read, provider retain or private Adobe call occurre
 No bypass attempted. Process-list checks found no AE at their check time; current
 project/resident state remains NOT OBSERVED.
 
-Next obtain approval for only this exact diagnostic candidate and safe test
-scope, then execute once with fresh process/project/module baseline. Continue
+At that checkpoint the next step required exact diagnostic approval. That
+approval is now granted; the current environment refusal above controls continuation. Continue
 independent authorized work; generic development scope does not bypass the
 reviewer's decision. Complete cleanup, allocation/lifetime/quiescence and
 repeat behavior remain unproven; no ResourcePassGate integration. Native C1

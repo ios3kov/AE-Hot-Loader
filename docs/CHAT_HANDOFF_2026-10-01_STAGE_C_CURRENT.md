@@ -3,7 +3,8 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [rules adoption](RULES_ADOPTION_6_0_0_2026-10-02.md),
+Current continuation: [authorized diagnostic preflight](C1_DIAGNOSTIC_PREFLIGHT_BLOCKED_2026-10-02.md),
+[rules adoption](RULES_ADOPTION_6_0_0_2026-10-02.md),
 [supervisor deadline review](C1_SUPERVISOR_DEADLINE_REVIEW_2026-10-02.md) and
 [prepared native candidate](C1_OBSERVER_CANDIDATE_REVIEW_2026-10-01.md).
 The current C1 section and next-gate order below supersede historical no-scan
@@ -415,6 +416,25 @@ Independent work is complete for this diagnostic preparation; dependent native
 registration remains blocked by critical complete-state/lifetime/repeat unknowns.
 No diagnostic → ResourcePassGate eligibility conversion; C1 registration/apply/
 render NOT RUN, C0 recorded PASS. Do not repeat consumed C0 or old registration scan.
+
+## Latest C1 diagnostic authorization and environment refusal
+
+The user explicitly replied «разрешаю» to the exact observe-d548b007e316
+install / one launch only without an existing AE session / one read-only capture
+scope. This supersedes the earlier missing-authority statements for that scope.
+Tool review permitted execution. The orchestrator passed exact clean source,
+candidate/signature/provider and unused evidence checks, then refused an
+existing AE session (PID 84352) before any live side effect. No installation,
+launch, request, sensitive read or retry; destination absent, control/journal
+empty, native request unconsumed. Existing project/session preserved, not inspected.
+
+Current result **BLOCKED on safe environment**. Wait for the user to save and
+close AE normally and explicitly resume; do not terminate AE or retry
+on a timer. Recheck the exact unused candidate and safe baseline on resumption.
+Diagnostic permission is already granted; do not ask for it again. Private calls,
+provider retention and registration are outside this permission. See
+[full scoped evidence](C1_DIAGNOSTIC_PREFLIGHT_BLOCKED_2026-10-02.md).
+Registration/apply/render and release gates remain open; C0 is not repeated.
 
 ## Next gate — exact order
 
