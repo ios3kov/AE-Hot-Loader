@@ -50,15 +50,23 @@ invoke teardown. Next independent work: reproducible bounded PIN file review,
 then retained-state/lifetime contract. Registration/apply/render and release
 remain blocked. Earlier environment/authority records are historical.
 
-## C1 MEE ownership evidence — prepared
+## C1 MEE ownership evidence — exact-source PASS
 
-The file-only collector now reproduces five MEE ownership/lifecycle windows,
-960 decoded instructions and 61 addressed anchors. Focused 13-test collector
-suite PASS, including owned arm64 file inspection; saved MEE windows pass the
-new checks. Retention, state overwrite/repeated saved entrypoint call, finish
-callbacks and separate teardown release are distinguished. Actual seven-record
-identity and lifetime/repeat safety remain unproven. No new live operation,
-native profile or gate change. Next exact clean-source collection/regression/CI.
+File-only collector source 095a219 reproduces five MEE ownership/lifecycle
+windows: 960 instructions, 61 structural anchors PASS. Default search compatibility
+PASS (472 instructions). Full clean local regression PASS: 310 Python/no skips,
+62 Node, 22 stages. Independent private report/hash verification PASS; research CI
+37038542355 and full macOS 37038542153 both exact-source PASS. Bounded static audit
+retains the sole known local-argparse false-positive, raw exit 1.
+
+Retention, state overwrite/repeated saved entrypoint call, finish callbacks and
+separate teardown release are distinguished. Supplemental 315-instruction AEgx
+file review identifies a separate modern AEGP queue; do not equate seven retained
+GeneralPlugin records with seven particular AEGPs or borrow public AEGP repeat
+semantics. Actual seven-record identities and lifetime/repeat safety remain
+unproven. No new live operation, native profile/helper or gate change. Next owned-
+buffer record identity/layout decoder and a separately scoped diagnostic contract;
+PIN comparator/synchronization remains open.
 See [MEE ownership review](C1_MEE_OWNERSHIP_REVIEW_2026-10-02.md).
 
 ## C1 PIN file collector — exact local PASS

@@ -91,3 +91,60 @@ allocation and mutation limits must be resolved before any new live candidate.
 Also retain the PIN comparator/global synchronization question. Do not claim that
 count seven identifies seven particular modules or proves safe lifecycle.
 Additional live authority must target that concrete prepared diagnostic.
+
+## Exact-source closeout
+
+Code/test source **095a219253bf86bea82fa06fc00ac6c87e6f0b05**.
+Actual ownership collection PASS: five complete windows / 960 instructions /
+61 structural anchors. Private source-bound report SHA-256:
+`c8d92041ac586f34b4a1cd2293458f20052ff3a0528e6111075687590f4373b5`.
+Independent exact archive inventory/CRC/payload hashes PASS.
+
+Default search mode compatibility PASS: 472 instructions; report SHA-256
+`20ed121b26d7acd50c2f6c41aff42a1a6652bdd0aa551b3f6972a0de0107f2b0`.
+Independent archive/hash verification PASS. No existing mode/profile changed.
+
+Full clean local regression PASS: **310 Python/no skips, 62 Node, 22 stages**,
+source unchanged after execution. Private regression report SHA-256
+`30788e2df1c52fa0f8d7b443e9bd10f0a599b8d4ffb3bd904a8d70f71c4b6429`.
+Independent archive inventory/payload hashes PASS. Research CI **37038542355**
+and full macOS CI **37038542153** both verified completed/success at exact source
+095a219253bf86bea82fa06fc00ac6c87e6f0b05. These build/offline checks are separate
+from the historical live diagnostic; no new live operation occurred.
+
+Bounded code-profile audit completed all selected checks: 294 supported text
+files, no omissions. Raw exit 1/review_required retained for the sole previously
+classified local argparse false-positive at tools/artifact_manifest.py:71.
+Scope digest `db050ad8c5b8e7f8744a1a09337a0378521b07d7c20a7b9f6ce4678377aabcf5`;
+private report SHA-256
+`06a419090dc39294343b011210ef80a677660c9982142b90a85ad0cdd03797c3`.
+This is not full security or release certification.
+
+## Legacy general-plugin records and modern AEGP are distinct routes
+
+The setup window installs first type `AEgp` (0x41456770) with PluginScanFunc /
+PluginCleanupFunc, then `AEgx` (0x41456778) with AEgx_PluginScanFunc and a null
+cleanup target. The GeneralPlugin retained vector and operation-3 callback path
+must not be silently treated as the public modern AEGP initialization ABI.
+
+Supplemental file-only inspection at the same clean source pins the same MEE
+file and decodes the complete AEgx_PluginScanFunc window `[0x37a00, 0x37eec)`:
+315 instructions. It calls MEE_GetGPList at 0x37ca4 and appends a distinct typed
+`AEgxPluginLoadAtom` at 0x37cd8; the fast path advances that queue by eight bytes
+(0x37cc4–0x37cc8). This separates the modern queue from GeneralPlugin's 0xb0
+record route. It does not identify each of the seven actual captured records.
+Private supplemental ZIP SHA-256:
+`3fcec686ae6ecf3045725ac94d53e29d40325b8c6d21ae48c7a526beeb948145`;
+independent archive/hash verification PASS. No function was invoked or attached.
+
+The [AE SDK Guide entry-point contract](https://ae-plugins.docsforadobe.dev/aegps/implementation/)
+describes modern AEGP initialization once during launch and subsequent messaging
+through registered hooks. Its signature begins with SPBasicSuite*. That public
+contract does not define the internal MEE operation-3 record protocol or establish
+repeat safety for its actual entries. This distinction prevents transferring a
+public AEGP lifecycle assumption to an unidentified legacy retained record.
+
+Ownership-flow review is complete for this bounded file question. Actual record
+identity, owned/borrowed object lifetime, complete cleanup, atomicity/quiescence,
+PIN comparator/synchronization and safe repeat behavior remain open. The zero-
+record gate and native helper bytes are unchanged. No release/merge/main update.
