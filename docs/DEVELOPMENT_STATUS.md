@@ -12,16 +12,24 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
-## C1 ordinary-effect publication review — prepared, verification pending
+## Latest C1 ordinary-effect publication review — offline PASS
 
-After the retained-name live PASS, file-only research distinguishes the ordinary
-resource/FLT publication route from the Missing Effect placeholder path. The
-collector adds 13 complete bounded windows/83 static anchors and corrects a
-reproduced C++ exception-comment diagnostic false positive. Focused 18 tests PASS;
-clean-source collection/regression/CI are pending. Native profiles/helpers and
-ResourcePassGate unchanged; no new AE operation. See [publication review and
-acceptance](C1_EFFECT_PUBLICATION_REVIEW_2026-10-02.md). Native backend NOT READY;
-registration/apply/render/release gates remain open.
+Code/test source **db4799e2d964a68be761d71924bc5c693d13dea3**. File-only
+publication collection PASS: 13 complete windows / 5002 instructions / 83 static
+anchors; 48 direct raw BL checks and all five mode archives independently PASS.
+The Missing Effect route creates a placeholder, not a loaded plugin. Real resource
+setup reaches descriptor retention/post-setup/conditional publication/readiness;
+safe isolation from existing GeneralPlugin state remains unproven.
+
+Collector exception-comment false positive fixed; full clean local regression
+**358 Python/no skips, 62 Node, 22 stages PASS**. Research CI 37055729740 and
+full macOS CI 37055729761 both completed/success at exact source db4799e. Source/static review complete; sole known local
+argparse scanner false positive retained (raw exit 1, not security certification).
+Native profiles/helpers and ResourcePassGate unchanged; no new AE operation.
+See [publication evidence and remaining contract](C1_EFFECT_PUBLICATION_REVIEW_2026-10-02.md).
+Next file-only review: FCSpec::ReadyFilter / DoLazyGlobalSetup and PiPL/path
+routine descriptor construction. Native backend NOT READY; registration/apply/
+render/release gates remain open. Earlier prepared status is superseded.
 
 ## Latest C1 retained-name diagnostic — live PASS
 

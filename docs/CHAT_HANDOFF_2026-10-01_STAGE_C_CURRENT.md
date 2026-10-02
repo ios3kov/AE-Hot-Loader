@@ -3,7 +3,8 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [retained names live PASS](C1_RETAINED_NAMES_LIVE_PASS_2026-10-02.md),
+Current continuation: [publication review](C1_EFFECT_PUBLICATION_REVIEW_2026-10-02.md),
+[retained names live PASS](C1_RETAINED_NAMES_LIVE_PASS_2026-10-02.md),
 [rules adoption](RULES_ADOPTION_6_2_0_2026-10-02.md),
 [supervisor deadline review](C1_SUPERVISOR_DEADLINE_REVIEW_2026-10-02.md) and
 [prepared native candidate](C1_OBSERVER_CANDIDATE_REVIEW_2026-10-01.md).
@@ -11,16 +12,24 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
-## C1 ordinary-effect publication review — prepared, verification pending
+## Latest C1 ordinary-effect publication review — offline PASS
 
-After the retained-name live PASS, file-only research distinguishes the ordinary
-resource/FLT publication route from the Missing Effect placeholder path. The
-collector adds 13 complete bounded windows/83 static anchors and corrects a
-reproduced C++ exception-comment diagnostic false positive. Focused 18 tests PASS;
-clean-source collection/regression/CI are pending. Native profiles/helpers and
-ResourcePassGate unchanged; no new AE operation. See [publication review and
-acceptance](C1_EFFECT_PUBLICATION_REVIEW_2026-10-02.md). Native backend NOT READY;
-registration/apply/render/release gates remain open.
+Code/test source **db4799e2d964a68be761d71924bc5c693d13dea3**. File-only
+publication collection PASS: 13 complete windows / 5002 instructions / 83 static
+anchors; 48 direct raw BL checks and all five mode archives independently PASS.
+The Missing Effect route creates a placeholder, not a loaded plugin. Real resource
+setup reaches descriptor retention/post-setup/conditional publication/readiness;
+safe isolation from existing GeneralPlugin state remains unproven.
+
+Collector exception-comment false positive fixed; full clean local regression
+**358 Python/no skips, 62 Node, 22 stages PASS**. Research CI 37055729740 and
+full macOS CI 37055729761 both completed/success at exact source db4799e. Source/static review complete; sole known local
+argparse scanner false positive retained (raw exit 1, not security certification).
+Native profiles/helpers and ResourcePassGate unchanged; no new AE operation.
+See [publication evidence and remaining contract](C1_EFFECT_PUBLICATION_REVIEW_2026-10-02.md).
+Next file-only review: FCSpec::ReadyFilter / DoLazyGlobalSetup and PiPL/path
+routine descriptor construction. Native backend NOT READY; registration/apply/
+render/release gates remain open. Earlier prepared status is superseded.
 
 ## Latest C1 retained-name diagnostic — live PASS
 
@@ -91,6 +100,9 @@ apply/render and release remain blocked; no further live action is authorized
 by this consumed diagnostic scope.
 
 ## Exact starting point
+
+- Latest offline publication collector/code/test source: **db4799e2d964a68be761d71924bc5c693d13dea3**.
+- Diagnostic scope consumed; next work is downstream file-only ownership/readiness review.
 
 - Latest retained native adapter/supervisor source: **0204ab83212d68b19d85b78d0c7239511f301b7b**.
 - Name candidate: **identity-d5480a2a4090**, installed/one-shot diagnostic PASS; authority consumed. Preserve the helper/session; next work is file-only.
