@@ -20,12 +20,14 @@ struct Snapshot {
     Bytes records;
     std::vector<NameCopy> names;
 };
+struct Frame { Address address; Bytes bytes; };
 struct Diagnostic {
     bool success = false;
     std::string failure;
     Snapshot snapshot;
     std::vector<retained_identity::Record> identities;
     std::vector<mapped_memory::ReadRecord> reads;
+    std::vector<Frame> frames; // Ordered completed copies, including partial failures.
     std::size_t calls = 0, bytes = 0;
 };
 class Observer {
@@ -48,6 +50,7 @@ public:
                 Need(reader.calls() < kCalls && size <= kBytes &&
                      reader.bytes() <= kBytes - size, "retained-capture-budget");
                 auto bytes = reader.read(address, size);
+                result.frames.push_back({address, bytes});
                 const auto& current = reader.records().back();
                 for (const auto& prior : reader.records())
                     if (prior.address == current.address)

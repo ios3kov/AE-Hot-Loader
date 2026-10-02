@@ -145,6 +145,17 @@ remain UNKNOWN; dependent native integration is blocked. Do not replay setup,
 setdown/unprep, relax the restriction or replace callbacks. No native C1
 backend/live request is ready. Prior records are preserved.
 
+## C1 retained identity journal — focused owned-evidence PASS
+
+A bounded journal now saves completed raw copy frames from both captures. A
+separate Python verifier reconstructs names/read order and refuses incomplete,
+inconsistent or wrong-run evidence. Focused journal suite PASS: 11 Python tests,
+17 nested C++ journal cases. Native helper/profile, copied-byte/read budgets and
+ResourcePassGate unchanged; actual AE names still NOT RUN. Full clean regression,
+static review and exact-source CI pending. Next separate host transaction/
+supervisor and inert candidate, with actual binding/pre/postflight and authority.
+See [journal/verifier review](C1_RETAINED_JOURNAL_REVIEW_2026-10-02.md).
+
 ## C1 retained identity capture — exact-source PASS
 
 Code/test source **eb559edac5d9bf5d3861d5673d9df47e9de1f5e8**.

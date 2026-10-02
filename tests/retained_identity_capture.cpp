@@ -68,7 +68,8 @@ void Synthetic() {
         Check(r.success && r.failure.empty() && r.identities.size() == count &&
               r.snapshot.records.size() == count * 0xb0 &&
               r.calls == (count ? 6 + 2 * count : 4) &&
-              r.bytes == 64 + count * 2 * (0xb0 + 256) && r.reads.size() == r.calls);
+              r.bytes == 64 + count * 2 * (0xb0 + 256) && r.reads.size() == r.calls &&
+              r.frames.size() == r.calls);
         if (count == 8) Check(r.calls == Observer::kCalls && r.bytes == Observer::kBytes);
         const auto copies = fake.copies;
         Check(observer.run(layout, 0x1000, fake).failure == "retained-capture-consumed" &&
