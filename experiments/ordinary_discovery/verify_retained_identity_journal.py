@@ -208,31 +208,36 @@ def _identity(info):
             info.st_size, info.st_mtime_ns, info.st_ctime_ns)
 
 
-def _names(fd):
+def _names(fd, limit=len(NAMES)):
     names = set()
     with os.scandir(fd) as entries:
         for entry in entries:
             names.add(entry.name)
-            need(len(names) <= len(NAMES), 'journal inventory limit')
+            need(len(names) <= limit, 'journal inventory limit')
     return names
 
 
 def verify_directory(path, expected):
     """Read only an existing private journal; never create/delete or query AE."""
     validate_scope(expected)
+    return _verify_directory(path, expected, NAMES, PAYLOAD_LIMIT, verify_records)
+
+
+def _verify_directory(path, expected, names, payload_limit, verify):
+    """Shared bounded no-follow reader; caller validates expected policy first."""
     fd = _directory(path)
     try:
         initial = os.fstat(fd)
-        need(_names(fd) == set(NAMES), 'journal inventory')
+        need(_names(fd, len(names)) == set(names), 'journal inventory')
         records, identities = {}, {}
-        for name in NAMES:
+        for name in names:
             child = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC, dir_fd=fd)
             try:
                 info = os.fstat(child)
                 need(stat.S_ISREG(info.st_mode) and info.st_uid == os.getuid() and info.st_nlink == 1 and
-                     stat.S_IMODE(info.st_mode) == 0o600 and info.st_size <= PAYLOAD_LIMIT + 128,
+                     stat.S_IMODE(info.st_mode) == 0o600 and info.st_size <= payload_limit + 128,
                      'journal file ownership/type/mode/size')
-                chunks, remaining = [], PAYLOAD_LIMIT + 129
+                chunks, remaining = [], payload_limit + 129
                 while remaining:
                     chunk = os.read(child, remaining)
                     if not chunk:
@@ -245,10 +250,10 @@ def verify_directory(path, expected):
                 records[name], identities[name] = raw, _identity(info)
             finally:
                 os.close(child)
-        result = verify_records(records, expected)
-        need(_names(fd) == set(NAMES) and _identity(initial) == _identity(os.fstat(fd)),
+        result = verify(records, expected)
+        need(_names(fd, len(names)) == set(names) and _identity(initial) == _identity(os.fstat(fd)),
              'journal directory changed')
-        for name in NAMES:
+        for name in names:
             need(_identity(os.stat(name, dir_fd=fd, follow_symlinks=False)) == identities[name],
                  'journal entry replaced')
         fresh = _directory(path)

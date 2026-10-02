@@ -63,6 +63,18 @@ invoke teardown. Next independent work: reproducible bounded PIN file review,
 then retained-state/lifetime contract. Registration/apply/render and release
 remain blocked. Earlier environment/authority records are historical.
 
+## C1 retained host journal — focused owned-data PASS
+
+All three host observations and both copied-byte captures are now saved in a
+private one-shot journal and independently checked. Expected run/candidate/host/
+provider/root/paths are bound; changed project/registry/images, malformed or
+partial files and an independent expired/backwards deadline refuse. Focused
+retained family: 27 Python PASS, including 13 new verifier tests and 19 nested
+C++ disk-producer cases. No AE operation or native helper/profile/gate change.
+Full clean regression/static review/CI pending. Measured native binding and
+external request supervision remain unconnected; actual seven names NOT RUN.
+See [host journal/verification review](C1_RETAINED_HOST_JOURNAL_REVIEW_2026-10-02.md).
+
 ## C1 retained identity transaction — exact-source PASS
 
 The transaction core now refuses wrong-run/process/provider/root/project data,
