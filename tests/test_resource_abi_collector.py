@@ -173,6 +173,56 @@ class ResourceAbiCollectorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unreviewed'):
             collector.verify_publication(text, 'FLT-if-missing', start, end - 4)
 
+    def test_transitive_factory_scope_covers_owner_and_guid_dependencies(self):
+        windows = collector.review_windows('factory-transitive')
+        self.assertEqual(len(windows), 24)
+        self.assertEqual(sum((end-start)//4 for _,_,start,end in windows), 1369)
+        self.assertEqual({name for _,name,_,_ in windows}, {'dvacore', 'MEE'})
+        self.assertEqual({label for label,*_ in windows}, set(collector.TRANSITIVE_ANCHORS))
+        selected={label:(name,start,end) for label,name,start,end in windows}
+        self.assertEqual(selected['trans-map-init'], ('dvacore',0xb0f94,0xb1008))
+        self.assertEqual(selected['trans-map-dtor'], ('dvacore',0xb1008,0xb1030))
+        self.assertEqual(selected['trans-map-destroy'], ('dvacore',0xb1030,0xb1078))
+        self.assertEqual(selected['trans-mee-guid-init'], ('MEE',0x45214,0x45a08))
+        self.assertEqual(selected['trans-weak-lock-stub'], ('dvacore',0x2fef34,0x2fef40))
+        self.assertNotIn('factory-transitive', collector.DATA_WINDOWS)
+        self.assertLessEqual(max(end-start for _,_,start,end in windows),4096)
+
+    def test_transitive_factory_rejects_changed_creation_lock_owner_and_guid(self):
+        for label,_,start,end in collector.review_windows('factory-transitive'):
+            anchors=collector.TRANSITIVE_ANCHORS[label]
+            def transcript(overrides):
+                return ''.join('owned[0x%x] <+%d>: %s %s\n' %
+                    (a,a-start,*overrides.get(a,anchors.get(a,('nop',''))))
+                    for a in range(start,end,4))
+            good=transcript({})
+            result=collector.verify_transitive(good,label,start,end)
+            self.assertEqual(result['decoded_instructions'],(end-start)//4)
+            self.assertIn('not-supported-host-ownership',result['claim'])
+            for address in anchors:
+                with self.subTest(label=label,address=address),self.assertRaisesRegex(ValueError,'anchors'):
+                    collector.verify_transitive(transcript({address:('nop','tampered')}),label,start,end)
+            for bad in (good+good,good.splitlines()[0],good.replace(': nop',': .long',1) if ': nop' in good else ''):
+                with self.assertRaises(ValueError):collector.verify_transitive(bad,label,start,end)
+            with self.assertRaisesRegex(ValueError,'unreviewed'):
+                collector.verify_transitive(good,label,start,end+4)
+
+    def test_transitive_factory_catalog_and_dvacore_pin_are_explicit(self):
+        lines=('00000000000abbfc (__TEXT,__text) external __ZN7dvacore8classref12ClassFactory13RegisterClass\n'
+               '00000000000b14d8 (__TEXT,__text) external __ZN7dvacore8classref11UnknownBase17GetSharedFromThisEv\n'
+               '0000000000045214 (__TEXT,__text) non-external __GLOBAL__sub_I_MEE_Plugins.cpp\n'
+               '0000000000004000 (__TEXT,__text) external unrelated\n')
+        selected=collector.select_symbols(lines,'factory-transitive')
+        self.assertIn('RegisterClass',selected)
+        self.assertIn('GetSharedFromThis',selected)
+        self.assertIn('sub_I_MEE_Plugins',selected)
+        self.assertNotIn('unrelated',selected)
+        path,pin=collector.INPUTS['dvacore']
+        self.assertEqual(pin,'cb6faaf5b745903b80b44105b658ab68186d5065ae47c8a57c9b23e26aa8ecb0')
+        self.assertNotIn('dvacore',collector.FILE_ONLY_INPUTS)
+        self.assertIn(str(path),collector.PROFILE.read_text())
+        collector.profile_agrees()
+
     def test_factory_receiver_scope_is_complete_and_excludes_live_calls(self):
         windows=collector.review_windows('factory-receiver')
         self.assertEqual(len(windows),14)

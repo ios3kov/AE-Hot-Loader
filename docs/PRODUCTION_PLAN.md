@@ -12,6 +12,48 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## Transitive class factory ownership — eight-block pass
+
+2026-10-03 user “давай снова целый пак шагов в одном прогоне” continues the
+same arbitrary ordinary-effect/no-restart product. Baseline clean research
+f7ba6caa9cb713a3728532cb33e56c4bfad7521d; previous tested code4ca1e66 remains
+historical. Rules8.0.0 /132b7cd32873ba7328e3128ffbb33e1929b74d45, AI_ENTRYPOINT
+first. Stage C1 Development research; offline collector Standard, any receiver/
+call component Critical. API-SOURCE/thread/ownership/repro/refusal/task-close/
+cleanup apply. Existing SDK25.6_61 inventory reused; no new host call planned.
+
+| ID | Acceptance / observable result | Check / dependency |
+|---|---|---|
+| TRANS-01 | Trace ClassFactory registration and lookup | Same-pin dvacore exact symbol inventory, complete selected RegisterClass/CreateClassInstanceRef bodies and direct delegates as needed |
+| TRANS-02 | Trace creation/query output and callback boundary | Actual argument/result/exception dataflow; distinguish indirect callback from supported callable ABI |
+| TRANS-03 | Trace shared-from-this acquisition | Complete UnknownBase GetSharedFromThis/SetSharedFromThis bodies and direct lifetime delegates; foreign ownership never constructed from diagnostic integers |
+| TRANS-04 | Trace release and expired-owner refusal | Complete selected release/weak-lock paths where direct dependencies require; object lifetime versus control storage |
+| TRANS-05 | Resolve distinct class GUID storage question | Selected MEE initializer/xrefs or exact file fixups only for0x10f080/0x10fa38; runtime equality not inferred from names/zero-fill |
+| TRANS-06 | Review synchronization/error/late-call limits | Explicit locks/critical sections/normal-unwind paths in selected bodies, no claim of whole-host admission/drain/rollback |
+| TRANS-07 | Implement substantiated research/control change | Fixed bounded collector mode and meaningful malformed/tamper refusals; concrete host component only if contracts suffice, otherwise explicit BLOCKED |
+| TRANS-08 | Verify and reconcile entire pass | Clean original capture, separate original-byte/ZIP/source/semantic review; full runner/raw scanner/exact-source CI; docs/handoff/compatibility/private retention/ownership-aware cleanup |
+
+Before body capture: obtain selected dvacore/MEE symbol inventories. Initial body
+selection is restricted to dvacore ClassFactory RegisterClass/CreateClassInstanceRef,
+UnknownBase GetSharedFromThis/SetSharedFromThis and the directly used shared/weak
+acquisition/release delegates. End at next distinct original text symbol, split
+complete larger functions into contiguous <=4096-byte windows. Adaptive bodies/data
+must be directly relevant to creation/query/retention or the two GUID cells; document
+selection before capture. dvacore existing profile pin cb6faaf5b745903b80b44105b658ab68186d5065ae47c8a57c9b23e26aa8ecb0
+and previous MEE pin must be verified before/after. No original binaries/full
+unbounded disassembly committed. No AE launch/attach/install/active-session read/
+private invoke/foreign retain/release/destructor/unload, unchanged scan, main update,
+merge/release or existing gate bypass. Actual retained AE receiver and supported
+late ABI remain UNKNOWN; live trial BLOCKED until these and continuous host
+admission/drain/whole-effect rollback are substantiated. Original product/A/B/C1/C2/D/
+release obligations retained; eight blocks do not imply their completion.
+
+Selected initial complete dvacore bodies before capture: trans-create0xaba2c–0xabb18, trans-instance0xabb18–0xabb70, trans-register0xabbfc–0xabd84, trans-mutex0xabd84–0xabe58, trans-token0xabe8c–0xac024, trans-shared0xb14d8–0xb14ec, trans-shared-const0xb14ec–0xb1500, trans-weak0xb1500–0xb15ec, trans-shared-as0xb15f0–0xb1708, trans-unknown-dtor0xb1410–0xb144c. No SetSharedFromThis symbol in the selected inventory; its absence is not proof that no indirect setter exists.
+
+Adaptive selection before capture: direct map insertion/comparator, unique/shared unlock and once initialization delegates, bad-weak throw and two libc++ linkage stubs are needed for creation/lifetime/error/lock boundaries. The selected MEE ADRP/add root0x10fa08 at0x45230 identifies complete global initializer0x45214–0x45a08; capture that body to resolve the offset0x30 GUID store, without general session access. Added trans-map-insert0xb1078–0xb1188, trans-guid-less0xb1188–0xb13f4, trans-bad-weak0x805b0–0x805e4, trans-unique-unlock0xabe58–0xabe8c, trans-shared-unlock0xac024–0xac058, trans-map-init0xb0f94–0xb1078, trans-mutex-init0xb0edc–0xb0f64, trans-weak-lock-stub0x2fef34–0x2fef40, trans-weak-release-stub0x2fef28–0x2fef34, trans-mee-guid-init0x45214–0x45a08.
+
+Boundary review: preliminary map-init range also contained two distinct next-symbol bodies. Final collection splits it into initializer0xb0f94–0xb1008, destructor0xb1008–0xb1030, recursive destroy0xb1030–0xb1078; retain discovery transcript separately. GUID initialization now has a concrete counterpart at MEE0x45870: x19=0x10fa08 plus0x30 gives0x10fa38, passed the same36-byte GUID literal to the char/length constructor. Include previously reviewed named initializer0xb5e8–0xb610 solely for the new cross-initializer comparison and constructor stub0xa0448–0xa0454. Static same initialization input is distinct from observed runtime equality.
+
 ## Factory receiver acquisition — seven-block pass
 
 2026-10-03 user “делай” accepts the preceding seven-step proposal. Baseline clean
