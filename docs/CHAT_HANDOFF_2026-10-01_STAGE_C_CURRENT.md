@@ -17,6 +17,20 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
+## Module admission — list membership and readiness separated
+
+[Admission review](C1_MODULE_ADMISSION_2026-10-03.md): 12 pinned windows /
+3446 instructions / 232 anchors. Factory Create inserts a module before Init;
+CreateUnknown checks SetupFilter before returning a module; cache/virtual paths
+remain conditional. GetModules has no explicit body lock/readiness check;
+default AddModuleToList is a no-op and SetdownAsync constructs a ready future,
+not a proved host drain. Outer LoadPlugins delegates to LoadPluginList; full
+transitive late ABI/owner/thread/admission/drain/rollback UNKNOWN. Backend NOT READY.
+New bounded collector/refusal implementation: 54 focused tests PASS; clean full
+checks/independent review/CI pending. ADMIT-08 executable host experiment BLOCKED,
+registration/apply/render NOT RUN. No current AE operation; original obligations
+retained. Next: complete LoadPluginList dispatch/ownership/error transaction.
+
 ## Routine-to-effect handoff — internal route found, safe late contract open
 
 [Combined handoff review](C1_ROUTINE_HANDOFF_2026-10-03.md): 17 complete pinned

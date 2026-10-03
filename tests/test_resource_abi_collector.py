@@ -173,6 +173,57 @@ class ResourceAbiCollectorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unreviewed'):
             collector.verify_publication(text, 'FLT-if-missing', start, end - 4)
 
+    def test_module_admission_scope_requires_complete_fixed_bodies(self):
+        windows = collector.review_windows('module-admission')
+        self.assertEqual(len(windows), 12)
+        self.assertEqual(sum((end-start)//4 for _, _, start, end in windows), 3446)
+        self.assertEqual({image for _, image, *_ in windows}, {'MEE', 'PluginSupport'})
+        self.assertEqual({label for label, *_ in windows}, set(collector.ADMISSION_ANCHORS))
+        self.assertIn(('admit-init', 'MEE', 0x408c, 0x45ac), windows)
+        self.assertIn(('admit-impl-b', 'MEE', 0x8dc8, 0x8dfc), windows)
+        for _, image, start, end in windows:
+            script = collector.lldb_script(collector.INPUTS[image][0], start, end)
+            self.assertIn('target create --no-dependents --arch arm64', script)
+            self.assertNotRegex(script, r'process|expression|call ')
+        self.assertNotIn('module-admission', collector.DATA_WINDOWS)
+
+    def test_module_admission_refuses_changed_admission_failure_and_ownership(self):
+        # Owned synthetic parser refusal controls, not Adobe runtime evidence.
+        for label, _, start, end in collector.review_windows('module-admission'):
+            anchors = collector.ADMISSION_ANCHORS[label]
+            def transcript(overrides):
+                return ''.join('owned[0x%x] <+%d>: %s %s\n' %
+                    (a, a-start, *overrides.get(a, anchors.get(a, ('nop', ''))))
+                    for a in range(start, end, 4))
+            text = transcript({})
+            self.assertEqual(collector.verify_admission(text, label, start, end)['claim'],
+                             'file-only-module-admission-not-late-host-transaction')
+            for address, (op, args) in anchors.items():
+                for wrong in [('nop', ''), (op, args+'x0')]:
+                    with self.subTest(label=label, address=hex(address), wrong=wrong):
+                        with self.assertRaisesRegex(ValueError, 'structural'):
+                            collector.verify_admission(transcript({address: wrong}), label, start, end)
+            for bad in [text+text.splitlines()[0]+'\n', '\n'.join(text.splitlines()[:-1])]:
+                with self.assertRaisesRegex(ValueError, 'bounds'):
+                    collector.verify_admission(bad, label, start, end)
+            with self.assertRaisesRegex(ValueError, 'undecoded'):
+                collector.verify_admission(text.replace(': ', ': .long ', 1), label, start, end)
+            for wrong_label, wrong_end in [('unknown', end), (label, end+4)]:
+                with self.assertRaisesRegex(ValueError, 'unreviewed'):
+                    collector.verify_admission(text, wrong_label, start, wrong_end)
+
+    def test_module_admission_catalog_separates_list_from_effect_publication(self):
+        names = ['__ZN2ML11LoadPluginsE', '__ZN2ML27AELibraryVideoFilterFactory6CreateE',
+                 '__ZN2ML27AELibraryVideoFilterFactory17CreateUnknownImplE',
+                 '__ZN2ML27AELibraryVideoFilterFactory10GetModulesE',
+                 '__ZN2ML32AELibraryPluginVideoFilterModule4InitE',
+                 '__ZN2ML20IPluginModuleFactory12SetdownAsyncEv']
+        chosen = collector.select_symbols('\n'.join('external '+n for n in names)+
+                                          '\nexternal PLUG_Search\n', 'module-admission')
+        for name in names:
+            self.assertIn(name, chosen)
+        self.assertNotIn('PLUG_Search', chosen)
+
     def test_routine_handoff_scope_pins_startup_handoff_and_complete_windows(self):
         windows = collector.review_windows('routine-handoff')
         self.assertEqual(len(windows), 17)

@@ -28,6 +28,20 @@ WINDOWS = {
     "PLUG": (0x8A6C, 0x9028),
 }
 REVIEWS = {
+    "module-admission": (
+        ('admit-load-a', 'PluginSupport', 0x60a8, 0x70a8),
+        ('admit-load-b', 'PluginSupport', 0x70a8, 0x7788),
+        ('admit-create', 'MEE', 0x7660, 0x7a48),
+        ('admit-unknown', 'MEE', 0x7b1c, 0x7dc8),
+        ('admit-impl-a', 'MEE', 0x7dc8, 0x8dc8),
+        ('admit-impl-b', 'MEE', 0x8dc8, 0x8dfc),
+        ('admit-add', 'MEE', 0x8e80, 0x8e84),
+        ('admit-get', 'MEE', 0x8e84, 0x90b0),
+        ('admit-cache', 'MEE', 0x90b0, 0x9108),
+        ('admit-init', 'MEE', 0x408c, 0x45ac),
+        ('admit-base-init', 'MEE', 0xbbcc, 0xbbd4),
+        ('admit-setdown', 'MEE', 0x9110, 0x9190),
+    ),
     "routine-handoff": (
         ('handoff-init', 'aelib', 0x61134, 0x61fe8),
         ('handoff-aelib', 'aelib', 0x63aa0, 0x63c04),
@@ -285,6 +299,10 @@ FILE_ONLY_INPUTS = {
 }
 INPUTS.update(FILE_ONLY_INPUTS)
 SYMBOL_WANTED = {
+    "module-admission": re.compile(r"(ML11LoadPlugins|LoadPluginList|"
+                                    r"AELibraryVideoFilterFactory.*(Create|GetModules|AddModuleToList|GetPiPLFromHardcodedCache)|"
+                                    r"AELibraryPluginVideoFilterModule4Init|AELibraryVideoFilterModule4Init|"
+                                    r"IPluginModuleFactory12SetdownAsync)"),
     "routine-handoff": re.compile(r"(InitIterator|SetupAEPlugin|AELibPluginSetter|"
                                   r"AELibraryVideoFilterModule.*SetupFilter|"
                                   r"PluginSupport.*LoadAEPlugins|FLT_FCSpec.*(C[012]|D[012]|SetRoutineDescH)|"
@@ -2791,6 +2809,282 @@ HANDOFF_ANCHORS = {
 }
 
 
+# Fixed original-file structural anchors, not callable private ABI or runtime identities.
+ADMISSION_ANCHORS = {
+    'admit-load-a': {
+        0x60c8: ('stp', 'w2,w5,[sp,#0x8]'),
+        0x60dc: ('adrp', 'x8,170'),
+        0x60e0: ('add', 'x8,x8,#0x660'),
+        0x60e4: ('ldapr', 'x8,[x8]'),
+        0x60ec: ('b.eq', '0x6118'),
+        0x6108: ('adrp', 'x2,47'),
+        0x610c: ('add', 'x2,x2,#0xe2c'),
+        0x6114: ('bl', '0x8d084'),
+        0x612c: ('bl', '0x8cd48'),
+        0x6154: ('blr', 'x8'),
+        0x63cc: ('bl', '0x8c658'),
+        0x63d4: ('b.eq', '0x63e4'),
+        0x63e0: ('b.ne', '0x65cc'),
+        0x6410: ('bl', '0x575e0'),
+        0x65f8: ('bl', '0x575e0'),
+        0x6638: ('bl', '0x575e0'),
+        0x6680: ('bl', '0x575e0'),
+        0x66bc: ('bl', '0x575e0'),
+        0x6898: ('mov', 'w2,#0x1'),
+        0x689c: ('ldr', 'w3,[sp,#0xc]'),
+        0x68a0: ('bl', '0x57738'),
+        0x6d00: ('cmp', 'x19,x8'),
+        0x6d44: ('mov', 'x0,x25'),
+        0x6d48: ('bl', '0x8c634'),
+        0x6e34: ('str', 'x0,[sp,#0xe8]'),
+        0x6f88: ('adrp', 'x8,170'),
+        0x6f8c: ('add', 'x8,x8,#0x7e0'),
+        0x6fec: ('bl', '0x8c634'),
+    },
+    'admit-load-b': {
+        0x7130: ('str', 'x25,[sp,#0x48]'),
+        0x7140: ('ldp', 'x8,x9,[x23]'),
+        0x7184: ('bl', '0x8c634'),
+        0x7224: ('tbnz', 'w21,#0x0,0x72a8'),
+        0x72ec: ('add', 'x0,sp,#0x40'),
+        0x72f0: ('ldr', 'x1,[sp]'),
+        0x72f4: ('ldp', 'w2,w4,[sp,#0x8]'),
+        0x72f8: ('mov', 'x3,x20'),
+        0x72fc: ('bl', '0x7ee8'),
+        0x7314: ('ldr', 'x8,[x8,#0x30]'),
+        0x7318: ('blr', 'x8'),
+        0x7324: ('bl', '0x3590c'),
+        0x735c: ('bl', '0x3590c'),
+        0x7390: ('sub', 'x8,x20,x21'),
+        0x7394: ('lsr', 'x0,x8,#5'),
+        0x73b4: ('ret', ''),
+        0x75d8: ('bl', '0x3590c'),
+        0x75e0: ('bl', '0x4d6c'),
+        0x75e8: ('bl', '0x8c334'),
+        0x776c: ('bl', '0x3590c'),
+        0x7774: ('bl', '0x4d6c'),
+        0x777c: ('bl', '0x8c334'),
+    },
+    'admit-create': {
+        0x7678: ('mov', 'x20,x2'),
+        0x767c: ('mov', 'x21,x1'),
+        0x7680: ('mov', 'x22,x0'),
+        0x7684: ('mov', 'x19,x8'),
+        0x768c: ('bl', '0x7a48'),
+        0x76f8: ('ldp', 'x24,x8,[x22,#0x10]'),
+        0x7700: ('b.hs', '0x77ac'),
+        0x7708: ('str', 'x0,[x24]'),
+        0x771c: ('stur', 'q0,[x24,#0x8]'),
+        0x77b4: ('bl', '0xabbc'),
+        0x77b8: ('str', 'x0,[x22,#0x10]'),
+        0x7804: ('ldr', 'x0,[sp,#0x30]'),
+        0x789c: ('mov', 'x1,sp'),
+        0x78a0: ('mov', 'x2,x20'),
+        0x78a4: ('mov', 'w3,#0x0'),
+        0x78a8: ('bl', '0x408c'),
+        0x7908: ('stp', 'xzr,xzr,[x19,#0x8]'),
+        0x7914: ('stp', 'x21,x20,[x19,#0x8]'),
+        0x79a0: ('ret', ''),
+        0x79e8: ('bl', '0x3e9c'),
+        0x79f0: ('bl', '0x9e648'),
+        0x7a34: ('bl', '0x3e9c'),
+        0x7a3c: ('bl', '0x3e9c'),
+        0x7a44: ('bl', '0x9e648'),
+    },
+    'admit-unknown': {
+        0x7b34: ('mov', 'x21,x5'),
+        0x7b44: ('mov', 'x19,x8'),
+        0x7bc0: ('bl', '0x7dc8'),
+        0x7bdc: ('ldr', 'x8,[sp,#0x18]'),
+        0x7be0: ('cbz', 'x8,0x7cfc'),
+        0x7be4: ('ldp', 'x22,x9,[x20,#0x10]'),
+        0x7bec: ('b.hs', '0x7c54'),
+        0x7bf4: ('str', 'x8,[x22]'),
+        0x7c10: ('stp', 'x8,x9,[x22,#0x8]'),
+        0x7c44: ('str', 'x0,[x20,#0x10]'),
+        0x7c5c: ('bl', '0xaf7c'),
+        0x7c60: ('str', 'x0,[x20,#0x10]'),
+        0x7ca4: ('blr', 'x8'),
+        0x7cb0: ('cbz', 'x0,0x7d08'),
+        0x7cb4: ('stp', 'x21,x20,[x19,#0x8]'),
+        0x7d00: ('stp', 'xzr,xzr,[x19]'),
+        0x7d48: ('ret', ''),
+        0x7da8: ('bl', '0x3e9c'),
+        0x7db0: ('bl', '0x9e648'),
+        0x7dc4: ('bl', '0x9e648'),
+    },
+    'admit-impl-a': {
+        0x7de8: ('mov', 'x19,x8'),
+        0x7df4: ('ldp', 'x8,x9,[x2]'),
+        0x7dfc: ('b.eq', '0x89b8'),
+        0x7e2c: ('cmp', 'x9,x27'),
+        0x7e34: ('smaddl', 'x9,w27,w9,x8'),
+        0x7e3c: ('ccmp', 'x10,x9,#0x4,hi'),
+        0x7e58: ('ldr', 'x8,[x8,#0x60]'),
+        0x7e5c: ('blr', 'x8'),
+        0x7e60: ('tbz', 'w0,#0x3,0x80ac'),
+        0x7eec: ('stp', 'x9,x8,[x29,#-0xa0]'),
+        0x7f88: ('bl', '0xa0a9c'),
+        0x7fec: ('sub', 'x8,x29,#0x90'),
+        0x7ff8: ('mov', 'w1,#0x0'),
+        0x7ffc: ('bl', '0x9fea8'),
+        0x80c0: ('ldr', 'x8,[x8,#0x88]'),
+        0x80c4: ('blr', 'x8'),
+        0x80cc: ('tbnz', 'w0,#0x0,0x80f0'),
+        0x80e4: ('ldr', 'x8,[x8,#0xb0]'),
+        0x80ec: ('cbz', 'w0,0x817c'),
+        0x8104: ('ldr', 'x8,[x8,#0xb0]'),
+        0x810c: ('cbz', 'w0,0x859c'),
+        0x8110: ('ldp', 'x23,x8,[x24,#0x28]'),
+        0x8144: ('stp', 'x8,x9,[x23,#0x8]'),
+        0x8174: ('add', 'x0,x23,#0x18'),
+        0x8184: ('bl', '0x2a6f4'),
+        0x8194: ('bl', '0x2dd30'),
+        0x8198: ('tbnz', 'w0,#0x0,0x861c'),
+        0x8224: ('ldr', 'x8,[x8,#0x68]'),
+        0x822c: ('blr', 'x8'),
+        0x82f0: ('str', 'w8,[x20]'),
+        0x82f8: ('stp', 'xzr,xzr,[x19]'),
+        0x8324: ('bl', '0xb164'),
+        0x8328: ('str', 'x0,[x24,#0x28]'),
+        0x859c: ('str', 'wzr,[x20]'),
+        0x85a0: ('stp', 'xzr,xzr,[x19,#0x8]'),
+        0x85a4: ('str', 'xzr,[x19]'),
+        0x85f4: ('ret', ''),
+        0x85fc: ('str', 'w8,[x20]'),
+        0x8620: ('bl', '0x7a48'),
+        0x86cc: ('sub', 'x2,x29,#0xa8'),
+        0x86d8: ('bl', '0x408c'),
+        0x8750: ('add', 'x23,x8,#0x8'),
+        0x8814: ('add', 'x1,sp,#0x20'),
+        0x8818: ('add', 'x2,sp,#0x8'),
+        0x881c: ('mov', 'x0,x23'),
+        0x8820: ('bl', '0xbbe0'),
+        0x8824: ('mov', 'x21,x0'),
+        0x8870: ('tbz', 'w21,#0x0,0x896c'),
+        0x8874: ('ldp', 'x8,x9,[x22]'),
+        0x88a4: ('str', 'w8,[x20]'),
+        0x88bc: ('str', 'w8,[x20]'),
+        0x8900: ('blr', 'x8'),
+        0x8904: ('stp', 'xzr,xzr,[x19,#0x8]'),
+        0x8908: ('str', 'x0,[x19]'),
+        0x8910: ('stp', 'x21,x20,[x19,#0x8]'),
+        0x8918: ('stp', 'xzr,xzr,[x19]'),
+        0x8968: ('tbnz', 'w21,#0x0,0x8874'),
+        0x896c: ('str', 'wzr,[x20]'),
+        0x8970: ('stp', 'xzr,xzr,[x19,#0x8]'),
+        0x8974: ('str', 'xzr,[x19]'),
+        0x8cc8: ('bl', '0x3e9c'),
+        0x8cd0: ('bl', '0x3e9c'),
+        0x8cd8: ('bl', '0x3e9c'),
+        0x8ce0: ('bl', '0x3e9c'),
+        0x8ce8: ('bl', '0x9e648'),
+        0x8db8: ('bl', '0xa0e68'),
+        0x8dc0: ('bl', '0x3e9c'),
+    },
+    'admit-impl-b': {
+        0x8dc8: ('bl', '0x9e648'),
+        0x8dd4: ('bl', '0x8dfc'),
+        0x8ddc: ('bl', '0x3e9c'),
+        0x8de4: ('bl', '0x9e648'),
+        0x8df0: ('bl', '0x3e9c'),
+        0x8df8: ('bl', '0x9e648'),
+    },
+    'admit-add': {
+        0x8e80: ('ret', ''),
+    },
+    'admit-get': {
+        0x8ea4: ('ldp', 'x22,x21,[x0,#0x8]'),
+        0x8eac: ('b.eq', '0x9074'),
+        0x8ee4: ('ldr', 'x8,[x22]'),
+        0x8f00: ('ldadd', 'x27,x8,[x8]'),
+        0x8f18: ('ldr', 'x8,[x8,#0x18]'),
+        0x8f24: ('blr', 'x8'),
+        0x8f28: ('str', 'x0,[sp,#0x18]'),
+        0x8f3c: ('ldp', 'x26,x8,[x19,#0x8]'),
+        0x8f44: ('b.hs', '0x8fd0'),
+        0x8f4c: ('str', 'x0,[x26]'),
+        0x8f60: ('stur', 'q0,[x26,#0x8]'),
+        0x8fd8: ('bl', '0xb3ec'),
+        0x8fdc: ('str', 'x0,[x19,#0x8]'),
+        0x9090: ('ret', ''),
+        0x909c: ('bl', '0x3e9c'),
+        0x90a4: ('bl', '0x3e9c'),
+        0x90ac: ('bl', '0x9e648'),
+    },
+    'admit-cache': {
+        0x90c0: ('mov', 'x19,x2'),
+        0x90c8: ('mov', 'x20,x8'),
+        0x90cc: ('bl', '0x2a6f4'),
+        0x90d0: ('cbz', 'x0,0x90f0'),
+        0x90d4: ('mov', 'x8,x20'),
+        0x90d8: ('mov', 'x1,x21'),
+        0x90dc: ('mov', 'x2,x19'),
+        0x90ec: ('b', '0x2cfbc'),
+        0x90f0: ('stp', 'xzr,xzr,[x20]'),
+        0x90f4: ('str', 'xzr,[x20,#0x10]'),
+        0x9104: ('ret', ''),
+    },
+    'admit-init': {
+        0x40a4: ('mov', 'x20,x2'),
+        0x40a8: ('mov', 'x21,x1'),
+        0x40ac: ('mov', 'x19,x0'),
+        0x40b0: ('add', 'x0,x0,#0x8'),
+        0x40b8: ('bl', '0xbbcc'),
+        0x40e4: ('ldadd', 'x9,x8,[x8]'),
+        0x40e8: ('stp', 'x0,x22,[sp,#0x10]'),
+        0x420c: ('ldr', 'x8,[x8,#0x18]'),
+        0x4214: ('blr', 'x8'),
+        0x4260: ('cbz', 'w23,0x4340'),
+        0x4380: ('blr', 'x8'),
+        0x4390: ('ldr', 'x23,[x19,#0xe8]'),
+        0x4394: ('stp', 'x22,x8,[x19,#0xe0]'),
+        0x4398: ('str', 'x0,[x19,#0xd8]'),
+        0x4420: ('ldaddal', 'x9,x8,[x8]'),
+        0x4454: ('add', 'x8,x19,#0xf0'),
+        0x445c: ('b.eq', '0x44ec'),
+        0x4464: ('str', 'x8,[x19,#0xf0]'),
+        0x4478: ('ldadd', 'x11,x10,[x10]'),
+        0x4480: ('stp', 'x9,x8,[x19,#0xf8]'),
+        0x44c4: ('ret', ''),
+        0x4500: ('ret', ''),
+        0x4548: ('bl', '0x4838'),
+        0x4550: ('bl', '0x9e648'),
+        0x45a0: ('bl', '0x4838'),
+        0x45a8: ('bl', '0x9e648'),
+    },
+    'admit-base-init': {
+        0xbbcc: ('str', 'w1,[x0,#0xbc]'),
+        0xbbd0: ('ret', ''),
+    },
+    'admit-setdown': {
+        0x9120: ('stp', 'xzr,xzr,[sp]'),
+        0x9124: ('mov', 'x0,sp'),
+        0x9128: ('bl', '0x9964'),
+        0x912c: ('ldr', 'x19,[sp,#0x8]'),
+        0x9150: ('ret', ''),
+        0x9178: ('ret', ''),
+        0x9184: ('bl', '0x5354'),
+        0x918c: ('bl', '0x9e648'),
+    },
+}
+
+
+def verify_admission(text, label, start, end):
+    require(any((row[0], row[2], row[3]) == (label, start, end)
+                for row in REVIEWS["module-admission"]), "unreviewed module admission window")
+    count = validate_disassembly(text, start, end)
+    rows = {int(address, 16): (op, re.sub(r"\s+", "", args.split(";")[0]))
+            for address, op, args in re.findall(
+                r"^.*\[0x([0-9a-fA-F]+)\]\s+<[^>]*>:[ \t]+(\S+)[ \t]*([^\n]*)", text, re.M)}
+    anchors = ADMISSION_ANCHORS[label]
+    require(all(rows.get(a) == v for a, v in anchors.items()),
+            "module admission structural anchors differ")
+    return {"decoded_instructions": count, "structural_anchors": len(anchors),
+            "claim": "file-only-module-admission-not-late-host-transaction"}
+
+
+
 def verify_handoff(text, label, start, end):
     require(any((row[0], row[2], row[3]) == (label, start, end)
                 for row in REVIEWS["routine-handoff"]), "unreviewed routine handoff window")
@@ -3392,6 +3686,7 @@ def main():
         metadata = {}
         owner = {}
         handoff = {}
+        admission = {}
         for name in names:
             path, _ = INPUTS[name]
             nm, nm_err = run_tool(["/usr/bin/nm", "-arch", "arm64", "-n", "-m", str(path)])
@@ -3407,6 +3702,8 @@ def main():
                  "--source", str(folder / (label + "-inspect.lldb"))],
                 timeout=60)
             instruction_count = verify_lldb_disassembly(disassembly, diagnostics, start, end)
+            if args.review == 'module-admission':
+                admission[label] = verify_admission(disassembly, label, start, end)
             if args.review == 'routine-handoff':
                 handoff[label] = verify_handoff(disassembly, label, start, end)
             if args.review == 'publication-owner':
@@ -3499,6 +3796,19 @@ def main():
             "inputs": outputs,
             "data_windows": data_outputs,
         }
+        if args.review == 'module-admission':
+            record['module_admission_evidence'] = admission
+            record['loader_delegate'] = 'ML-LOADPLUGINLIST-TRANSITIVE-CONTRACT-UNKNOWN'
+            record['factory_list_as_ready_registry'] = 'NO-CREATE-INSERTS-BEFORE-INIT'
+            record['unknown_factory_setup_gate'] = 'FILE-ORDER-OBSERVED-NOT-ATOMICITY'
+            record['default_async_setdown_as_drain'] = 'NOT-PROVEN-READY-FUTURE-ONLY'
+            record['native_registration_ABI'] = 'UNKNOWN'
+            record['actual_native_receiver_and_provider'] = 'NOT OBSERVED'
+            record['host_wide_reader_render_exclusion'] = 'NOT PROVEN'
+            record['whole_effect_rollback'] = 'NOT PROVEN'
+            record['transitive_callee_side_effects'] = 'UNKNOWN'
+            record['native_experiment'] = 'BLOCKED'
+            record['registration_apply_render'] = 'NOT RUN'
         if args.review == 'routine-handoff':
             record['routine_handoff_evidence'] = handoff
             record['handoff_route'] = 'STARTUP-SETTER-TO-FLT-PROVIDER-REGISTER-FILE-ONLY'

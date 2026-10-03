@@ -12,6 +12,36 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## Module admission and initialization — bounded continuation
+
+2026-10-03. User “делай” continues the accepted original product under v8.0.0
+132b7cd32873ba7328e3128ffbb33e1929b74d45, AI_ENTRYPOINT first. Starting clean
+research HEAD b03f249c74b5ce15ab17ed9af2a1db6aa26291c3. Stage C1 Development;
+file-only collector Standard, dependent native invocation Critical. Apply
+AI-STATE/API-SOURCE/SAFE/REPRO/TEST-CONTROL/TASK-CLOSE/CLEANUP and native/thread/
+bounded tools overlays. No new feature/reference or product contract change.
+AE 25.6x101 arm64 / actual SDK 25.6_61 scope retained; broader support UNKNOWN.
+
+| ID | Acceptance | Check / dependency |
+|---|---|---|
+| ADMIT-01 | Identify upstream admission and initialization route | Pinned complete ML LoadPlugins and selected MEE factory/module bodies; distinguish direct from unresolved virtual targets |
+| ADMIT-02 | Establish provider/module ownership and failure order | Normal/unwind release, setup versus collection insertion; no speculative private objects |
+| ADMIT-03 | Establish thread/admission/drain boundaries | Selected locks and async/delegate boundaries; no per-object lock or file-flush delay as all-reader exclusion |
+| ADMIT-04 | Establish completion and rollback limits | Return/result/collection gates, partial mutation and unreviewed transitive callees |
+| ADMIT-05 | Implement bounded collector and refusal controls | Exact complete fixed windows, clean source/hash pins, malformed/tampered refusal cases |
+| ADMIT-06 | Verify research implementation | Clean collection, independent original-byte/archive/source review, full applicable runner/scanner/exact-source CI |
+| ADMIT-07 | Reconcile documentation and cleanup | Requirement/task/check/Evidence mapping, retain original A/B/C1/C2/D/release obligations and private owned receipts |
+| ADMIT-08 | Executable host experiment and live result | Conditional on confirmed supported ABI/owner/thread/drain/rollback plus concrete new live-operation scope; otherwise BLOCKED/NOT RUN |
+
+New discriminator: ML::LoadPlugins upstream of the previous startup delegate,
+and MEE video-filter factory/module admission upstream of SetupFilter. No repeated
+PICA inventory or unchanged scan. Repository edits, owned tests, file-only tools,
+research commit/push/CI authorized. No current AE inspection/attach/launch/install,
+private invocation, scan, retain/unregister/unload or forced quit; prior live
+scopes consumed. Native helpers/profiles/ResourcePassGate, SDK, user sessions,
+projects/third-party plugins/history preserved. No merge/release. Complete 01–07
+research even if 08 blocked; file evidence is not product runtime acceptance.
+
 ## Routine-to-effect handoff — accepted conditional twelve-step pass
 
 2026-10-03. User “делай” accepts the twelve-block proposal in this chat. Starting
