@@ -13,9 +13,10 @@
 namespace {
 using Event = void (*)(int) noexcept;
 Event event = nullptr;
+void (*dependent_teardown)() noexcept = nullptr; // explicit owned fixture callback
 std::uint64_t created=0, destroyed=0, acquired=0, released=0, destructor_calls=0, true_calls=0;
 int mode=0;
-struct Factory { std::uint64_t value=73; ~Factory() { ++destroyed; if(event) event(1); } };
+struct Factory { std::uint64_t value=73; ~Factory() { ++destroyed; if(dependent_teardown) dependent_teardown(); if(event) event(1); } };
 struct Block { std::array<unsigned char,24> prefix{}; Factory factory; };
 static_assert(offsetof(Block,factory)==24);
 std::shared_ptr<Block> original;
@@ -71,4 +72,5 @@ extern "C" std::uint64_t AEHL_TestUse(std::uintptr_t slot) noexcept {
     return it->second->factory.value;
 }
 extern "C" void AEHL_TestEvent(Event e) noexcept { event=e; }
+extern "C" void AEHL_TestDependentTeardown(void (*f)() noexcept) noexcept { dependent_teardown=f; }
 __attribute__((destructor)) static void OnUnload() { if(event) event(3); }

@@ -12,6 +12,35 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## Factory cleanup and dependent code residency — eight-block pass
+
+2026-10-03 continuation, clean e4275d199442d3e57924f473c9d2c658bade1ab1.
+Stage C1 Development research, accepted rules8.0.0 /132b7cd32873ba7328e3128ffbb33e1929b74d45;
+AI_ENTRYPOINT first. Native lifetime/reentrancy/ABI Critical; API-SOURCE, actual
+owned execution, source identity, task-close and ownership-aware cleanup apply.
+Existing SDK25.6_61 inventory reused; no new Adobe API or runtime operation.
+Original arbitrary ordinary-effect/no-restart product and A/B/C1/C2/D/release retained.
+
+| ID | Task / observable acceptance | Check / dependency |
+|---|---|---|
+| DEP-01 | Trace final reference release to complete factory cleanup | Reuse immutable receiver InterfaceRef/zero-shared/D1/D2 complete bodies; independent original raw branches/nlist/VTT/dataflow/ZIP/pin review, no new body capture |
+| DEP-02 | Define explicit dependency lifetime boundary | Distinguish object retention, factory image residency and callback/dependent image residency; no claim that main thread or mutex establishes host-wide safety |
+| DEP-03 | Implement owned dependent image bundle | Only already resident exact-pinned owned version/teardown exports and reviewed code spans; bounded unique profile list, no absent loads or Adobe profiles |
+| DEP-04 | Preserve result-before-code teardown order | Factory reference destroyed while all enumerated dependencies held; then dependency handles close in reverse order; stable reference moves and correct move assignment/partial failure cleanup |
+| DEP-05 | Demonstrate real transitive callback lifetime | Fresh factory dylib plus two dynamically supplied owned providers; drop harness handles and original owner, actually invoke both callbacks during final object destructor, then observe unload; ASan/UBSan |
+| DEP-06 | Exercise concrete refusals and meaningful TDD | Deliberately wrong release order fails before stale callback dispatch; bad version/export/profile/thread, absent dependency, partial acquisition, exception/malformed result and changed source checks |
+| DEP-07 | Verify exact candidate | Focused controls, full offline runner, raw scanner/manual native review, both exact-source CI; bind retained source/runner/native artifact hashes |
+| DEP-08 | Reconcile pass and cleanup | Update plan/status/handoff/compatibility/checkpoint, preserve preliminary failures and original evidence, retain private native artifacts; clean only fresh owned scanner copy |
+
+No new Adobe capture is initially necessary: the previous complete receiver bodies
+include the selected last-owner cleanup chain. This proves selected static paths,
+not a complete host callback graph or supported private lifecycle contract. The
+new bundle protects only explicitly enumerated owned modules; it cannot discover
+or certify all AE/provider dependencies. No AE launch/attach/install/session read,
+private acquisition/release/destructor/unload, unchanged scan, host gate bypass,
+merge/main mutation or release. Actual AE factory/host transaction remains BLOCKED;
+registration/apply/render NOT RUN. Proceed with independent bounded owned research.
+
 ## Native class-reference call boundary — eight-block pass
 
 2026-10-03 next authorized packet, starting clean72fefe9f2cdac41422fe8c1210791a4fc881a494.
