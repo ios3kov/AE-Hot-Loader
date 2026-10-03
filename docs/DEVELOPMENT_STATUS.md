@@ -22,9 +22,13 @@ Provider AddEffect can precede failing lazy globals; disposal mutates canonical/
 GPU/global/descriptor state without proved whole-effect rollback. A per-module
 mutex does not establish continuous all-reader/render exclusion. Actual supported
 late ABI/receiver/lifetime/thread/drain/transaction UNKNOWN; backend NOT READY.
-51 focused collector tests PASS; clean collection/full regression/review/CI pending.
+At exact clean code e0b85908706290771ba50bd9efe3ff0d59be9772: 51 focused /
+427 full Python tests, zero skips, 62 Node / 22 stages PASS; clean collection and
+independent original-byte/archive/334-source-file verification PASS. One scanner
+finding reviewed as a local-CLI false positive, raw exit 1 retained. Research CI
+37133192290 and macOS CI 37133192291 both completed/success at exact e0b8590.
 HAND-01–08 bounded file findings documented, required native contracts BLOCKED;
-HAND-09 preparation partial, HAND-10 executable experiment BLOCKED, HAND-11/12
+HAND-09 research tooling/checks/review/CI/docs complete, HAND-10 executable experiment BLOCKED, HAND-11/12
 NOT RUN. Original product/A/B/C1/C2/D/release retained; no current AE operation.
 Next: upstream module admission/initialization and its enforceable late-host contract.
 

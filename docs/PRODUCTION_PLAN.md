@@ -49,6 +49,22 @@ research preparation. Repo work/owned tests/file tools/research commit/push/CI
 remain authorized. No merge/release. Complete independent 01–09 work even if
 10–12 remain BLOCKED/NOT RUN. Record actual task versus test status separately.
 
+HAND closeout: [handoff findings, exact receipts and 12-block final mapping](C1_ROUTINE_HANDOFF_2026-10-03.md).
+At clean code e0b8590, 01/02 internal startup/module/cache/callback/provider-to-FLT
+handoff identified; 03/04 structural invocation/retention/transfer/teardown reviewed,
+actual supported ABI/receiver/lifetime still UNKNOWN. 05–08 selected lock/reentry,
+cache/status normalization, publication-before-lazy-failure and non-atomic disposal
+reviewed; required thread/all-reader admission/drain/completion/full rollback
+BLOCKED. 09 research implementation/checks/review/CI/docs complete: 427 Python/no
+skips, 62 Node/22 stages, 17 windows/4707 instructions/275 anchors, independent
+original-byte/archive/source review PASS, one raw scanner false positive reviewed,
+both exact-source CI completed/success. 10 native experiment BLOCKED, 11/12 AE
+registration/apply/render and live-result interpretation NOT RUN. All twelve
+blocks accounted for; no eight/twelve-host-step or product readiness claim.
+Next: upstream module admission/initialization and enforceable late-host
+transaction/drain contract. Native helpers/profiles/gates, SDK/project/session/
+third-party/history preserved; owned receipts retained, no purge or loaded cleanup.
+
 ## PiPL publication owner — next conditional eight-step pass
 
 2026-10-03. User “делай” accepts the proposed follow-up. Starting clean research

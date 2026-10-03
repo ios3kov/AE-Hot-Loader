@@ -8,7 +8,8 @@ arbitrary ordinary-effect/no-restart product and A/B/C1/C2/D/release obligations
 Collector Standard, native integration Critical/gated. Only pinned original-file
 research and owned controls; no AE process operation in preparation.
 
-Prepared state: investigation not completed, new source-bound checks NOT RUN.
+Historical preparation state, superseded by the exact closeout below:
+investigation not completed, new source-bound checks NOT RUN.
 Native receiver/ABI/thread/admission/drain/completion/rollback UNKNOWN; dependent
 HAND-10–12 BLOCKED/NOT RUN until established mechanism and concrete operation scope.
 
@@ -155,3 +156,80 @@ research discriminator: the upstream module-admission/initialization contract
 that supplies SetupFilter's actual provider, and whether it supplies an enforceable
 late-host drain/transaction. Do not replay InitIterator, swap the setter, or call
 SetupFilter/FLT/disposal through guessed objects. No main merge/release.
+
+
+## Exact clean-source local closeout
+
+Research implementation/tests/prepared acceptance source:
+`e0b85908706290771ba50bd9efe3ff0d59be9772`, clean before/after collection and full
+regression. Later status closeout is documentation only and does not promote
+these receipts to a different code candidate. Native helpers/profiles/gates,
+SDK inputs/owned fixture source and unrelated product behavior unchanged.
+
+| Check / actual scope at e0b8590 | Result and identified private evidence |
+|---|---|
+| New routine-handoff collection | PASS: 17 complete windows / 4707 instructions / 275 anchors; original hashes stable before/after. `resource-routine-handoff-893a4b3c-ryxmxahb.zip`, SHA-256 `a94937ce92504d23bbfa44d62e50687cbe80f3ab0e17961783a34c9959e5f9bc` |
+| Independent file/archive verification | PASS: 41 unique members, CRC, exact hash-manifest coverage, folder/archive equality and source pins; original arm64 decoding corroborates 956 direct / 432 conditional / 105 indirect branches / 18 returns. Also 3 callback/roster address paths, 2 owner/callback pair writes and 3 cache/status register/bit/target decisions. `independent-review.json`, SHA-256 `96e14a774efef1384459ece7f0ccf1330950988452bdef1f80a3617101c1f16d` |
+| Independent verifier identity | Private `/private/tmp/aehl-handoff-independent.py`, SHA-256 `fb640353f948c22d0bf205c972b873bcb669080bbb90cdf5a5d72f792292b2b3`; does not import the collector or execute Adobe code |
+| Full local offline runner | PASS: 427 Python tests, zero skips/failures/errors, 51 + 11 Node tests, all 22 stages. Native syntax/owned guard build/run PASS. `/private/tmp/AEHL-checks-f3_u6wi2.zip`, SHA-256 `288ec4f45f98b2fe19a2707c55908bd488b8efe82a4a30fcba22b7fc808999da` |
+| Independent full-run archive/source check | PASS: CRC, 25 unique members, exact manifest/hash coverage and all 334 tracked hashes match clean HEAD; source unchanged after true, inventory SHA-256 `fd832600e39e5660fd37e12e82f330732c3fcae09d06f57aeb8c16eb5fa5017e`. Nested native cases are not added to Python count |
+| Static scanner raw result | REVIEW_REQUIRED / exit 1. One `vibe.no_ratelimit_auth` finding at tools/artifact_manifest.py:71; separate review at this source confirms local argparse CLI entry, no auth endpoint/network route. False positive disposition, raw finding retained. `/private/tmp/aehl-routine-handoff-e0b8590-audit.json`, SHA-256 `f590410e76817dc8688ab82079d1a8069d62466a066ca1c190070efc04993ebe`; release readiness not assessed |
+
+Offline/native runner PASS; full AE pipeline BLOCKED, product package NOT RUN,
+live operations requested false. These tests verify research tools/owned controls,
+not an installed/loaded native late-registration candidate. Broader AE/platform
+compatibility UNKNOWN. Public SDK cross-check above is exact-header research,
+not a new owned SDK macro/runtime test. Historical prior receipts retain their
+original source and scope; earlier prepared pending text is superseded for local
+checks. Both exact-source CI workflows are completed/success; receipts below.
+
+## Final task reconciliation
+
+| Requirement / accepted task | Actual observable work/check | Remaining acceptance and impact |
+|---|---|---|
+| API-SOURCE / HAND-01 | Startup callback installation and module/cache/boost consumer identified in complete pinned bodies, clean source + independent raw bytes PASS | Actual runtime setter/module/provider identity not observed |
+| API-SOURCE / HAND-02 | aelib wrapper → FLT setup → provider/path descriptor transfer → post-setup/AddEffect linked; earlier actual publisher review preserved | Internal startup handoff identified, supported late-host bridge unproven |
+| NATIVE / HAND-03 | Private register/argument/return/InterfaceRef/Boost contract boundaries distinguished from exact public SDK | Usable ABI/receiver contract UNKNOWN; native call BLOCKED |
+| NATIVE ownership / HAND-04 | Retain/transfer/store/normal and exceptional release, constructor/destructor correspondence reviewed | Actual object/executable lifetime and escaped owner safety UNKNOWN |
+| SAFE / HAND-05 | Per-module lock/reentry and unlocked global setter/getter body boundaries reviewed | Permitted thread and transitive callback contract UNKNOWN |
+| SAFE / HAND-06 | Per-module/FCSpec/PLUG/FLT locks distinguished, no continuous host-wide lease established | All-reader/render/MFR admission/drain BLOCKED |
+| TEST-CONTROL / HAND-07 | Cache bypass, status-sign normalization, AddEffect-before-lazy-error verified from original bytes | Whole-effect completion and real registry/apply/render still unproven |
+| SAFE / HAND-08 | Canonical/GPU/global teardown ordering, aggregate errors and descriptor clear-on-unload-error reviewed | Whole-effect inverse transaction/rollback BLOCKED; no disposal-as-probe |
+| REPRO / HAND-09 | 51 focused / 427 full Python, 62 Node/22 stages, source/archive/raw-byte review and scanner disposition complete; plan/status/handoff updated | Both exact-source CI completed/success; compatibility/status/handoff/plan closeout complete |
+| SAFE / HAND-10 | Prerequisites assessed; no unsafe native candidate manufactured | Executable experiment BLOCKED on 03–08 |
+| SAFE / HAND-11 | No AE process inspection/install/launch/invocation performed | Live experiment NOT RUN; needs confirmed safe packet + concrete new operation scope |
+| TEST-CONTROL / HAND-12 | Registry/application/render distinctions retained | Actual registration/apply/render/result interpretation NOT RUN, depends on 11 |
+| TASK-CLOSE / CLEANUP / retained scope | Original arbitrary ordinary-effect/no-restart goal, A/B/C1/C2/D/release and owned/private reproducibility receipts retained | Product/native backend NOT READY. Unknown/shared/third-party/SDK/project/session/loaded-helper materials left in place; closed-host cleanup separate |
+
+HAND-01–08 research answers and tooling are complete for their stated file scope;
+this does not close their unproven native contracts. HAND-09 research tooling/checks/review/CI/docs closeout complete, independent of
+those native gates. No claim that all 12 execution
+steps or the product are complete; no merge/release or private invocation.
+
+
+Private evidence retention: owned build-ae-hot-loader/handoff-closeout-e0b8590-tb6gjf3o
+contains byte-identical copies of the collection, full local report, scanner raw
+report, independent verifier and independent review. RETENTION.json SHA-256
+`7391e23e6a8d69e02d39b153dbf3042701e4a571072ffd22a04cb066bbbb7164` binds every
+retained copy to e0b8590. No purge/deletion/loaded-file cleanup; original receipts
+remain available. These private research records are not distributable candidates.
+
+
+Exact-source CI completion independently read from GitHub for
+`e0b85908706290771ba50bd9efe3ff0d59be9772`:
+[research 37133192290](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37133192290)
+and [macOS 37133192291](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37133192291)
+both completed/success. macOS includes owned build/sign/package/smoke/archive
+checks, not AE installation/loading or ordinary-effect registration/apply/render.
+Source/runtime/private evidence remain separate from this documentation closeout.
+
+Final reconciliation: all 12 accepted blocks accounted for; 01–08 bounded file
+research complete, their missing native contracts remain explicit, 09 research
+implementation/checks/review/CI/docs complete. 10 executable experiment BLOCKED,
+11/12 live work NOT RUN. No dropped feature/product obligation, broadened live
+permission, runtime/version certification, main merge or release. No further
+cleanup required for this research handoff: owned receipts retained intentionally
+for reproducibility, unknown/shared/loaded materials preserved. Next permitted
+research remains upstream module admission/initialization and a confirmed late-host
+transaction/drain contract; guessed startup replay/setter replacement/teardown
+are not a substitute for those gates.
