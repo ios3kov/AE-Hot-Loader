@@ -24,17 +24,31 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
 ## BEE queue controls — current continuation
 
-[QUE checkpoint](C1_WORKQUEUE_CONTROLS_2026-10-03.md), baseline a950085.
-Exact BEE pin/UUID/original nlist;14 complete bodies /2546 instructions.
-Cancel/Pause/Resume act on one ID; cancel flag and terminal stage differ;
-eager completion transfers retained callbacks/RemoveItem via indirect executor.
-Add/Execute remain independent new-work paths. Actual executor/thread/notify/
-worker graph unknown; no caller-held host-wide admission/drain barrier.
-Factory safe initial acquisition/private ABI/thread and whole-effect recovery
-still required. Backend stays unbound, actual adapter/trials BLOCKED / NOT RUN.
-8 parser /77 collector focused PASS; exact full/scanner/original/CI pending.
-No AE operation or new live profile. Do not repeat unchanged scans or treat
-cancel return, item pause/state/map erasure as proof of universal quiescence.
+Exact clean tested/pushed code a24d8a2f5d0b06234d839005f36cc44749f0478f;
+[QUE checkpoint and reconciliation](C1_WORKQUEUE_CONTROLS_2026-10-03.md).
+BEE exact offline pin/UUID/nlist,14 complete bodies /2546 instructions.
+Cancel/Pause/Resume act on one ID; flag and terminal stage differ. Eager completion
+transfers retained callbacks/RemoveItem through an indirect executor. Add/Execute
+remain separate new-work paths. Actual executor/notify/worker/thread graph UNKNOWN;
+no caller-held all-registry-reader/MFR admission/drain barrier. Safe initial factory
+acquisition/private ABI/thread and whole-effect inverse remain required. Backend
+unbound, actual adapter/trials BLOCKED, registration/apply/render NOT RUN.
+
+8 parser/77 collector focused,481 full Python/no skips,62 Node/all22 steps PASS;
+370 tracked source-byte proof. Independent14-window/2546-instruction/25-field review
+and10 historical archive/pin rechecks PASS. Raw scanner1/review_required preserved:
+247 text123 unsupported/no omissions, one CLI false positive reviewed without
+suppression. Research CI37149834498 /macOS CI37149834507 completed/success at exact
+a24d8a2; build/synthetic package checks are not AE proof. Packet PARTIAL:
+3 DONE /5 PARTIAL /3 BLOCKED. Private evidence queue-closeout-a24d8a2-lgfwcf2f;
+only fresh owned scanner clone removed. Docs-only closeout proves all non-Markdown
+source unchanged. Original product/A/B/C1/C2/D/release and historical evidence retained.
+
+Further work needs an actual admission/owner/recovery contract. Do not promote
+cancel return, item pause/stage/map erasure, idle, zero-counter, loader visibility
+or owned mocks to universal host safety. No unchanged scan or speculative foreign
+call/teardown. QUE-09–11 require the unresolved actual prerequisites, then current
+safe disposable environment; prior user authority does not prove those contracts.
 
 ## Scoped controls and corrected match-name dependency — previous continuation
 

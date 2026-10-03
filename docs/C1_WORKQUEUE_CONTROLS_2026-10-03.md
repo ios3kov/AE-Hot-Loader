@@ -34,7 +34,7 @@ byte0 to be null. Original file rejected that assumption; nlist.h explicitly
 defines index0 as the empty name. Corrected that interpretation and added the
 non-null-byte0 refusal regression without altering the original file or pin.
 An initial owned test fixture had a wrong final-name index/length; corrected it
-and retained the failure. Synthetic tests prove parser refusal, never AE behavior.
+and recorded the observed correction. Synthetic tests prove parser refusal, never AE behavior.
 
 ## Concrete cancellation and scheduler findings
 
@@ -97,3 +97,66 @@ missing/duplicate/undecodable rows and offline-only pins/tool caps. Complete new
 collector execution, full runner, raw scanner/manual original review and both
 exact-source CI are pending at this checkpoint. Final identities and task states
 will follow; no product or release PASS is claimed.
+
+## Exact closeout and evidence
+
+Clean tested/pushed code **a24d8a2f5d0b06234d839005f36cc44749f0478f**.
+Final actual offline collector: resource-workqueue-control-e845d062-6jzszadj.zip,
+SHA2562a41b7bbd0847f1d6553a4b9d18d53c49849e2f7ab278d0dcc32ca215764a079;
+14 complete windows /2546 instructions; exact BEE before/after pin, selected nlist,
+raw body hashes and all normalized instruction digests PASS. Adobe calls0.
+
+Full runner AEHL-checks-um95ya9y.zip, SHA256
+2a26ec22cbe1c6501cf3306e0c190eaa7b4b818de013c3e75a71d6a2db79190c:
+481 Python/no skips,62 Node/all22 steps PASS; aggregate Python480s /individual
+120s limits retained.370 tracked Git/working/runner bytes matched; source unchanged
+through run. Owned native cases executed on macOS; they do not establish AE behavior.
+
+Independent original review imports no current collector:14 windows/2546
+instructions,421 direct195 conditional57 indirect branches14 returns,25 scalar/
+add field decodes and cancel atomic register encoding; original nlist/body bytes/
+ZIP/transcript identities PASS.10 earlier archive CRC/manifests and currently
+installed original pins plus exact SDK header revalidated without recapture.
+Receipt SHA256138991767fb5a975655191b9da8a540c4410f87c0aed55e8b55b8c4beed60547.
+
+Raw scanner exit1/verdict review_required/release_readiness not_assessed:
+247 text123 unsupported/no omissions, all configured checks completed. Sole
+local argparse create/verify false positive at tools/artifact_manifest.py:71
+manually reviewed without suppression. Raw scanner is not host/release certification.
+Manual receipt SHA25661cd05be5dfe28e98cef30f2aebe19da0cb69596b73caa3625f21bb3d6a75462.
+[Research CI37149834498](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37149834498)
+and [macOS CI37149834507](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37149834507)
+completed/success at exact a24d8a2; all three jobs success, no failed step. macOS
+build/sign/package/integrity and synthetic regressions PASS; actual AE and release
+approval NOT RUN. CI package is not an installable handoff in this packet.
+
+Private evidence: build-ae-hot-loader/queue-closeout-a24d8a2-lgfwcf2f, including
+source/scanner/manual/original/CI/runner/preliminary correction records. Preserve
+historical artifacts and the two earlier ambiguous empty inventory directories.
+Only this pass's new clean byte-matched scanner clone was removed after proof;
+raw evidence retained. App/SDK/plugins/projects/preferences untouched. Docs-only
+closure checks all non-Markdown bytes against a24d8a2 and local links; final
+retention/source/remote receipts remain in that private evidence folder.
+
+## QUE-01–11 final task reconciliation
+
+| Task | Task/implementation state | Acceptance, actual checks and remaining work |
+|---|---|---|
+| QUE-01 | DONE | Actual original BEE cancel implementation located; pin/UUID/nlist/dependencies/14 selected complete bounds and original-byte review PASS. |
+| QUE-02 | PARTIAL | Concrete new-work Add/Execute and per-ID Pause/Cancel scope traced. No supported caller-held continuous host admission lease or all-producer exclusion established. |
+| QUE-03 | PARTIAL | Flag versus stage, eager versus flag-only cancel, retained callbacks/indirect executor/removal traced. Actual executor/notify/workers/thread/reentry and all MFR drain UNKNOWN; cancel return is insufficient. |
+| QUE-04 | PARTIAL | Reused original registry/dispatch/render evidence revalidated and reconciled with per-item queue scope. Coverage of every registry/effect reader and callback remains NOT PROVEN. |
+| QUE-05 | PARTIAL | Existing-only factory and initial pre-retain object-read constraints revalidated. Supported actual receiver/retention/private ABI/thread contract still UNKNOWN. |
+| QUE-06 | PARTIAL | Publication-before-error and limited cleanup/full inverse gaps revalidated. Full registry/canonical/preferences recovery remains NOT PROVEN. |
+| QUE-07 | DONE (research only) | Implemented only fixed original-file reader/collector/refusal controls.8 parser/77 collector focused plus481 full Python/62 Node PASS; host backend stays unbound. No new owned mock stand offered as host proof. |
+| QUE-08 | DONE | Exact-source collector/full runner/raw scanner/manual original review/both CI/source bytes/docs/task reconciliation/commit/push and owned-only cleanup completed; raw and historical evidence retained. |
+| QUE-09 | BLOCKED | Actual AE adapter depends on unresolved02–06 contracts; no private host call implemented. |
+| QUE-10 | BLOCKED / NOT RUN | Actual registration→apply→render depends on09 and current safe disposable environment; no executable host packet exists. |
+| QUE-11 | BLOCKED / NOT RUN | Repeat/recovery trial depends on10 and demonstrated inverse; no automatic retry or state change. |
+
+Packet **PARTIAL:3 DONE /5 PARTIAL /3 BLOCKED**. Original feature, compatibility,
+A/B/C1/C2/D and release obligations are retained. This advances the cancellation
+hypothesis from an opaque call to a concrete scoped state/callback path. It does
+not demonstrate hot registration, rendering or release readiness. Further bounded
+research must identify an actual admission/ownership/recovery contract; tracing
+more per-item cancellation alone cannot satisfy the all-reader transaction gate.

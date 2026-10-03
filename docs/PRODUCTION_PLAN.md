@@ -66,6 +66,20 @@ Execute7ac8f4–7acde4. Ten next-defined-text bodies /1702 instructions.
 These fill the concrete cancellation/transition/producer gaps exposed by the
 first four bodies; no claim of a complete host call graph.
 
+QUE final checkpoint: [BEE queue scope and full reconciliation](C1_WORKQUEUE_CONTROLS_2026-10-03.md).
+Exact clean tested/pushed code a24d8a2f5d0b06234d839005f36cc44749f0478f.
+QUE-01/07/08 DONE (research); QUE-02–06 PARTIAL; QUE-09–11 BLOCKED / NOT RUN.
+Packet PARTIAL:3 DONE /5 PARTIAL /3 BLOCKED.14 complete bodies /2546 instructions;
+8 parser/77 collector focused,481 full Python/no skips,62 Node/all22 steps PASS.
+Independent original14-window/25-field and10 historical archive/pin checks PASS;
+raw scanner1/review_required manually reviewed without suppression. Research
+CI37149834498 /macOS CI37149834507 completed/success at exact candidate.370
+source-byte proof; evidence retained/owned scan clone removed. No caller-held
+all-reader/MFR gate, actual retained factory/thread ABI or full registry/preferences
+inverse established; original product/all A/B/C1/C2/D/release obligations retained.
+Native backend stays unbound; actual registration/apply/render NOT RUN. Do not
+substitute further one-item cancellation or an unchanged scan for these gates.
+
 ## Host admission, render drain and concrete remaining owners — ten-task pass
 
 2026-10-03 continuation from clean **2685ca657dba7c2613b1902e9937697f3c78cc36**.

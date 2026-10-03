@@ -15,17 +15,28 @@ Dated evidence is unchanged; previous instructions do not renew permissions.
 
 ## Current checkpoint — BEE queue controls traced, host barrier still open
 
-2026-10-03 QUE-01–11 packet; [checkpoint](C1_WORKQUEUE_CONTROLS_2026-10-03.md).
-Located exact BEE cancellation and reviewed14 complete bodies /2546 instructions.
-Per-ID wrappers, atomic cancel flag, per-item pause/stage transitions, callback
-copy/indirect executor/removal and new-work Add/Execute are now distinguished.
-No continuous all-reader/MFR admission/drain or complete recovery established;
-actual factory acquisition/private ABI/thread still required. Host adapter/trials
-BLOCKED, registration/apply/render NOT RUN. Original product/gates retained.
+2026-10-03 QUE-01–11 packet at exact clean tested/pushed code
+**a24d8a2f5d0b06234d839005f36cc44749f0478f**;
+[checkpoint and all task states](C1_WORKQUEUE_CONTROLS_2026-10-03.md).
+14 complete BEE bodies /2546 instructions: per-ID controls, atomic cancel flag,
+per-item pause/stage, retained callback/indirect executor/removal and Add/Execute
+new-work path are now distinguished. Actual executor/notify/workers/thread and
+all-reader/MFR admission/drain are still unknown. Safe initial factory acquisition/
+private ABI/thread and full registry/canonical/preferences inverse remain required.
+Host adapter/trials BLOCKED, registration/apply/render without restart NOT RUN.
 
-Bounded selected nlist reader and fixed body-byte/transcript digest checks added
-only to offline collector/profile.8 parser /77 collector focused tests PASS;
-full exact-source runner/scanner/original/CI pending. Final reconciliation follows.
+Bounded selected nlist reader with fixed body-byte/full-transcript hashes added
+only to offline collector/profile.8 parser /77 collector focused /481 full Python/
+no skips,62 Node/all22 steps PASS;370 exact source bytes unchanged. Independent
+14-window/2546-instruction/25-field review and10 historical archive/pin rechecks
+PASS. Raw scanner1/review_required retained:247 text123 unsupported/no omissions;
+one local CLI false positive reviewed without suppression. Research CI37149834498 /
+macOS CI37149834507 completed/success on exact a24d8a2. Evidence retained; only
+fresh owned scanner clone removed, application/SDK/project/plugin state untouched.
+Packet PARTIAL:3 DONE /5 PARTIAL /3 BLOCKED; original product/all gates retained.
+Progress: opaque cancellation narrowed to one-item state/callback operations;
+continuous host transaction safety remains unproved. Next requires an actual
+admission/owner/recovery contract; unchanged scan or another cancel is insufficient.
 
 ## Previous checkpoint — scoped controls and corrected match-name dependency
 
