@@ -12,6 +12,38 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## PiPL publication owner — next conditional eight-step pass
+
+2026-10-03. User “делай” accepts the proposed follow-up. Starting clean research
+HEAD e0488682ad4e720328465e24cee26c64b982a500, branch research/ordinary-plugin-discovery.
+Rules v8.0.0 / 132b7cd32873ba7328e3128ffbb33e1929b74d45, AI_ENTRYPOINT first.
+Stage C1 Development; original arbitrary ordinary-effect/no-restart product retained.
+Apply AI-STATE/API-SOURCE/SAFE/REPRO/TEST-CONTROL/TASK-CLOSE/CLEANUP, tools bounded
+diagnostics and native ownership/thread overlays. File-only collector Standard;
+dependent private invocation Critical. No feature-set or reference audit trigger.
+Actual file/SDK scope remains AE 25.6x101 arm64 / SDK 25.6_61, broader support unknown.
+
+| ID | Acceptance | Check / dependency |
+|---|---|---|
+| OWNER-01 | Trace metadata/PiPL through routine descriptor to publication | Exact pinned complete PLUG registration overloads / descriptor construction and PluginSupport PiPL loading; relate to existing FLT publisher evidence |
+| OWNER-02 | Identify publication owner/receiver and invocation contract | File state/caller/interface distinctions; actual runtime identities unknown unless observed |
+| OWNER-03 | Establish ownership/lifetime/thread boundaries | Interface/shared references, list publication, scoped mutex and unwind; SDK declarations versus private C++ interfaces |
+| OWNER-04 | Establish continuous reader/render exclusion | Compare new locks/list boundaries with prior registry readers/render/MFR; snapshots/per-object locks do not meet host-wide lease |
+| OWNER-05 | Establish completion/failure/rollback | Registration overload and unregister ordering, local failure/owner teardown versus real inverse publication; no speculative recovery |
+| OWNER-06 | Minimal executable host experiment and refusal checks | Conditional on 01–05 safe mechanism; independently verify collector refusals as research tooling |
+| OWNER-07 | Build/regression/static review/exact-source CI and documents | Clean-source collection, independent bytes/archive/source checks; research checks distinct from host readiness |
+| OWNER-08 | Actual scoped AE experiment / result interpretation | Conditional on 06 safety and concrete permission for that new operation; prior scopes consumed |
+
+New discriminator: follow retained PiPL/provider into PLUG routine-registration
+variants and resource-loading lifetime. This extends the callback lifetime result;
+no repeated PICA/ordinary scan and no saved PluginData context. Repo/owned/file-only
+work, research commit/push/CI remain authorized. No AE process read, attach, launch,
+install, scan, invocation, retain/unregister/unload or forced quit in preparation.
+Native helpers/profiles/ResourcePassGate, SDK, existing consumed sessions/helpers,
+projects/third-party plugins and historical evidence preserved. No merge/release.
+If the bridge remains unproven, report partial research/NOT RUN dependent work;
+do not label all eight host steps PASS or fabricate an opaque provider/lease.
+
 ## Host metadata-to-registry bridge — conditional eight-step pass
 
 2026-10-03. User replied “делай” to the proposed eight steps. Starting clean

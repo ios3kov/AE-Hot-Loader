@@ -28,6 +28,20 @@ WINDOWS = {
     "PLUG": (0x8A6C, 0x9028),
 }
 REVIEWS = {
+    "publication-owner": (
+        ('owner-scan-data', 'PLUG', 0x6d50, 0x6f74),
+        ('owner-path', 'PLUG', 0x6fa8, 0x7150),
+        ('owner-provider', 'PLUG', 0x7228, 0x7430),
+        ('owner-minimal', 'PLUG', 0x7668, 0x7914),
+        ('owner-unregister', 'PLUG', 0x7914, 0x7c74),
+        ('owner-provider-desc', 'PLUG', 0xcd78, 0xd030),
+        ('owner-new-desc', 'PLUG', 0xd474, 0xd6d8),
+        ('owner-load-resource', 'PluginSupport', 0x4ca10, 0x4d0fc),
+        ('owner-load-pipls', 'PluginSupport', 0x4d164, 0x4d24c),
+        ('owner-get-pipl', 'PLUG', 0x10074, 0x1072c),
+        ('owner-populate', 'PluginSupport', 0x43d7c, 0x442a8),
+        ('owner-pipl-class', 'PluginSupport', 0x192f4, 0x193cc),
+    ),
     "plugin-metadata": (
         ('metadata-callback2', "PluginSupport", 0x4b194, 0x4b5b0),
         ('metadata-callback1', "PluginSupport", 0x4b5b0, 0x4b5d8),
@@ -252,6 +266,9 @@ FILE_ONLY_INPUTS = {
 }
 INPUTS.update(FILE_ONLY_INPUTS)
 SYMBOL_WANTED = {
+    "publication-owner": re.compile(r"(PLUG_(RegisterRoutine|UnregisterRoutine|RoutineDescPriv)|"
+                                    r"PLUGp_(NewRoutineDesc|GetPiPL)|"
+                                    r"PluginImpl.*LoadPiPLs|PiPL.*(PopulateFromPluginData|CreateClassRef))"),
     "plugin-metadata": re.compile(r"(PluginDataCallback|GetPFPluginData|PFPluginDataToPiPL|"
                                   r"PluginImpl.*GetPiPLs|PF_PluginDataD[012])"),
     'registry-consumers': re.compile(r'(FLT_FilterRegistry|FLT_ScBeginProject(Read|Write))'),
@@ -2157,6 +2174,298 @@ CONSUMER_ANCHORS = {
     },
 }
 
+# Fixed file-only owner/descriptor/PiPL evidence. These addresses are never called.
+# Routine-roster mutation is distinct from FLT effect-registry publication.
+OWNER_ANCHORS = {
+    'owner-scan-data': {
+        0x6d68: ('mov', 'x20,x1'),
+        0x6d6c: ('mov', 'x21,x0'),
+        0x6d70: ('mov', 'x19,x8'),
+        0x6d78: ('add', 'x23,x23,#0x488'),
+        0x6d7c: ('add', 'x22,x23,#0x38'),
+        0x6d9c: ('bl', '0x113a4'),
+        0x6da0: ('cbz', 'x21,0x6e58'),
+        0x6db4: ('b.ne', '0x6e58'),
+        0x6dc0: ('b.ne', '0x6e58'),
+        0x6ddc: ('b.ne', '0x6ea0'),
+        0x6de0: ('mov', 'x8,x19'),
+        0x6dec: ('bl', '0xd474'),
+        0x6df4: ('cbz', 'x9,0x6e38'),
+        0x6e04: ('str', 'x9,[x8]'),
+        0x6e1c: ('ldadd', 'w10,w9,[x9]'),
+        0x6e30: ('bl', '0x8560'),
+        0x6e34: ('str', 'x0,[x23,#0x18]'),
+        0x6e3c: ('bl', '0x113b0'),
+        0x6e54: ('ret', ''),
+        0x6f30: ('bl', '0x6330'),
+        0x6f38: ('bl', '0x6f74'),
+        0x6f50: ('bl', '0x113b0'),
+    },
+    'owner-path': {
+        0x6fc4: ('mov', 'x19,x8'),
+        0x6fcc: ('bl', '0x11584'),
+        0x6ff4: ('ldadd', 'x11,x10,[x10]'),
+        0x7010: ('bl', '0xcd74'),
+        0x701c: ('bl', '0x7150'),
+        0x7030: ('ldaddal', 'x9,x8,[x8]'),
+        0x7044: ('blr', 'x8'),
+        0x7054: ('add', 'x20,x20,#0x488'),
+        0x7058: ('add', 'x21,x20,#0x38'),
+        0x7078: ('bl', '0x113a4'),
+        0x708c: ('str', 'x9,[x8]'),
+        0x70a4: ('ldadd', 'w10,w9,[x9]'),
+        0x70b8: ('bl', '0x8560'),
+        0x70bc: ('str', 'x0,[x20,#0x18]'),
+        0x70c4: ('bl', '0x113b0'),
+        0x70d8: ('ret', ''),
+        0x70e4: ('bl', '0x6f74'),
+        0x70ec: ('bl', '0x6330'),
+        0x7144: ('bl', '0x11578'),
+    },
+    'owner-provider': {
+        0x723c: ('mov', 'x21,x1'),
+        0x7240: ('mov', 'x22,x0'),
+        0x7244: ('mov', 'x19,x8'),
+        0x724c: ('bl', '0x11584'),
+        0x7274: ('ldadd', 'x11,x10,[x10]'),
+        0x729c: ('ldadd', 'x11,x10,[x10]'),
+        0x72c8: ('add', 'x1,sp,#0x38'),
+        0x72cc: ('add', 'x2,sp,#0x20'),
+        0x72d4: ('bl', '0xd030'),
+        0x72e4: ('bl', '0x7150'),
+        0x72f8: ('ldaddal', 'x9,x8,[x8]'),
+        0x733c: ('blr', 'x8'),
+        0x7350: ('add', 'x20,x21,#0x38'),
+        0x7370: ('bl', '0x113a4'),
+        0x7384: ('str', 'x9,[x8]'),
+        0x739c: ('ldadd', 'w10,w9,[x9]'),
+        0x73b0: ('bl', '0x8560'),
+        0x73b4: ('str', 'x0,[x21,#0x18]'),
+        0x73bc: ('bl', '0x113b0'),
+        0x73d0: ('ret', ''),
+        0x73dc: ('bl', '0x6f74'),
+        0x73f8: ('bl', '0x6330'),
+        0x7410: ('bl', '0x6cbc'),
+        0x7424: ('bl', '0x11578'),
+    },
+    'owner-minimal': {
+        0x7688: ('mov', 'x19,x8'),
+        0x7694: ('add', 'x22,x23,#0x38'),
+        0x76b4: ('bl', '0x113a4'),
+        0x76b8: ('cbz', 'x21,0x77ac'),
+        0x76cc: ('b.ne', '0x77ac'),
+        0x76d8: ('b.ne', '0x77ac'),
+        0x76f4: ('b.ne', '0x77f4'),
+        0x770c: ('bl', '0x110ec'),
+        0x7718: ('mov', 'w1,#0x20'),
+        0x771c: ('mov', 'x2,x20'),
+        0x7720: ('bl', '0xd3f8'),
+        0x772c: ('bl', '0x7150'),
+        0x7770: ('ldadd', 'w10,w9,[x9]'),
+        0x7784: ('bl', '0x8560'),
+        0x7788: ('str', 'x0,[x23,#0x18]'),
+        0x7790: ('bl', '0x113b0'),
+        0x77a8: ('ret', ''),
+        0x7888: ('bl', '0x6330'),
+        0x78a8: ('bl', '0x11470'),
+        0x78d4: ('bl', '0x11578'),
+        0x78f0: ('bl', '0x113b0'),
+    },
+    'owner-unregister': {
+        0x7934: ('add', 'x21,x21,#0x488'),
+        0x7938: ('add', 'x20,x21,#0x38'),
+        0x7958: ('bl', '0x113a4'),
+        0x7974: ('b.eq', '0x79e4'),
+        0x79dc: ('mov', 'w20,#0x2'),
+        0x7a00: ('bl', '0x11608'),
+        0x7a1c: ('ldadd', 'w9,w8,[x8]'),
+        0x7a2c: ('ldp', 'x22,x8,[x21,#0x10]'),
+        0x7a40: ('cmp', 'x10,x9'),
+        0x7a5c: ('b.eq', '0x7b18'),
+        0x7a68: ('blr', 'x8'),
+        0x7a78: ('tbz', 'w8,#0x2,0x7a8c'),
+        0x7a80: ('bl', '0x7c74'),
+        0x7a88: ('cbnz', 'w0,0x7b1c'),
+        0x7a90: ('bl', '0xd6d8'),
+        0x7a98: ('cbnz', 'w0,0x7b1c'),
+        0x7ac4: ('stp', 'xzr,xzr,[x20]'),
+        0x7acc: ('stur', 'q0,[x20,#-0x10]'),
+        0x7af0: ('blr', 'x8'),
+        0x7b18: ('mov', 'w20,#0x0'),
+        0x7be4: ('str', 'x22,[x21,#0x18]'),
+        0x7bfc: ('bl', '0x113b0'),
+        0x7c18: ('ret', ''),
+        0x7c30: ('bl', '0x6f74'),
+    },
+    'owner-provider-desc': {
+        0xcd98: ('ldr', 'x0,[x2]'),
+        0xcd9c: ('cbz', 'x0,0xcf88'),
+        0xcda4: ('ldr', 'x8,[x2,#0x8]'),
+        0xcda8: ('cbz', 'x8,0xcf88'),
+        0xcdb4: ('ldr', 'x8,[x8,#0x30]'),
+        0xcdb8: ('blr', 'x8'),
+        0xce14: ('str', 'x8,[x20,#0x30]!'),
+        0xce38: ('ldadd', 'x11,x10,[x10]'),
+        0xce40: ('stp', 'x8,x9,[x19,#0x38]'),
+        0xce70: ('add', 'x22,x19,#0x48'),
+        0xce8c: ('ldadd', 'x9,x8,[x8]'),
+        0xce98: ('add', 'x8,x8,#0x3fa'),
+        0xceb4: ('blr', 'x8'),
+        0xcebc: ('str', 'x0,[x19,#0x48]'),
+        0xcec4: ('stp', 'x24,x23,[x19,#0x50]'),
+        0xcf34: ('blr', 'x8'),
+        0xcf3c: ('strb', 'w8,[x19,#0x60]'),
+        0xcf5c: ('ret', ''),
+        0xcf9c: ('bl', '0x11260'),
+        0xcfc8: ('bl', '0x11260'),
+        0xcffc: ('bl', '0x6cbc'),
+        0xd004: ('bl', '0x6cbc'),
+        0xd00c: ('bl', '0xc964'),
+    },
+    'owner-new-desc': {
+        0xd48c: ('mov', 'x19,x8'),
+        0xd49c: ('bl', '0x10074'),
+        0xd4ac: ('cbz', 'x8,0xd514'),
+        0xd4c8: ('blr', 'x8'),
+        0xd4f8: ('blr', 'x8'),
+        0xd500: ('cbnz', 'w0,0xd5e8'),
+        0xd524: ('ldr', 'x0,[x21,#0x8]'),
+        0xd52c: ('bl', '0x110ec'),
+        0xd53c: ('bl', '0xd034'),
+        0xd548: ('bl', '0x7150'),
+        0xd574: ('ldaddal', 'x9,x8,[x8]'),
+        0xd58c: ('ret', ''),
+        0xd600: ('bl', '0x115fc'),
+        0xd61c: ('bl', '0x6c8c'),
+        0xd624: ('bl', '0x6cbc'),
+        0xd670: ('b', '0xd6a0'),
+    },
+    'owner-load-resource': {
+        0x4ca34: ('mov', 'x19,x8'),
+        0x4ca38: ('stp', 'xzr,xzr,[x8]'),
+        0x4ca3c: ('str', 'xzr,[x8,#0x10]'),
+        0x4ca44: ('cbz', 'x8,0x4cdb4'),
+        0x4cab0: ('bl', '0x8ce38'),
+        0x4cabc: ('bl', '0x8c25c'),
+        0x4cac8: ('bl', '0x8c244'),
+        0x4cad0: ('b.lt', '0x4cd90'),
+        0x4cb0c: ('bl', '0x8c250'),
+        0x4cb14: ('cbz', 'x0,0x4caf8'),
+        0x4cb1c: ('bl', '0x192f4'),
+        0x4cb74: ('ldadd', 'x28,x8,[x8]'),
+        0x4cb80: ('bl', '0x41cec'),
+        0x4cc18: ('blr', 'x8'),
+        0x4cc40: ('str', 'x0,[x22]'),
+        0x4ccc4: ('bl', '0x4d884'),
+        0x4ccc8: ('str', 'x0,[x19,#0x8]'),
+        0x4cd98: ('bl', '0x8c274'),
+        0x4cdb0: ('b.ne', '0x4cfc0'),
+        0x4cdb8: ('bl', '0x192f4'),
+        0x4ce0c: ('bl', '0x41da8'),
+        0x4ce5c: ('blr', 'x8'),
+        0x4cf28: ('bl', '0x4d884'),
+        0x4cf2c: ('str', 'x0,[x19,#0x8]'),
+        0x4cfdc: ('ret', ''),
+        0x4d0e0: ('bl', '0x4d0fc'),
+        0x4d0e8: ('bl', '0x4d130'),
+        0x4d0f0: ('bl', '0x2378'),
+        0x4d0f8: ('bl', '0x8c334'),
+    },
+    'owner-load-pipls': {
+        0x4d174: ('mov', 'x19,x8'),
+        0x4d17c: ('ldr', 'x9,[x8,#0x20]'),
+        0x4d188: ('blr', 'x9'),
+        0x4d190: ('stp', 'x9,x8,[sp]'),
+        0x4d1a0: ('ldadd', 'x9,x8,[x8]'),
+        0x4d1a4: ('mov', 'x1,sp'),
+        0x4d1a8: ('mov', 'x8,x19'),
+        0x4d1ac: ('bl', '0x4ca10'),
+        0x4d1c0: ('ldaddal', 'x9,x8,[x8]'),
+        0x4d1d4: ('blr', 'x8'),
+        0x4d204: ('ret', ''),
+        0x4d238: ('bl', '0x1a8c'),
+        0x4d240: ('bl', '0x1a8c'),
+        0x4d248: ('bl', '0x8c334'),
+    },
+    'owner-get-pipl': {
+        0x100a0: ('mov', 'x19,x8'),
+        0x100a4: ('str', 'xzr,[x2]'),
+        0x100ac: ('cbnz', 'w1,0x1010c'),
+        0x100b4: ('cbz', 'w8,0x1010c'),
+        0x100e8: ('bl', '0x10fd8'),
+        0x1011c: ('bl', '0x10f30'),
+        0x1013c: ('cbz', 'w0,0x104d4'),
+        0x10150: ('bl', '0x10f3c'),
+        0x101a0: ('bl', '0x11650'),
+        0x101b0: ('bl', '0x10ef4'),
+        0x101b4: ('str', 'x26,[x20]'),
+        0x101f4: ('bl', '0x10fd8'),
+        0x10204: ('strb', 'w8,[x21,#0x18]'),
+        0x1022c: ('bl', '0x10f00'),
+        0x1023c: ('cbz', 'x0,0x10448'),
+        0x1027c: ('bl', '0x11644'),
+        0x10294: ('bl', '0x11140'),
+        0x102a4: ('ldr', 'x0,[sp,#0x58]'),
+        0x10384: ('blr', 'x8'),
+        0x103b0: ('blr', 'x8'),
+        0x103e0: ('blr', 'x8'),
+        0x10408: ('blr', 'x8'),
+        0x10420: ('bl', '0x1075c'),
+        0x10464: ('ret', ''),
+        0x106f8: ('bl', '0x6cbc'),
+        0x10700: ('bl', '0x6c8c'),
+    },
+    'owner-populate': {
+        0x43db8: ('mov', 'x19,x0'),
+        0x43dc8: ('bl', '0x8cef8'),
+        0x43dd4: ('bl', '0x8cf04'),
+        0x43f28: ('blr', 'x9'),
+        0x43f54: ('str', 'x9,[x8,#0x10]'),
+        0x43fc8: ('str', 'x25,[x26]'),
+        0x44184: ('blr', 'x9'),
+        0x441b0: ('str', 'x9,[x8,#0x10]'),
+        0x441dc: ('bl', '0x8cf28'),
+        0x44210: ('str', 'x10,[x9,#0x10]'),
+        0x44214: ('stp', 'w22,w21,[x19,#0x70]'),
+        0x44218: ('str', 'w28,[x19,#0x78]'),
+        0x4421c: ('str', 'w8,[x19,#0xb0]'),
+        0x44224: ('bl', '0x8cf28'),
+        0x44250: ('str', 'x9,[x8,#0x10]'),
+        0x44258: ('bl', '0x410a8'),
+        0x44260: ('bl', '0x413a0'),
+        0x44280: ('ret', ''),
+        0x442a4: ('bl', '0x8c334'),
+    },
+    'owner-pipl-class': {
+        0x19304: ('mov', 'x19,x8'),
+        0x19310: ('bl', '0x193cc'),
+        0x19328: ('bl', '0x8cd3c'),
+        0x19334: ('str', 'x8,[x19]'),
+        0x1934c: ('stp', 'xzr,xzr,[sp,#0x8]'),
+        0x19350: ('stp', 'x8,x9,[x19,#0x8]'),
+        0x19368: ('ret', ''),
+        0x19384: ('ldaddal', 'x9,x8,[x8]'),
+        0x19398: ('blr', 'x8'),
+        0x193b0: ('ret', ''),
+        0x193c8: ('bl', '0x8c334'),
+    },
+}
+
+
+def verify_owner(text, label, start, end):
+    require(any((row[0], row[2], row[3]) == (label, start, end)
+                for row in REVIEWS["publication-owner"]), "unreviewed publication owner window")
+    count = validate_disassembly(text, start, end)
+    rows = {int(address, 16): (op, re.sub(r"\s+", "", args.split(";")[0]))
+            for address, op, args in re.findall(
+                r"^.*\[0x([0-9a-fA-F]+)\]\s+<[^>]*>:[ \t]+(\S+)[ \t]*([^\n]*)", text, re.M)}
+    anchors = OWNER_ANCHORS[label]
+    require(all(rows.get(a) == v for a, v in anchors.items()),
+            "publication owner structural anchors differ")
+    return {"decoded_instructions": count, "structural_anchors": len(anchors),
+            "claim": "file-only-routine-owner-not-effect-publication-lease"}
+
+
 # Unslid file addresses in the exact PluginSupport pin. Not callable pointers.
 # Anchors bind metadata copying, entry dispatch, conversion and both teardown lanes.
 METADATA_ANCHORS = {
@@ -2728,6 +3037,7 @@ def main():
         registry_transaction = {}
         registry_consumers = {}
         metadata = {}
+        owner = {}
         for name in names:
             path, _ = INPUTS[name]
             nm, nm_err = run_tool(["/usr/bin/nm", "-arch", "arm64", "-n", "-m", str(path)])
@@ -2743,6 +3053,8 @@ def main():
                  "--source", str(folder / (label + "-inspect.lldb"))],
                 timeout=60)
             instruction_count = verify_lldb_disassembly(disassembly, diagnostics, start, end)
+            if args.review == 'publication-owner':
+                owner[label] = verify_owner(disassembly, label, start, end)
             if args.review == 'plugin-metadata':
                 metadata[label] = verify_metadata(disassembly, label, start, end)
             if args.review == 'publication':
@@ -2831,6 +3143,16 @@ def main():
             "inputs": outputs,
             "data_windows": data_outputs,
         }
+        if args.review == 'publication-owner':
+            record['publication_owner_evidence'] = owner
+            record['routine_roster'] = 'PLUG-GLOBAL-VECTOR-NOT-FLT-EFFECT-REGISTRY'
+            record['observed_lock_scope'] = 'PLUG-ROSTER-RECURSIVE-MUTEX-FILE-ONLY'
+            record['native_registration_ABI'] = 'UNKNOWN'
+            record['actual_PiPL_provider_and_receiver'] = 'NOT OBSERVED'
+            record['host_wide_reader_render_exclusion'] = 'NOT PROVEN'
+            record['unregister_as_effect_publication_rollback'] = 'NOT PROVEN'
+            record['transitive_callee_side_effects'] = 'UNKNOWN'
+            record['registration_apply_render'] = 'NOT RUN'
         if args.review == 'plugin-metadata':
             record['plugin_metadata_evidence'] = metadata
             record['opaque_context'] = 'STACK-LOCAL-IN-REVIEWED-UNCACHED-GETPIPLS-PATH'

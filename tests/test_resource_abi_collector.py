@@ -173,6 +173,54 @@ class ResourceAbiCollectorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unreviewed'):
             collector.verify_publication(text, 'FLT-if-missing', start, end - 4)
 
+    def test_publication_owner_scope_pins_both_files_and_complete_windows(self):
+        windows = collector.review_windows('publication-owner')
+        self.assertEqual(len(windows), 12)
+        self.assertEqual(sum((end-start)//4 for _, _, start, end in windows), 2403)
+        self.assertEqual({image for _, image, *_ in windows}, {'PLUG', 'PluginSupport'})
+        self.assertEqual({label for label, *_ in windows}, set(collector.OWNER_ANCHORS))
+        for _, image, start, end in windows:
+            script = collector.lldb_script(collector.INPUTS[image][0], start, end)
+            self.assertIn('target create --no-dependents --arch arm64', script)
+            self.assertNotRegex(script, r'process|expression|call ')
+        self.assertNotIn('publication-owner', collector.DATA_WINDOWS)
+
+    def test_publication_owner_refuses_wrong_owner_lock_release_and_completion(self):
+        # Owned synthetic parser controls. Cannot establish Adobe execution semantics.
+        for label, _, start, end in collector.review_windows('publication-owner'):
+            anchors = collector.OWNER_ANCHORS[label]
+            def transcript(overrides):
+                return ''.join('owned[0x%x] <+%d>: %s %s\n' %
+                    (a, a-start, *overrides.get(a, anchors.get(a, ('nop', ''))))
+                    for a in range(start, end, 4))
+            text = transcript({})
+            result = collector.verify_owner(text, label, start, end)
+            self.assertEqual(result['claim'], 'file-only-routine-owner-not-effect-publication-lease')
+            for address, (op, args) in anchors.items():
+                for wrong in [('nop', ''), (op, args+'x0')]:
+                    with self.subTest(label=label, address=hex(address), wrong=wrong):
+                        with self.assertRaisesRegex(ValueError, 'structural'):
+                            collector.verify_owner(transcript({address: wrong}), label, start, end)
+            for bad in [text+text.splitlines()[0]+'\n', '\n'.join(text.splitlines()[:-1])]:
+                with self.assertRaisesRegex(ValueError, 'bounds'):
+                    collector.verify_owner(bad, label, start, end)
+            with self.assertRaisesRegex(ValueError, 'undecoded'):
+                collector.verify_owner(text.replace(': ', ': .long ', 1), label, start, end)
+            for wrong_label, wrong_end in [('unknown', end), (label, end+4)]:
+                with self.assertRaisesRegex(ValueError, 'unreviewed'):
+                    collector.verify_owner(text, wrong_label, start, wrong_end)
+
+    def test_publication_owner_catalog_keeps_private_overloads_not_global_search(self):
+        names = ['PLUG_RegisterRoutine', 'PLUG_RegisterRoutineMinimal', 'PLUG_UnregisterRoutine',
+                 'PLUG_RoutineDescPrivC2', 'PLUGp_NewRoutineDesc', 'PLUGp_GetPiPL',
+                 'PluginImplInternalLoadPiPLs', 'PluginImplLoadPiPLs',
+                 'PiPLPopulateFromPluginData', 'PiPLCreateClassRef']
+        chosen = collector.select_symbols('\n'.join('external '+n for n in names)+
+                                          '\nexternal PLUG_Search\n', 'publication-owner')
+        for name in names:
+            self.assertIn(name, chosen)
+        self.assertNotIn('PLUG_Search', chosen)
+
     def test_plugin_metadata_scope_is_complete_and_offline(self):
         windows = collector.review_windows('plugin-metadata')
         self.assertEqual(len(windows), 6)

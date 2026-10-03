@@ -12,6 +12,23 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
+## PiPL publication owner — routine roster and effect registry distinguished
+
+[Publication-owner research](C1_PUBLICATION_OWNER_2026-10-03.md) extends the metadata
+lifetime result with 12 complete PLUG/PluginSupport windows, 2403 instructions and
+248 anchors. Registration overloads retain routine descriptors/providers in the
+PLUG roster under its own mutex; ordinary effects are published separately through
+FLT. Provider construction precedes roster locking in two variants. Unregister can
+return success for a missing roster entry, or enter unprep/dispose/teardown before
+erase; it is not a confirmed whole-effect rollback. Actual runtime provider/owner,
+thread/admission/drain/completion/rollback remain unproven. Native backend NOT READY.
+48 focused collector tests PASS; exact clean-source collection/full checks/CI
+pending at this prepared checkpoint. OWNER-01–05 file findings documented; required
+native contracts remain BLOCKED. OWNER-06 executable host experiment BLOCKED,
+OWNER-08 NOT RUN. Original product/A/B/C1/C2/D/release retained; no current AE
+operation or opaque-context replay, no merge/release. Next: establish the supported
+late-entry transaction joining the retained owner to FLT publication.
+
 ## Host metadata bridge — lifetime boundary identified, runtime still blocked
 
 [Bounded metadata review](C1_PLUGIN_METADATA_BRIDGE_2026-10-03.md) reconciles PICA
