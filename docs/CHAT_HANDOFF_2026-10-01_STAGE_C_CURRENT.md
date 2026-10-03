@@ -17,6 +17,22 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
+## Routine-to-effect handoff — internal route found, safe late contract open
+
+[Combined handoff review](C1_ROUTINE_HANDOFF_2026-10-03.md): 17 complete pinned
+file windows / 4707 instructions / 275 anchors. Startup registers a setter consumed
+by MEE SetupFilter, routed through aelib to FLT provider/path setup and publication.
+Cache can skip the callback; nonnegative status normalization is not readiness.
+Provider AddEffect can precede failing lazy globals; disposal mutates canonical/
+GPU/global/descriptor state without proved whole-effect rollback. A per-module
+mutex does not establish continuous all-reader/render exclusion. Actual supported
+late ABI/receiver/lifetime/thread/drain/transaction UNKNOWN; backend NOT READY.
+51 focused collector tests PASS; clean collection/full regression/review/CI pending.
+HAND-01–08 bounded file findings documented, required native contracts BLOCKED;
+HAND-09 preparation partial, HAND-10 executable experiment BLOCKED, HAND-11/12
+NOT RUN. Original product/A/B/C1/C2/D/release retained; no current AE operation.
+Next: upstream module admission/initialization and its enforceable late-host contract.
+
 ## PiPL publication owner — routine roster and effect registry distinguished
 
 [Publication-owner research](C1_PUBLICATION_OWNER_2026-10-03.md) extends the metadata

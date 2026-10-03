@@ -173,6 +173,58 @@ class ResourceAbiCollectorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unreviewed'):
             collector.verify_publication(text, 'FLT-if-missing', start, end - 4)
 
+    def test_routine_handoff_scope_pins_startup_handoff_and_complete_windows(self):
+        windows = collector.review_windows('routine-handoff')
+        self.assertEqual(len(windows), 17)
+        self.assertEqual(sum((end-start)//4 for _, _, start, end in windows), 4707)
+        self.assertEqual({image for _, image, *_ in windows}, {'aelib', 'MEE', 'PluginSupport', 'FLT', 'PLUG'})
+        self.assertEqual({label for label, *_ in windows}, set(collector.HANDOFF_ANCHORS))
+        for _, image, start, end in windows:
+            script = collector.lldb_script(collector.INPUTS[image][0], start, end)
+            self.assertIn('target create --no-dependents --arch arm64', script)
+            self.assertNotRegex(script, r'process|expression|call ')
+        self.assertNotIn('routine-handoff', collector.DATA_WINDOWS)
+
+    def test_routine_handoff_refuses_changed_cache_status_transfer_and_cleanup(self):
+        # Owned synthetic parser controls. Cannot establish Adobe execution semantics.
+        for label, _, start, end in collector.review_windows('routine-handoff'):
+            anchors = collector.HANDOFF_ANCHORS[label]
+            def transcript(overrides):
+                return ''.join('owned[0x%x] <+%d>: %s %s\n' %
+                    (a, a-start, *overrides.get(a, anchors.get(a, ('nop', ''))))
+                    for a in range(start, end, 4))
+            text = transcript({})
+            result = collector.verify_handoff(text, label, start, end)
+            self.assertEqual(result['claim'], 'file-only-startup-handoff-not-safe-late-registration')
+            for address, (op, args) in anchors.items():
+                for wrong in [('nop', ''), (op, args+'x0')]:
+                    with self.subTest(label=label, address=hex(address), wrong=wrong):
+                        with self.assertRaisesRegex(ValueError, 'structural'):
+                            collector.verify_handoff(transcript({address: wrong}), label, start, end)
+            for bad in [text+text.splitlines()[0]+'\n', '\n'.join(text.splitlines()[:-1])]:
+                with self.assertRaisesRegex(ValueError, 'bounds'):
+                    collector.verify_handoff(bad, label, start, end)
+            with self.assertRaisesRegex(ValueError, 'undecoded'):
+                collector.verify_handoff(text.replace(': ', ': .long ', 1), label, start, end)
+            for wrong_label, wrong_end in [('unknown', end), (label, end+4)]:
+                with self.assertRaisesRegex(ValueError, 'unreviewed'):
+                    collector.verify_handoff(text, wrong_label, start, wrong_end)
+
+    def test_routine_handoff_catalog_keeps_callback_handoff_not_global_search(self):
+        names = ['__Z17FLT_SetupAEPluginN7dvacore',
+                 '__Z24MEE_GetAELibPluginSetterv',
+                 '__ZN2ML26AELibraryVideoFilterModule11SetupFilterE',
+                 '__ZN2ML13PluginSupport13LoadAEPluginsEb',
+                 '__ZN10FLT_FCSpec15SetRoutineDescHE',
+                 '__Z18FLTp_DisposeFCSpecN5boost',
+                 '__Z24PLUGp_DisposeRoutineDescRN5boost',
+                 '__ZN5aelib12InitIteratorppEv']
+        chosen = collector.select_symbols('\n'.join('external '+n for n in names)+
+                                          '\nexternal PLUG_Search\n', 'routine-handoff')
+        for name in names:
+            self.assertIn(name, chosen)
+        self.assertNotIn('PLUG_Search', chosen)
+
     def test_publication_owner_scope_pins_both_files_and_complete_windows(self):
         windows = collector.review_windows('publication-owner')
         self.assertEqual(len(windows), 12)

@@ -12,6 +12,43 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## Routine-to-effect handoff — accepted conditional twelve-step pass
+
+2026-10-03. User “делай” accepts the twelve-block proposal in this chat. Starting
+clean research HEAD 815f2f9639da9b299ae6c26bdae986067d4f94fd. Rules v8.0.0,
+132b7cd32873ba7328e3128ffbb33e1929b74d45; AI_ENTRYPOINT read first. Stage C1
+Development research. Apply AI-STATE/API-SOURCE/SAFE/REPRO/TEST-CONTROL/TASK-CLOSE/
+CLEANUP, native ownership/thread and bounded tools diagnostics rules. Collector
+Standard; dependent native invocation Critical. No new feature/reference audit or
+product change. Actual AE 25.6x101 arm64 / SDK 25.6_61 scope; other support UNKNOWN.
+
+| ID | Acceptance / observable result | Check / dependency |
+|---|---|---|
+| HAND-01 | Identify actual file callers consuming retained routine/PiPL/provider | Fixed original-file symbols and complete caller bodies, direct branch correspondence; not live identity |
+| HAND-02 | Follow provider/routine-to-FLT publication handoff | Distinguish provider/path branches and conditional publisher sequence; compare previous complete setup/publication evidence |
+| HAND-03 | Establish invocation contract boundaries | Private register/return/interface/callback use versus actual SDK; mark missing ABI/receiver UNKNOWN |
+| HAND-04 | Establish object lifetime | Caller retained references, transfer, normal/exceptional cleanup and descriptor lifetime |
+| HAND-05 | Establish thread/reentry constraints | Selected locks/call ordering versus callbacks/virtual delegates; no idle-as-lease inference |
+| HAND-06 | Identify continuous render/read exclusion | Caller admission/drain coverage versus previously reviewed registry/readers/MFR; unknown global contract BLOCKED |
+| HAND-07 | Distinguish success/completion/errors | Actual outputs, early/exceptional failure, publication before later initialization |
+| HAND-08 | Establish full rollback boundary | Local unwind/disposal versus inverse canonical/provider/registry/parameter/global state; no speculative teardown |
+| HAND-09 | Implement bounded research tooling and verify | Refusal tests, clean collection, independent byte/archive/source review, full regression/scanner/exact-source CI and docs |
+| HAND-10 | Prepare minimal executable native experiment | Conditional on confirmed 01–08 safety, supported contract and precise candidate; no guessed private objects |
+| HAND-11 | One specifically authorized AE experiment | Conditional on 10 safe packet and concrete new operation scope; historical live scope consumed |
+| HAND-12 | Registration/apply/render and interpretation | Conditional on 11 actual result and approved fixture/operation scope; separate registry, application, rendering and rollback claims |
+
+First new discriminator: callers choosing retained provider versus path-only
+registration within FLT setup and their outer publication/initialization lifetime.
+Reuse earlier complete bodies only as named historical evidence; extend original
+file scope where actual callers/delegates remain unresolved. Do not repeat PICA or
+ordinary scan, fabricate provider/context, or call unregister as recovery. Preserve
+native helpers/profiles/ResourcePassGate, SDK, existing sessions/consumed helpers,
+third-party plugins/projects and historical/private evidence. No AE process
+inspection/launch/install/private call/scan/retain/unregister/unload/forced quit in
+research preparation. Repo work/owned tests/file tools/research commit/push/CI
+remain authorized. No merge/release. Complete independent 01–09 work even if
+10–12 remain BLOCKED/NOT RUN. Record actual task versus test status separately.
+
 ## PiPL publication owner — next conditional eight-step pass
 
 2026-10-03. User “делай” accepts the proposed follow-up. Starting clean research

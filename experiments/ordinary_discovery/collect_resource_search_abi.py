@@ -28,6 +28,25 @@ WINDOWS = {
     "PLUG": (0x8A6C, 0x9028),
 }
 REVIEWS = {
+    "routine-handoff": (
+        ('handoff-init', 'aelib', 0x61134, 0x61fe8),
+        ('handoff-aelib', 'aelib', 0x63aa0, 0x63c04),
+        ('handoff-setter', 'MEE', 0x3e320, 0x3e400),
+        ('handoff-getter', 'MEE', 0x3e400, 0x3e454),
+        ('handoff-module', 'MEE', 0xbbe0, 0xc274),
+        ('handoff-invoker', 'MEE', 0xc274, 0xc450),
+        ('handoff-load-ae', 'PluginSupport', 0x5b3f8, 0x5b944),
+        ('handoff-entry', 'FLT', 0x8ef8c, 0x8f360),
+        ('handoff-setup-a', 'FLT', 0x8d250, 0x8e250),
+        ('handoff-setup-b', 'FLT', 0x8e250, 0x8ef8c),
+        ('handoff-store', 'FLT', 0x5e26c, 0x5e2f0),
+        ('handoff-ctor', 'FLT', 0x5cae4, 0x5cbec),
+        ('handoff-release', 'FLT', 0x5cbec, 0x5cc60),
+        ('handoff-dtor', 'FLT', 0x5cc64, 0x5cd3c),
+        ('handoff-dispose', 'FLT', 0x9a258, 0x9a4d8),
+        ('handoff-provider', 'PLUG', 0x7228, 0x7430),
+        ('handoff-routine-dispose', 'PLUG', 0xd6d8, 0xd8ec),
+    ),
     "publication-owner": (
         ('owner-scan-data', 'PLUG', 0x6d50, 0x6f74),
         ('owner-path', 'PLUG', 0x6fa8, 0x7150),
@@ -266,6 +285,11 @@ FILE_ONLY_INPUTS = {
 }
 INPUTS.update(FILE_ONLY_INPUTS)
 SYMBOL_WANTED = {
+    "routine-handoff": re.compile(r"(InitIterator|SetupAEPlugin|AELibPluginSetter|"
+                                  r"AELibraryVideoFilterModule.*SetupFilter|"
+                                  r"PluginSupport.*LoadAEPlugins|FLT_FCSpec.*(C[012]|D[012]|SetRoutineDescH)|"
+                                  r"FLTp_(FiltSetup|DisposeFCSpec)|PLUG_RegisterRoutine|"
+                                  r"PLUGp_DisposeRoutineDesc|boost.*(function3|PLUG_RoutineDesc))"),
     "publication-owner": re.compile(r"(PLUG_(RegisterRoutine|UnregisterRoutine|RoutineDescPriv)|"
                                     r"PLUGp_(NewRoutineDesc|GetPiPL)|"
                                     r"PluginImpl.*LoadPiPLs|PiPL.*(PopulateFromPluginData|CreateClassRef))"),
@@ -2452,6 +2476,335 @@ OWNER_ANCHORS = {
 }
 
 
+# Fixed structural anchors in original pinned files, not callable addresses.
+# Startup setter, cache/status shortcuts, owner transfer and teardown boundaries.
+HANDOFF_ANCHORS = {
+    'handoff-init': {
+        0x61160: ('ldr', 'w23,[x0]'),
+        0x61164: ('cmp', 'w23,#0x23'),
+        0x61168: ('b.eq', '0x61bd4'),
+        0x61170: ('b.hi', '0x61bcc'),
+        0x61188: ('br', 'x9'),
+        0x61558: ('adrp', 'x8,2'),
+        0x6155c: ('add', 'x8,x8,#0xaa0'),
+        0x61568: ('stp', 'x9,x8,[sp,#0xa8]'),
+        0x61570: ('bl', '0x8b83c'),
+        0x61578: ('bl', '0x63c04'),
+        0x6158c: ('bl', '0x8c25c'),
+        0x6159c: ('bl', '0x8b890'),
+        0x615a4: ('bl', '0x8b8e4'),
+        0x615ac: ('bl', '0x8b8f0'),
+        0x615e4: ('bl', '0x8b818'),
+        0x61600: ('bl', '0x8b5f0'),
+        0x61618: ('bl', '0x8b6d4'),
+    },
+    'handoff-aelib': {
+        0x63aa0: ('sub', 'sp,sp,#0x60'),
+        0x63adc: ('ldadd', 'x11,x10,[x10]'),
+        0x63b04: ('ldadd', 'x11,x10,[x10]'),
+        0x63b34: ('bl', '0x8b5fc'),
+        0x63b38: ('mov', 'x21,x0'),
+        0x63b4c: ('ldaddal', 'x9,x8,[x8]'),
+        0x63b7c: ('ldaddal', 'x9,x8,[x8]'),
+        0x63b84: ('tbnz', 'w21,#0x1f,0x63bbc'),
+        0x63b88: ('mov', 'w0,#0x0'),
+        0x63b9c: ('ret', ''),
+        0x63bbc: ('mov', 'x0,x20'),
+        0x63bc4: ('bl', '0x8b6c8'),
+        0x63bd0: ('and', 'w0,w8,w0,asr#31'),
+        0x63be4: ('ret', ''),
+        0x63bf0: ('bl', '0xf374'),
+        0x63bf8: ('bl', '0xf374'),
+        0x63c00: ('bl', '0x8b4d0'),
+    },
+    'handoff-setter': {
+        0x3e320: ('sub', 'sp,sp,#0x40'),
+        0x3e338: ('cbz', 'x8,0x3e374'),
+        0x3e35c: ('blr', 'x8'),
+        0x3e374: ('adrp', 'x1,209'),
+        0x3e378: ('add', 'x1,x1,#0xe60'),
+        0x3e380: ('bl', '0x4506c'),
+        0x3e3ac: ('blr', 'x8'),
+        0x3e3bc: ('ret', ''),
+        0x3e3f0: ('blr', 'x8'),
+        0x3e3f8: ('bl', '0x9e648'),
+    },
+    'handoff-getter': {
+        0x3e400: ('str', 'xzr,[x8]'),
+        0x3e404: ('adrp', 'x9,209'),
+        0x3e408: ('ldr', 'x9,[x9,#0xe60]'),
+        0x3e40c: ('cbz', 'x9,0x3e434'),
+        0x3e414: ('tbnz', 'w9,#0x0,0x3e438'),
+        0x3e41c: ('ldr', 'x3,[x9]'),
+        0x3e428: ('add', 'x0,x0,#0xe68'),
+        0x3e430: ('br', 'x3'),
+        0x3e434: ('ret', ''),
+        0x3e44c: ('str', 'x9,[x8,#0x18]'),
+        0x3e450: ('ret', ''),
+    },
+    'handoff-module': {
+        0xbbe0: ('stp', 'x28,x27,[sp,#-0x40]!'),
+        0xbc04: ('add', 'x22,x0,#0x8'),
+        0xbc28: ('bl', '0xa0bb0'),
+        0xbc30: ('bl', '0x3e400'),
+        0xbc3c: ('bl', '0x2a6f4'),
+        0xbc4c: ('bl', '0x2dd30'),
+        0xbc50: ('cbnz', 'w0,0xbd78'),
+        0xbc74: ('ldadd', 'x11,x10,[x10]'),
+        0xbcd4: ('ldadd', 'x11,x10,[x10]'),
+        0xbd24: ('bl', '0xc274'),
+        0xbd28: ('mov', 'x20,x0'),
+        0xbd74: ('tbnz', 'w20,#0x1f,0xbdd8'),
+        0xbd78: ('ldr', 'd0,[sp,#0x78]'),
+        0xbd7c: ('str', 'd0,[x19,#0xb0]'),
+        0xbd80: ('ldr', 'w8,[sp,#0x80]'),
+        0xbd84: ('str', 'w8,[x19,#0xb8]'),
+        0xbd88: ('mov', 'w19,#0x1'),
+        0xbdd4: ('tbz', 'w20,#0x1f,0xbd78'),
+        0xc0fc: ('mov', 'w19,#0x0'),
+        0xc114: ('bl', '0xa0bbc'),
+        0xc118: ('mov', 'x0,x19'),
+        0xc130: ('ret', ''),
+        0xc1d8: ('bl', '0xc450'),
+        0xc1e0: ('bl', '0xc4a0'),
+        0xc1e8: ('bl', '0x9e648'),
+        0xc21c: ('bl', '0xc4a0'),
+        0xc270: ('bl', '0x9e648'),
+    },
+    'handoff-invoker': {
+        0xc274: ('sub', 'sp,sp,#0x80'),
+        0xc28c: ('ldr', 'x8,[x0]'),
+        0xc290: ('cbz', 'x8,0xc3f4'),
+        0xc29c: ('and', 'x8,x8,#0xfffffffffffffffe'),
+        0xc2a0: ('ldr', 'x23,[x8,#0x8]'),
+        0xc2bc: ('stur', 'q0,[sp,#0x20]'),
+        0xc2c0: ('stp', 'xzr,xzr,[x1,#0x8]'),
+        0xc2c4: ('str', 'xzr,[x1]'),
+        0xc2dc: ('stur', 'q0,[sp,#0x8]'),
+        0xc2e0: ('stp', 'xzr,xzr,[x21,#0x8]'),
+        0xc2e4: ('str', 'xzr,[x21]'),
+        0xc2f8: ('blr', 'x23'),
+        0xc2fc: ('mov', 'x19,x0'),
+        0xc360: ('mov', 'x0,x19'),
+        0xc378: ('ret', ''),
+        0xc418: ('bl', '0xcbfc'),
+        0xc41c: ('brk', '#0x1'),
+        0xc428: ('bl', '0x3e9c'),
+        0xc430: ('bl', '0x3e9c'),
+        0xc438: ('bl', '0x9e648'),
+    },
+    'handoff-load-ae': {
+        0x5b3f8: ('sub', 'sp,sp,#0xf0'),
+        0x5b46c: ('bl', '0x8c748'),
+        0x5b488: ('str', 'xzr,[sp,#0x60]'),
+        0x5b4d4: ('bl', '0x8c76c'),
+        0x5b51c: ('bl', '0x5830'),
+        0x5b53c: ('cbz', 'x8,0x5b7ac'),
+        0x5b544: ('bl', '0x8ccdc'),
+        0x5b57c: ('bl', '0x60a8'),
+        0x5b6f0: ('bl', '0x60a8'),
+        0x5b7a8: ('bl', '0x8cc40'),
+        0x5b848: ('ret', ''),
+        0x5b908: ('bl', '0x8c334'),
+    },
+    'handoff-entry': {
+        0x8ef8c: ('sub', 'sp,sp,#0xb0'),
+        0x8efa4: ('mov', 'x21,x0'),
+        0x8efac: ('cbz', 'x0,0x8f22c'),
+        0x8efb8: ('cbz', 'x8,0x8f22c'),
+        0x8efc0: ('mov', 'w19,#0x77'),
+        0x8efc4: ('movk', 'w19,#0xa007,lsl#16'),
+        0x8efcc: ('ldr', 'x8,[x8,#0x30]'),
+        0x8efd0: ('blr', 'x8'),
+        0x8efe0: ('b.ne', '0x8f210'),
+        0x8effc: ('blr', 'x8'),
+        0x8f0d8: ('tbnz', 'w23,#0x0,0x8f210'),
+        0x8f0fc: ('ldadd', 'x11,x10,[x10]'),
+        0x8f11c: ('blr', 'x8'),
+        0x8f144: ('ldadd', 'x10,x9,[x9]'),
+        0x8f194: ('stp', 'xzr,xzr,[sp]'),
+        0x8f198: ('add', 'x0,sp,#0x28'),
+        0x8f19c: ('add', 'x2,sp,#0x10'),
+        0x8f1a0: ('mov', 'x3,x20'),
+        0x8f1a4: ('mov', 'x4,#0x0'),
+        0x8f1a8: ('mov', 'x5,#0x0'),
+        0x8f1ac: ('bl', '0x8d250'),
+        0x8f1bc: ('ldaddal', 'x9,x8,[x8]'),
+        0x8f1ec: ('ldaddal', 'x9,x8,[x8]'),
+        0x8f20c: ('mov', 'w19,#0x0'),
+        0x8f210: ('mov', 'x0,x19'),
+        0x8f228: ('ret', ''),
+        0x8f2b0: ('bl', '0x4918'),
+        0x8f2b8: ('bl', '0xd404'),
+        0x8f2cc: ('bl', '0xd404'),
+        0x8f2d4: ('b.ne', '0x8f2e8'),
+        0x8f2dc: ('bl', '0xa7188'),
+        0x8f2e4: ('b', '0x8f300'),
+        0x8f2ec: ('b.ne', '0x8f328'),
+        0x8f2f8: ('bl', '0xa5c7c'),
+        0x8f304: ('cbnz', 'w20,0x8f210'),
+        0x8f308: ('b', '0x8f20c'),
+        0x8f32c: ('bl', '0xa5820'),
+    },
+    'handoff-setup-a': {
+        0x8d250: ('stp', 'x28,x27,[sp,#-0x60]!'),
+        0x8d270: ('mov', 'x20,x4'),
+        0x8d278: ('mov', 'x23,x2'),
+        0x8d280: ('mov', 'x22,x0'),
+        0x8d298: ('cbz', 'x4,0x8d2c0'),
+        0x8e05c: ('bl', '0x8b2d4'),
+        0x8e0c4: ('cbz', 'x8,0x8e12c'),
+        0x8e0cc: ('cbz', 'x8,0x8e12c'),
+        0x8e0dc: ('cbz', 'x8,0x8e474'),
+        0x8e0e4: ('cbz', 'x9,0x8e470'),
+        0x8e12c: ('stp', 'xzr,xzr,[sp,#0x188]'),
+    },
+    'handoff-setup-b': {
+        0x8e250: ('mov', 'x9,#-0x1'),
+        0x8e27c: ('add', 'x8,sp,#0x1b0'),
+        0x8e288: ('bl', '0xa5b80'),
+        0x8e290: ('stp', 'xzr,xzr,[sp,#0x1b0]'),
+        0x8e298: ('str', 'q0,[sp,#0xf0]'),
+        0x8e388: ('bl', '0x5e26c'),
+        0x8e3e4: ('bl', '0x9284c'),
+        0x8e404: ('bl', '0x8b2d4'),
+        0x8e470: ('stp', 'x8,xzr,[sp,#0xc8]'),
+        0x8e474: ('ldr', 'x8,[x23]'),
+        0x8e4d4: ('add', 'x8,sp,#0x1b0'),
+        0x8e4e0: ('bl', '0xa5b74'),
+        0x8e4e8: ('stp', 'xzr,xzr,[sp,#0x1b0]'),
+        0x8e4f0: ('str', 'q0,[sp,#0xf0]'),
+        0x8e610: ('bl', '0x5e26c'),
+        0x8e66c: ('bl', '0x9284c'),
+        0x8e68c: ('bl', '0x8b2d4'),
+        0x8e6e4: ('cbz', 'w21,0x8e794'),
+        0x8e6e8: ('cbnz', 'x20,0x8e758'),
+        0x8e70c: ('bl', '0x146c8'),
+        0x8e73c: ('bl', '0x9a204'),
+        0x8e740: ('mov', 'x19,x0'),
+        0x8e74c: ('cbnz', 'w19,0x8ec5c'),
+        0x8e754: ('bl', '0x14838'),
+        0x8ec64: ('str', 'w19,[x0]'),
+        0x8ec74: ('bl', '0xa71dc'),
+        0x8ec9c: ('bl', '0x14838'),
+        0x8ef88: ('bl', '0xa5820'),
+    },
+    'handoff-store': {
+        0x5e26c: ('stp', 'x20,x19,[sp,#-0x20]!'),
+        0x5e278: ('ldp', 'x9,x8,[x1]'),
+        0x5e27c: ('cbz', 'x8,0x5e28c'),
+        0x5e288: ('ldadd', 'w11,w10,[x10]'),
+        0x5e28c: ('ldr', 'x19,[x0,#0xc8]'),
+        0x5e290: ('stp', 'x9,x8,[x0,#0xc0]'),
+        0x5e2a0: ('ldaddal', 'w9,w8,[x8]'),
+        0x5e2b8: ('blr', 'x8'),
+        0x5e2c4: ('ldaddal', 'w9,w8,[x8]'),
+        0x5e2dc: ('blr', 'x8'),
+        0x5e2e8: ('ret', ''),
+    },
+    'handoff-ctor': {
+        0x5cae4: ('stp', 'x26,x25,[sp,#-0x50]!'),
+        0x5cb0c: ('stp', 'x8,x9,[x0]'),
+        0x5cb10: ('stp', 'wzr,wzr,[x0,#0xa4]'),
+        0x5cb20: ('stp', 'q0,q0,[x0,#0xb0]'),
+        0x5cb24: ('str', 'xzr,[x0,#0xd0]'),
+        0x5cb4c: ('add', 'x0,x0,#0x170'),
+        0x5cb60: ('bl', '0xa678c'),
+        0x5cb68: ('str', 'w8,[x19,#0x218]'),
+        0x5cba8: ('ret', ''),
+        0x5cbe0: ('bl', '0x5cbec'),
+        0x5cbe8: ('bl', '0xa5820'),
+    },
+    'handoff-release': {
+        0x5cbec: ('stp', 'x20,x19,[sp,#-0x20]!'),
+        0x5cbfc: ('ldr', 'x20,[x0,#0x8]'),
+        0x5cc0c: ('ldaddal', 'w9,w8,[x8]'),
+        0x5cc14: ('b.ne', '0x5cc4c'),
+        0x5cc24: ('blr', 'x8'),
+        0x5cc34: ('cmp', 'w8,#0x1'),
+        0x5cc48: ('blr', 'x8'),
+        0x5cc58: ('ret', ''),
+    },
+    'handoff-dtor': {
+        0x5cc64: ('stp', 'x20,x19,[sp,#-0x20]!'),
+        0x5cc80: ('add', 'x0,x0,#0x170'),
+        0x5cc84: ('bl', '0xa6798'),
+        0x5ccd0: ('ldr', 'x20,[x19,#0xc8]'),
+        0x5cce0: ('ldaddal', 'w9,w8,[x8]'),
+        0x5cce8: ('b.ne', '0x5cd20'),
+        0x5ccf8: ('blr', 'x8'),
+        0x5cd04: ('ldaddal', 'w9,w8,[x8]'),
+        0x5cd1c: ('blr', 'x8'),
+        0x5cd2c: ('ret', ''),
+    },
+    'handoff-dispose': {
+        0x9a258: ('sub', 'sp,sp,#0x70'),
+        0x9a280: ('bl', '0xa5b5c'),
+        0x9a294: ('blr', 'x8'),
+        0x9a314: ('bl', '0xa60fc'),
+        0x9a31c: ('ldr', 'x0,[x19]'),
+        0x9a320: ('bl', '0x5ed8c'),
+        0x9a33c: ('ldadd', 'w9,w8,[x8]'),
+        0x9a344: ('bl', '0x5d644'),
+        0x9a348: ('mov', 'x19,x0'),
+        0x9a374: ('blr', 'x8'),
+        0x9a3a4: ('csel', 'w8,w20,w21,ne'),
+        0x9a3b0: ('csel', 'w19,w19,w8,ne'),
+        0x9a3ec: ('ret', ''),
+        0x9a434: ('bl', '0xa7188'),
+        0x9a438: ('ldr', 'w20,[x0]'),
+        0x9a440: ('b', '0x9a31c'),
+        0x9a454: ('bl', '0xa5c7c'),
+        0x9a460: ('b', '0x9a31c'),
+        0x9a4d4: ('bl', '0xa5820'),
+    },
+    'handoff-provider': {
+        0x7228: ('sub', 'sp,sp,#0x80'),
+        0x7348: ('adrp', 'x21,17'),
+        0x734c: ('add', 'x21,x21,#0x488'),
+        0x73b4: ('str', 'x0,[x21,#0x18]'),
+    },
+    'handoff-routine-dispose': {
+        0xd6d8: ('sub', 'sp,sp,#0x60'),
+        0xd6f0: ('adrp', 'x22,11'),
+        0xd6f4: ('add', 'x22,x22,#0x488'),
+        0xd6f8: ('add', 'x21,x22,#0x38'),
+        0xd718: ('bl', '0x113a4'),
+        0xd734: ('bl', '0x11608'),
+        0xd750: ('ldrh', 'w8,[x0,#0x28]'),
+        0xd754: ('tbnz', 'w8,#0x2,0xd770'),
+        0xd758: ('tbnz', 'w8,#0x3,0xd7b4'),
+        0xd760: ('ldr', 'x21,[x20,#0x8]'),
+        0xd764: ('stp', 'xzr,xzr,[x20]'),
+        0xd7b8: ('bl', '0x10dac'),
+        0xd7c0: ('cbz', 'w0,0xd81c'),
+        0xd7c8: ('stp', 'xzr,xzr,[x20]'),
+        0xd81c: ('ldr', 'w8,[x22,#0x28]'),
+        0xd824: ('str', 'w8,[x22,#0x28]'),
+        0xd82c: ('stp', 'xzr,xzr,[x20]'),
+        0xd890: ('bl', '0x113b0'),
+        0xd8a8: ('ret', ''),
+        0xd8c0: ('bl', '0x113b0'),
+        0xd8e0: ('bl', '0x6f74'),
+        0xd8e8: ('bl', '0x110a4'),
+    },
+}
+
+
+def verify_handoff(text, label, start, end):
+    require(any((row[0], row[2], row[3]) == (label, start, end)
+                for row in REVIEWS["routine-handoff"]), "unreviewed routine handoff window")
+    count = validate_disassembly(text, start, end)
+    rows = {int(address, 16): (op, re.sub(r"\s+", "", args.split(";")[0]))
+            for address, op, args in re.findall(
+                r"^.*\[0x([0-9a-fA-F]+)\]\s+<[^>]*>:[ \t]+(\S+)[ \t]*([^\n]*)", text, re.M)}
+    anchors = HANDOFF_ANCHORS[label]
+    require(all(rows.get(a) == v for a, v in anchors.items()),
+            "routine handoff structural anchors differ")
+    return {"decoded_instructions": count, "structural_anchors": len(anchors),
+            "claim": "file-only-startup-handoff-not-safe-late-registration"}
+
+
 def verify_owner(text, label, start, end):
     require(any((row[0], row[2], row[3]) == (label, start, end)
                 for row in REVIEWS["publication-owner"]), "unreviewed publication owner window")
@@ -3038,6 +3391,7 @@ def main():
         registry_consumers = {}
         metadata = {}
         owner = {}
+        handoff = {}
         for name in names:
             path, _ = INPUTS[name]
             nm, nm_err = run_tool(["/usr/bin/nm", "-arch", "arm64", "-n", "-m", str(path)])
@@ -3053,6 +3407,8 @@ def main():
                  "--source", str(folder / (label + "-inspect.lldb"))],
                 timeout=60)
             instruction_count = verify_lldb_disassembly(disassembly, diagnostics, start, end)
+            if args.review == 'routine-handoff':
+                handoff[label] = verify_handoff(disassembly, label, start, end)
             if args.review == 'publication-owner':
                 owner[label] = verify_owner(disassembly, label, start, end)
             if args.review == 'plugin-metadata':
@@ -3143,6 +3499,19 @@ def main():
             "inputs": outputs,
             "data_windows": data_outputs,
         }
+        if args.review == 'routine-handoff':
+            record['routine_handoff_evidence'] = handoff
+            record['handoff_route'] = 'STARTUP-SETTER-TO-FLT-PROVIDER-REGISTER-FILE-ONLY'
+            record['return_value_as_ready_effect'] = 'NOT-PROVEN-CACHE-SHORTCUT-AND-STATUS-NORMALIZATION'
+            record['native_registration_ABI'] = 'UNKNOWN'
+            record['actual_native_receiver_and_provider'] = 'NOT OBSERVED'
+            record['observed_lock_scope'] = 'MEE-PER-MODULE-ONLY-NOT-HOST-WIDE'
+            record['publication_before_lazy_failure'] = 'FILE-ORDER-OBSERVED-NOT-ATOMICITY'
+            record['host_wide_reader_render_exclusion'] = 'NOT PROVEN'
+            record['whole_effect_rollback'] = 'NOT PROVEN'
+            record['transitive_callee_side_effects'] = 'UNKNOWN'
+            record['native_experiment'] = 'BLOCKED'
+            record['registration_apply_render'] = 'NOT RUN'
         if args.review == 'publication-owner':
             record['publication_owner_evidence'] = owner
             record['routine_roster'] = 'PLUG-GLOBAL-VECTOR-NOT-FLT-EFFECT-REGISTRY'
