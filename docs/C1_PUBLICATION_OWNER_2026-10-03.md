@@ -144,8 +144,9 @@ OWNER-01 bounded handoff research complete; safe end-to-end bridge unproven.
 OWNER-02/03 structural owners/lifetime review complete, actual receiver/provider/
 thread/invocation contract BLOCKED. OWNER-04/05 reviewed lock/failure boundaries,
 but required host-wide exclusion/completion/rollback BLOCKED. OWNER-06 host
-experiment BLOCKED; research-tool refusal checks PASS. OWNER-07 final checks/CI
-pending. OWNER-08 live experiment/interpretation NOT RUN, depends on confirmed
+experiment BLOCKED; research-tool refusal checks PASS. OWNER-07 research checks/
+review/CI/docs complete at f515025; receipts below. OWNER-08 live experiment/
+interpretation NOT RUN, depends on confirmed
 mechanism and concrete new live authority. This is not eight completed host steps.
 
 Next discriminator: the supported late-entry/admission/drain contract joining the
@@ -154,3 +155,49 @@ or PLUG unregister as guessed rollback does not meet it. Native backend NOT READ
 no merge/release or scope change. Preserve consumed helpers/session, third-party
 plugins/projects, SDK and historical private evidence. Retain current owned/private
 research receipts for reproducibility; no shared-state cleanup or loaded-file removal.
+
+## Exact clean-source closeout
+
+Research code/tests/prepared acceptance commit:
+`f5150253c8f1ea013ec7edf3d03d587126a7cd10`, clean before and after collection and
+regression. This later closeout changes documentation only; it does not transfer
+those receipts to a new code candidate. Native helper/profile/ResourcePassGate,
+SDK input and owned SDK macro fixture source remain unchanged.
+
+| Evidence at f515025 | Actual result / identity |
+|---|---|
+| New publication-owner collection | PASS: 12 complete windows / 2403 instructions / 248 anchors; private `resource-publication-owner-d6518fdc-jb1ocrdk.zip`, 28 unique members, SHA-256 `68ef59b6830a48635ed36c1b46b10da91ed3a09424722aa0a236e3fb9392cc8c` |
+| Fresh related metadata collection | PASS: 744 instructions; private `resource-plugin-metadata-6996e439-x00j6xg8.zip`, 15 members, SHA-256 `4e5396a02d0f5b5b5cadc47aa40b33e1142df37fa7944ed48e900195a259cd39`; not a new owned SDK runtime test |
+| Fresh FLT publication collection | PASS: 5002 instructions; private `resource-publication-a278ca14-gzmgz3ux.zip`, 30 members, SHA-256 `e703d8475c27892cac9e48f89106ea0e11b8f343806530372446dda4e11a7d0c` |
+| Independent original-byte/archive review | PASS: CRC, exact unique membership, member hashes and source pins for all three; new owner raw Mach-O corroboration: 439 direct / 226 conditional / 47 indirect branches / 15 returns, 5 PLUGp_G address paths and 8 scalar/pair field writes. Private `independent-review.json`, SHA-256 `97e0bd18aaec0ff501a4f6a887ae498701d6e55008af9852a3fc9d91d924a7ba` |
+| Full local offline runner | PASS: 424 Python tests, zero skips/failures/errors; 51 + 11 Node tests, 22 stages. Native syntax and owned guard build/run PASS. Private `/private/tmp/AEHL-checks-hjrv28j0.zip`, SHA-256 `d2f85dfea8ef87af5bd21dbee8f4dbd76e7eabb4ade4be350d621bea333154d9` |
+| Independent full-run archive/source verification | PASS: CRC, 25 unique members, exact manifest/hash coverage, all 333 tracked source hashes match clean HEAD; inventory SHA-256 `5b343ef3ef80267dee9423f538450fec7388613e4963ce8c81ce55bea248c5fc`. Nested native cases are not added to Python count |
+| Static scanner raw findings | REVIEW_REQUIRED / exit 1, one finding `vibe.no_ratelimit_auth` at tools/artifact_manifest.py:71. Separate source review finds local argparse CLI entry, no auth route/network request. False positive disposition; raw finding preserved, not suppressed. Private `/private/tmp/aehl-publication-owner-f515025-audit.json`, SHA-256 `e9ba0790bd93b97fd5177d9451a3e410202550c354d6aacda47a5fa5eb5a08b7`; release readiness not assessed |
+| Research CI | [37132060603](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37132060603), completed/success at exact f515025 |
+| macOS CI | [37132060602](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37132060602), completed/success at exact f515025; owned build/sign/package/smoke/archive checks only, no AE installation or runtime proof |
+
+Full runner reports offline/native PASS, full AE pipeline BLOCKED, product package
+NOT RUN and live AE operations requested false. CI packaging is a separate owned
+build check; it does not make an installable native registration experiment ready.
+No new SDK call or signature change; prior exact 9e35d1e SDK-owned macro evidence
+remains historical. Fixed file addresses/opcodes do not attest to a live object.
+
+### TASK-CLOSE-001 reconciliation
+
+| Requirement / task | Observable result / actual check | Remaining gate |
+|---|---|---|
+| API-SOURCE / OWNER-01 | Pinned complete PiPL/provider, PLUG roster and FLT publisher bodies distinguished; exact archives and independent raw-byte review PASS | End-to-end late-entry bridge unproven |
+| NATIVE ownership/thread / OWNER-02–03 | Retained PiPL/provider/control references, constructor-before-lock and local unwind documented; public SDK/private interfaces separated | Actual runtime identities, usable ABI, valid lifetime/thread contract BLOCKED |
+| SAFE / OWNER-04 | PLUG roster and FLT mutex boundaries reviewed against prior readers/MFR | Continuous all-reader/render admission/drain lease BLOCKED |
+| SAFE completion/rollback / OWNER-05 | Not-found success, unprep/dispose errors before erase, owner teardown documented | Whole-effect completion and inverse transaction BLOCKED; unregister is not approved recovery |
+| TEST-CONTROL / OWNER-06 | Three new refusal/catalog/scope tests, 48 focused collector tests and 424-test full suite PASS | Executable host experiment BLOCKED on 01–05, no opaque provider fabricated |
+| REPRO / OWNER-07 | Clean f515025 collection, independent archive/source review, raw scanner disposition, 22 stages and both exact-source CI PASS; current plan/status/handoff/compatibility updated | No runtime readiness inferred |
+| SAFE / OWNER-08 | No AE process operation performed | Live experiment/interpretation NOT RUN; needs confirmed mechanism and concrete new operation scope |
+| CLEANUP / preserved scope | Owned reproducibility receipts retained; no third-party, SDK, shared-state, project/session or loaded-helper removal | Existing consumed session/helpers require safe closed-host cleanup separately |
+
+Research implementation and its available checks are complete. Conditional native
+execution remains open; this is not completion of eight host steps or the product.
+Original arbitrary ordinary-effect/no-restart goal and A/B/C1/C2/D/release acceptance
+retained; no main merge or release. Next authorized research discriminator remains
+supported admission/drain and the retained routine/provider to FLT publication
+handoff, with actual ownership/completion/rollback contracts required before a call.

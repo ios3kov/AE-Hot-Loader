@@ -27,9 +27,14 @@ FLT. Provider construction precedes roster locking in two variants. Unregister c
 return success for a missing roster entry, or enter unprep/dispose/teardown before
 erase; it is not a confirmed whole-effect rollback. Actual runtime provider/owner,
 thread/admission/drain/completion/rollback remain unproven. Native backend NOT READY.
-48 focused collector tests PASS; exact clean-source collection/full checks/CI
-pending at this prepared checkpoint. OWNER-01–05 file findings documented; required
-native contracts remain BLOCKED. OWNER-06 executable host experiment BLOCKED,
+At clean research code f5150253c8f1ea013ec7edf3d03d587126a7cd10:
+48 focused / 424 full Python tests, zero skips, 62 Node / 22 stages PASS;
+clean-source collection and independent original-byte/archive/source review PASS.
+Research CI 37132060603 and macOS CI 37132060602 both completed/success at that
+exact source. One scanner finding reviewed as a local CLI false positive, raw exit
+1 retained. OWNER-07 research checks/review/CI/docs complete. OWNER-01–05 file
+findings documented; required native contracts remain BLOCKED. OWNER-06 executable
+host experiment BLOCKED,
 OWNER-08 NOT RUN. Original product/A/B/C1/C2/D/release retained; no current AE
 operation or opaque-context replay, no merge/release. Next: establish the supported
 late-entry transaction joining the retained owner to FLT publication.

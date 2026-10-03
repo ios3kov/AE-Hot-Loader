@@ -44,6 +44,19 @@ projects/third-party plugins and historical evidence preserved. No merge/release
 If the bridge remains unproven, report partial research/NOT RUN dependent work;
 do not label all eight host steps PASS or fabricate an opaque provider/lease.
 
+OWNER closeout: [publication-owner findings, exact receipts and final task mapping](C1_PUBLICATION_OWNER_2026-10-03.md).
+At clean code f515025, OWNER-01 bounded route research complete; 02/03 structural
+ownership/lifetime review complete but actual provider/receiver/ABI/thread BLOCKED.
+04/05 lock/failure review complete but continuous all-reader/MFR exclusion and
+whole-effect completion/rollback BLOCKED. 06 collector refusals PASS, executable
+host experiment BLOCKED. 07 research implementation/checks/review/docs complete:
+424 Python/no skips, 62 Node/22 stages, independent raw-byte/archive/source review,
+both exact-source research/macOS CI completed/success; one raw scanner finding
+reviewed as local-CLI false positive. 08 live experiment/interpretation NOT RUN.
+No eight-host-step or product completion claim, native helper/profile unchanged.
+Next: supported routine/provider-to-FLT transaction/admission/drain contract;
+no repeated inventory, guessed private call or unregister-as-rollback.
+
 ## Host metadata-to-registry bridge — conditional eight-step pass
 
 2026-10-03. User replied “делай” to the proposed eight steps. Starting clean
