@@ -17,6 +17,20 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
+## Loader dispatch — preparation complete, host contract open
+
+[Loader dispatch review](C1_LOADER_DISPATCH_2026-10-03.md): 23 fixed windows /
+11754 instructions /792 anchors. LoadPluginList routes candidates to AddPlugin;
+factories are selected with retained interfaces, and creation is delegated virtually.
+The actual receiver/late ABI is unproven. HeavyInit continuations do not prove drain;
+cache cleanup/local unwinding do not prove whole-effect rollback. Startup code also
+changes global exception policy. All observations file-only, no current AE operation.
+57 focused tests PASS; clean collection/full checks/independent review/exact CI
+NOT RUN at preparation. DISPATCH-01–07 research findings/tooling prepared,
+08/09 verification/closeout pending, 10 native packet/execution BLOCKED;
+registration/apply/render NOT RUN. Backend NOT READY; original product and
+A/B/C1/C2/D/release obligations retained.
+
 ## Module admission — list membership and readiness separated
 
 [Admission review](C1_MODULE_ADMISSION_2026-10-03.md): 12 pinned windows /

@@ -173,6 +173,63 @@ class ResourceAbiCollectorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unreviewed'):
             collector.verify_publication(text, 'FLT-if-missing', start, end - 4)
 
+    def test_loader_dispatch_scope_requires_complete_fixed_bodies(self):
+        windows = collector.review_windows('loader-dispatch')
+        self.assertEqual(len(windows), 23)
+        self.assertEqual(sum((end-start)//4 for _, _, start, end in windows), 11754)
+        self.assertEqual({image for _, image, *_ in windows}, {'PluginSupport'})
+        self.assertEqual({label for label, *_ in windows}, set(collector.LOADER_DISPATCH_ANCHORS))
+        self.assertIn(('dispatch-create-plugin', 'PluginSupport', 0x156f0, 0x15a54), windows)
+        self.assertIn(('dispatch-add-7', 'PluginSupport', 0x128a4, 0x12cf8), windows)
+        for _, image, start, end in windows:
+            script = collector.lldb_script(collector.INPUTS[image][0], start, end)
+            self.assertIn('target create --no-dependents --arch arm64', script)
+            self.assertNotRegex(script, r'process|expression|call ')
+        self.assertNotIn('loader-dispatch', collector.DATA_WINDOWS)
+        for prefix, first, last, count in [('dispatch-list-', 0x7ee8, 0xa6d0, 3),
+                                          ('dispatch-add-', 0xc8a4, 0x12cf8, 7)]:
+            parts = [(start, end) for label, _, start, end in windows if label.startswith(prefix)]
+            self.assertEqual(len(parts), count)
+            self.assertEqual((parts[0][0], parts[-1][1]), (first, last))
+            self.assertTrue(all(a[1] == b[0] for a, b in zip(parts, parts[1:])))
+
+    def test_loader_dispatch_refuses_changed_admission_failure_and_ownership(self):
+        # Owned synthetic parser refusal controls, not Adobe runtime evidence.
+        for label, _, start, end in collector.review_windows('loader-dispatch'):
+            anchors = collector.LOADER_DISPATCH_ANCHORS[label]
+            def transcript(overrides):
+                return ''.join('owned[0x%x] <+%d>: %s %s\n' %
+                    (a, a-start, *overrides.get(a, anchors.get(a, ('nop', ''))))
+                    for a in range(start, end, 4))
+            text = transcript({})
+            self.assertEqual(collector.verify_loader_dispatch(text, label, start, end)['claim'],
+                             'file-only-loader-dispatch-not-safe-late-registration')
+            for address, (op, args) in anchors.items():
+                for wrong in [('nop', ''), (op, args+'x0')]:
+                    with self.subTest(label=label, address=hex(address), wrong=wrong):
+                        with self.assertRaisesRegex(ValueError, 'structural'):
+                            collector.verify_loader_dispatch(transcript({address: wrong}), label, start, end)
+            for bad in [text+text.splitlines()[0]+'\n', '\n'.join(text.splitlines()[:-1])]:
+                with self.assertRaisesRegex(ValueError, 'bounds'):
+                    collector.verify_loader_dispatch(bad, label, start, end)
+            with self.assertRaisesRegex(ValueError, 'undecoded'):
+                collector.verify_loader_dispatch(text.replace(': ', ': .long ', 1), label, start, end)
+            for wrong_label, wrong_end in [('unknown', end), (label, end+4)]:
+                with self.assertRaisesRegex(ValueError, 'unreviewed'):
+                    collector.verify_loader_dispatch(text, wrong_label, start, wrong_end)
+
+    def test_loader_dispatch_catalog_separates_list_from_effect_publication(self):
+        names = ['__ZN2ML11LoadPluginsE', '__ZN2ML12_GLOBAL__N_114LoadPluginListE',
+                 '__ZN2ML12_GLOBAL__N_19AddPluginE', '__ZN2ML12_GLOBAL__N_112CreatePluginE',
+                 '__ZN2ML13PluginSupport28FindPluginFactoriesForModuleE',
+                 '__ZN2ML13PluginSupport31GetFactoryListForModuleNFiltersE',
+                 '__ZN2ML16MetaPluginLoader10LoadPluginE']
+        chosen = collector.select_symbols('\n'.join('external '+n for n in names)+
+                                          '\nexternal PLUG_Search\n', 'loader-dispatch')
+        for name in names:
+            self.assertIn(name, chosen)
+        self.assertNotIn('PLUG_Search', chosen)
+
     def test_module_admission_scope_requires_complete_fixed_bodies(self):
         windows = collector.review_windows('module-admission')
         self.assertEqual(len(windows), 12)

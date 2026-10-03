@@ -12,6 +12,50 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## Loader dispatch, ownership and failure — combined ten-block pass
+
+2026-10-03. User “давай снова целый пак шагов в одном прогоне” authorizes this
+continuation of the original arbitrary ordinary-effect/no-restart product. Starting
+clean research HEAD 39b169d16ffbdfb9f1e42894b962e582fda38533; previous checked code
+59f1e7ae1a8e279adfb7a9891ff5de6494d203cc and its CI remain historical for new bytes.
+Rules v8.0.0 /132b7cd32873ba7328e3128ffbb33e1929b74d45, AI_ENTRYPOINT first.
+Stage C1 Development research; collector Standard, native invocation Critical/gated.
+Apply AI-STATE/API-SOURCE/SAFE/REPRO/TEST-CONTROL/TASK-CLOSE/CLEANUP, native
+ownership/thread and bounded tools diagnostics. No product/feature/reference change.
+Actual AE 25.6x101 arm64 /SDK 25.6_61 scope; broader compatibility UNKNOWN.
+
+| ID | Acceptance | Check / dependency |
+|---|---|---|
+| DISPATCH-01 | Identify real LoadPluginList orchestration | Complete pinned original-file body, direct call correspondence and actual selected symbol boundaries |
+| DISPATCH-02 | Identify one-time setup and factory selection | Complete call_once body and selected same-pin downstream delegates where needed; direct versus virtual/indirect targets distinguished |
+| DISPATCH-03 | Establish provider/module ownership transfer | Retained references and collection publication order, normal/unwind release versus earlier factory evidence |
+| DISPATCH-04 | Establish thread/admission/drain boundaries | Selected synchronization/callback/async boundaries; global all-reader/render lease must be proved, not inferred |
+| DISPATCH-05 | Distinguish result/completion/error semantics | Loader output/list/status gates, selected exception paths and prior setup/publication facts |
+| DISPATCH-06 | Establish whole-effect rollback boundary | Explicit inverse actions versus local releases/unknown transitive state; no speculative teardown |
+| DISPATCH-07 | Implement bounded collector/refusal controls | Exact complete fixed windows, reviewed structural anchors, malformed/tampered output refusals, source/hash/owned-output guards |
+| DISPATCH-08 | Verify research candidate | Clean-source collection, separate original-byte/archive/source review, full regression, raw scanner disposition and exact-source CI |
+| DISPATCH-09 | Reconcile documents/retention/cleanup | Requirement/task/check/Evidence mapping, original A/B/C1/C2/D/release retained, owned receipts durably preserved |
+| DISPATCH-10 | Executable native packet and live result | Conditional on proved supported ABI/owner/thread/admission/drain/rollback and concrete new live scope; otherwise BLOCKED/NOT RUN |
+
+New discriminator: follow PluginSupport LoadPluginList, its one-time initialization
+and selected direct delegates toward actual factory/module dispatch, replacing the
+previous unresolved outer-loader edge. Body collection is file-only, complete
+symbol bounds split into <=4096-byte windows; adaptive downstream selection stays
+within pinned existing files and this dispatch/ownership/error scope. No repeated
+PICA inventory/ordinary scan or guessed provider/callback. Repo/owned tests/file
+research/commit/push/CI authorized. No current AE inspection/attach/install/launch,
+scan/private call/retain/unregister/unload/forced quit. Prior scopes consumed.
+Preserve native helpers/profiles/gates, actual SDK/app/session/projects/third-party
+plugins/history. No merge/release. Complete independent 01–09 research even if 10
+blocked; do not label ten host steps or the original product complete.
+
+Preparation: [bounded dispatch findings](C1_LOADER_DISPATCH_2026-10-03.md),
+23 windows/11754 instructions/792 anchors; 57 focused tests PASS after three
+expected TDD missing-mode errors. DISPATCH-01–06 bounded findings documented with
+native contracts UNKNOWN/BLOCKED; 07 tooling/refusals prepared; 08 clean-source
+checks/review/CI NOT RUN; 09 final receipts/cleanup pending; 10 native BLOCKED,
+registration/apply/render NOT RUN.
+
 ## Module admission and initialization — bounded continuation
 
 2026-10-03. User “делай” continues the accepted original product under v8.0.0
