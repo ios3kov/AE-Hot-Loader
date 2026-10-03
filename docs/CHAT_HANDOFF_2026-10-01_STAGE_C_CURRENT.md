@@ -10,12 +10,27 @@ Current continuation: [registry transaction batch](C1_REGISTRY_TRANSACTION_BATCH
 [dispatch review](C1_EFFECT_DISPATCH_REVIEW_2026-10-02.md),
 [publication review](C1_EFFECT_PUBLICATION_REVIEW_2026-10-02.md),
 [retained names live PASS](C1_RETAINED_NAMES_LIVE_PASS_2026-10-02.md),
-[rules adoption](RULES_ADOPTION_6_2_0_2026-10-02.md),
+[rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md),
 [supervisor deadline review](C1_SUPERVISOR_DEADLINE_REVIEW_2026-10-02.md) and
 [prepared native candidate](C1_OBSERVER_CANDIDATE_REVIEW_2026-10-01.md).
 The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
+
+## Current five-block pass — verification pending
+
+Rules v8.0.0 are adopted at the supplied commit. Current acceptance and retained
+whole-product obligations are mapped in PRODUCTION_PLAN. Bounded file review of
+registry destruction/replacement/settings consumers, preference failure and
+thread-local project serialization scopes is complete; the new file-only mode
+captures 14 windows / 2413 instructions / 150 anchors. Focused 42 collector tests
+PASS. Clean-source package/independent byte verification, full regression and
+both CI remain pending; previous 880b55f PASS does not certify these changes.
+[Current batch and no-go decision](C1_REGISTRY_CONSUMERS_BATCH_2026-10-03.md).
+Reviewed paths do not establish continuous all-reader/dispatch/MFR exclusion or
+safe rollback. Native registration adapter remains BLOCKED; backend NOT READY;
+registration/apply/render NOT RUN and A/B/D/release obligations remain open.
+No host action or new live authority. Cleanup assessed, no removal/move required.
 
 ## Latest C1 registry transaction batch — offline PASS
 
@@ -254,7 +269,7 @@ by this consumed diagnostic scope.
 - Historical count-observer native candidate source:
   **`7c983c5b5adfde0300f2370e5772ed757ab6b613`**; native bytes unchanged.
 - Current canonical AE Development Rules source:
-  **6.2.0 / `d966078a9e45fee7ec9ad14f211a9da753d64b8a`**; read pinned AI_ENTRYPOINT first.
+  **8.0.0 / `132b7cd32873ba7328e3128ffbb33e1929b74d45`**; read pinned AI_ENTRYPOINT first.
 - Historical Stage C no-scan core head:
   **`c1e20e4ab4d4a4f6654f67df7dbb224f0790b5be`**.
 - Historical live-launcher code/test head:

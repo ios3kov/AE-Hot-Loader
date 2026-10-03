@@ -4,13 +4,28 @@ Updated: 2026-10-03. Branch: `research/ordinary-plugin-discovery`.
 Stage **C of A–D**; core registration, A/B/D and release gates remain open.
 Current continuation handoff: [CHAT_HANDOFF_2026-10-01_STAGE_C_CURRENT.md](CHAT_HANDOFF_2026-10-01_STAGE_C_CURRENT.md).
 AGENTS.md and PRODUCTION_PLAN apply. Current canonical rules:
-AE-Development-Rules **6.2.0**, tag `v6.2.0`, peeled commit
-`d966078a9e45fee7ec9ad14f211a9da753d64b8a`, adopted on 2026-10-02, starting with
+AE-Development-Rules **8.0.0**, tag `v8.0.0`, peeled commit
+`132b7cd32873ba7328e3128ffbb33e1929b74d45`, adopted on 2026-10-03, starting with
 AI_ENTRYPOINT.md. Older rule/permission/environment statements below belong
 to their named checkpoints and do not supersede this continuation.
 Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
+
+## Current five-block pass — verification pending
+
+Rules v8.0.0 are adopted at the supplied commit. Current acceptance and retained
+whole-product obligations are mapped in PRODUCTION_PLAN. Bounded file review of
+registry destruction/replacement/settings consumers, preference failure and
+thread-local project serialization scopes is complete; the new file-only mode
+captures 14 windows / 2413 instructions / 150 anchors. Focused 42 collector tests
+PASS. Clean-source package/independent byte verification, full regression and
+both CI remain pending; previous 880b55f PASS does not certify these changes.
+[Current batch and no-go decision](C1_REGISTRY_CONSUMERS_BATCH_2026-10-03.md).
+Reviewed paths do not establish continuous all-reader/dispatch/MFR exclusion or
+safe rollback. Native registration adapter remains BLOCKED; backend NOT READY;
+registration/apply/render NOT RUN and A/B/D/release obligations remain open.
+No host action or new live authority. Cleanup assessed, no removal/move required.
 
 ## Latest C1 registry transaction batch — offline PASS
 

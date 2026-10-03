@@ -1,11 +1,11 @@
 # AE Hot Loader development instructions
 
-Start with [AE Development Rules AI_ENTRYPOINT](https://github.com/ios3kov/AE-Development-Rules/blob/d966078a9e45fee7ec9ad14f211a9da753d64b8a/AI_ENTRYPOINT.md)
+Start with [AE Development Rules AI_ENTRYPOINT](https://github.com/ios3kov/AE-Development-Rules/blob/132b7cd32873ba7328e3128ffbb33e1929b74d45/AI_ENTRYPOINT.md)
 and select the applicable canonical modules before each significant stage.
-Adopted on 2026-10-02 at the user's explicit migration request:
-AE-Development-Rules **6.2.0**, tag `v6.2.0`, peeled source
-`d966078a9e45fee7ec9ad14f211a9da753d64b8a`.
-See [adoption and migration](docs/RULES_ADOPTION_6_2_0_2026-10-02.md).
+Adopted on 2026-10-03 at the user's explicit migration request:
+AE-Development-Rules **8.0.0**, tag `v8.0.0`, peeled source
+`132b7cd32873ba7328e3128ffbb33e1929b74d45`.
+See [adoption and migration](docs/RULES_ADOPTION_8_0_0_2026-10-03.md).
 Before a significant step, select risk/component/delivery rules and relevant
 feature overlays (IPC, diagnostics, testing, distribution). Do not silently
 replace this accepted source with the latest main. Older baseline
@@ -47,7 +47,7 @@ user-validation question does not block an otherwise safe identified test build;
 missing mandatory safety checks or actual live-operation authority still block
 the affected action. Full Release evaluates all applicable required checks.
 
-Apply v6.2.0 MAC-001 to the macOS distributable: exact artifact integrity,
+Apply v8.0.0 MAC-001 to the macOS distributable: exact artifact integrity,
 documented installation, actual host loading and selected-channel evidence.
 Unsigned or locally ad-hoc-signed artifacts may qualify after these checks.
 Do not require paid accounts, distribution certificates or remote signing/
@@ -55,3 +55,5 @@ notarization services. Existing local signing/verification remains part of the
 reviewed build profile; its PASS is not install/AE-load PASS. Do not weaken system
 security or remove quarantine automatically. Windows distribution is outside
 the current Mac-only native research scope; reassess WIN-001 if that scope changes.
+
+For significant multi-block work, TASK-CLOSE-001 requires requirement/task/acceptance/check/Evidence mapping and final reconciliation in the existing plan/checkpoint. FEATURE-SET-001 applies only to a requested feature-set change; preserve retained obligations. CLEANUP-001 requires an ownership-aware cleanup assessment; unknown materials and historical evidence stay in place.

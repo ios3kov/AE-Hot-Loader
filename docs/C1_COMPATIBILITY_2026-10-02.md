@@ -1,4 +1,8 @@
-# C1 compatibility scope under rules 6.2.0
+# C1 compatibility scope — current rules 8.0.0
+
+Current adoption: v8.0.0 / `132b7cd32873ba7328e3128ffbb33e1929b74d45`, 2026-10-03;
+[adoption record](RULES_ADOPTION_8_0_0_2026-10-03.md).
+The following original baseline remains historical; dated rows keep their own Evidence.
 
 This is a bounded research inventory, not a complete product API/artifact audit.
 Baseline `bed0de67d7e91b56ac51d5c9efb39653f0a534ad`; accepted rules 6.2.0,
@@ -22,6 +26,8 @@ Compatibility Status; do not infer a supported AE range from a single build.
 | File-only provider/isolation collector and unbound resource policy, pinned PluginSupport/PLUG/FLT arm64 files | source 56be72b; [combined review](C1_PROVIDER_ISOLATION_BATCH_2026-10-03.md); native helpers/profile unchanged | 376 local Python/62 Node/22 stages PASS; 884 instructions/293 anchors/105 direct/24 indirect/4 rebases/2 import-name resolutions PASS; both exact-source CI workflows completed/success | UNKNOWN for runtime: file ownership correspondence and refusal policy only; real receiver, exclusive registry publication window and completion/failure ABI unproven |
 | File-only registry transaction collector and continuous-lease refusal policy, pinned aelib/FLT arm64 files | source 880b55f; [six-step review](C1_REGISTRY_TRANSACTION_BATCH_2026-10-03.md); native helpers/profile unchanged | 379 local Python/62 Node/22 stages PASS; 3063 instructions/484 anchors/578 direct/71 indirect branches/9 raw fields/3 counter-address paths PASS; Research CI [37120018578](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37120018578) and macOS CI [37120018592](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37120018592) both completed/success at exact 880b55f | UNKNOWN for runtime: startup/selected-lock/counter/completion file findings and unbound refusal policy only; enforceable all-reader/MFR lease, transitive failure semantics and actual registration/apply/render unproven |
 | Full tool, other AE builds/versions/platforms | no complete exact distributed-candidate/runtime evidence | NOT RUN | UNKNOWN; no minimum/current endpoint interpolation |
+
+Current consumer review: [five-block batch](C1_REGISTRY_CONSUMERS_BATCH_2026-10-03.md). Exact pinned AE 25.6x101 FLT arm64 file scope only; full-source checks pending, AE compatibility UNKNOWN. No runtime or broader-host support claim.
 
 ## Relevant API/layout inventory and omissions
 

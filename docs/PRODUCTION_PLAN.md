@@ -3,14 +3,49 @@
 Updated: 2026-10-03. Branch: `research/ordinary-plugin-discovery`.
 
 Source of current verified state: [DEVELOPMENT_STATUS](DEVELOPMENT_STATUS.md).
-Accepted standard: **6.2.0**, `v6.2.0` peeled to
-`d966078a9e45fee7ec9ad14f211a9da753d64b8a`, adopted on 2026-10-02.
-Canonical [AI_ENTRYPOINT](https://github.com/ios3kov/AE-Development-Rules/blob/d966078a9e45fee7ec9ad14f211a9da753d64b8a/AI_ENTRYPOINT.md)
+Accepted standard: **8.0.0**, `v8.0.0` peeled to
+`132b7cd32873ba7328e3128ffbb33e1929b74d45`, adopted on 2026-10-03.
+Canonical [AI_ENTRYPOINT](https://github.com/ios3kov/AE-Development-Rules/blob/132b7cd32873ba7328e3128ffbb33e1929b74d45/AI_ENTRYPOINT.md)
 and its selected AE Development Rules modules, plus `AGENTS.md`, apply.
 Historical plans/evidence remain preserved and must not
 be treated as current approval.
-Migration scope/evidence: [rules adoption](RULES_ADOPTION_6_2_0_2026-10-02.md).
+Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
+
+## Current five-block pass — acceptance fixed before implementation
+
+2026-10-03; starting clean HEAD e42588fc5d19e2e8a423fefa55ca8b64cc1a560a.
+User requested rules v8.0.0 at 132b7cd32873ba7328e3128ffbb33e1929b74d45
+and authorized this combined pass. Stage C1 / Development. Existing product
+contract is retained; no new feature set or product-direction change requested.
+FEATURE-SET-001 is conditional/N/A for this scope; TASK-CLOSE-001 applies.
+Repository edits, owned fixtures, pinned file-only inspection and research-branch
+commit/push are in scope. Consumed live diagnostic permission is not renewed;
+no installation, AE launch/attach/process read, private invocation or teardown.
+
+| ID / requirement | Block and observable acceptance | Check / phase and dependencies | Status / evidence |
+|---|---|---|---|
+| PASS-01 / STANDARD-VERSION, AI-STATE, TASK-CLOSE | Adopt exact v8.0.0; restore goal, authority, applicability and all remaining obligations in canonical records | Verify VERSION/tag/source; standard self-test/router and current documentation links; Development | NOT RUN; existing v6.2 evidence stays historical |
+| PASS-02 / API-SOURCES, ownership | Bounded registry destruction/replacement/settings-reader and project read/write scope review, identifying owners/locks and limits | Exact pinned FLT file only; complete fixed windows and original-byte verification | NOT RUN; requires acceptance above |
+| PASS-03 / CODE-SAFETY, DEBUGGING | Trace preference/update/replacement errors and publication order; distinguish local cleanup from proven rollback | Same file identity; inspect calls/unwind; unknown transitive contracts stay explicit | NOT RUN; depends on PASS-02 capture |
+| PASS-04 / SAFE, RENDER | Decide whether reviewed paths establish continuous exclusion of registry consumers/dispatch/MFR | Evidence-backed go/no-go, covering reentry and escaped owners; do not treat counters/locks as a barrier without proof | NOT RUN; dependent native adapter remains BLOCKED |
+| PASS-05 / TEST-CONTROL, REPRO, TASK-CLOSE | Implement only an evidenced related change; independently verify evidence, available regression, both CI and reconcile whole current scope | Clean source identity; archive integrity, refusal tests, bounded review, exact-source CI; update checkpoint and cleanup assessment | NOT RUN; runtime/release not implied |
+
+Retained whole-product obligations (no deferral or scope removal):
+
+| Obligation | Acceptance / dependent phase | Current status and blocking condition |
+|---|---|---|
+| A/B generic Agent, ordinary discovery and Control Shell research | Preserve existing routes and identities; validate integrated user workflow during D | Historical research preserved; integrated final acceptance OPEN |
+| C0 owned no-scan lifecycle | Identified safe no-scan diagnostic | Historical PASS; do not repeat or transfer to changed candidate |
+| C1 late registration | Exact intended new registry identity in the same process, project unchanged and no unrelated changes | NOT RUN; receiver/provider ownership, continuous exclusion, failure/completion semantics and native adapter unresolved; historical unchanged scan FAIL retained |
+| C2 apply | Owned fixture creates an instance of newly registered exact effect | NOT RUN; requires C1 registration PASS |
+| C2 render | Identified real output from that instance, same source/artifact/runtime | NOT RUN; requires apply PASS; offline models cannot substitute |
+| D integration / safety / compatibility | Panel/helper roundtrip, repeat/error/timeout/project safety, install/update/rollback and actual supported matrix | OPEN; requires C; runtime/platform scenarios not certified by CI |
+| Release | Identified final package, all applicable acceptance including Level 2 regression and instructions | BLOCKED; C1/C2/D prerequisites open; prior publication request does not waive gates |
+
+Each block's actual result and source/Evidence will be recorded in the current
+checkpoint. Cleanup assessment will preserve unique research evidence, installed
+helpers and unknown/active work; this pass authorizes no deletion of those items.
 
 ## Product scope
 
@@ -25,6 +60,21 @@ Primary Stage C goal:
 
 Loaded binaries, registry publication, application and rendering are separate
 claims.
+
+## Current five-block pass — verification pending
+
+Rules v8.0.0 are adopted at the supplied commit. Current acceptance and retained
+whole-product obligations are mapped in PRODUCTION_PLAN. Bounded file review of
+registry destruction/replacement/settings consumers, preference failure and
+thread-local project serialization scopes is complete; the new file-only mode
+captures 14 windows / 2413 instructions / 150 anchors. Focused 42 collector tests
+PASS. Clean-source package/independent byte verification, full regression and
+both CI remain pending; previous 880b55f PASS does not certify these changes.
+[Current batch and no-go decision](C1_REGISTRY_CONSUMERS_BATCH_2026-10-03.md).
+Reviewed paths do not establish continuous all-reader/dispatch/MFR exclusion or
+safe rollback. Native registration adapter remains BLOCKED; backend NOT READY;
+registration/apply/render NOT RUN and A/B/D/release obligations remain open.
+No host action or new live authority. Cleanup assessed, no removal/move required.
 
 ## Latest C1 registry transaction batch — offline PASS
 

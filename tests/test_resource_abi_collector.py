@@ -173,6 +173,48 @@ class ResourceAbiCollectorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unreviewed'):
             collector.verify_publication(text, 'FLT-if-missing', start, end - 4)
 
+    def test_registry_consumers_keeps_fixed_file_scope_and_no_host_calls(self):
+        windows = collector.review_windows('registry-consumers')
+        self.assertEqual({key for _, key, *_ in windows}, {'FLT'})
+        self.assertEqual({label for label, *_ in windows}, set(collector.CONSUMER_ANCHORS))
+        self.assertEqual(len(windows), 14)
+        for label, key, start, end in windows:
+            script = collector.lldb_script(collector.INPUTS[key][0], start, end)
+            self.assertNotIn('process launch', script)
+            self.assertNotIn('process attach', script)
+            self.assertLessEqual((end-start)//4, 4096)
+
+    def test_registry_consumers_rejects_changed_mutation_lock_and_tls_paths(self):
+        for label, _, start, end in collector.review_windows('registry-consumers'):
+            anchors = collector.CONSUMER_ANCHORS[label]
+            def transcript(overrides):
+                return ''.join('owned[0x%x] <+%d>: %s %s\n' %
+                    (a, a-start, *overrides.get(a, anchors.get(a, ('nop', ''))))
+                    for a in range(start, end, 4))
+            text = transcript({})
+            self.assertEqual(collector.verify_consumers(text, label, start, end)['claim'],
+                             'file-only-no-global-barrier-or-rollback-proof')
+            for address in anchors:
+                with self.subTest(label=label, address=hex(address)), self.assertRaisesRegex(ValueError, 'structural'):
+                    collector.verify_consumers(transcript({address: ('nop', '')}), label, start, end)
+            with self.assertRaisesRegex(ValueError, 'unreviewed'):
+                collector.verify_consumers(text, label, start, end+4)
+            with self.assertRaisesRegex(ValueError, 'bounds'):
+                collector.verify_consumers(text+text.splitlines()[0]+'\n', label, start, end)
+            with self.assertRaisesRegex(ValueError, 'bounds'):
+                collector.verify_consumers('\n'.join(text.splitlines()[:-1]), label, start, end)
+
+    def test_registry_consumers_catalog_includes_project_tls_and_registry_paths(self):
+        names = ('FLT_FilterRegistryD2', 'FLT_FilterRegistryUpdateEffectFromPrefs',
+                 'FLT_FilterRegistryReplaceByNewerFilter',
+                 'FLT_FilterRegistryGetAllEffectSettingsForPluginManager',
+                 'FLT_ScBeginProjectRead', 'FLT_ScBeginProjectWrite')
+        text = '\n'.join('external '+name for name in names)+ '\nexternal PLUG_Search\n'
+        selected = collector.select_symbols(text, 'registry-consumers')
+        for name in names:
+            self.assertIn(name, selected)
+        self.assertNotIn('PLUG_Search', selected)
+
     def test_registry_catalog_contains_notifier_counter_and_wrapper_symbols(self):
         names = ('__ZN15FLT_RenderState12RenderScoperD1Ev',
                  '__ZN15FLT_RenderState29CreateScoper_RenderingEffectsEv',

@@ -28,6 +28,22 @@ WINDOWS = {
     "PLUG": (0x8A6C, 0x9028),
 }
 REVIEWS = {
+    "registry-consumers": (
+        ('registry-dtor', 'FLT', 0x46cc, 0x4918),
+        ('prefs-update', 'FLT', 0x5480, 0x5854),
+        ('registry-replace', 'FLT', 0x5854, 0x5c34),
+        ('registry-missing', 'FLT', 0x5c34, 0x606c),
+        ('settings-get', 'FLT', 0x7448, 0x7aec),
+        ('settings-owner-release', 'FLT', 0x7aec, 0x7b4c),
+        ('settings-all', 'FLT', 0x7b4c, 0x80a8),
+        ('registry-pair-release', 'FLT', 0x80a8, 0x8138),
+        ('settings-update', 'FLT', 0x8138, 0x8840),
+        ('project-write-start', 'FLT', 0x31da0, 0x31e58),
+        ('project-write-reset', 'FLT', 0x31e88, 0x31ed8),
+        ('project-write-end', 'FLT', 0x31ed8, 0x31f38),
+        ('project-read-start', 'FLT', 0x31fc8, 0x32080),
+        ('project-read-end', 'FLT', 0x320b0, 0x32214),
+    ),
     "registry-transaction": (
         ('AE-init-iterator', 'aelib', 0x61134, 0x61fe8),
         ('AE-resource-caller', 'aelib', 0x63914, 0x63aa0),
@@ -228,6 +244,7 @@ FILE_ONLY_INPUTS = {
 }
 INPUTS.update(FILE_ONLY_INPUTS)
 SYMBOL_WANTED = {
+    'registry-consumers': re.compile(r'(FLT_FilterRegistry|FLT_ScBeginProject(Read|Write))'),
     'registry-transaction': re.compile(r'(InitIterator|Egg_PlugSearch|FLT_FilterRegistry|'
                                        r'RenderState.*(Scoper|ActivelyRendering)|GetNumThreadsRenderingEffects|'
                                        r'FLT_NotifyFilterLoadingDone)'),
@@ -1948,6 +1965,201 @@ REGISTRY_ANCHORS = {
     },
 }
 
+# Exact pinned FLT consumer/mutation/TLS paths. File evidence only.
+CONSUMER_ANCHORS = {
+    'registry-dtor': {
+        0x46ec: ('add', 'x20,x0,#0x50'),
+        0x4700: ('bl', '0xa6d44'),
+        0x4740: ('bl', '0x9a258'),
+        0x47fc: ('str', 'x22,[x19,#0x38]'),
+        0x480c: ('bl', '0x15664'),
+        0x4820: ('bl', '0xa6d50'),
+        0x4828: ('bl', '0xa6798'),
+        0x48b8: ('bl', '0x15664'),
+        0x48c4: ('bl', '0x15664'),
+        0x48e4: ('ret', ''),
+        0x48f4: ('bl', '0xa6d50'),
+    },
+    'prefs-update': {
+        0x549c: ('add', 'x20,x0,#0x50'),
+        0x54bc: ('bl', '0xa6d44'),
+        0x54cc: ('blr', 'x8'),
+        0x5638: ('blr', 'x8'),
+        0x5648: ('bl', '0x60cc'),
+        0x5684: ('bl', '0x11ba4'),
+        0x56ac: ('bl', '0xa5a78'),
+        0x56b4: ('cbnz', 'w0,0x578c'),
+        0x56f8: ('bl', '0xa5b8c'),
+        0x5700: ('cbnz', 'w0,0x57ac'),
+        0x572c: ('bl', '0x5e114'),
+        0x5770: ('bl', '0xa6d50'),
+        0x5788: ('ret', ''),
+        0x57a4: ('bl', '0xa71dc'),
+        0x57c4: ('bl', '0xa71dc'),
+        0x5804: ('bl', '0x498c'),
+        0x582c: ('bl', '0x498c'),
+        0x5850: ('bl', '0xa5820'),
+    },
+    'registry-replace': {
+        0x587c: ('add', 'x22,x0,#0x50'),
+        0x589c: ('bl', '0xa6d44'),
+        0x58c8: ('stp', 'x10,x9,[x8]'),
+        0x58f0: ('blr', 'x8'),
+        0x5924: ('blr', 'x8'),
+        0x5a30: ('bl', '0x11af4'),
+        0x5ab0: ('bl', '0x15970'),
+        0x5b50: ('stp', 'x9,x8,[x22,#0x38]'),
+        0x5bac: ('strh', 'w8,[x9,#0x218]'),
+        0x5bb8: ('bl', '0x5480'),
+        0x5bc8: ('bl', '0xa6d50'),
+        0x5c04: ('bl', '0x498c'),
+        0x5c30: ('bl', '0xa5820'),
+        0x5a44: ('bl', '0xa6d50'),
+    },
+    'registry-missing': {
+        0x5c5c: ('add', 'x22,x0,#0x50'),
+        0x5c7c: ('bl', '0xa6d44'),
+        0x5c8c: ('bl', '0x4c4c'),
+        0x5df4: ('bl', '0x15bd0'),
+        0x5e1c: ('bl', '0x993a4'),
+        0x5ea0: ('str', 'x8,[x19,#0x38]'),
+        0x5eb8: ('str', 'x22,[x10]'),
+        0x5ec4: ('str', 'x20,[x8,#0x8]'),
+        0x5f44: ('ldrh', 'w8,[x8,#0x218]'),
+        0x5f48: ('strh', 'w8,[x22,#0x218]'),
+        0x5ff4: ('bl', '0xa6d50'),
+        0x6010: ('ret', ''),
+        0x6034: ('bl', '0x4918'),
+        0x603c: ('bl', '0x498c'),
+        0x6044: ('bl', '0xa5820'),
+    },
+    'settings-get': {
+        0x7488: ('bl', '0xa7158'),
+        0x74b4: ('bl', '0xa7158'),
+        0x74cc: ('str', 'x0,[x19,#0x8]'),
+        0x74dc: ('blr', 'x8'),
+        0x7650: ('bl', '0x60cc'),
+        0x7688: ('bl', '0x11ba4'),
+        0x77e0: ('bl', '0xa5a78'),
+        0x77e8: ('cbnz', 'w0,0x79f0'),
+        0x7820: ('bl', '0xa5b8c'),
+        0x7828: ('cbnz', 'w0,0x7a10'),
+        0x7958: ('strb', 'w8,[x23,#0x98]'),
+        0x796c: ('bl', '0x5e138'),
+        0x79b8: ('ret', ''),
+        0x7a08: ('bl', '0xa71dc'),
+        0x7a28: ('bl', '0xa71dc'),
+        0x7ae0: ('bl', '0x7aec'),
+    },
+    'settings-owner-release': {
+        0x7b0c: ('ldaddal', 'x9,x8,[x8]'),
+        0x7b30: ('blr', 'x8'),
+        0x7b38: ('bl', '0xa7020'),
+        0x7b48: ('ret', ''),
+    },
+    'settings-all': {
+        0x7b78: ('add', 'x22,x0,#0x50'),
+        0x7b98: ('bl', '0xa6d44'),
+        0x7c04: ('ldadd', 'w9,w8,[x8]'),
+        0x7c28: ('bl', '0x7448'),
+        0x7ca4: ('stp', 'x22,x8,[x1,#0x20]'),
+        0x7cc0: ('str', 'x1,[x27]'),
+        0x7ce8: ('str', 'x8,[x20,#0x10]'),
+        0x7e20: ('ldadd', 'w9,w8,[x8]'),
+        0x7e44: ('bl', '0x7448'),
+        0x7ec0: ('stp', 'x22,x8,[x1,#0x20]'),
+        0x7edc: ('str', 'x1,[x27]'),
+        0x7f04: ('str', 'x8,[x20,#0x10]'),
+        0x7fe0: ('bl', '0xa6d50'),
+        0x8000: ('ret', ''),
+        0x802c: ('bl', '0x498c'),
+        0x8074: ('bl', '0x498c'),
+        0x809c: ('bl', '0x498c'),
+        0x80a4: ('bl', '0xa5820'),
+    },
+    'registry-pair-release': {
+        0x80c8: ('ldaddal', 'w9,w8,[x8]'),
+        0x80e0: ('blr', 'x8'),
+        0x80ec: ('ldaddal', 'w9,w8,[x8]'),
+        0x8104: ('blr', 'x8'),
+        0x811c: ('bl', '0xa6948'),
+        0x812c: ('ret', ''),
+    },
+    'settings-update': {
+        0x8160: ('add', 'x21,x0,#0x50'),
+        0x8180: ('bl', '0xa6d44'),
+        0x841c: ('ldadd', 'w28,w8,[x8]'),
+        0x8454: ('blr', 'x8'),
+        0x8604: ('bl', '0x62b4'),
+        0x8640: ('bl', '0x5480'),
+        0x871c: ('bl', '0xa5958'),
+        0x8724: ('cbnz', 'w0,0x8764'),
+        0x8734: ('bl', '0xa6d50'),
+        0x8754: ('ret', ''),
+        0x877c: ('bl', '0xa71dc'),
+        0x8818: ('bl', '0x498c'),
+        0x883c: ('bl', '0xa5820'),
+    },
+    'project-write-start': {
+        0x31db8: ('strb', 'w8,[x0]'),
+        0x31ddc: ('add', 'x20,x20,#0xd20'),
+        0x31de4: ('bl', '0xa6420'),
+        0x31df4: ('add', 'x1,x1,#0x124'),
+        0x31e10: ('b', '0xa642c'),
+        0x31e1c: ('ret', ''),
+        0x31e54: ('bl', '0xa71dc'),
+    },
+    'project-write-reset': {
+        0x31e98: ('add', 'x0,x0,#0xd20'),
+        0x31e9c: ('bl', '0xa6420'),
+        0x31eac: ('bl', '0xa6420'),
+        0x31ebc: ('bl', '0x174f0'),
+        0x31ec4: ('str', 'xzr,[x19,#0x10]'),
+        0x31ed4: ('ret', ''),
+    },
+    'project-write-end': {
+        0x31ef0: ('strb', 'wzr,[x19]'),
+        0x31ef8: ('add', 'x20,x20,#0xd20'),
+        0x31f00: ('bl', '0xa6420'),
+        0x31f20: ('bl', '0xa642c'),
+        0x31f30: ('ret', ''),
+    },
+    'project-read-start': {
+        0x31fe0: ('strb', 'w8,[x0]'),
+        0x32004: ('add', 'x20,x20,#0xd28'),
+        0x3200c: ('bl', '0xa6420'),
+        0x3201c: ('add', 'x1,x1,#0x130'),
+        0x32038: ('b', '0xa642c'),
+        0x32044: ('ret', ''),
+        0x3207c: ('bl', '0xa71dc'),
+    },
+    'project-read-end': {
+        0x320e4: ('strb', 'wzr,[x19]'),
+        0x320ec: ('add', 'x0,x0,#0xd28'),
+        0x320f0: ('bl', '0xa6420'),
+        0x32100: ('bl', '0xa6420'),
+        0x32168: ('bl', '0xa5cc4'),
+        0x321a0: ('add', 'x20,x20,#0xd28'),
+        0x321a8: ('bl', '0xa6420'),
+        0x321c8: ('bl', '0xa642c'),
+        0x321fc: ('ret', ''),
+        0x32210: ('bl', '0xa5820'),
+    },
+}
+
+def verify_consumers(text, label, start, end):
+    require(any((row[0], row[2], row[3]) == (label, start, end)
+                for row in REVIEWS['registry-consumers']), 'unreviewed registry consumer window')
+    count = validate_disassembly(text, start, end)
+    rows = {int(address, 16): (op, re.sub(r'\s+', '', args.split(';')[0]))
+            for address, op, args in re.findall(
+                r'^.*\[0x([0-9a-fA-F]+)\]\s+<[^>]*>:[ \t]+(\S+)[ \t]*([^\n]*)', text, re.M)}
+    anchors = CONSUMER_ANCHORS[label]
+    require(all(rows.get(a) == v for a, v in anchors.items()), 'registry consumer structural anchors differ')
+    return {'decoded_instructions': count, 'structural_anchors': len(anchors),
+            'claim': 'file-only-no-global-barrier-or-rollback-proof'}
+
+
 def verify_registry_transaction(text, label, start, end):
     require(any((row[0], row[2], row[3]) == (label, start, end)
                 for row in REVIEWS['registry-transaction']), 'unreviewed registry transaction window')
@@ -2333,6 +2545,7 @@ def main():
         entry = {}
         isolation = {}
         registry_transaction = {}
+        registry_consumers = {}
         for name in names:
             path, _ = INPUTS[name]
             nm, nm_err = run_tool(["/usr/bin/nm", "-arch", "arm64", "-n", "-m", str(path)])
@@ -2356,6 +2569,8 @@ def main():
                 dispatch[label] = verify_dispatch(disassembly, label, start, end)
             if args.review == 'provider-factory':
                 retention[label] = verify_retention(disassembly, label, start, end)
+            if args.review == 'registry-consumers':
+                registry_consumers[label] = verify_consumers(disassembly, label, start, end)
             if args.review == 'registry-transaction':
                 registry_transaction[label] = verify_registry_transaction(disassembly, label, start, end)
             if args.review == 'provider-isolation':
@@ -2432,6 +2647,14 @@ def main():
             "inputs": outputs,
             "data_windows": data_outputs,
         }
+        if args.review == 'registry-consumers':
+            record['registry_consumer_evidence'] = registry_consumers
+            record['native_registration_ABI'] = 'UNKNOWN'
+            record['actual_receiver_lifetime'] = 'NOT OBSERVED'
+            record['project_scope'] = 'THREAD-LOCAL-NOT-GLOBAL-EXCLUSION'
+            record['host_wide_publication_lease'] = 'NOT PROVEN'
+            record['failure_atomicity_and_safe_rollback'] = 'NOT PROVEN'
+            record['registration_apply_render'] = 'NOT RUN'
         if args.review == 'registry-transaction':
             record['registry_transaction_evidence'] = registry_transaction
             record['native_registration_ABI'] = 'UNKNOWN'
