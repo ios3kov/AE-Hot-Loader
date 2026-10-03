@@ -17,30 +17,38 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
-## PICA preparation — six steps complete, real AE diagnostic pending
+## PICA live diagnostic — all eight pass steps complete, registration open
 
-Code/test source **f21064a5ea0e9dc41828987d365d18f8687515e2**; rules v8.0.0 / 132b7cd.
-Separate public-suite availability/adapter enumeration helper implemented and
-built against the exact supplied SDK. Build **pica-1840ac76ef3b**, final binary
-SHA-256 `e80e5875033d13e2d43922cc852092ddb2bc056733f5dd91215287852f13066b`.
-Build/sign/exports/identity/inert/refusal checks PASS. Local regression **399
-Python/no skips, 62 Node, 22 stages PASS**, independently verified ZIP/source/SDK.
-Research CI [37122917227](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37122917227)
-and macOS CI [37122917217](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37122917217)
-completed/success at exact f21064a. Bounded review completed, raw static exit 1
-retains sole reviewed local argparse false positive. Both CIs are offline/build
-proof, not AE runtime. [Acceptance reconciliation, exact packet and receipts](PICA_AVAILABILITY_REVIEW_2026-10-03.md).
+User replied “продолжай” to the concrete one-shot request. AE was verified closed
+before installing only the identified **pica-1840ac76ef3b** helper and launching
+one controlled session. Actual code source **f21064a5ea0e9dc41828987d365d18f8687515e2**,
+AE 25.6x101 arm64, PID **14298**, start **1791030995.377505**; final binary SHA-256
+`e80e5875033d13e2d43922cc852092ddb2bc056733f5dd91215287852f13066b`.
+One exact request **COMPLETE**, independently reverified. All four PICA providers
+available: Plug-ins rev4/rev6, Access rev3, Adapters rev3, error 0 each.
+Complete global adapter list: only **Sweet Pea 2 Adapter v1**, the SDK's standard
+PICA adapter. No separately identified ordinary-effect adapter observed in this
+list; no broad absence/impossibility claim. Project/registry/identity unchanged:
+blank clean idle revision 1, **786** effects; **1409** images byte-identical.
+[PICA result, acceptance and exact receipts](PICA_AVAILABILITY_REVIEW_2026-10-03.md).
 
-PICA-01–06 complete; PICA-07/08 NOT RUN, requiring fresh authorization for this
-identified potential-load public diagnostic and a currently fully closed host
-before installing/launching the sole new owned helper/session. Historical one-shot
-scopes remain consumed. No installation, AE launch/read/call, merge or release.
-Actual suite/adapter availability UNKNOWN; backend NOT READY, registration/apply/
-render NOT RUN. A/B/C1/C2/D/release obligations and product contract retained.
-Next: one authorized exact-packet availability diagnostic; preserve partial data
-on refusal/hang, then assess ordinary-effect adapter/publication bridge from real
-results. Cleanup preserves identified build/evidence, installed/SDK/historical/
-unknown materials. Documentation-only closeout is distinct from tested f21064a.
+PICA-01–06 preparation completed; PICA-07 scoped live observation PASS; PICA-08
+interpretation complete. Old and this new one-shot authority consumed; no replay.
+Preparation regression remains **399 Python/no skips, 62 Node, 22 stages PASS**;
+research CI 37122917227 and macOS CI 37122917217 success at exact f21064a. These
+are preparation receipts, not checks rerun for the doc-only runtime closeout.
+Actual AE/helper loading is separately verified, not full release certification.
+
+Next: bounded public PICA plug-in inventory correlation with known ordinary-effect
+files; review exact revision-6 file-spec/CFURL lifetime first. No native packet or
+renewed live scope for that different operation. FindPluginProperty may send a
+message/modify properties, so it is excluded from assumed passive name lookup.
+Backend NOT READY; registration/apply/render NOT RUN. NO-GO for AddPlugin/private
+publication until ordinary-effect bridge/ownership/admission/drain/failure are
+established. A/B/C1/C2/D/release obligations and original product contract retained.
+No private call, ordinary scan, unload, restart, merge or release. Cleanup preserves
+identified installed inert/consumed helper and session pending closed-host cleanup,
+other plugins/SDK/historical evidence. No forced termination or removal while loaded.
 
 ## Current combined hypothesis pass — offline checks complete, runtime open
 

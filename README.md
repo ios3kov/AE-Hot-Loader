@@ -48,11 +48,12 @@ That consumed one-shot gate must not be repeated. Subsequent identified C1
 read-only diagnostics are also historical and their one-shot scopes are consumed.
 Current C1 research compares PICA, single-effect publication and a stable shell,
 including possible combinations; see [hypothesis review](docs/HYPOTHESES_REVIEW_2026-10-03.md).
-The next PICA availability diagnostic has a separate identified public-suite helper
-and one-shot observer; [packet/contracts](docs/PICA_AVAILABILITY_REVIEW_2026-10-03.md).
-Its preparation does not install or run AE. Suite acquisition may load modules;
-actual availability/adapter enumeration requires the newly scoped live operation.
-The old no-new-image gate and consumed one-shot scopes do not cover that operation.
+The identified PICA availability diagnostic completed in AE 25.6:
+all four requested suite revisions are available; the complete global adapter list
+contains only the standard **Sweet Pea 2 Adapter v1**. Project/effect registry and
+loaded image inventories stayed unchanged. [Actual result and exact evidence](docs/PICA_AVAILABILITY_REVIEW_2026-10-03.md).
+This confirms PICA access, not ordinary-effect registration. Its one-shot scope is
+consumed; a new inventory/publication experiment needs its own reviewed packet.
 A safe ordinary-effect registration adapter remains BLOCKED on provider ownership,
 continuous host-wide exclusion and complete publication/failure semantics.
 Current-candidate late registration/apply/render are NOT RUN. Historical scope

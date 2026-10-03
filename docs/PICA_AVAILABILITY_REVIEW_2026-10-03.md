@@ -1,4 +1,4 @@
-# PICA availability diagnostic — bounded preparation
+# PICA availability diagnostic — preparation and live result
 
 Date: 2026-10-03. Stage C1 research; Development preparation for a scoped
 Validation diagnostic. Rules v8.0.0 / `132b7cd32873ba7328e3128ffbb33e1929b74d45`.
@@ -7,6 +7,100 @@ User approved the eight-step proposal; [acceptance mapping](PRODUCTION_PLAN.md)
 was written before implementation. The first six steps prepare/check the packet;
 steps seven/eight require a separately authorized real AE diagnostic/result.
 No change to the original arbitrary ordinary-effect registration goal.
+
+## Current result — PICA-07/08 completed on the exact candidate
+
+After the concrete packet/permission request, the user's direct reply
+“продолжай” authorized this stated install/one-launch/public snapshot/PICA
+availability/adapter-enumeration operation. AI_ENTRYPOINT §4.1 applies the reply
+within that exact proposed scope; the permission did not originate from a manifest
+or old checkpoint. Main AE process was verified absent before installation and
+again before launch. Other matching background brokers/crash reporters were
+preserved. No active-user-process termination or existing project reset.
+
+Candidate source **f21064a5ea0e9dc41828987d365d18f8687515e2**; documentation baseline
+`6094f9a2cd7b7d807c573849889f92f92b5da4a2`. The difference is documentation only;
+source/build/manifest/final binary identities above/below are unchanged.
+Actual Build **pica-1840ac76ef3b**, final binary
+`e80e5875033d13e2d43922cc852092ddb2bc056733f5dd91215287852f13066b`.
+One controlled AE 25.6x101 arm64 launch, PID **14298**, start **1791030995.377505**;
+run `pica-availability-d320f17bf29f496893a345a19c1cee13`.
+Installed file inventory/sign verification PASS; preexisting MediaCore entry
+identities/modes preserved. Startup readiness matched exact loaded helper/source,
+module, process and run. One request published; no replay/restart.
+
+| Requested observation | Actual result |
+|---|---|
+| SP Plug-ins Suite rev4 | AcquireSuite error 0; provider present |
+| SP Plug-ins Suite rev6 | AcquireSuite error 0; provider present |
+| SP Access Suite rev3 | AcquireSuite error 0; provider present |
+| SP Adapters Suite rev3 | AcquireSuite error 0; provider present |
+| Complete global adapter enumeration | One entry: **Sweet Pea 2 Adapter**, version **1**; documented NULL end observed, owned iterator deleted once |
+| Project/registry/host baseline | Same exact PID/start/module/source, blank unsaved clean idle project revision **1**, **786** effect identities before/after |
+| Loaded images | **1409** before/after, byte-identical image inventories; additions **0** |
+| Native terminal + independent observer | **COMPLETE**, independently reverified exact request/claim, every required stage, terminal/result and original evidence hashes |
+| Ordinary-effect registration / apply / render | **NOT RUN**; no mutation APIs were invoked |
+
+PICA-07 **PASS for the scoped availability diagnostic**, actual AE loading of this
+identified local helper observed. This is not full product/release MAC-001 pass.
+PICA-08 **complete**: the actual provider is available, but an ordinary-effect
+publication bridge remains unverified. Runtime authority is now consumed.
+Prep builder manifest intentionally remains immutable (its installation/launch
+fields describe build time); actual setup/runtime are separate identified receipts.
+
+Primary SDK interpretation: `Headers/SP/SPInterf.h:62-65` defines
+`kSPSweetPea2Adapter` and version 1 for PICA version 2.
+`SPAdapts.h:267-276` distinguishes that adapter from application legacy adapters;
+`SPInterf.h:97-100` limits generic PICA messages to PICA plug-ins, with a separate
+adapter interface needed for non-PICA targets. Therefore the one enumerated entry
+is the standard PICA adapter. **No separately identified ordinary-AE-effect adapter
+was observed in this complete global list for this exact host/session.** This
+neither proves all possible bridges absent nor justifies treating PF_Cmd-style
+ordinary effects as PICA-message plug-ins or guessing adapterInfo/opaque casts.
+
+Combination decision: **NO-GO for AddPlugin/AddXPlatPlugin/AcquirePlugin or direct
+ordinary-effect publication now**. Suite availability alone does not establish
+owned AE registration receivers, lifecycle conversion, continuous admission/drain,
+completion/error/rollback contracts. PICA + private publication remains conditional
+on those contracts; PICA + preinstalled shell still requires initial registration;
+three-way combination has no accepted safe native design. Original product goal,
+A/B integration, C1 publication, C2 apply/render, D compatibility/hardening and
+release obligations remain open. No universal loader or impossibility claim.
+
+Next discriminator: review and prepare bounded **public PICA plug-in inventory
+correlation** with known startup-registered ordinary-effect files. The SDK declares
+NewPluginListIterator(NULL)/NextPlugin/DeletePluginListIterator and GetPluginAdapter;
+rev6 GetPluginXplatFileSpec requires its exact XPlatFileSpec/CFURL ownership review.
+Actual list contents/correlation are NOT RUN. Avoid FindPluginProperty: its documented
+fallback can send a message and modify a property list (SPPlugs.h:492-499), so it is
+not an assumed passive name getter. No AddPlugin/AddAdapter, AcquirePlugin, global
+list free, messaging, private access or registration without a newly reviewed,
+identified packet and its actual applicable authority. This is the next research
+question, not an approved executable design or renewed live scope.
+
+Evidence retained in ignored private `build-ae-hot-loader/pica-1840ac76ef3b/`:
+
+- `control/external-result.json`: SHA-256
+  `0e4933a74a6739e2a41c9dbdfbfee7cf926f237201c323724b8c4b7c52df997c`.
+- `live-verification.json`: SHA-256
+  `dbdf5b24289da284e7d43b8284b3d8def3bdec9905068519c1748c978a1cbeb0`.
+- `pica-live-private.zip`: 30 members, CRC checked, SHA-256
+  `eb04fb9f70627c1221cbe0437cd643ee7849395dfa7900a8d9e63833bab9b841`.
+  Private original transport includes its consumed token; not uploaded or committed.
+- Before/after project/registry payloads equal; images-0/images-1 SHA-256 both
+  `786e3510f8bd35638d9e4448f593b1b4b3875d08d27a0318e7aca55e118e598f`.
+  Terminal SHA-256
+  `e4e66a2db563dfe32f73fb17825676fa9d18bece0aee9f07e5840bf93b9e5d39`.
+
+No code/build input changed. Prior exact-source 399 Python/no skips, 62 Node,
+22 local stages and both CI success remain the preparation receipts; they are
+not reported as tests rerun for this documentation closeout. Actual runtime is
+separate evidence above. Repository links/whitespace and final branch state are
+checked at closeout. No merge/release, private call, scan, unload, preference or
+security change. Cleanup: do not remove the loaded helper or terminate a session
+that may become user-owned; keep the identified installed helper inert/consumed
+and preserve all receipts/SDK/other plugins. Normal session exit and guarded
+removal of only the exact owned helper remain pending closed-host cleanup.
 
 ## Primary API inventory and ownership
 
@@ -88,7 +182,7 @@ Cleanup review: retain existing installed helpers, SDK, user sessions and histor
 or unknown evidence. New build/evidence stays in ignored owned private workspace;
 no third-party/root cleanup. No merge, release or installable handoff.
 
-## Identified packet — prepared, no live operation authorized/executed
+## Identified packet — historical pre-run scope at 6094f9a
 
 Code/test source **f21064a5ea0e9dc41828987d365d18f8687515e2**, clean when built
 and tested. Build **pica-1840ac76ef3b**; run
@@ -135,7 +229,7 @@ CI reconciliation follows below; PICA-07/08 remain NOT RUN until live prerequisi
 and actual operation permission. Prepared packet is not a release or ordinary
 registration proof. Doc-only closeout is distinct from the tested code identity.
 
-## PICA-06 exact-source CI and final reconciliation
+## Preparation reconciliation at 6094f9a — before live authorization
 
 [Research CI 37122917227](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37122917227)
 completed/success, panel-contract and native-syntax jobs success.

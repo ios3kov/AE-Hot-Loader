@@ -12,6 +12,25 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## PICA-07/08 runtime closeout — original product obligations retained
+
+All eight scoped pass tasks completed at identified code/helper source f21064a:
+PICA-01–06 preparation receipts unchanged; PICA-07 actual AE diagnostic **PASS**;
+PICA-08 interpretation complete. Human reply “продолжай” authorized the specific
+packet; closed-host guards/install/hash/sign/readiness passed. One AE launch and
+request, no retry. Four requested suites available (error 0), complete global list
+contains only standard Sweet Pea 2 Adapter v1. Same blank revision-1 project,
+786 effect identities and 1409 loaded images before/after. Actual AE registration,
+apply/render remain NOT RUN; no separately identified ordinary-effect bridge.
+[Detailed live acceptance/receipts/combination decision](PICA_AVAILABILITY_REVIEW_2026-10-03.md).
+Current one-shot permission consumed; next public plug-in inventory correlation
+needs exact file-spec/lifetime review and a separately prepared applicable packet.
+No existing acceptance deferred or weakened; backend NOT READY, A/B/C1/C2/D/release
+open. Cleanup retains identified loaded inert helper/session/evidence until safe
+closed-host ownership checks; no forced quit/removal, third-party or SDK changes.
+Tables and scope below preserve the pre-run checkpoint; this section supersedes
+their pending PICA-07/08 state without rewriting historical evidence.
+
 ## PICA availability diagnostic — eight-step acceptance before implementation
 
 2026-10-03; user approved the proposed six preparation steps and two conditional
