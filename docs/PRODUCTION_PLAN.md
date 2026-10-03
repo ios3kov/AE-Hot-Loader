@@ -12,6 +12,37 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## Existing factory and code lifetime — eight-block pass
+
+2026-10-03 continuation, baseline clean147761b0755da43f1008baf6a34a064a8513ce31.
+Stage C1 Development research; rules8.0.0 /132b7cd32873ba7328e3128ffbb33e1929b74d45,
+AI_ENTRYPOINT first; native ownership Critical. API-SOURCE/thread/ownership,
+meaningful refusal regression, exact source/Evidence, task-close and cleanup apply.
+SDK25.6_61 inventory reused; no new Adobe API call. Original product and all
+A/B/C1/C2/D/release obligations remain retained. Actual AE adapter remains BLOCKED
+until private ABI/lifetime/late-host admission/drain/whole-effect rollback suffice.
+
+| ID | Task / observable acceptance | Check / dependency |
+|---|---|---|
+| LEASE-01 | Review existing-only branch and initialization side effects | Reuse retained complete43944–43c0c original-file body after archive/pin/raw-byte verification; false skips factory allocation, but guards/locks/atexit can still mutate |
+| LEASE-02 | Record return/retention boundary and gaps | x8 output24 bytes, weak lock then retained result, cleanup before mutex unlock; no Adobe C++ ownership reconstruction or supported-ABI claim |
+| LEASE-03 | Implement continuous resident code ownership | Main-thread RAII RTLD_NOLOAD lease of an already resident exact-pinned image, exact exports/UUID, no absent load; release reference before module handle |
+| LEASE-04 | Implement non-creating owned acquisition contract | Repo-owned explicitly declared C ABI returning opaque owner/object/generation24-byte result; no private Adobe symbol/profile accepted or call made |
+| LEASE-05 | Prove real cross-module lifetime | Fresh owned dylib creates fixture explicitly; absent/expired acquire creates nothing; last original strong owner dropped, moved lease still usable, final destruction exactly once while code resident |
+| LEASE-06 | Refuse bad source/ABI/reference/thread | TDD/fresh wrong-version and malformed-result native modules, changed bytes, wrong UUID/export, wrong thread before callback; balanced cleanup without guessed layout |
+| LEASE-07 | Run complete exact candidate checks | Full runner, ASan/UBSan owned stand, raw scanner + manual finding review, both exact-SHA CI; owned ABI != AE registration/render |
+| LEASE-08 | Reconcile and retain pass | Independent old-capture/raw review, source/ZIP/CI receipts, status/plan/handoff/compatibility updates and ownership-aware cleanup; list every remaining host gate |
+
+No new Adobe body collection initially needed: prior complete classref body and
+retained receiver/transitive evidence cover selected false branch. If a direct
+missing dependency requires additional file capture, record bounded selection first.
+Owned native module/ABI is an isolated research/control implementation, not the AE
+factory ABI or an approved production bridge. The lease proves code residency,
+not host unload permission, main-thread exclusivity, host admission or render drain.
+Only fresh fixture modules/objects may be loaded/created/released in owned test
+processes. No AE launch/attach/install/session read/private invoke/foreign refcount,
+foreign teardown/unload, unchanged scan, main mutation, merge or release.
+
 ## Transitive class factory ownership — eight-block pass
 
 2026-10-03 user “давай снова целый пак шагов в одном прогоне” continues the
