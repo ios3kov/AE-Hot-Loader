@@ -43,6 +43,20 @@ Only fresh fixture modules/objects may be loaded/created/released in owned test
 processes. No AE launch/attach/install/session read/private invoke/foreign refcount,
 foreign teardown/unload, unchanged scan, main mutation, merge or release.
 
+Final reconciliation: [existing-factory/code lifetime](C1_EXISTING_FACTORY_LEASE_2026-10-03.md).
+LEASE-01/02 original false branch/result reviewed independently;03/04 owned
+resident image/reference lease implemented;05/06 real cross-module ownership,
+absence/expiry/move/thread/tamper/error cleanup and ASan/UBSan PASS. At clean
+a9a7f7211f9d2ee2e12cae05600a4dbcb6045e2b:455 Python/no skips,62 Node/22 stages PASS;
+353-source/ZIP/native-artifact/raw original body review PASS. Scanner raw exit1
+retained (local CLI 'verify' false positive),238 supported text/115 unsupported
+types/omissions[], native types separately reviewed/tested. Both exact-source CI
+37141951178/37141951225 completed/success;07/08 bounded evidence/retention/cleanup/
+docs reconciled. Eight-block research scope complete, actual AE adapter BLOCKED,
+registration/apply/render NOT RUN; no original product gate removed or weakened.
+Next: actual retained AE receiver/call/release/thread contract, then late-host
+admission/drain/whole-effect rollback; no foreign operation authorized by owned tests.
+
 ## Transitive class factory ownership — eight-block pass
 
 2026-10-03 user “давай снова целый пак шагов в одном прогоне” continues the

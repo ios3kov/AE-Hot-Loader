@@ -17,6 +17,23 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
+## Existing factory — owned acquisition and code lifetime implemented
+
+[Current lease packet](C1_EXISTING_FACTORY_LEASE_2026-10-03.md): non-creating
+MEE branch reviewed without new Adobe capture; it can still initialize guards/atexit.
+Repo-owned24-byte opaque ABI acquisition and resident-only exact-pinned code lease
+implemented, real native cross-module lifetime/move/absence/expiry/refusal/sanitizer
+tests PASS, release before image close/unload observed on fresh owned fixtures.
+Exact codea9a7f7211f9d2ee2e12cae05600a4dbcb6045e2b:455 Python/no skips,62 Node/22 stages,
+353-source/ZIP/native-artifact/original-byte review PASS; raw scanner1/local-CLI
+false positive retained,238 supported text/115 unsupported types/omissions[];
+native manual/strict compiler/sanitizer coverage separate. Both exact-source CI
+37141951178/37141951225 completed/success. Private evidence/artifacts retained,
+owned clean scanner copy removed; historical/shared/app/SDK/session state untouched.
+Actual AE adapter and full product remain PARTIAL/BLOCKED; owned ABI is not Adobe
+classref ABI. Next real retained acquisition/release/thread contract, then host
+admission/drain/whole-effect rollback. No unchanged scan or private call on this basis.
+
 ## Transitive factory — creation and ownership paths traced
 
 [Transitive review](C1_FACTORY_TRANSITIVE_2026-10-03.md):24 complete pinned dvacore/

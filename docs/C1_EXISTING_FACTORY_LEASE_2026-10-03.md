@@ -93,6 +93,63 @@ never truncates a mapped file, restores original bytes; cleanup still releases t
 originally trusted owner through resident code. Initial missing-header test log was
 not retained; no acceptance claim is based on it.
 
-Full exact candidate checks, scanner, CI and final source/retention reconciliation
-are pending at this implementation checkpoint. Live AE calls/registration/apply/
-render NOT RUN; actual AE adapter BLOCKED by technical contracts above.
+## Exact-source verification and final reconciliation
+
+Tested clean code **a9a7f7211f9d2ee2e12cae05600a4dbcb6045e2b**. Private unified runner
+/private/tmp/AEHL-checks-sqjmfuec.zip SHA **8cc8ef710d2930d89f0f385b50058514265cdd839424033318ba0169a6f50f63**:455 Python/no skips,
+zero failures/errors/expected failures/unexpected successes;62 Node; all22 stages
+PASS. Python79.886 seconds. Independent ZIP CRC/every manifest payload and all353
+Git blob/working source bytes verified, source_unchanged_after=true. Source-proof
+SHA **6ceae6aca0e23a9a5fe72a98eb7c260a635a9a08af1e49f7edc26cfc90d36c29**. No installable AE candidate or runtime result is claimed.
+
+Scanner on fresh clean local Git clone:353 tracked Git/working/copied byte hashes
+equal;238 supported text files,115 unsupported type files, omissions[]; all selected
+checks complete. C++/headers are among unsupported regex types and were separately
+manually reviewed/strictly compiled/executed with ASan/UBSan. Raw exit1 /
+review_required /release_readiness=not_assessed retained; sole candidate
+vibe.no_ratelimit_auth tools/artifact_manifest.py:71 is the local argparse mode
+choice 'verify', no HTTP/auth route/listener. Manual false-positive review, no
+suppression. Raw scanner SHA **c56af1c3b4059af8f1b78b7e367e1da7e1184784f217274d0239d0609fe17ebb**; manual review SHA **7c86d637f8809b1a75141b321ea889cf43e2a4118aac8f8fd56dce4021d95697**.
+
+Research CI [37141951178](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37141951178)
+and macOS CI [37141951225](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37141951225)
+both completed/success at exact tested source above. Linux/macOS own distinct
+platform applicability; local455/no-skips is macOS arm64, not a Linux native claim.
+CI builds/smokes/archives are offline and do not prove AE loading/registration/render.
+
+Separate current raw original-body receipt SHA **7316d3312e3e1e679aeb4ceb4631e98d477d701b2bebc575a978d31018001709**.
+Both separate exact-artifact native and ASan/UBSan stands retain executable/dylib
+bytes, commands, hashes, stdout and unchanged-after results: receipt SHA **2ad03dda7ed68027394abd2fc2daf74781de31e97e35077348258de20639be77**.
+Both observe unload_observed=1 after release→factory destruction; fresh fixture
+modules only, no Adobe image/reference teardown. Owned ABI lifetime is PASS;
+the corresponding actual Adobe ABI/lifetime operation remains BLOCKED/NOT RUN.
+
+Durable private receipts: build-ae-hot-loader/lease-closeout-a9a7f72-koet973k; retained native
+artifacts: build-ae-hot-loader/lease-native-a9a7f72-mba7cscu. RETENTION.json SHA
+**5fb7722f45469a3ba3871ece70a03044b1c73e29dd963cfb974dc318132b5a8d** covers the runner, source proof, independent verifier/receipt,
+raw scanner/manual review, platform sources, compiler/TDD/focused observations,
+CI and cleanup receipt plus exact native artifact hashes. Preliminary compiler
+and runtime FAIL logs preserved; no retrospective PASS applied to those attempts.
+Historical original capture retains its original source identity. Fresh scanner
+clone removed only after clean/no-unique-commit check, complete byte proof and
+retention; ephemeral fixtures cleaned by their own TemporaryDirectory. Retained
+artifacts, original/shared/historical materials, app/SDK/projects/plugins untouched.
+
+| Requirement | Final bounded result / evidence | Remaining dependency |
+|---|---|---|
+| LEASE-01 |178-row original body, all branch/store/nlist/pin/archive checks PASS; false skips creation, guards/atexit still reachable | AE execution NOT OBSERVED |
+| LEASE-02 | x0/x8/result stores and selected lifetime/lock exits documented | Private callable ABI/initial live receiver UNKNOWN |
+| LEASE-03 | Resident-only exact-pin/UUID/export RAII image lease implemented, actual owned cross-dylib code lifetime PASS | Foreign host lifecycle authority/admission not established |
+| LEASE-04 | Explicit owned24-byte opaque reference/version ABI and consumer implemented | Not Adobe InterfaceRef or production bridge |
+| LEASE-05 | Real weak acquisition, absent/expired no creation, ownership moves/destruction and code residency PASS, actual owned unload observed | Actual AE factory acquisition/release NOT RUN |
+| LEASE-06 | Wrong source/UUID/version/export/ref/thread and stale-call refusals PASS; TDD repaired; ASan/UBSan PASS | Trusted owned contract, not hostile-output or AE liveness certification |
+| LEASE-07 |455 Python/62 Node/22 stages, raw scanner/manual review and both exact-source CI reconciled | Full AE registration/apply/render and broader compatibility NOT RUN |
+| LEASE-08 | Source/ZIP/native-artifact/CI/retention/cleanup and current docs reconciled | Original A/B/C1/C2/D/release gates retained OPEN |
+
+Eight blocks close the bounded owned-code/lifetime research packet; full product
+is **PARTIAL**. Actual AE adapter remains BLOCKED: establish the real retained
+receiver and callable acquisition/release/thread contract, then safe late-host
+admission/drain/whole-effect rollback before registration/apply/render. This pass
+does not bypass ResourcePassGate, repeat unchanged scan, merge or release.
+Docs-only closeout must compare every non-document Git blob/working byte against
+the tested code; evidence does not relabel its later documentation SHA as tested.

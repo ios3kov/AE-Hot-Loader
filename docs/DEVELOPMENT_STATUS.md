@@ -12,6 +12,26 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
+## Current checkpoint — existing factory and continuous code lifetime
+
+2026-10-03: eight-block LEASE packet reconciled under rules8.0.0. Tested clean
+code **a9a7f7211f9d2ee2e12cae05600a4dbcb6045e2b**; [checkpoint](C1_EXISTING_FACTORY_LEASE_2026-10-03.md).
+Non-creating MEE branch skips factory allocation/ClassWatcher but can initialize
+guards/atexit and retain/release owners; raw complete-body/source verification PASS.
+Implemented resident-only exact-pin image lease and explicitly declared owned
+factory acquisition lease. Actual fresh native cross-module/ASan/UBSan tests prove
+absent/expired no-create, retained lifetime/moves, release before code close and
+owned unload; stale source/ABI/ref/thread refusals PASS. No Adobe ABI/runtime claim.
+455 Python/no skips,62 Node/22 stages,353-source/ZIP/native-artifact review PASS;
+raw scanner1/review_required retained, local CLI false positive manually reviewed;
+238 supported text/115 unsupported types/omissions[], native manually checked.
+Research CI37141951178/macOS CI37141951225 completed/success at exact tested SHA.
+Private receipts and exact native fixtures retained; only fresh scanner copy removed.
+Bounded packet complete; full product PARTIAL, actual host receiver/ABI/thread and
+admission/drain/rollback BLOCKED, registration/apply/render NOT RUN. Next: actual
+supported retained AE acquisition/release, then host transaction. No unchanged scan,
+foreign lifetime operation, app/SDK/project/plugin mutation, merge or release.
+
 ## Transitive factory — creation and ownership paths traced
 
 [Transitive review](C1_FACTORY_TRANSITIVE_2026-10-03.md):24 complete pinned dvacore/
