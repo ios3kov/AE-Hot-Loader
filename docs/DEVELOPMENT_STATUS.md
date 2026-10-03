@@ -13,7 +13,32 @@ Previous status is preserved at
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
 
-## Current checkpoint — actual factory module object owners
+## Current checkpoint — scoped controls and corrected match-name dependency
+
+2026-10-03 ADM packet continues at exact clean tested/pushed
+**ae5ca5cd30bf3e2aa1538dc3659e4ebe939a8f25**;
+[checkpoint](C1_ADMISSION_CONTRACTS_2026-10-03.md). Typed methods and original
+fields identify PluginImpl+e8 as match-name ImmutableString. This corrects the
+earlier separate-provider interpretation; actual inner string callbacks and full
+host ownership/thread graph remain unobserved.
+
+Exact SDK25.6_61 selected queue/idle/async contracts, GUID-scoped capsule
+cancellation and one-thread resume were reviewed. No continuous host-wide
+registry/dispatch admission or callback/MFR drain provider was established.
+Actual safe initial factory acquisition/private thread contract and complete
+registry/preferences rollback are still required. No AE adapter was connected;
+registration/apply/render without restart NOT RUN.
+
+Fixed six-body/247-instruction collector and exact SDK excerpts/pin added.
+76 focused /471 full Python/no skips,62 Node/all22 stages PASS;367 tracked
+source-byte proof. Independent original eight-window/677-instruction/20-field
+review plus nine historical archive/pin rechecks PASS. Raw scanner1 retained:
+244 text123 unsupported/no omissions, one local CLI false positive reviewed
+without suppression. Evidence retained; fresh owned scanner clone removed.
+Research CI37147989601 /macOS CI37147989620 pending at this checkpoint.
+Original product and all A/B/C1/C2/D/release obligations retained; packet PARTIAL.
+
+## Previous checkpoint — actual factory module object owners
 
 2026-10-03 twelve-task OBJ packet is **PARTIAL**:6 DONE /5 PARTIAL /1 BLOCKED;
 [checkpoint and reconciliation](C1_FACTORY_OBJECT_OWNERS_2026-10-03.md). Bounded file

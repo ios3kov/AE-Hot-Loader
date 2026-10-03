@@ -3,7 +3,8 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [actual factory object owners](C1_FACTORY_OBJECT_OWNERS_2026-10-03.md),
+Current continuation: [scoped admission controls and match-name correction](C1_ADMISSION_CONTRACTS_2026-10-03.md),
+[actual factory object owners](C1_FACTORY_OBJECT_OWNERS_2026-10-03.md),
 [factory dependency lifetime](C1_FACTORY_DEPENDENCY_LIFETIME_2026-10-03.md),
 [native reference call boundary](C1_CLASSREF_CALL_BOUNDARY_2026-10-03.md),
 [registry transaction batch](C1_REGISTRY_TRANSACTION_BATCH_2026-10-03.md),
@@ -20,7 +21,32 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
-## Actual factory object owners — selected chain traced, host trial blocked
+## Scoped controls and corrected match-name dependency — current continuation
+
+Exact clean tested/pushed code ae5ca5cd30bf3e2aa1538dc3659e4ebe939a8f25;
+[ADM checkpoint](C1_ADMISSION_CONTRACTS_2026-10-03.md). PluginImpl+e8 is a
+match-name ImmutableString, established by typed setter/getter and two complete
+string destructors. The earlier separate-provider interpretation below is
+historical; string implementation callbacks/full host ownership still unobserved.
+
+Selected SDK25.6_61 queue/idle/request controls and private GUID cancellation /
+single Mach thread resume do not establish continuous all-reader admission and
+callback/MFR drain. Opaque BEE cancellation completion remains UNKNOWN. Do not
+turn idle, queue pause, cancel return, a zero counter or thread suspension into
+that proof. Actual acquisition/private thread contract and whole-effect recovery
+also remain required. AE adapter/trial BLOCKED, registration/apply/render NOT RUN.
+
+Six new complete bodies/247 instruction anchors with exact SDK excerpts/pin;
+76 focused /471 Python/no skips,62 Node/all22 stages PASS;367 source-byte proof.
+Independent original eight-window/677-instruction/20-field review, nine reused
+archive/pin checks PASS. Raw scanner1 preserved, local CLI false positive reviewed
+without suppression. Original evidence retained; only new owned scan clone removed.
+Both exact-source CI37147989601/37147989620 pending at this checkpoint.
+Next bounded file research can follow the opaque work-queue cancellation target
+and its admission/completion scope; actual wrapper call is not an authorized or
+proved replacement for a host-owned token and recovery boundary.
+
+## Previous actual factory object owners — selected chain traced, host trial blocked
 
 [OBJ checkpoint](C1_FACTORY_OBJECT_OWNERS_2026-10-03.md): twelve-task packet PARTIAL,
 6 DONE /5 PARTIAL /1 BLOCKED. Exact code2b0dbdd04590dcae6cada595ba368b5726f2d288.

@@ -66,6 +66,25 @@ class UnifiedRunTests(unittest.TestCase):
         self.assertEqual(identity['tracked_sha256']['owned.txt'], hashlib.sha256(b'source').hexdigest())
         self.assertTrue(identity['clean'])
 
+    def test_python_suite_budget_does_not_extend_individual_stage_limits(self):
+        def plan(root,work,system):
+            counts = {'status':'PASS','tests_run':1,'skipped':[]}
+            code = 'import pathlib; pathlib.Path(%r).write_text(%r)' % (
+                str(work/'python.json'),json.dumps(counts))
+            return [('python',[sys.executable,'-c',code]),
+                    ('individual',[sys.executable,'-c','pass'])]
+        with mock.patch.object(runner,'stages',side_effect=plan), \
+             mock.patch.object(runner.shutil,'which',return_value=sys.executable), \
+             mock.patch.object(runner,'run_command',wraps=runner.run_command) as commands, \
+             contextlib.redirect_stdout(io.StringIO()):
+            code,archive = runner.run(self.repo,self.output,self.commit)
+        self.assertEqual(code,0)
+        self.assertEqual([call.kwargs.get('timeout') for call in commands.call_args_list],[480,120])
+        with zipfile.ZipFile(archive) as z:
+            report=json.loads(z.read('report.json'))
+        self.assertEqual([step['timeout_seconds'] for step in report['steps']],[480,120])
+        self.assertEqual(report['python_tests']['tests_run'],1)
+
     def test_dirty_source_rejected_without_reset(self):
         (self.repo / 'owned.txt').write_text('keep my changes')
         with self.assertRaises(runner.Blocked):

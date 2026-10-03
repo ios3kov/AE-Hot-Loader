@@ -64,6 +64,28 @@ callback graph/admission/drain/whole-effect rollback still UNKNOWN. Full clean
 candidate runner/raw scanner/original review/both CI pending; adapter/trial
 BLOCKED, registration/apply/render NOT RUN.
 
+Exact local checkpoint ae5ca5cd30bf3e2aa1538dc3659e4ebe939a8f25:76 focused /
+471 full Python/no skips,62 Node/all22 stages PASS;367 tracked-source-byte proof.
+Six new bodies/247 instructions and SDK excerpts retained; independent original
+eight-window/677-instruction/20-field review and nine historical archive/pin
+checks PASS. Raw scanner1 retained,244 text123 unsupported/no omissions;
+local CLI false positive manually reviewed, no suppression. Both exact-source
+CI37147989601/37147989620 pending. Owned scanner clone removed after byte proof;
+original files and retained evidence preserved. Final task reconciliation pending
+CI; actual adapter/trial remains BLOCKED.
+
+ADM-08 scope correction before implementation: Research CI37147989601 native
+job111275777106 FAIL, panel job PASS. Downloaded artifact11283247492 confirms
+aggregate Python timeout120.058s, no Python summary and subsequent stages NOT RUN;
+local complete suite114.341s. Preserve this FAIL and its exact ae5ca5c identity.
+Change only aggregate suite budget to bounded480s, keep individual stage120s,
+per-test native limits/output limits/failfast/owned-process cleanup intact; expose
+stage budgets in the report. Acceptance: real worker evidence/control confirms
+selected aggregate versus individual budget, existing actual timeout/failure
+controls still fail safely, then clean new-source runner/scanner/manual/both CI.
+No repeated AE operation or suppression of the original failure. Original file
+archive may be reused with unchanged collector bytes and historical source.
+
 ## Actual factory object owners and host prerequisites — twelve-task pass
 
 2026-10-03 continuation from clean **4a89b3ffeea929015156f65b32a8bcdc0ef3c637**.

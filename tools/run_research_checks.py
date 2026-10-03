@@ -26,6 +26,10 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 MAX_LOG = 8 * 1024 * 1024
+COMMAND_TIMEOUT_SECONDS = 120
+# The aggregate worker includes hundreds of tests and separately bounded native
+# builds. Its deadline must not be confused with an individual command deadline.
+PYTHON_SUITE_TIMEOUT_SECONDS = 480
 
 
 class Blocked(RuntimeError):
@@ -80,7 +84,7 @@ def source_identity(root, expected=None):
             'inventory_sha256': hashlib.sha256(payload).hexdigest(), 'clean': True}
 
 
-def run_command(argv, root, log, timeout=120, limit=MAX_LOG):
+def run_command(argv, root, log, timeout=COMMAND_TIMEOUT_SECONDS, limit=MAX_LOG):
     """Bound time/output; terminate only this newly created test process group."""
     started = time.monotonic()
     result = {'status': 'FAIL', 'returncode': None, 'log': 'logs/' + log.name}
@@ -246,7 +250,9 @@ def run(root, parent, expected=None):
             if source_identity(root, expected) != identity:
                 raise Blocked('Source changed; remaining stages stopped')
             print('CHECK ' + name, flush=True)
-            result = run_command(command, root, folder / 'logs' / (name + '.log'))
+            budget = PYTHON_SUITE_TIMEOUT_SECONDS if name == 'python' else COMMAND_TIMEOUT_SECONDS
+            record['steps'][index]['timeout_seconds'] = budget
+            result = run_command(command, root, folder / 'logs' / (name + '.log'), timeout=budget)
             record['steps'][index].update(result)
             if name == 'python' and result['status'] == 'PASS':
                 try:
