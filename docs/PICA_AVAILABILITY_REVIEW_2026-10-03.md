@@ -70,8 +70,8 @@ cases. Synthetic providers/processes are explicitly labelled; Linux publication
 transport is synthetic, macOS test uses its real exclusive filesystem primitive.
 AE NOT RUN. No current installation, launch or host read performed.
 
-PICA-05 build/sign/hash/inert checks and PICA-06 full regression/CI/review are
-pending until the identified clean-source candidate is built and checked.
+PICA-05 build/sign/hash/inert and local PICA-06 regression/review are complete
+at the identified clean-source candidate below. CI is reconciled in closeout.
 PICA-07/08 are NOT RUN, pending exact packet prerequisites and live authority.
 The accepted conditional proposal and AI_ENTRYPOINT §4.1 do not renew consumed
 historical one-shot scopes. Actual authorization must include potentially loading
@@ -87,3 +87,92 @@ replacement for the ordinary-effect goal. All A/B/C1/C2/D/release gates retained
 Cleanup review: retain existing installed helpers, SDK, user sessions and historical
 or unknown evidence. New build/evidence stays in ignored owned private workspace;
 no third-party/root cleanup. No merge, release or installable handoff.
+
+## Identified packet — prepared, no live operation authorized/executed
+
+Code/test source **f21064a5ea0e9dc41828987d365d18f8687515e2**, clean when built
+and tested. Build **pica-1840ac76ef3b**; run
+`pica-availability-d320f17bf29f496893a345a19c1cee13`.
+Final binary SHA-256
+`e80e5875033d13e2d43922cc852092ddb2bc056733f5dd91215287852f13066b`.
+Private manifest SHA-256
+`a473c0218e00259056e7f9c75071daaf58c1573f4fd299ba63a8d01cfe915340`.
+Candidate and private manifest/control are under ignored
+`build-ae-hot-loader/pica-1840ac76ef3b/`; 4 bundle files / 74 SDK inputs independently
+rechecked. Exact real-SDK compile, local ad-hoc sign/verify, export set, identity
+getter, inert null/token/wrong-host and resident self/export/changed-hash checks
+**PASS**. Control remains empty; prospective destination absent. No installation.
+
+Proposed sole new installation path:
+`/Users/os3kov/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/AEHLPica1840ac76ef3b.plugin`.
+It must be absent; copy only this identified bundle with AE fully closed. Preserve
+all installed helpers and third-party files. One newly controlled AE 25.6 session,
+no user project ownership assumption, no active-session termination. Its initial
+project must actually be blank/unsaved/clean/nonrendering; restored or nonowned
+project blocks the request, with no reset/discard automation. Exact loaded helper,
+AE executable/PID/start and private readiness must match before publishing once.
+
+Intended operation: public project/effect snapshot; acquire the four exact PICA
+suite revisions (may load modules); enumerate adapter name/version via the public
+iterator if available; snapshot after and preserve image additions, raw error,
+terminal and evidence hashes. No effect registration/application/rendering, scan,
+private call, attach/debugger, preference/security changes, restart/retry or unload.
+Native 10-second cooperative deadline / external 30-second wait; on a hung SDK call
+preserve the process and partial evidence. This preparation does not authorize
+force termination. After completion, session exit/removal of only this owned helper
+requires a closed host and ownership/inventory checks; no existing plugin cleanup.
+
+PICA-05 completed. Local PICA-06 regression **399 Python/no skips, 62 Node,
+22 stages PASS** at exact f21064a; report
+`/private/tmp/AEHL-checks-utsfsheg.zip`, SHA-256
+`18ad13ae6c98e711ee21388d58db798acdb9d489185d9dcabada853977ad1119`.
+ZIP CRC, all 25 member hashes and 320 tracked-source hashes independently verified.
+Bounded static review completed at the same source; raw exit **1**, sole reviewed
+local argparse false positive at tools/artifact_manifest.py:71, no suppression.
+Private scanner SHA-256
+`43a085eb6e8648ff25a3f0524d73180b021fee190bf2b78c2af6488cfb82e675`.
+CI reconciliation follows below; PICA-07/08 remain NOT RUN until live prerequisites
+and actual operation permission. Prepared packet is not a release or ordinary
+registration proof. Doc-only closeout is distinct from the tested code identity.
+
+## PICA-06 exact-source CI and final reconciliation
+
+[Research CI 37122917227](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37122917227)
+completed/success, panel-contract and native-syntax jobs success.
+[macOS CI 37122917217](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37122917217)
+completed/success, build/sign/ABI smoke/package roundtrip success. Both are at
+exact **f21064a5ea0e9dc41828987d365d18f8687515e2**. Research CI runs the portable
+policy/evidence tests; the supplied SDK/helper build is local, not claimed as a
+CI SDK build. Neither CI runs AE or validates hot effect registration.
+Private `ci-review.json` SHA-256: `864495c1a61111c61d63d92f152078ef8c792552a2c9feb8dd53ac7f1bd7b468`.
+`preparation-review.json` SHA-256:
+`10e1ee2ee5a3d6975742606f34b21a6a7fa08dd7bc7d8f8be7828c283db187fd`.
+
+| Requirement/task | Acceptance result | Evidence / retained limit |
+|---|---|---|
+| PICA-01 | PASS for exact public access contract | Local SDK pins and successful provider/callback signature assertions; AE availability UNKNOWN |
+| PICA-02 | PASS for bounded enumeration contract | Exact SDK iterator/getter assertions, owned iterator and bounded names/count; actual adapters UNKNOWN |
+| PICA-03 | PASS for implemented separate one-shot diagnostic | Public helper/build manifest, request/source/runtime/self binding, durable stages; AE NOT RUN |
+| PICA-04 | PASS for owned/synthetic refusal/failure/deadline checks | 23 labelled native cases plus 15 real-file Python cases; not counted twice in 399 total |
+| PICA-05 | PASS for identified candidate prerequisite checks | Clean f21064a, real SDK arm64/sign/exports/getter/inert, final SHA and 4-file inventory; no installation or actual AE load |
+| PICA-06 | PASS for available regression/review/CI/packet/docs | 399 Python/no skips, 62 Node, 22 stages; independently checked ZIP/source/SDK, raw static-review finding retained, both exact-source CI success |
+| PICA-07 | NOT RUN | Fresh live authorization and current fully closed host required before installing this sole new helper/session; baseline checked without resetting a project |
+| PICA-08 | NOT RUN | Depends on actual PICA-07 evidence; no fabricated availability/publication conclusion |
+
+All six preparation tasks are complete. Prepared Validation packet prerequisites
+are distinct from actual host loading and final product acceptance. Public suite
+calls may load modules, so the consumed passive/no-new-image and old diagnostic
+permissions do not cover this new operation. The proposed one-shot scope above
+needs an actual human reply; command-line flags or this checkpoint are not consent.
+[AI_ENTRYPOINT §4.1](https://github.com/ios3kov/AE-Development-Rules/blob/132b7cd32873ba7328e3128ffbb33e1929b74d45/AI_ENTRYPOINT.md#41-продолжение-работы-и-границы-разрешений):
+“Повторно не запрашивать ранее выданное действительное разрешение в том же scope.”
+Here prior one-shot scopes are consumed, and the new request expressly permits
+potential module loading rather than assuming unchanged images.
+
+Final checkpoint: Stage C1, original ordinary-effect goal retained; backend NOT
+READY, registration/apply/render NOT RUN, A/B/C2/D/release obligations open.
+No merge/release/installation/host operation or executable registration adapter.
+Cleanup retains the uniquely identified build and private receipts for the next
+step, all installed/SDK/historical/unknown materials; owned disposable test fixtures
+self-clean only. Documentation-only closeout changes no code/build inputs and
+must not be presented as the code/source identity tested above.

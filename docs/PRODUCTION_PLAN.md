@@ -39,8 +39,15 @@ performed during preparation; prior one-shot scopes are not reusable.
 | PICA-07 | One separately scoped AE availability diagnostic | Conditional: identified packet prerequisites and actual authorization; exact host/project/image/runtime binding, potential suite load explicit |
 | PICA-08 | Interpret real result and combination go/no-go | Conditional on PICA-07; suite/adapter names do not establish ordinary-effect publication |
 
-Results and concrete live scope will be recorded in
+PICA-01–06 complete at code/test source **f21064a5ea0e9dc41828987d365d18f8687515e2**:
+exact SDK build/sign/export/identity/inert PASS, 399 Python/no skips / 62 Node /
+22 local stages PASS, both exact-source CI success. Build pica-1840ac76ef3b;
+independently checked receipts and row-by-row acceptance reconciliation in
 [PICA diagnostic review](PICA_AVAILABILITY_REVIEW_2026-10-03.md).
+PICA-07/08 remain NOT RUN until actual fresh potential-load diagnostic authority
+and current closed-host/baseline prerequisites. No installation/launch/host read.
+Ordinary registration/backend acceptance remains unresolved; no release readiness.
+Documentation-only closeout is distinct from the code/test source above.
 All A/B/C1 registration/C2 apply-render/D/release acceptance stays open. Cleanup
 preserves installed helpers, user sessions, SDK and unknown/historical evidence.
 

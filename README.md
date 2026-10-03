@@ -48,6 +48,11 @@ That consumed one-shot gate must not be repeated. Subsequent identified C1
 read-only diagnostics are also historical and their one-shot scopes are consumed.
 Current C1 research compares PICA, single-effect publication and a stable shell,
 including possible combinations; see [hypothesis review](docs/HYPOTHESES_REVIEW_2026-10-03.md).
+The next PICA availability diagnostic has a separate identified public-suite helper
+and one-shot observer; [packet/contracts](docs/PICA_AVAILABILITY_REVIEW_2026-10-03.md).
+Its preparation does not install or run AE. Suite acquisition may load modules;
+actual availability/adapter enumeration requires the newly scoped live operation.
+The old no-new-image gate and consumed one-shot scopes do not cover that operation.
 A safe ordinary-effect registration adapter remains BLOCKED on provider ownership,
 continuous host-wide exclusion and complete publication/failure semantics.
 Current-candidate late registration/apply/render are NOT RUN. Historical scope
