@@ -46,6 +46,15 @@ third-party plug-ins and historical private evidence. Permission for repository
 edits, owned fixtures, file-only tools, research commit/push/CI comes from the
 accepted pass and prior development context. No main merge or release.
 
+BRIDGE closeout: [metadata review and exact receipts](C1_PLUGIN_METADATA_BRIDGE_2026-10-03.md).
+At clean code source 9e35d1e, 01 reconciliation and 02/03 bounded file/SDK research
+complete, but usable bridge/full invocation contracts BLOCKED. Temporary context
+is destroyed before reviewed GetPiPLs return; callback replay NO-GO. 04 BLOCKED;
+05 research-tool checks PASS (421 Python/no skips, 62 Node/22 stages, actual SDK
+owned control, independent file/archive review), host-experiment checks NOT RUN.
+06 local/review/docs and both exact-source CI completed/success. 07/08 NOT RUN.
+Original product/A/B/C1/C2/D/release retained; no new live operation or scope change.
+
 ## INV-07/08 live closeout — all eight scoped steps complete
 
 Exact human authority “запускай”, normal user Quit “закрыл”, closed-host guards,

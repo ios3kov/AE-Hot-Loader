@@ -102,3 +102,72 @@ metadata callback/context or retrying unchanged PICA cannot meet that gate.
 Cleanup preserves SDK, third-party plugins/projects, previous consumed helper and
 session, historical evidence. Current owned controls/private receipts are retained
 for reproducibility; no loaded-file deletion, shared cleanup or forced termination.
+
+## Clean-source verification closeout
+
+Code/test source **9e35d1ea5820cbf239b787b00a346f35c49a47bb**, clean before and after
+collection/checks. Actual collection: **6 windows / 744 instructions / 139 anchors**,
+all exact PluginSupport input hashes unchanged. Independent verification checks
+15-member ZIP uniqueness/CRC/every payload digest, exact source and scope fields,
+full instruction coverage and original arm64 Mach-O bytes: **109 direct B/BL,
+67 conditional branches, 23 indirect BR/BLR and 8 returns** agree with transcripts.
+This verifies file correspondence, not transitive side effects or live execution.
+
+Local unified runner: **421 Python, no skips / 62 Node / 22 stages PASS**, 332 tracked
+files bound to the exact clean source. Independent ZIP/source-byte checks PASS.
+The 27 nested native policy cases remain one Python test, not added to its count.
+An initial shortened expected-SHA argument was rejected before any check; the
+accepted run used the full SHA. No timeout extension or weakened check.
+
+Actual SDK owned contract: C++17 arm64 `-Werror` compile and **4** owned callback
+cases PASS. Six SDK headers + owned source + selected OS SDKSettings.json pinned
+before/after (8 inputs). SDK declaration hashes: AE_PluginData.h
+`25be4a7620bc1c8fbcde7828304e9a207e9cabd0aaf3060f12c4e15c71ff52ca`, entry.h
+`2ae54d29d4bd28fc55585d7b36dd7bf93046352648bfdb9c10eca0f9905669d4`.
+Owned binary SHA-256 `14d18a8a0914def66b7b8711f8c8b307d53fca937cd2375bd1216bbabd97ad35`.
+Dependency inventory initially refused the unlisted OS SDK settings input;
+explicitly pinning that selected settings file allowed the clean control receipt.
+No SDK modification, stub header or Adobe execution. CI does not have this local
+Adobe SDK control; its own checks remain separately scoped.
+
+Static scanner raw exit **1**, `review_required`: sole known
+`vibe.no_ratelimit_auth`, tools/artifact_manifest.py:71. Independent source review
+confirms local argparse create/verify modes, no network request handler/auth route;
+false positive retained with raw evidence, not suppressed or relabelled exit 0.
+Separate code review checked fixed-mode bounds, exact image/provider pin, full
+coverage/call operand refusals, clean source enforcement, archive integrity and
+report unknowns. No native invocation/profile/gate or product scope changed.
+
+Private receipt locators (not published; no SDK/disassembly/binary in Git):
+
+| Receipt | SHA-256 |
+|---|---|
+| build-ae-hot-loader/resource-plugin-metadata-54cac067-xazeta5_.zip | 437ff6db106adb177217b386495a710fede1393d6febd6fc1a2412f646db21da |
+| same folder / independent-review.json | ff5a9d577fda84bfb4897da4a122674f40a4839419199879d5152f397ee91fce |
+| same folder / owned-sdk-contract.json | faa7b120b5bee77286dfcc1313db643912308501117b754239ffdd958e8575d6 |
+| /private/tmp/AEHL-checks-0zzr6fs5.zip | bc92cc14a4df31d159ab7809365266bd2be045f98063b51ed0d5f0b1bf697a03 |
+| /private/tmp/aehl-metadata-regression-independent.json | 1d3d5e29d7768f5e482ac407ed38f79ed350a3b9b0fba3bfba739588af9629e6 |
+| /private/tmp/aehl-plugin-metadata-9e35d1e-audit.json | bcf4d4b6102298339cc08631e288590170fa4a67ff6c43461d8fa6b484fa9935 |
+
+Exact-source [research CI 37126661037](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37126661037)
+completed/success; [macOS CI 37126661063](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37126661063)
+completed/success, both at exact 9e35d1e. All research jobs and macOS build
+completed/success; native package/owned smoke tests are not live AE certification.
+The following records supersede preparation statements above; historical receipts
+remain unchanged. No live operation in this pass, no merge or release.
+
+| Requirement | Final research status | Outstanding acceptance |
+|---|---|---|
+| BRIDGE-01 | PASS: hypotheses reconciled | Separate old runtime/lifecycle scopes retained |
+| BRIDGE-02 | File research PASS; usable bridge BLOCKED | No ordinary-registry publication contract identified |
+| BRIDGE-03 | SDK/context boundary PASS; invocation contract BLOCKED | Actual owner/admission/drain/completion/failure/rollback |
+| BRIDGE-04 | BLOCKED, executable host experiment NOT RUN | Mechanism/safety prerequisite remains absent |
+| BRIDGE-05 | Research tooling/local SDK checks PASS; host experiment tests NOT RUN | Depends on 04 |
+| BRIDGE-06 | PASS: local checks/review/docs and both exact-source CI completed/success | Runtime/release gates remain independently open |
+| BRIDGE-07 | NOT RUN | Depends on 04 and concrete new live scope |
+| BRIDGE-08 | NOT RUN for live result; file interpretation complete | Depends on 07 |
+
+This is not eight successful host steps. It eliminates unsafe callback replay and
+narrows the missing handoff to the publication owner, while the original product
+remains unimplemented at that boundary. No further unconditional live action is
+justified. Next pass should establish that handoff and its transaction contract.

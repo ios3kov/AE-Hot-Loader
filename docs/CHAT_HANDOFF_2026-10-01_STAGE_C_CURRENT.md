@@ -26,8 +26,11 @@ which is destroyed on normal and exceptional exit. Retaining/replaying this
 context is NO-GO. Callback success and PiPL conversion do not by themselves prove
 ordinary-registry publication; actual transitive targets/receiver/host-wide
 admission/drain/completion/rollback remain unproven. Six file-only windows cover
-744 instructions. New refusal controls and actual SDK owned contract prepared;
-clean-source collection/full checks/exact-source CI pending at this checkpoint.
+744 instructions / 139 anchors at exact clean code source 9e35d1e. Local checks:
+421 Python/no skips, 62 Node/22 stages PASS; actual SDK owned callback control PASS.
+Independent file/archive/source-byte review PASS; research CI 37126661037 success,
+macOS CI 37126661063 completed/success at exact 9e35d1e. BRIDGE-06 complete.
+These are offline checks; no current AE invocation.
 BRIDGE-01 research complete; usable mechanism in 02 and full contract in 03 remain
 BLOCKED. Host experiment 04 and live 07/08 NOT RUN; no new live scope assumed.
 Backend NOT READY; original product and A/B/C1/C2/D/release obligations retained.
