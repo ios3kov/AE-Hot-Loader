@@ -12,6 +12,18 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
+## Latest C1 combined entry/lifetime batch — prepared, acceptance pending
+
+Stage C1 / Development, rules 6.2.0. This combined cycle covers library retention,
+FCSpec/PLUG saved-entry correspondence, failure/recovery constraints and a concrete
+future AE trial design. Twenty-three complete bodies/thunks / 1351 instructions /
+225 anchors plus three serialized tables / 29 rebases; new focused suite 32 PASS.
+ASLFoundation pin is offline only; native profile/helpers/ResourcePassGate unchanged.
+Clean-source collection, independent original-byte verification, full regression/
+static review and exact-source CI remain pending. No live packet or AE operation.
+See [combined evidence and trial design](C1_ENTRY_LIFETIME_BATCH_2026-10-03.md).
+Backend NOT READY; actual registration/apply/render/release remain open.
+
 ## Latest C1 provider and canonical factory retention — offline PASS
 
 Code/test source **49a85318fcfb884315b9d36d3cb4b74a094a0399**. Fourteen complete

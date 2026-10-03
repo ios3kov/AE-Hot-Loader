@@ -207,8 +207,9 @@ class ResourceAbiCollectorTests(unittest.TestCase):
 
     def test_file_only_pins_cannot_change_scope_or_native_profile(self):
         record = json.loads(collector.FILE_ONLY_PROFILE.read_text())
-        self.assertEqual(set(record['inputs']), {'TDB'})
+        self.assertEqual(set(record['inputs']), {'TDB', 'ASLFoundation'})
         self.assertNotIn('TDB.dylib', collector.PROFILE.read_text())
+        self.assertNotIn('ASLFoundation.framework', collector.PROFILE.read_text())
         with tempfile.TemporaryDirectory(prefix='aehl-file-pins-') as tmp:
             path = Path(tmp)/'pins.json'
             with mock.patch.object(collector, 'FILE_ONLY_PROFILE', path):
@@ -219,14 +220,15 @@ class ResourceAbiCollectorTests(unittest.TestCase):
                     path.write_text(json.dumps(bad))
                     with self.subTest(field=field), self.assertRaisesRegex(ValueError, 'file-only'):
                         collector.profile_agrees()
-                bad = json.loads(json.dumps(record)); bad['inputs']['TDB']['sha256'] = '0'*64
-                path.write_text(json.dumps(bad))
-                with self.assertRaisesRegex(ValueError, 'file-only'):
-                    collector.profile_agrees()
-                path.write_text(json.dumps(record))
-                with mock.patch.dict(collector.INPUTS, {'TDB': (Path('/tmp/other'), '0'*64)}):
-                    with self.assertRaisesRegex(ValueError, 'file-only'):
+                for name in record['inputs']:
+                    bad = json.loads(json.dumps(record)); bad['inputs'][name]['sha256'] = '0'*64
+                    path.write_text(json.dumps(bad))
+                    with self.subTest(name=name), self.assertRaisesRegex(ValueError, 'file-only'):
                         collector.profile_agrees()
+                    path.write_text(json.dumps(record))
+                    with mock.patch.dict(collector.INPUTS, {name: (Path('/tmp/other'), '0'*64)}):
+                        with self.assertRaisesRegex(ValueError, 'file-only'):
+                            collector.profile_agrees()
 
     def test_provider_factory_symbols_exclude_scans(self):
         text = 'external ML_PluginImpl_Load\nexternal TDB_StreamFactory_RegisterCanonicalInstance\n' \
@@ -235,6 +237,78 @@ class ResourceAbiCollectorTests(unittest.TestCase):
         for name in ('PluginImpl', 'RegisterCanonicalInstance', 'Get_AE_StreamFactory'):
             self.assertIn(name, selected)
         for name in ('PLUG_Search', 'SetupGeneralPluginScan'):
+            self.assertNotIn(name, selected)
+
+    def test_entry_lifetime_scope_keeps_destructors_and_thunk_separate(self):
+        windows = collector.review_windows('entry-lifetime')
+        self.assertEqual({name for _, name, *_ in windows}, {'ASLFoundation', 'FLT', 'PLUG'})
+        self.assertEqual({label for label, *_ in windows}, set(collector.ENTRY_ANCHORS))
+        self.assertEqual(len(windows), 23)
+        self.assertEqual(sum((b-a)//4 for _, _, a, b in windows), 1351)
+        self.assertIn(('FLT-desc-release', 'FLT', 0x5cbec, 0x5cc60), windows)
+        self.assertIn(('FLT-ctor-thunk', 'FLT', 0x5cc60, 0x5cc64), windows)
+        self.assertEqual(collector.ENTRY_ANCHORS['PLUG-unload-plugin'], {0x87a0: ('ret', '')})
+        self.assertEqual(sum(n for _, _, _, n in collector.DATA_WINDOWS['entry-lifetime']), 32)
+        for _, key, a, b in windows:
+            script = collector.lldb_script(collector.INPUTS[key][0], a, b)
+            self.assertNotIn('process attach', script)
+            self.assertNotIn('process launch', script)
+
+    def test_entry_lifetime_rejects_changed_lifetime_or_cached_procedure_anchors(self):
+        for label, key, start, end in collector.review_windows('entry-lifetime'):
+            anchors = collector.ENTRY_ANCHORS[label]
+            def transcript(overrides):
+                return ''.join('owned[0x%x] <+%d>: %s %s\n' %
+                    (a, a-start, *overrides.get(a, anchors.get(a, ('nop', ''))))
+                    for a in range(start, end, 4))
+            text = transcript({})
+            result = collector.verify_entry_lifetime(text, label, start, end)
+            self.assertIn('not-live-lifetime-or-safe-rollback', result['claim'])
+            for address in anchors:
+                with self.subTest(label=label, address=hex(address)):
+                    with self.assertRaisesRegex(ValueError, 'structural'):
+                        collector.verify_entry_lifetime(transcript({address: ('nop', '')}),
+                                                        label, start, end)
+            with self.assertRaisesRegex(ValueError, 'bounds'):
+                collector.verify_entry_lifetime(text + text.splitlines()[0]+'\n', label, start, end)
+            with self.assertRaisesRegex(ValueError, 'unreviewed'):
+                collector.verify_entry_lifetime(text, label, start, end+4)
+
+    def test_entry_tables_reject_retargeted_bound_reserved_or_missing_fixups(self):
+        for label, key, start, count in collector.DATA_WINDOWS['entry-lifetime']:
+            targets = collector.ENTRY_TABLE_TARGETS[label]
+            words = [0] + [(2 << 51) | target for target in targets[1:]]
+            rows = ['__DATA_CONST __const 0x%x rebase 0x%x' % (start+i*8, target)
+                    for i, target in enumerate(targets) if i]
+            fixups = '\n'.join(rows)
+            chains = 'pointer_format: 6 (DYLD_CHAINED_PTR_64_OFFSET)'
+            result = collector.verify_entry_table(words, fixups, chains, label)
+            self.assertEqual(result['rebases'], count-1)
+            self.assertEqual(result['claim'], 'file-table-correspondence-not-runtime-receiver')
+            for i in range(count):
+                for mask in (1, 1 << 44, 1 << 63):
+                    bad = list(words); bad[i] ^= mask
+                    with self.subTest(label=label, index=i, mask=mask), self.assertRaises(ValueError):
+                        collector.verify_entry_table(bad, fixups, chains, label)
+            for bad in (fixups+'\n'+rows[0], '\n'.join(rows[1:]),
+                        fixups.replace('rebase', 'bind'), fixups.replace('0x%x' % targets[1], '0x0')):
+                with self.assertRaises(ValueError):
+                    collector.verify_entry_table(words, bad, chains, label)
+            with self.assertRaises(ValueError):
+                collector.verify_entry_table(words[:-1], fixups, chains, label)
+            with self.assertRaises(ValueError):
+                collector.verify_entry_table(words, fixups, chains.replace('6 (', '2 ('), label)
+            with self.assertRaises(ValueError):
+                collector.verify_entry_table(words, fixups, chains, 'unreviewed')
+
+    def test_entry_lifetime_symbols_exclude_registration_and_scan(self):
+        text = 'external ASL_Module_GetProcAddress\nexternal FLT_FCSpec_GetEffectProc\n' \
+               'external PLUGp_LoadPlatRoutine\nexternal PLUG_Search\n' \
+               'external RegisterCanonicalInstance\nexternal SetupGeneralPluginScan\n'
+        selected = collector.select_symbols(text, 'entry-lifetime')
+        for name in ('GetProcAddress', 'GetEffectProc', 'LoadPlatRoutine'):
+            self.assertIn(name, selected)
+        for name in ('PLUG_Search', 'RegisterCanonicalInstance', 'SetupGeneralPluginScan'):
             self.assertNotIn(name, selected)
 
     def test_dispatch_scope_includes_both_procedure_lanes_and_parameter_body(self):

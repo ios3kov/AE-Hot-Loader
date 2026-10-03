@@ -5,6 +5,10 @@
     "TDB": {
       "path": "/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app/Contents/Frameworks/TDB.dylib",
       "sha256": "c40f65989078368f63302050edc42315873dbbd71949324ddc79f01753f2d7d5"
+    },
+    "ASLFoundation": {
+      "path": "/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app/Contents/Frameworks/ASLFoundation.framework/Versions/A/ASLFoundation",
+      "sha256": "f1c3c7256f8a986f39519387511436577a3d65fb9d04a672bbb115c1871a3fe7"
     }
   }
 }

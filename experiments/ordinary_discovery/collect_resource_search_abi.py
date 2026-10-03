@@ -100,6 +100,31 @@ REVIEWS = {
         ("TDB-unregister-recursive", "TDB", 0x1fe1c, 0x200f4),
         ("TDB-get-stream", "TDB", 0x20128, 0x20230),
     ),
+    "entry-lifetime": (
+        ("ASL-load", "ASLFoundation", 0x23b18, 0x23e4c),
+        ("ASL-create", "ASLFoundation", 0x241d0, 0x24310),
+        ("ASL-ctor", "ASLFoundation", 0x24344, 0x243ac),
+        ("ASL-ctor-base", "ASLFoundation", 0x243ac, 0x24404),
+        ("ASL-dtor", "ASLFoundation", 0x24404, 0x24450),
+        ("ASL-dtor-complete", "ASLFoundation", 0x24450, 0x2449c),
+        ("ASL-delete", "ASLFoundation", 0x2449c, 0x244e8),
+        ("ASL-proc", "ASLFoundation", 0x24594, 0x24aa4),
+        ("ASL-unload-flag", "ASLFoundation", 0x24b3c, 0x24b44),
+        ("ASL-last-owner", "ASLFoundation", 0x27ca8, 0x27cc0),
+        ("FLT-ctor", "FLT", 0x5cae4, 0x5cbec),
+        ("FLT-desc-release", "FLT", 0x5cbec, 0x5cc60),
+        ("FLT-ctor-thunk", "FLT", 0x5cc60, 0x5cc64),
+        ("FLT-dtor", "FLT", 0x5cc64, 0x5cd3c),
+        ("FLT-get-desc", "FLT", 0x5d0dc, 0x5d0f8),
+        ("FLT-set-proc", "FLT", 0x5d0f8, 0x5d104),
+        ("FLT-set-desc", "FLT", 0x5e26c, 0x5e2f0),
+        ("FLT-get-proc", "FLT", 0x5e2f0, 0x5e2fc),
+        ("PLUG-load-platform", "PLUG", 0x1087c, 0x10b98),
+        ("PLUG-entry", "PLUG", 0x10b98, 0x10dac),
+        ("PLUG-unload-platform", "PLUG", 0x10dac, 0x10e6c),
+        ("PLUG-unload-plugin", "PLUG", 0x87a0, 0x87a4),
+        ("PLUG-desc-dtor", "PLUG", 0xe720, 0xe7f0),
+    ),
     "ownership": (
         ("MEE-setup", "MEE", 0x36C58, 0x36DA4),
         ("MEE-scan", "MEE", 0x36DA4, 0x376EC),
@@ -108,7 +133,24 @@ REVIEWS = {
         ("MEE-setdown", "MEE", 0x37F34, 0x38044),
     ),
 }
-DATA_WINDOWS = {"lifecycle": (("PLUG-vtable", "PLUG", 0x14920, 12),)}
+DATA_WINDOWS = {
+    "lifecycle": (("PLUG-vtable", "PLUG", 0x14920, 12),),
+    "entry-lifetime": (
+        ("FLT-vtable", "FLT", 0xd5c70, 14),
+        ("ASL-module-vtable", "ASLFoundation", 0x31670, 11),
+        ("ASL-owner-vtable", "ASLFoundation", 0x317f8, 7),
+    ),
+}
+# File-relative targets after decoding DYLD_CHAINED_PTR_64_OFFSET rebases.
+# Word zero is offset-to-top, not a fixup. These are never live addresses.
+ENTRY_TABLE_TARGETS = {
+    "FLT-vtable": (0, 0xd60d8, 0x5cd3c, 0x5cd40, 0x5e2f0, 0x5e1c8,
+                   0x5e0c8, 0x5e0f4, 0x5e0fc, 0x5d7e4, 0x5dec4, 0x5e120,
+                   0x5e12c, 0x5e2fc),
+    "ASL-module-vtable": (0, 0x316c8, 0x24450, 0x2449c, 0x28718,
+                          0x28ce8, 0x24b44, 0x24f40, 0x24fa8, 0x25220, 0x24f00),
+    "ASL-owner-vtable": (0, 0x31830, 0x27c90, 0x27c94, 0x27ca8, 0x27cc0, 0x27d3c),
+}
 INPUTS = {
     "aelib": (
         APP / "Contents/Frameworks/aelib.framework/Versions/A/aelib",
@@ -135,6 +177,9 @@ INPUTS = {
 FILE_ONLY_INPUTS = {
     "TDB": (APP / "Contents/Frameworks/TDB.dylib",
             "c40f65989078368f63302050edc42315873dbbd71949324ddc79f01753f2d7d5"),
+    "ASLFoundation": (
+        APP / "Contents/Frameworks/ASLFoundation.framework/Versions/A/ASLFoundation",
+        "f1c3c7256f8a986f39519387511436577a3d65fb9d04a672bbb115c1871a3fe7"),
 }
 INPUTS.update(FILE_ONLY_INPUTS)
 SYMBOL_WANTED = {
@@ -154,6 +199,12 @@ SYMBOL_WANTED = {
                                   r"U_GenericPluginDispatch|GetCanonicalEffect)"),
     "provider-factory": re.compile(r"(PluginImpl|Get_AE_StreamFactory|"
                                    r"StreamFactory.*(Canonical|UnregisterFactoryFunc))"),
+    "entry-lifetime": re.compile(r"(Module.*(Load|Create|ProcAddress|UnloadOnDestroy|[CD][012])|"
+                                 r"shared_ptr_pointerIPN3ASL6Module|"
+                                 r"FLT_FCSpec.*(RoutineDescH|EffectProc|[CD][012])|"
+                                 r"PLUGp_(Load|Unload)PlatRoutine|"
+                                 r"PLUG_RoutineDescPriv.*(GetEntryPoint|UnloadPlugin|D2)|"
+                                 r"ZTV.*(ASL6Module|FLT_FCSpec))"),
     "ownership": re.compile(r"(SetupGeneralPluginScan|PluginScanFunc|PluginCleanupFunc|"
                             r"CleanupGeneralPluginScan|SetdownGeneralPlugins|vectorI13GeneralPlugin)"),
 }
@@ -710,6 +761,328 @@ RETENTION_ANCHORS = {
 }
 
 
+# Complete destructor instruction anchors also bind the observed absence of
+# CFBundle release/unload calls; this is an exact-file observation, not policy.
+ENTRY_ANCHORS = {
+    'ASL-load': {
+        0x23b68: ('bl', '0x29908'),
+        0x23b8c: ('bl', '0x2953c'),
+        0x23c24: ('bl', '0x29668'),
+        0x23c38: ('bl', '0x2965c'),
+        0x23c48: ('mov', 'w19,#0x1'),
+        0x23c4c: ('movk', 'w19,#0xa00f,lsl#16'),
+        0x23c50: ('bl', '0x2986c'),
+        0x23cb0: ('bl', '0x29338'),
+        0x23cc8: ('bl', '0x241d0'),
+        0x23cd4: ('bl', '0x294a0'),
+        0x23d80: ('bl', '0x24310'),
+        0x23e18: ('bl', '0x2986c'),
+        0x23e30: ('bl', '0x296a4'),
+    },
+    'ASL-create': {
+        0x241fc: ('stp', 'x8,x21,[x0]'),
+        0x24200: ('strb', 'wzr,[x0,#0x10]'),
+        0x24210: ('bl', '0x294ac'),
+        0x2422c: ('stp', 'xzr,x19,[x0,#0x10]'),
+        0x24234: ('stp', 'x19,x0,[x20]'),
+        0x24244: ('ldaddal', 'x9,x8,[x8]'),
+        0x2426c: ('blr', 'x8'),
+        0x24274: ('bl', '0x29de8'),
+        0x242a0: ('blr', 'x8'),
+        0x242f4: ('mov', 'w0,#0x6'),
+        0x242f8: ('movk', 'w0,#0xa00f,lsl#16'),
+        0x2430c: ('bl', '0x296a4'),
+    },
+    'ASL-ctor': {
+        0x24358: ('add', 'x8,x8,#0x680'),
+        0x2435c: ('stp', 'x8,x1,[x0]'),
+        0x24360: ('strb', 'w2,[x0,#0x10]'),
+        0x24370: ('bl', '0x294ac'),
+        0x243a4: ('bl', '0x296a4'),
+    },
+    'ASL-ctor-base': {
+        0x243c0: ('add', 'x8,x8,#0x680'),
+        0x243c4: ('stp', 'x8,x1,[x0]'),
+        0x243c8: ('strb', 'w2,[x0,#0x10]'),
+        0x243dc: ('bl', '0x294ac'),
+        0x24400: ('bl', '0x296a4'),
+    },
+    'ASL-dtor': {
+        0x24404: ('stp', 'x20,x19,[sp,#-0x20]!'),
+        0x24408: ('stp', 'x29,x30,[sp,#0x10]'),
+        0x2440c: ('add', 'x29,sp,#0x10'),
+        0x24410: ('mov', 'x19,x0'),
+        0x24414: ('adrp', 'x8,13'),
+        0x24418: ('add', 'x8,x8,#0x680'),
+        0x2441c: ('str', 'x8,[x0]'),
+        0x24420: ('strb', 'wzr,[x0,#0x10]'),
+        0x24424: ('ldrsb', 'w8,[x0,#0x2f]'),
+        0x24428: ('tbz', 'w8,#0x1f,0x2443c'),
+        0x2442c: ('ldr', 'x0,[x19,#0x18]'),
+        0x24430: ('ldr', 'x8,[x19,#0x28]'),
+        0x24434: ('and', 'x1,x8,#0x7fffffffffffffff'),
+        0x24438: ('bl', '0x29b30'),
+        0x2443c: ('mov', 'x0,x19'),
+        0x24440: ('ldp', 'x29,x30,[sp,#0x10]'),
+        0x24444: ('ldp', 'x20,x19,[sp],#0x20'),
+        0x24448: ('ret', ''),
+        0x2444c: ('bl', '0x4ec8'),
+    },
+    'ASL-dtor-complete': {
+        0x24450: ('stp', 'x20,x19,[sp,#-0x20]!'),
+        0x24454: ('stp', 'x29,x30,[sp,#0x10]'),
+        0x24458: ('add', 'x29,sp,#0x10'),
+        0x2445c: ('mov', 'x19,x0'),
+        0x24460: ('adrp', 'x8,13'),
+        0x24464: ('add', 'x8,x8,#0x680'),
+        0x24468: ('str', 'x8,[x0]'),
+        0x2446c: ('strb', 'wzr,[x0,#0x10]'),
+        0x24470: ('ldrsb', 'w8,[x0,#0x2f]'),
+        0x24474: ('tbz', 'w8,#0x1f,0x24488'),
+        0x24478: ('ldr', 'x0,[x19,#0x18]'),
+        0x2447c: ('ldr', 'x8,[x19,#0x28]'),
+        0x24480: ('and', 'x1,x8,#0x7fffffffffffffff'),
+        0x24484: ('bl', '0x29b30'),
+        0x24488: ('mov', 'x0,x19'),
+        0x2448c: ('ldp', 'x29,x30,[sp,#0x10]'),
+        0x24490: ('ldp', 'x20,x19,[sp],#0x20'),
+        0x24494: ('ret', ''),
+        0x24498: ('bl', '0x4ec8'),
+    },
+    'ASL-delete': {
+        0x2449c: ('stp', 'x20,x19,[sp,#-0x20]!'),
+        0x244a0: ('stp', 'x29,x30,[sp,#0x10]'),
+        0x244a4: ('add', 'x29,sp,#0x10'),
+        0x244a8: ('mov', 'x19,x0'),
+        0x244ac: ('adrp', 'x8,13'),
+        0x244b0: ('add', 'x8,x8,#0x680'),
+        0x244b4: ('str', 'x8,[x0]'),
+        0x244b8: ('strb', 'wzr,[x0,#0x10]'),
+        0x244bc: ('ldrsb', 'w8,[x0,#0x2f]'),
+        0x244c0: ('tbz', 'w8,#0x1f,0x244d4'),
+        0x244c4: ('ldr', 'x0,[x19,#0x18]'),
+        0x244c8: ('ldr', 'x8,[x19,#0x28]'),
+        0x244cc: ('and', 'x1,x8,#0x7fffffffffffffff'),
+        0x244d0: ('bl', '0x29b30'),
+        0x244d4: ('mov', 'x0,x19'),
+        0x244d8: ('ldp', 'x29,x30,[sp,#0x10]'),
+        0x244dc: ('ldp', 'x20,x19,[sp],#0x20'),
+        0x244e0: ('b', '0x29e90'),
+        0x244e4: ('bl', '0x4ec8'),
+    },
+    'ASL-proc': {
+        0x245dc: ('bl', '0x29c14'),
+        0x245fc: ('bl', '0x294d0'),
+        0x24634: ('bl', '0x299e0'),
+        0x24660: ('bl', '0x2a07c'),
+        0x24668: ('cbnz', 'w0,0x2472c'),
+        0x2466c: ('ldr', 'x0,[x19,#0x8]'),
+        0x24674: ('bl', '0x29344'),
+        0x24678: ('mov', 'x19,x0'),
+        0x2468c: ('bl', '0x299e0'),
+        0x246d4: ('bl', '0x294a0'),
+        0x246e4: ('bl', '0x29c20'),
+        0x246e8: ('mov', 'x0,x19'),
+        0x24778: ('bl', '0x29f2c'),
+        0x247e0: ('bl', '0x29c20'),
+        0x2487c: ('bl', '0x299f8'),
+        0x2488c: ('cbnz', 'w0,0x249cc'),
+        0x249c0: ('mov', 'x19,#0x0'),
+        0x249c8: ('b', '0x2467c'),
+        0x249f8: ('bl', '0x29a04'),
+        0x249fc: ('brk', '#0x1'),
+        0x24a98: ('bl', '0x25b54'),
+        0x24a9c: ('b', '0x247a8'),
+    },
+    'ASL-unload-flag': {
+        0x24b3c: ('strb', 'w1,[x0,#0x10]'),
+        0x24b40: ('ret', ''),
+    },
+    'ASL-last-owner': {
+        0x27ca8: ('ldr', 'x0,[x0,#0x18]'),
+        0x27cac: ('cbz', 'x0,0x27cbc'),
+        0x27cb0: ('ldr', 'x8,[x0]'),
+        0x27cb4: ('ldr', 'x1,[x8,#0x8]'),
+        0x27cb8: ('br', 'x1'),
+        0x27cbc: ('ret', ''),
+    },
+    'FLT-ctor': {
+        0x5cb04: ('add', 'x8,x8,#0xc80'),
+        0x5cb0c: ('stp', 'x8,x9,[x0]'),
+        0x5cb20: ('stp', 'q0,q0,[x0,#0xb0]'),
+        0x5cb24: ('str', 'xzr,[x0,#0xd0]'),
+        0x5cb60: ('bl', '0xa678c'),
+        0x5cbe0: ('bl', '0x5cbec'),
+        0x5cbe8: ('bl', '0xa5820'),
+    },
+    'FLT-desc-release': {
+        0x5cbfc: ('ldr', 'x20,[x0,#0x8]'),
+        0x5cc0c: ('ldaddal', 'w9,w8,[x8]'),
+        0x5cc10: ('cmp', 'w8,#0x1'),
+        0x5cc24: ('blr', 'x8'),
+        0x5cc30: ('ldaddal', 'w9,w8,[x8]'),
+        0x5cc48: ('blr', 'x8'),
+    },
+    'FLT-ctor-thunk': {
+        0x5cc60: ('b', '0x5cae4'),
+    },
+    'FLT-dtor': {
+        0x5cc84: ('bl', '0xa6798'),
+        0x5ccd0: ('ldr', 'x20,[x19,#0xc8]'),
+        0x5cce0: ('ldaddal', 'w9,w8,[x8]'),
+        0x5cce4: ('cmp', 'w8,#0x1'),
+        0x5ccf8: ('blr', 'x8'),
+        0x5cd04: ('ldaddal', 'w9,w8,[x8]'),
+        0x5cd1c: ('blr', 'x8'),
+        0x5cd2c: ('ret', ''),
+    },
+    'FLT-get-desc': {
+        0x5d0dc: ('ldp', 'x10,x9,[x0,#0xc0]'),
+        0x5d0e0: ('stp', 'x10,x9,[x8]'),
+        0x5d0e4: ('cbz', 'x9,0x5d0f4'),
+        0x5d0e8: ('add', 'x8,x9,#0x8'),
+        0x5d0ec: ('mov', 'w9,#0x1'),
+        0x5d0f0: ('ldadd', 'w9,w8,[x8]'),
+        0x5d0f4: ('ret', ''),
+    },
+    'FLT-set-proc': {
+        0x5d0f8: ('add', 'x8,x0,#0xd0'),
+        0x5d0fc: ('swpal', 'x1,x8,[x8]'),
+        0x5d100: ('ret', ''),
+    },
+    'FLT-set-desc': {
+        0x5e278: ('ldp', 'x9,x8,[x1]'),
+        0x5e288: ('ldadd', 'w11,w10,[x10]'),
+        0x5e28c: ('ldr', 'x19,[x0,#0xc8]'),
+        0x5e290: ('stp', 'x9,x8,[x0,#0xc0]'),
+        0x5e2a0: ('ldaddal', 'w9,w8,[x8]'),
+        0x5e2a4: ('cmp', 'w8,#0x1'),
+        0x5e2b8: ('blr', 'x8'),
+        0x5e2c4: ('ldaddal', 'w9,w8,[x8]'),
+        0x5e2dc: ('blr', 'x8'),
+    },
+    'FLT-get-proc': {
+        0x5e2f0: ('add', 'x8,x0,#0xd0'),
+        0x5e2f4: ('ldar', 'x0,[x8]'),
+        0x5e2f8: ('ret', ''),
+    },
+    'PLUG-load-platform': {
+        0x108b4: ('blr', 'x9'),
+        0x108dc: ('blr', 'x8'),
+        0x108e8: ('bl', '0x10b98'),
+        0x108f0: ('str', 'x0,[x8,#0x8]'),
+        0x108f4: ('cbz', 'x0,0x1099c'),
+        0x10900: ('strh', 'w9,[x8,#0x28]'),
+        0x10934: ('bl', '0x2b64'),
+        0x1093c: ('str', 'xzr,[x8,#0x8]'),
+        0x1095c: ('mov', 'w19,#0x0'),
+        0x10964: ('mov', 'w19,#0x1'),
+        0x10a48: ('bl', '0x11074'),
+        0x10a58: ('str', 'w8,[x0]'),
+        0x10a68: ('bl', '0x115fc'),
+        0x10ac8: ('bl', '0x10f0c'),
+        0x10b44: ('cmp', 'w21,#0x2'),
+        0x10b48: ('b.ne', '0x10b60'),
+        0x10b5c: ('b', '0x10968'),
+        0x10b70: ('bl', '0x11104'),
+        0x10b7c: ('b', '0x10968'),
+    },
+    'PLUG-entry': {
+        0x10bb0: ('ldr', 'x8,[x0,#0x8]'),
+        0x10bb4: ('cbnz', 'x8,0x10bdc'),
+        0x10bb8: ('ldr', 'x0,[x19,#0x48]'),
+        0x10bc0: ('ldr', 'x8,[x19,#0x50]'),
+        0x10bcc: ('ldr', 'x8,[x8,#0x68]'),
+        0x10bd0: ('blr', 'x8'),
+        0x10bd4: ('str', 'x0,[x19,#0x8]'),
+        0x10bdc: ('ldrb', 'w8,[x19,#0x60]'),
+        0x10c2c: ('bl', '0x112f0'),
+        0x10c40: ('ldaddal', 'x9,x8,[x8]'),
+        0x10c94: ('bl', '0x112f0'),
+        0x10c9c: ('mov', 'w1,#0x0'),
+        0x10ca0: ('bl', '0x1114c'),
+        0x10cb4: ('ldaddal', 'x9,x8,[x8]'),
+        0x10cbc: ('ldr', 'x0,[x19,#0x8]'),
+        0x10ce0: ('blr', 'x8'),
+        0x10d00: ('blr', 'x8'),
+        0x10d88: ('bl', '0xe6c0'),
+    },
+    'PLUG-unload-platform': {
+        0x10dc4: ('ldr', 'x8,[x8,#0x30]'),
+        0x10dc8: ('blr', 'x8'),
+        0x10dcc: ('tbnz', 'w0,#0x0,0x10dd8'),
+        0x10dd4: ('bl', '0x87a0'),
+        0x10de0: ('str', 'xzr,[x8,#0x8]'),
+        0x10de8: ('mov', 'w10,#0xffec'),
+        0x10dec: ('and', 'w9,w9,w10'),
+        0x10df0: ('strh', 'w9,[x8,#0x28]'),
+        0x10e1c: ('mov', 'x0,x19'),
+        0x10e48: ('mov', 'x0,x19'),
+        0x10e64: ('bl', '0x110a4'),
+    },
+    'PLUG-unload-plugin': {
+        0x87a0: ('ret', ''),
+    },
+    'PLUG-desc-dtor': {
+        0xe738: ('add', 'x8,x8,#0x10'),
+        0xe740: ('ldr', 'x20,[x0,#0x58]'),
+        0xe750: ('ldaddal', 'x9,x8,[x8]'),
+        0xe764: ('blr', 'x8'),
+        0xe76c: ('bl', '0x114dc'),
+        0xe770: ('ldr', 'x20,[x19,#0x40]'),
+        0xe780: ('ldaddal', 'x9,x8,[x8]'),
+        0xe7bc: ('blr', 'x8'),
+        0xe7c4: ('bl', '0x114dc'),
+        0xe7e8: ('ret', ''),
+    },
+}
+
+def verify_entry_lifetime(text, label, start, end):
+    require(any((row[0], row[2], row[3]) == (label, start, end)
+                for row in REVIEWS['entry-lifetime']),
+            'unreviewed entry lifetime window')
+    count = validate_disassembly(text, start, end)
+    rows = {}
+    for address, op, operands in re.findall(
+            r'^.*\[0x([0-9a-fA-F]+)\]\s+<[^>]*>:[ \t]+(\S+)[ \t]*([^\n]*)', text, re.M):
+        rows[int(address, 16)] = (op, re.sub(r'\s+', '', operands.split(';')[0]))
+    expected = ENTRY_ANCHORS[label]
+    require(all(rows.get(address) == pair for address, pair in expected.items()),
+            'entry lifetime structural anchors differ')
+    return {'decoded_instructions': count, 'structural_anchors': len(expected),
+            'claim': 'file-only-entry-and-owners-not-live-lifetime-or-safe-rollback'}
+
+
+def verify_entry_table(words, fixups, chains, label):
+    require(label in ENTRY_TABLE_TARGETS, 'unreviewed entry table')
+    _, _, start, count = next(row for row in DATA_WINDOWS['entry-lifetime'] if row[0] == label)
+    formats = re.findall(r'pointer_format:\s+(\d+)\s+\(([^)]+)\)', chains)
+    require(formats and all(pair == ('6', 'DYLD_CHAINED_PTR_64_OFFSET') for pair in formats),
+            'entry table fixup format differs')
+    expected = ENTRY_TABLE_TARGETS[label]
+    require(len(words) == count and words[0] == 0, 'entry table coverage/header differs')
+    # 64_OFFSET rebase: low 36 bits target, high8 bits 36..43, reserved bits
+    # 44..50, next bits 51..62, bind bit 63. These pins use low targets only.
+    require(all(isinstance(w, int) and 0 <= w < 1 << 64 and
+                not w & ((1 << 63) | (0x7fff << 36)) for w in words[1:]),
+            'entry table is bound, high-address or reserved')
+    targets = (0,) + tuple(w & ((1 << 36)-1) for w in words[1:])
+    require(targets == expected, 'entry table targets differ')
+    rows = []
+    for address, kind, target in re.findall(
+            r'^\s*__DATA_CONST\s+__const\s+0x([0-9a-fA-F]+)\s+(\S+)\s+([^\n]+)',
+            fixups, re.M):
+        address = int(address, 16)
+        if start <= address < start + count*8:
+            require(kind == 'rebase' and re.fullmatch(r'0x[0-9a-fA-F]+', target.strip()),
+                    'entry table fixup is not a plain rebase')
+            rows.append((address, int(target.strip(), 16)))
+    require(rows == [(start+i*8, target) for i, target in enumerate(expected) if i],
+            'entry table fixups differ or are incomplete/duplicated')
+    return {'rebases': count-1, 'file_targets': [hex(target) for target in expected],
+            'claim': 'file-table-correspondence-not-runtime-receiver'}
+
+
 def verify_retention(text, label, start, end):
     require((label, 'PluginSupport' if label.startswith('PS-') else 'TDB', start, end)
             in REVIEWS['provider-factory'], 'unreviewed provider retention window')
@@ -1002,6 +1375,7 @@ def main():
         readiness = {}
         dispatch = {}
         retention = {}
+        entry = {}
         for name in names:
             path, _ = INPUTS[name]
             nm, nm_err = run_tool(["/usr/bin/nm", "-arch", "arm64", "-n", "-m", str(path)])
@@ -1025,6 +1399,8 @@ def main():
                 dispatch[label] = verify_dispatch(disassembly, label, start, end)
             if args.review == 'provider-factory':
                 retention[label] = verify_retention(disassembly, label, start, end)
+            if args.review == 'entry-lifetime':
+                entry[label] = verify_entry_lifetime(disassembly, label, start, end)
             if args.review == 'ownership':
                 ownership[label] = verify_ownership(disassembly, label, start, end)
             write_exclusive(folder / (label + "-disassembly.txt"), disassembly)
@@ -1036,6 +1412,24 @@ def main():
                 "decoded_instructions": instruction_count,
             }
         data_outputs = {}
+        table_fixups = {}
+        if args.review == 'entry-lifetime':
+            for name in ('FLT', 'ASLFoundation'):
+                chains, diagnostics = run_tool(
+                    ['/usr/bin/xcrun', 'dyld_info', '-arch', 'arm64', '-fixup_chains', str(INPUTS[name][0])])
+                require(not diagnostics.strip(), 'entry fixup chains produced diagnostics')
+                fixups, diagnostics = run_tool(
+                    ['/usr/bin/xcrun', 'dyld_info', '-arch', 'arm64', '-fixups', str(INPUTS[name][0])])
+                require(not diagnostics.strip(), 'entry fixups produced diagnostics')
+                table_fixups[name] = (fixups, chains)
+                write_exclusive(folder / (name + '-fixup-chains.txt'), chains)
+                ranges = [(a, a+n*8) for _, image, a, n in DATA_WINDOWS[args.review] if image == name]
+                selected = []
+                for line in fixups.splitlines():
+                    match = re.match(r'^\s*__DATA_CONST\s+__const\s+0x([0-9a-fA-F]+)', line)
+                    if match and any(a <= int(match[1], 16) < b for a, b in ranges):
+                        selected.append(line)
+                write_exclusive(folder / (name + '-table-fixups.txt'), '\n'.join(selected)+'\n')
         for label, name, start, count in DATA_WINDOWS.get(args.review, ()):
             require(name in names, "data image not included in review identity")
             script = lldb_data_script(INPUTS[name][0], start, count)
@@ -1052,6 +1446,9 @@ def main():
                 write_exclusive(folder / (label + "-stderr.txt"), diagnostics)
             data_outputs[label] = {"image": name, "start": hex(start), "word_count": len(values),
                                    "interpretation": "file-backed serialized words, not runtime pointers"}
+            if args.review == 'entry-lifetime':
+                data_outputs[label]['table_evidence'] = verify_entry_table(
+                    values, *table_fixups[name], label)
         if args.review == "lifecycle":
             fixups, diagnostics = run_tool(
                 ["/usr/bin/xcrun", "dyld_info", "-arch", "arm64", "-fixup_chains", str(INPUTS["PLUG"][0])])
@@ -1097,6 +1494,14 @@ def main():
             record['reference_counts_and_map_changes'] = 'FILE ONLY'
             record['safe_unregistration_and_failure_rollback'] = 'NOT PROVEN'
             record['receiver_thread_and_provider_lifetime'] = 'NOT PROVEN'
+            record['registration_apply_render'] = 'NOT RUN'
+        if args.review == 'entry-lifetime':
+            record['entry_lifetime_evidence'] = entry
+            record['native_registration_ABI'] = 'UNKNOWN'
+            record['actual_provider_descriptor_procedure_identity'] = 'NOT OBSERVED'
+            record['CFBundle_lookup_may_load_code'] = True
+            record['final_executable_unload_and_quiescence'] = 'NOT PROVEN'
+            record['safe_unregistration_and_failure_rollback'] = 'NOT PROVEN'
             record['registration_apply_render'] = 'NOT RUN'
         if args.review == 'ownership':
             record['ownership_evidence'] = ownership
