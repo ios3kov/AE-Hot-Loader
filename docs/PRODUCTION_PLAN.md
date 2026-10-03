@@ -12,6 +12,38 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## PICA availability diagnostic — eight-step acceptance before implementation
+
+2026-10-03; user approved the proposed six preparation steps and two conditional
+AE/result steps. Starting clean research source
+`9dbc361affe186cb04d30e49bd1f373799909078`; rules remain v8.0.0 / 132b7cd.
+Stage C1 research, Development preparation of a scoped Validation diagnostic.
+Product contract retained; no new effect loader or shell-only scope adopted.
+AI-STATE / API-SOURCE / SAFE / REPRO / TEST-CONTROL / TASK-CLOSE / CLEANUP apply;
+native host-thread/ownership and tools lifecycle/IPC/diagnostics overlays apply.
+Pixel/MFR render acceptance is outside this availability-only probe, retained for
+C2/D. Repository edits, exact SDK review, owned fixtures, build/sign/identity,
+research-branch commit/push/CI and concrete live-packet preparation are authorized.
+The accepted proposal makes AE execution conditional on safety and current
+operation permission. No installation, launch, host read, scripting or call is
+performed during preparation; prior one-shot scopes are not reusable.
+
+| ID | Block / observable acceptance | Check / phase and dependency |
+|---|---|---|
+| PICA-01 | Identify host-supplied SPBasicSuite provider and exact available-contract candidates | Exact SDK headers/sample, provider/callback type assertions; no private provider calls |
+| PICA-02 | Define bounded adapter-name/version enumeration without registration | Exact SPAdaptersSuite3 iterator/getters; no AddPlugin/AddXPlatPlugin/AcquirePlugin/AddAdapter/send-message/startup/teardown |
+| PICA-03 | Implement separately inert, one-shot diagnostic with durable identity/before/call/result/after evidence | Exact run/source/build/module/process/token request, private no-follow control, consume-before-call, no replay |
+| PICA-04 | Verify refusal/failure/deadline/partial result and iterator ownership | Owned C++ backend tests, real-file request/evidence tests; synthetic providers are labelled |
+| PICA-05 | Build exact SDK arm64 candidate, local ad-hoc sign/export/identity/inert checks | Clean source + header inputs + final binary/bundle hashes; prospective path only, no installation |
+| PICA-06 | Regression / bounded review / exact-source CI, packet and docs reconciliation | Available offline runner + research/macOS CI; neither is AE proof |
+| PICA-07 | One separately scoped AE availability diagnostic | Conditional: identified packet prerequisites and actual authorization; exact host/project/image/runtime binding, potential suite load explicit |
+| PICA-08 | Interpret real result and combination go/no-go | Conditional on PICA-07; suite/adapter names do not establish ordinary-effect publication |
+
+Results and concrete live scope will be recorded in
+[PICA diagnostic review](PICA_AVAILABILITY_REVIEW_2026-10-03.md).
+All A/B/C1 registration/C2 apply-render/D/release acceptance stays open. Cleanup
+preserves installed helpers, user sessions, SDK and unknown/historical evidence.
+
 ## Combined hypothesis check — acceptance fixed before investigation
 
 2026-10-03; user requested checking all three proposed hypotheses together.

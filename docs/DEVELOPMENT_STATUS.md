@@ -12,6 +12,18 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
+## PICA availability preparation — implemented, exact-candidate checks pending
+
+User approved six preparation steps and two conditional live/result steps.
+Separate public-suite helper and observer are implemented; exact SDK contracts,
+23 owned/synthetic policy scenarios and 15 real-file evidence cases checked.
+[PICA review and remaining gates](PICA_AVAILABILITY_REVIEW_2026-10-03.md).
+Build/sign/inert, full regression and exact-source CI remain pending.
+No installation, AE launch/read or live call; actual suite/adapter availability
+UNKNOWN, registration/apply/render NOT RUN. Product scope and A/B/C1/C2/D/release
+obligations retained. Concrete live packet will follow identified build/checks;
+prior one-shot authorization remains consumed.
+
 ## Current combined hypothesis pass — offline checks complete, runtime open
 
 User requested all three hypotheses together and then their combinations.
