@@ -10,8 +10,9 @@ product**.
 Current verified state: [DEVELOPMENT_STATUS](docs/DEVELOPMENT_STATUS.md).  
 Current gates: [PRODUCTION_PLAN](docs/PRODUCTION_PLAN.md).  
 Development requirements: [AGENTS](AGENTS.md).
-Accepted rules baseline: **AE Development Rules 6.2.0**; see
-[adoption record](docs/RULES_ADOPTION_6_2_0_2026-10-02.md).
+Accepted rules baseline: **AE Development Rules 8.0.0**, pinned source
+`132b7cd32873ba7328e3128ffbb33e1929b74d45`; see
+[adoption record](docs/RULES_ADOPTION_8_0_0_2026-10-03.md).
 
 ## Current Stage C
 
@@ -43,11 +44,14 @@ only intended live operation is:
 
 The no-scan Stage C0 folder-object lifecycle is **PASS** at its identified
 historical source; see [live evidence](docs/NO_SCAN_DIRECTORY_LIVE_PASS_2026-10-01.md).
-That consumed one-shot gate must not be repeated. Current Stage C1 is a separate
-read-only cleanup-state diagnostic, followed by a resource-registration
-experiment only when its safety contract is proven. Diagnostic installation/
-launch/read authority is pending; ordinary-effect registration/apply/render
-remain unverified. C0 permission and evidence do not authorize those later steps.
+That consumed one-shot gate must not be repeated. Subsequent identified C1
+read-only diagnostics are also historical and their one-shot scopes are consumed.
+Current C1 research compares PICA, single-effect publication and a stable shell,
+including possible combinations; see [hypothesis review](docs/HYPOTHESES_REVIEW_2026-10-03.md).
+A safe ordinary-effect registration adapter remains BLOCKED on provider ownership,
+continuous host-wide exclusion and complete publication/failure semantics.
+Current-candidate late registration/apply/render are NOT RUN. Historical scope
+and evidence do not authorize a different host operation.
 
 The helper being an AEGP `.plugin` does **not** make AE Hot Loader an effect
 plug-in product. It is an internal host-side component of the tool.

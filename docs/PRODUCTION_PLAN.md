@@ -12,6 +12,58 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## Combined hypothesis check — acceptance fixed before investigation
+
+2026-10-03; user requested checking all three proposed hypotheses together.
+Starting clean research HEAD `16986dcc759c7d6d4870218e378b100d6afd28b6`;
+rules remain v8.0.0 / `132b7cd32873ba7328e3128ffbb33e1929b74d45`.
+Stage C1 research / Development; this is feasibility investigation, not a
+product-scope change or permission to adopt the narrower shell alternative.
+Apply AI-STATE, API-SOURCE, SAFE, TEST-CONTROL, TASK-CLOSE and CLEANUP.
+Existing one-shot host scopes remain consumed; no executable safe native packet
+has been established. Complete SDK/file/source/owned-process checks first;
+unknown native contracts block dependent host invocation. Preserve all C1/C2/D
+and release acceptance; no unchanged scan, host lifecycle replay or teardown.
+
+| ID | Hypothesis / observable acceptance | Available check and final boundary |
+|---|---|---|
+| HYP-01 | PICA can register a new ordinary effect in running AE | Verify exact SDK suite revisions, inputs and adapter protocol; inspect target files for provider evidence; distinguish declarations/file evidence from actual suite availability and FLT publication |
+| HYP-02 | A single-effect registration chain can bypass broad rescan safely | Reconcile known publication/ownership/isolation/failure evidence; identify missing contracts and explicit falsifiers; no unsafe private invocation |
+| HYP-03 | A stable preinstalled shell can swap compatible implementations | Execute actual current shell with owned test libraries outside AE, including repeat, invalid candidate, busy call and rollback; preserve distinction from new host effect registration |
+| HYP-04 | Results select a next discriminating experiment without losing product obligations | Source/artifact/hash/log receipts, bounded review, current checkpoint and README consistency; commit research branch; runtime unknowns remain open |
+| HYP-05 | User subsequently asked whether mechanisms can be combined | Evaluate all pairings and the three-way route; require actual ownership/publication bridge, no duplicate registration or invented adapter; retain original goal |
+
+Results will be recorded in [combined review](HYPOTHESES_REVIEW_2026-10-03.md).
+Cleanup: retain historical/installed/third-party inputs; new private evidence and
+owned test workspace stay outside Git; no deletion of unknown materials.
+
+## Current combined hypothesis pass — preparation checks complete
+
+User requested all three hypotheses together and then their combinations.
+Starting clean source 16986dcc759c7d6d4870218e378b100d6afd28b6; rules remain
+v8.0.0 at 132b7cd32873ba7328e3128ffbb33e1929b74d45. See the acceptance mapping
+in [production plan](PRODUCTION_PLAN.md) and [combined review](HYPOTHESES_REVIEW_2026-10-03.md).
+PICA default suite revisions/signatures compile against the actual supplied SDK;
+AE suite/provider and ordinary-effect adapter/publication availability UNKNOWN.
+Five relevant literals were absent in nine exact hash-verified pinned files;
+that is a bounded lexical result, not proof of runtime absence.
+Single-effect native invocation remains BLOCKED on ownership, admission/drain
+and completion/failure contracts. Historical dynamic-fixture registration delta
+and scoped apply evidence are preserved separately from incomplete lifecycle,
+render NOT RUN and PiPL/RSMB failures; no broad impossibility claim is justified.
+New owned-process test executes the actual shell transaction with only isolated
+log/home/temp routing: fifteen labelled checks PASS in one aggregate Python test.
+Actual new AE registration/apply/render NOT RUN; this test cannot certify them.
+
+Combinations reviewed: PICA + the ordinary-effect adapter/publication route is a
+conditional same-goal candidate. A shell cannot remove the unresolved initial
+registration step; a preinstalled shell-only product would require a scope
+decision. No guessed opaque-handle conversion, native adapter or new live packet.
+Full clean-source regression/CI and exact source identity pending closeout.
+README stale baseline and diagnostic authority repaired; all A/B/C1/C2/D/release
+obligations retained. Cleanup preserves historical/installed/unknown inputs;
+only disposable owned test workspaces are removed. No AE operation, merge or release.
+
 ## Current five-block pass — acceptance fixed before implementation
 
 2026-10-03; starting clean HEAD e42588fc5d19e2e8a423fefa55ca8b64cc1a560a.

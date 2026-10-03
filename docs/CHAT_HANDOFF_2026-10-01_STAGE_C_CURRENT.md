@@ -17,6 +17,33 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
+## Current combined hypothesis pass — preparation checks complete
+
+User requested all three hypotheses together and then their combinations.
+Starting clean source 16986dcc759c7d6d4870218e378b100d6afd28b6; rules remain
+v8.0.0 at 132b7cd32873ba7328e3128ffbb33e1929b74d45. See the acceptance mapping
+in [production plan](PRODUCTION_PLAN.md) and [combined review](HYPOTHESES_REVIEW_2026-10-03.md).
+PICA default suite revisions/signatures compile against the actual supplied SDK;
+AE suite/provider and ordinary-effect adapter/publication availability UNKNOWN.
+Five relevant literals were absent in nine exact hash-verified pinned files;
+that is a bounded lexical result, not proof of runtime absence.
+Single-effect native invocation remains BLOCKED on ownership, admission/drain
+and completion/failure contracts. Historical dynamic-fixture registration delta
+and scoped apply evidence are preserved separately from incomplete lifecycle,
+render NOT RUN and PiPL/RSMB failures; no broad impossibility claim is justified.
+New owned-process test executes the actual shell transaction with only isolated
+log/home/temp routing: fifteen labelled checks PASS in one aggregate Python test.
+Actual new AE registration/apply/render NOT RUN; this test cannot certify them.
+
+Combinations reviewed: PICA + the ordinary-effect adapter/publication route is a
+conditional same-goal candidate. A shell cannot remove the unresolved initial
+registration step; a preinstalled shell-only product would require a scope
+decision. No guessed opaque-handle conversion, native adapter or new live packet.
+Full clean-source regression/CI and exact source identity pending closeout.
+README stale baseline and diagnostic authority repaired; all A/B/C1/C2/D/release
+obligations retained. Cleanup preserves historical/installed/unknown inputs;
+only disposable owned test workspaces are removed. No AE operation, merge or release.
+
 ## Current five-block pass — offline PASS, live adapter NO-GO
 
 Rules v8.0.0 adopted at the supplied 132b7cd commit. All five scoped offline
