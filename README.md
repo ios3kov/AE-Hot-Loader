@@ -57,7 +57,11 @@ consumed. A separate bounded public plug-in inventory helper is now built and
 locally validated at source 525000b, with 418 Python/no skips, 62 Node and 22 stages
 PASS. Its live question is whether exact known ordinary-effect files occur in
 PICA's global list. [Contracts, preparation receipts and conditional live scope](docs/PICA_INVENTORY_REVIEW_2026-10-03.md).
-That new AE inventory is NOT RUN and needs its own reviewed packet/actual authority.
+That identified inventory completed in AE: two fully resolved PICA records point
+to AE.app with the standard adapter; neither known ordinary-effect file is listed,
+although both matches exist in AE's registry. Project/registry/images unchanged.
+This supplies no direct ordinary-effect publication bridge; the scoped one-shot
+permission is consumed. [Actual inventory result](docs/PICA_INVENTORY_REVIEW_2026-10-03.md).
 A safe ordinary-effect registration adapter remains BLOCKED on provider ownership,
 continuous host-wide exclusion and complete publication/failure semantics.
 Current-candidate late registration/apply/render are NOT RUN. Historical scope

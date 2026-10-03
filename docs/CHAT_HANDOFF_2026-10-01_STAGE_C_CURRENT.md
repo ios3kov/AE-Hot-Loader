@@ -17,23 +17,35 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
-## Public PICA inventory — six preparation steps complete, live pending
+## Public PICA inventory — all eight pass steps complete, registration open
 
-INV-01–05 complete: exact SDK rev4 value FSRef contract, bounded exact-file
-correlation, separate one-shot helper/observer and actual SDK arm64 signed build.
-Code/test source **525000b6915423b7d387f10e846f972472570754**, build
-**inventory-a96d55e17240**. Full local regression **418 Python / no skips,
-62 Node / 22 stages PASS**; 27 native policy scenarios count as one Python case.
-[Contracts, exact receipts and acceptance](PICA_INVENTORY_REVIEW_2026-10-03.md).
-Research CI 37124717978 and macOS CI 37124718156 completed/success at that exact source.
-Known owned Control Shell/Rust Probe files and match names are pinned; correlation
-LISTED/NOT_LISTED/UNKNOWN does not prove ordinary-effect publication. Rev6 CFURL
-ownership is not assumed; property getters that may send messages are excluded.
-INV-01–06 complete; exact packet and receipts reconciled. INV-07/08 actual AE observation/interpretation
-NOT RUN, conditional on exact packet and actual live authority; previous one-shot
-permission consumed. No install, AE inspection, launch, project mutation, merge
-or release in this preparation pass. Backend NOT READY; registration/apply/render
-NOT RUN, A/B/C1/C2/D/release obligations retained. Older evidence stays historical.
+User authorized the exact packet with “запускай”, then confirmed normal AE Quit
+with “закрыл”. Closed-host guards passed; only the unique helper was installed
+and one controlled AE 25.6x101 arm64 session launched. Code/helper source
+**525000b6915423b7d387f10e846f972472570754**, build **inventory-a96d55e17240**,
+PID **28761**, start **1791033664.137575**. One exact request **COMPLETE**,
+independently verified. Plug-ins rev4 / Adapters rev3 available, both error 0.
+Complete public global PICA list: **2** fully resolved records, both the AE.app
+file with standard **Sweet Pea 2 Adapter v1**. Known Control Shell/Rust Probe
+files **NOT_LISTED**, although both match names are registered in AE. No direct
+file bridge demonstrated; possible host/aggregate/proxy meaning UNKNOWN.
+Same blank clean idle project revision 1, **786** effect identities and **1410**
+loaded images byte-identical, no additions. [Exact result, interpretation and
+receipts](PICA_INVENTORY_REVIEW_2026-10-03.md). INV-01–06 preparation complete,
+INV-07 scoped live PASS, INV-08 interpretation complete; one-shot authority consumed.
+
+Preparation 418 Python/no skips, 62 Node/22 stages PASS and research CI 37124717978 /
+macOS CI 37124718156 success remain exact 525000b receipts, not rerun for this
+runtime doc closeout. Actual helper loading/diagnostic separately verified.
+Backend NOT READY; registration/apply/render NOT RUN, A/B/C1/C2/D/release retained.
+NO-GO for treating public PICA AddPlugin as a confirmed ordinary-effect registry
+bridge. Next: identify a host-specific bridge and its ownership/admission/drain/
+completion/failure/rollback contracts; no repeat of this inventory or guessed call.
+No broad impossibility claim, shell-only product adoption, merge or release.
+Cleanup retains installed consumed helper/session/evidence pending safe closed-host
+cleanup; no forced quit, loaded-file removal, third-party/project/SDK changes.
+Following sections preserve earlier checkpoints; their pending inventory statements
+are superseded by this current closeout.
 
 ## PICA live diagnostic — all eight pass steps complete, registration open
 

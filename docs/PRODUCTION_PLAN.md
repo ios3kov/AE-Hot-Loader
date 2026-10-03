@@ -12,6 +12,25 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## INV-07/08 live closeout — all eight scoped steps complete
+
+Exact human authority “запускай”, normal user Quit “закрыл”, closed-host guards,
+unique install/hash/sign checks and one controlled launch passed. Code/helper
+source 525000b, build inventory-a96d55e17240, AE 25.6x101 arm64 PID 28761 / start
+1791033664.137575. Request COMPLETE; full public PICA list has 2 resolved records,
+both AE.app / Sweet Pea 2 Adapter v1. Known ordinary-effect files NOT_LISTED while
+both registered match names are present. Same blank revision-1 project, 786 effect
+identities and 1410 images byte-identical; no added image, registration/apply/render.
+[Acceptance, raw receipt hashes and bounded interpretation](PICA_INVENTORY_REVIEW_2026-10-03.md).
+INV-01–06 preparation complete, INV-07 live PASS, INV-08 interpretation complete.
+One-shot authority consumed. Direct public PICA ordinary-effect bridge unproven;
+NO-GO for an AddPlugin experiment on that premise. Next host-specific bridge
+research retains ownership/admission/drain/completion/failure/rollback gates.
+Original product, A/B/C1/C2/D and release acceptance unchanged. No main merge,
+release, private call, effect mutation, forced quit or loaded helper removal.
+Earlier preparation tables below retain their pre-run snapshot; this closeout
+supersedes their pending INV-07/08 state without relabelling earlier evidence.
+
 ## Public PICA plug-in inventory — eight-step acceptance before implementation
 
 2026-10-03; user approved the proposed next eight steps with “выполняй”. Starting

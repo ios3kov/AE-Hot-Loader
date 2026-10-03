@@ -137,7 +137,8 @@ identify the new helper, potential suite load, global plug-in iterator and publi
 file/adapter getters, with one owned blank clean idle session and closed-host
 installation guards. No forced quit, project reset or removal of loaded helpers.
 
-INV-07/08 remain NOT RUN pending that gate. Registration/apply/render NOT RUN,
+At the preparation checkpoint, INV-07/08 were NOT RUN pending that gate.
+The live closeout below supersedes this pending state. Registration/apply/render NOT RUN,
 backend NOT READY. Cleanup retains previous installed inert helper/session,
 proprietary SDK, known/third-party plug-ins and historical/private evidence.
 Only owned temporary test workspaces are disposable. No main merge or release.
@@ -152,8 +153,8 @@ Only owned temporary test workspaces are disposable. No main merge or release.
 | INV-04 | PASS (owned/synthetic) | 19 Python cases including 27 native policy scenarios; preserved raw errors, failures, deadlines and uncertainty |
 | INV-05 | PASS (prerequisite) | Clean 525000b SDK arm64 build/sign/exports/hash/inert and real owned FSRef roundtrip; actual AE NOT RUN |
 | INV-06 | PASS | 418 Python/no skips, 62 Node, 22 stages; ZIP/source verification, bounded review and both exact-source CI success |
-| INV-07 | NOT RUN | New live inventory permission/closed-host guard pending; no install, launch or AE inspection |
-| INV-08 | NOT RUN | Depends on actual INV-07 inventory; no finding inferred from synthetic fixtures |
+| INV-07 | PASS (scoped live) | One exact authorized request COMPLETE, public getters/iterator and unchanged baseline independently verified; see live closeout below |
+| INV-08 | PASS (interpretation) | Two resolved AE.app records, both known-effect files NOT_LISTED; direct public publication bridge remains unproven, no AddPlugin authorization |
 
 Private review-receipt.json SHA-256: `6e6a7bc7ad3915b0940d3f215ca22ea3b894f4d3973f19f8bc5ed49d8504fde5`.
 The code/test source and native candidate remain 525000b; this documentation-only
@@ -168,3 +169,89 @@ runner/private packet/raw failed report and intermediate builds retained for aud
 Installed previous consumed helper/session, existing known and third-party plug-ins,
 SDK and historical evidence preserved. No host forced quit or preferences/project
 change. The unused new helper token remains private and applies to only this packet.
+
+## INV-07/08 live closeout — exact observed inventory, registration still open
+
+Human replied **“запускай”** to the exact inventory-a96d55e17240 installation,
+one AE launch, public plug-in/file/adapter inventory and potential suite-load
+request. First closed-host guard found an already running AE PID 27329; no
+installation, request or launch occurred at that guard. User then replied
+**“закрыл”**. Exact main-process guard confirmed AE fully closed before install
+and again before the controlled launch. Only the unique identified helper was
+installed; its complete file map and strict signature verified, preexisting
+MediaCore entry inode/device/mode inventory preserved, known file hashes unchanged.
+No forced quit, project reset, preference reset, security-setting or third-party
+plug-in change.
+
+Actual code/helper source **525000b6915423b7d387f10e846f972472570754**, build
+**inventory-a96d55e17240**, run **pica-inventory-35f19062c0114be199aaaec144692bb6**.
+Single controlled AE 25.6x101 arm64 session PID **28761**, start
+**1791033664.137575**. Installed/loaded helper binary SHA-256 unchanged:
+`8cb9534868406b4223e4b55c209a2addab8126baefdf6c5d14bf65947df24bb8`.
+Exact request identity, self-export/hash, process/module and blank clean idle
+public project baseline verified. Native terminal **COMPLETE**, independently
+rechecked against exact claim, entry deltas, known-file observations and journals.
+No second request, restart, ordinary scan, registration, apply or render.
+
+SP Plug-ins Suite rev4 and SP Adapters Suite rev3 both available, error 0.
+Complete global public list: **2 records**, both resolved without file/path or
+adapter/name/version errors. Both return exactly
+`/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app`, adapter
+**Sweet Pea 2 Adapter**, version **1**. Identical file/adapter records are retained;
+no claim of two distinct physical plug-in files or unknown record identities.
+Both ordinary-effect anchors (Control Shell and Rust Probe) are registered in AE
+and their binary/resource hashes remain pinned, but their exact bundle/main-binary
+paths are **NOT_LISTED** in this fully resolved observed list. Not UNKNOWN, since
+no unresolved file entry or incomplete iterator remains in this request.
+
+Before/after: same process/module and blank clean idle project revision **1**,
+**786** registered effect identities, **1410** loaded images, **0** image additions.
+Image inventories byte-identical, SHA-256 both
+`27a3c8b03a3365c522908a841be0f54ac4b6e6a5f9c1a0501e588b293fef0e3c`.
+Iterator deletion logged exactly once; bounded two-suite leases retained until
+this host exits. Existing installed helpers lacked their activation tokens and
+were preserved. This new one-shot authority/token is consumed; no replay.
+
+### Interpretation and next discriminating gate
+
+This exact observation supplies no direct known ordinary-effect file correlation
+through PICA's global public list. AE ordinary registry count and the public PICA
+inventory describe different observed records. These app-file records could be
+host/aggregate/proxy objects; their undocumented internals and role are UNKNOWN.
+The two anchor results do not prove all ordinary plug-ins absent, no possible
+host-specific bridge, or product impossibility. No AddPlugin/AcquirePlugin call
+was performed and the data do not establish an ordinary-effect publication API.
+
+Decision: **NO-GO for treating public PICA AddPlugin as the confirmed ordinary
+AE registry bridge**. Next independent research is a documented or concretely
+identified host-specific bridge from registration to the ordinary-effect registry,
+with ownership, continuous admission/drain, completion/failure and rollback
+contracts resolved before an executable adapter. No repeated identical inventory
+or broad guessed private call. A preinstalled stable-shell workflow remains a
+separate product-scope alternative; it is not adopted without a user decision.
+Original arbitrary ordinary-effect/no-restart goal, A/B/C1/C2/D and release gates
+remain open. Backend NOT READY; ordinary registration/apply/render **NOT RUN**.
+
+### Private receipts and closure
+
+All raw records remain inside ignored build-ae-hot-loader/inventory-a96d55e17240;
+manifest/config/request/claim contain a consumed diagnostic token and are private.
+No proprietary SDK, raw control, module list or installable artifact is published.
+
+| Receipt | SHA-256 |
+|---|---|
+| installation.json | `cb0e305e89410f4a23ad13904f6e606432675d01c554c1115e378d7f262f0616` |
+| launch.json | `03f76b35e686b1cb5c6544a23cb97a2818875658fbd2e457974ec722f20a848b` |
+| control/external-result.json | `125008fb4129522effa074ccd94061de9daaabcc0b9f16b1ecca390a99a8b84b` |
+| live-verification.json | `c983d6403097b9061f6ac6af62c4608684ae2d20ff6ee1dc8fb558a5073504f9` |
+| inventory-live-private.zip (36 members, CRC/member/byte check PASS) | `af4409ba369414e07ca49af5dcdb8d6eae95b8d038fba09b69cfe6e0b586a650` |
+
+INV-01–08 scoped pass closed: six preparation steps at exact 525000b, seventh
+actual observation PASS, eighth interpretation complete. Earlier full regression
+418 Python/no skips, 62 Node/22 stages and both CI success remain preparation
+receipts, not reruns for this documentation-only live closeout. Actual helper AE
+loading and the selected diagnostic are separately verified; full release is
+not certified. No acceptance requirement removed or weakened, no merge/release.
+Cleanup preserves the owned consumed helper, controlled session and evidence
+until safely closed-host cleanup; no automatic termination or loaded-file removal.
+Installed/unknown plug-ins, projects, SDK and historical evidence are untouched.
