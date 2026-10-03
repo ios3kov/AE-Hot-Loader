@@ -12,6 +12,30 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
+## Requested native launch — preflight BLOCKED
+
+2026-10-03 user “запускай” requests the pending native trial. The launch request
+is received; no repeat generic consent question is needed. At exact clean source
+52e1efe5591e3dda5b2fccd6c9133ceb4e1e8348, source/implementation review confirms ResourcePassGate
+is an abstract unbound policy and ResourcePassJournal is an abstract journal wrapper;
+concrete search_one_root implementations are only synthetic tests. No identified
+safe host packet exists for DISPATCH-10. Actual factory receiver/supported late ABI,
+continuous host-wide reader/render/MFR exclusion, completion and whole-effect
+rollback remain unknown or unimplemented. Generic authorization cannot implement
+them. Native packet BLOCKED; AE launch and registration/apply/render NOT RUN.
+
+Ran one owned offline resource policy control: one Python test /129 nested
+synthetic cases PASS, including missing/unreviewed ownership, isolation/completion
+and active/unknown rendering refusals; zero host calls. This is refusal evidence,
+not runtime proof. Current preflight receipt
+`build-ae-hot-loader/launch-preflight-52e1efe-wjh0pnwl/receipt.json`, SHA-256
+614f0377be9780de74e029773de9063513b5f53cdb70cd70222195dd84f415ac; log SHA-256
+46fa65c190f4f5ccb0a788ed29145351d88f4ff70b4d4693f8547cd6c228650c. Full product tests/CI from earlier source remain
+historical; no new code/build/install or AE operation. Cleanup: owned temporary
+executable removed by test lifecycle, fresh receipt retained, historical/shared/
+loaded materials untouched. Next: implement and independently substantiate the
+real host adapter/transaction contract before preparing a new executable packet.
+
 ## Loader dispatch — research checks complete, native contract open
 
 [Loader dispatch review](C1_LOADER_DISPATCH_2026-10-03.md): 23 complete fixed
