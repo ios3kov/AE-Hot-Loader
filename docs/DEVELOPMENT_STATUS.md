@@ -1,6 +1,6 @@
 # AE Hot Loader — current development status
 
-Updated: 2026-10-02. Branch: `research/ordinary-plugin-discovery`.
+Updated: 2026-10-03. Branch: `research/ordinary-plugin-discovery`.
 Stage **C of A–D**; core registration, A/B/D and release gates remain open.
 Current continuation handoff: [CHAT_HANDOFF_2026-10-01_STAGE_C_CURRENT.md](CHAT_HANDOFF_2026-10-01_STAGE_C_CURRENT.md).
 AGENTS.md and PRODUCTION_PLAN apply. Current canonical rules:
@@ -11,6 +11,17 @@ to their named checkpoints and do not supersede this continuation.
 Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
+
+## Latest C1 provider and canonical factory — implementation checkpoint
+
+Fourteen complete pinned PluginSupport/TDB windows / 1365 instructions / 146
+anchors are prepared. Library shared references and canonical/factory tables
+have separate lifetimes; Free is a no-op, and recursive unregister is not a
+proven rollback. See [provider/factory review](C1_PROVIDER_FACTORY_REVIEW_2026-10-03.md).
+TDB pin is confined to a file-only manifest; native profile/helpers/ResourcePassGate
+unchanged. Clean-source collection/regression/CI are pending the implementation
+commit. No live AE operation. Backend NOT READY; registration/apply/render remain
+open. Next: ASL module lifetime and FCSpec's exact provider/virtual reference path.
 
 ## Latest C1 effect dispatch and parameter failure — offline PASS
 

@@ -1,0 +1,10 @@
+{
+  "schema": "AEHL-FILE-REVIEW-PINS-1",
+  "scope": "offline-only-not-native-host-profile",
+  "inputs": {
+    "TDB": {
+      "path": "/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app/Contents/Frameworks/TDB.dylib",
+      "sha256": "c40f65989078368f63302050edc42315873dbbd71949324ddc79f01753f2d7d5"
+    }
+  }
+}

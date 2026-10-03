@@ -19,6 +19,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[2]
 APP = Path("/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app")
 PROFILE = ROOT / "experiments/ordinary_discovery/AE256ResourceProfile.hpp"
+FILE_ONLY_PROFILE = ROOT / "experiments/ordinary_discovery/AE256ProviderFactoryFiles.json"
 MAX_OUTPUT = 2 * 1024 * 1024
 WINDOWS = {
     # SearchStatFunc + Egg_PlugSearch, and all of PLUG_Search through its
@@ -83,6 +84,22 @@ REVIEWS = {
         ("FLT-dispatch-machine", "FLT", 0x3B2A8, 0x3B804),
         ("FLT-dispatch-crash", "FLT", 0x3B804, 0x3BA04),
     ),
+    "provider-factory": (
+        ("PS-ctor", "PluginSupport", 0x4ba6c, 0x4bb34),
+        ("PS-dtor", "PluginSupport", 0x4bbd0, 0x4bd14),
+        ("PS-init", "PluginSupport", 0x4becc, 0x4c440),
+        ("PS-load", "PluginSupport", 0x4c440, 0x4c55c),
+        ("PS-free", "PluginSupport", 0x4c55c, 0x4c560),
+        ("PS-entry", "PluginSupport", 0x4c568, 0x4c71c),
+        ("PS-module", "PluginSupport", 0x4d368, 0x4d394),
+        ("TDB-factory", "TDB", 0x599c, 0x59a8),
+        ("TDB-get-instance", "TDB", 0x1f014, 0x1f15c),
+        ("TDB-register", "TDB", 0x1f15c, 0x1f400),
+        ("TDB-unregister-name", "TDB", 0x1f804, 0x1f8c8),
+        ("TDB-unregister-factory", "TDB", 0x1fbe4, 0x1fe1c),
+        ("TDB-unregister-recursive", "TDB", 0x1fe1c, 0x200f4),
+        ("TDB-get-stream", "TDB", 0x20128, 0x20230),
+    ),
     "ownership": (
         ("MEE-setup", "MEE", 0x36C58, 0x36DA4),
         ("MEE-scan", "MEE", 0x36DA4, 0x376EC),
@@ -109,7 +126,17 @@ INPUTS = {
         APP / "Contents/Frameworks/MEE.dylib",
         "18579ae84d541df7d08eda4507a5d3ceed78f2c4385f07c8a222f02255ec7344",
     ),
+    "PluginSupport": (
+        APP / "Contents/Frameworks/PluginSupport.framework/Versions/A/PluginSupport",
+        "4d2c200b198124b43887bbb7e53c9e48514621a54feb36085822852978b45832",
+    ),
 }
+# Additional pins are offline collector inputs, not a native/live profile extension.
+FILE_ONLY_INPUTS = {
+    "TDB": (APP / "Contents/Frameworks/TDB.dylib",
+            "c40f65989078368f63302050edc42315873dbbd71949324ddc79f01753f2d7d5"),
+}
+INPUTS.update(FILE_ONLY_INPUTS)
 SYMBOL_WANTED = {
     "search-abi": re.compile(r"(PLUG_Search|Egg_PlugSearch|SearchStatFunc)"),
     "cleanup": re.compile(r"(PLUG_InstallScan|PLUGp_DoCleanups|FLT_Birth|"
@@ -125,6 +152,8 @@ SYMBOL_WANTED = {
                                    r"PLUG_RoutineDescPriv|CreateClassRef)"),
     "effect-dispatch": re.compile(r"(DispatchFilter|FLTp_DoParamsSetup|"
                                   r"U_GenericPluginDispatch|GetCanonicalEffect)"),
+    "provider-factory": re.compile(r"(PluginImpl|Get_AE_StreamFactory|"
+                                   r"StreamFactory.*(Canonical|UnregisterFactoryFunc))"),
     "ownership": re.compile(r"(SetupGeneralPluginScan|PluginScanFunc|PluginCleanupFunc|"
                             r"CleanupGeneralPluginScan|SetdownGeneralPlugins|vectorI13GeneralPlugin)"),
 }
@@ -502,6 +531,200 @@ DISPATCH_ANCHORS = {
 }
 
 
+# Static provider references/maps/cleanup only; no runtime recipient certification.
+RETENTION_ANCHORS = {
+    'PS-ctor': {
+        0x4baa4: ('str', 'x8,[x0]'),
+        0x4baf0: ('bl', '0x8ca54'),
+        0x4bb1c: ('stp', 'xzr,xzr,[x19,#0x128]'),
+        0x4bb20: ('strb', 'wzr,[x19,#0x138]'),
+    },
+    'PS-dtor': {
+        0x4bc04: ('ldr', 'x20,[x0,#0x130]'),
+        0x4bc14: ('ldaddal', 'x9,x8,[x8]'),
+        0x4bc44: ('blr', 'x8'),
+        0x4bc4c: ('bl', '0x8d300'),
+        0x4bc58: ('ldr', 'x20,[x19,#0x100]'),
+        0x4bc68: ('ldaddal', 'x9,x8,[x8]'),
+        0x4bce8: ('blr', 'x8'),
+        0x4bcf0: ('bl', '0x8d300'),
+        0x4bc74: ('str', 'xzr,[x19,#0xe8]'),
+        0x4bc90: ('blr', 'x8'),
+        0x4bcc8: ('bl', '0x8ca60'),
+    },
+    'PS-init': {
+        0x4bef0: ('cbnz', 'x0,0x4bfd8'),
+        0x4bfe4: ('ldr', 'x8,[x8,#0x30]'),
+        0x4bfe8: ('blr', 'x8'),
+        0x4bff4: ('bl', '0x8d1e0'),
+        0x4c03c: ('str', 'w0,[x19,#0xe0]'),
+        0x4c05c: ('str', 'w0,[x19,#0xe4]'),
+        0x4c07c: ('add', 'x21,x19,#0xe8'),
+        0x4c0a4: ('blr', 'x8'),
+        0x4c0cc: ('str', 'x22,[x21]'),
+        0x4c110: ('blr', 'x8'),
+        0x4c138: ('blr', 'x8'),
+        0x4c13c: ('str', 'w0,[x19,#0x120]'),
+        0x4c274: ('bl', '0x8c97c'),
+        0x4c2e8: ('bl', '0x8c928'),
+        0x4c2ec: ('brk', '#0x1'),
+        0x4c43c: ('bl', '0x8c334'),
+    },
+    'PS-load': {
+        0x4c460: ('mov', 'x20,x8'),
+        0x4c464: ('add', 'x19,x0,#0x8'),
+        0x4c488: ('bl', '0x8ceb0'),
+        0x4c48c: ('ldrb', 'w8,[x21,#0x138]'),
+        0x4c49c: ('bl', '0x8c628'),
+        0x4c4a0: ('ldr', 'x8,[x21,#0x128]'),
+        0x4c4ac: ('stp', 'x8,x9,[x20]'),
+        0x4c4c4: ('bl', '0x8c61c'),
+        0x4c4c8: ('tbnz', 'w0,#0x1f,0x4c4ec'),
+        0x4c4d4: ('stp', 'x8,x9,[x20]'),
+        0x4c4e4: ('ldadd', 'x9,x8,[x8]'),
+        0x4c4f0: ('str', 'w0,[x22]'),
+        0x4c4f4: ('stp', 'xzr,xzr,[x20]'),
+        0x4c4fc: ('bl', '0x8cebc'),
+        0x4c528: ('bl', '0x8c334'),
+        0x4c558: ('bl', '0x8c334'),
+    },
+    'PS-free': {
+        0x4c55c: ('ret', ''),
+    },
+    'PS-entry': {
+        0x4c58c: ('ldr', 'x9,[x8,#0x20]'),
+        0x4c598: ('blr', 'x9'),
+        0x4c59c: ('ldr', 'x21,[sp,#0x28]'),
+        0x4c5ac: ('ldaddal', 'x9,x8,[x8]'),
+        0x4c5b4: ('ldr', 'x21,[x20,#0x128]'),
+        0x4c5b8: ('cbz', 'x21,0x4c6cc'),
+        0x4c5c0: ('cbz', 'w8,0x4c6a0'),
+        0x4c5d4: ('cmp', 'x23,#0x90'),
+        0x4c5d8: ('b.eq', '0x4c674'),
+        0x4c648: ('ldr', 'x21,[x24,#0x148]'),
+        0x4c690: ('bl', '0x8d300'),
+        0x4c6a8: ('bl', '0x8ca18'),
+        0x4c6b4: ('bl', '0x8ce2c'),
+        0x4c6cc: ('mov', 'x0,x21'),
+        0x4c718: ('bl', '0x8c334'),
+    },
+    'PS-module': {
+        0x4d368: ('ldr', 'x10,[x0,#0x128]'),
+        0x4d374: ('stp', 'x10,x9,[x8]'),
+        0x4d384: ('ldadd', 'x9,x8,[x8]'),
+        0x4d38c: ('stp', 'xzr,xzr,[x8]'),
+    },
+    'TDB-factory': {
+        0x599c: ('adrp', 'x8,95'),
+        0x59a0: ('ldr', 'x0,[x8,#0xd40]'),
+        0x59a4: ('ret', ''),
+    },
+    'TDB-get-instance': {
+        0x1f054: ('bl', '0x50974'),
+        0x1f05c: ('ldr', 'x23,[x21,#0x40]!'),
+        0x1f0a0: ('tbz', 'w0,#0x0,0x1f0d4'),
+        0x1f0a4: ('mov', 'x19,#0x0'),
+        0x1f0b4: ('bl', '0x50980'),
+        0x1f0d4: ('add', 'x0,x20,#0x50'),
+        0x1f0f0: ('bl', '0x21f8c'),
+        0x1f0f4: ('ldr', 'x19,[x0,#0x30]'),
+        0x1f158: ('bl', '0x50404'),
+    },
+    'TDB-register': {
+        0x1f1ac: ('bl', '0x50974'),
+        0x1f1b4: ('bl', '0x302c8'),
+        0x1f1c8: ('ldr', 'x23,[x21,#0x40]!'),
+        0x1f20c: ('tbz', 'w0,#0x0,0x1f30c'),
+        0x1f214: ('mov', 'w1,#0x1'),
+        0x1f218: ('bl', '0x2f370'),
+        0x1f220: ('ldr', 'x8,[x8,#0x158]'),
+        0x1f228: ('blr', 'x8'),
+        0x1f238: ('str', 'x19,[sp,#0x38]'),
+        0x1f23c: ('add', 'x0,x20,#0x50'),
+        0x1f248: ('bl', '0x21e68'),
+        0x1f25c: ('bl', '0x50cb0'),
+        0x1f27c: ('stp', 'xzr,x20,[x0,#0x10]'),
+        0x1f294: ('bl', '0x21d04'),
+        0x1f2d4: ('bl', '0x50980'),
+        0x1f31c: ('blr', 'x8'),
+        0x1f320: ('add', 'x0,x20,#0x50'),
+        0x1f340: ('bl', '0x21f8c'),
+        0x1f344: ('ldr', 'x19,[x0,#0x30]'),
+        0x1f3e0: ('blr', 'x8'),
+        0x1f3fc: ('bl', '0x50404'),
+    },
+    'TDB-unregister-name': {
+        0x1f824: ('bl', '0x20128'),
+        0x1f828: ('cbz', 'x0,0x1f884'),
+        0x1f830: ('ldr', 'x8,[x8,#0x98]'),
+        0x1f834: ('blr', 'x8'),
+        0x1f848: ('bl', '0x1fe1c'),
+        0x1f86c: ('bl', '0x50974'),
+        0x1f870: ('add', 'x0,x20,#0x8'),
+        0x1f878: ('bl', '0x228e4'),
+        0x1f880: ('bl', '0x50980'),
+        0x1f8c0: ('bl', '0x50404'),
+    },
+    'TDB-unregister-factory': {
+        0x1fc2c: ('bl', '0x50974'),
+        0x1fc34: ('ldr', 'x25,[x24,#0x58]!'),
+        0x1fc80: ('tbnz', 'w21,#0x0,0x1fca8'),
+        0x1fcbc: ('bl', '0x50980'),
+        0x1fcc8: ('tbnz', 'w8,#0x0,0x1fcdc'),
+        0x1fcd0: ('ldr', 'x8,[x8,#0x8]'),
+        0x1fcd8: ('blr', 'x8'),
+        0x1fcdc: ('eor', 'w0,w19,#0x1'),
+        0x1fcfc: ('ldr', 'x21,[x23,#0x30]'),
+        0x1fd08: ('bl', '0x228e4'),
+        0x1fd10: ('b.ne', '0x1fd38'),
+        0x1fd14: ('add', 'x0,x20,#0x38'),
+        0x1fd1c: ('bl', '0x22d9c'),
+        0x1fd24: ('b.ne', '0x1fd74'),
+        0x1fd6c: ('bl', '0x50d4c'),
+        0x1fda8: ('bl', '0x50d4c'),
+    },
+    'TDB-unregister-recursive': {
+        0x1fe4c: ('bl', '0x3348c'),
+        0x1fe74: ('bl', '0x50620'),
+        0x1ff14: ('ldaddal', 'x9,x8,[x8]'),
+        0x1ff38: ('bl', '0x302c8'),
+        0x1ff48: ('bl', '0x1fbe4'),
+        0x1ff4c: ('ldr', 'x8,[x19,#0x10]'),
+        0x1ff8c: ('blr', 'x8'),
+        0x1ffa0: ('bl', '0x1fe1c'),
+        0x2001c: ('b', '0x1ffc0'),
+        0x20030: ('mov', 'w2,#0x1'),
+        0x20034: ('bl', '0x1fbe4'),
+        0x2004c: ('bl', '0x5062c'),
+    },
+    'TDB-get-stream': {
+        0x20164: ('bl', '0x50974'),
+        0x20168: ('ldr', 'x22,[x20,#0x58]!'),
+        0x201ac: ('tbz', 'w0,#0x0,0x201dc'),
+        0x201b0: ('mov', 'x19,#0x0'),
+        0x201c0: ('bl', '0x50980'),
+        0x201dc: ('ldr', 'x19,[x21,#0x30]'),
+        0x201fc: ('bl', '0x50404'),
+        0x2022c: ('bl', '0x50404'),
+    },
+}
+
+
+def verify_retention(text, label, start, end):
+    require((label, 'PluginSupport' if label.startswith('PS-') else 'TDB', start, end)
+            in REVIEWS['provider-factory'], 'unreviewed provider retention window')
+    count = validate_disassembly(text, start, end)
+    rows = {}
+    for address, op, operands in re.findall(
+            r'^.*\[0x([0-9a-fA-F]+)\]\s+<[^>]*>:[ \t]+(\S+)[ \t]*([^\n]*)', text, re.M):
+        rows[int(address, 16)] = (op, re.sub(r'\s+', '', operands.split(';')[0]))
+    expected = RETENTION_ANCHORS[label]
+    require(all(rows.get(address) == pair for address, pair in expected.items()),
+            'provider retention structural anchors differ')
+    return {'decoded_instructions': count, 'structural_anchors': len(expected),
+            'claim': 'file-only-references-and-maps-not-runtime-lifetime-or-rollback'}
+
+
 def verify_dispatch(text, label, start, end):
     require((label, 'FLT', start, end) in REVIEWS['effect-dispatch'],
             'unreviewed effect dispatch window')
@@ -602,8 +825,18 @@ def source_identity():
 def profile_agrees():
     text = PROFILE.read_text(encoding="utf-8")
     for name, (path, digest) in INPUTS.items():
+        if name in FILE_ONLY_INPUTS:
+            require((path, digest) == FILE_ONLY_INPUTS[name],
+                    "collector input differs from file-only profile: " + name)
+            continue
         require(str(path) in text and digest in text,
                 "collector pin differs from C1 profile: " + name)
+    record = json.loads(FILE_ONLY_PROFILE.read_text(encoding="utf-8"))
+    expected = {"schema": "AEHL-FILE-REVIEW-PINS-1",
+                "scope": "offline-only-not-native-host-profile",
+                "inputs": {key: {"path": str(path), "sha256": digest}
+                           for key, (path, digest) in FILE_ONLY_INPUTS.items()}}
+    require(record == expected, "collector pin differs from file-only profile")
 
 
 def validate_input(path, expected):
@@ -768,6 +1001,7 @@ def main():
         publication = {}
         readiness = {}
         dispatch = {}
+        retention = {}
         for name in names:
             path, _ = INPUTS[name]
             nm, nm_err = run_tool(["/usr/bin/nm", "-arch", "arm64", "-n", "-m", str(path)])
@@ -789,6 +1023,8 @@ def main():
                 readiness[label] = verify_readiness(disassembly, label, start, end)
             if args.review == 'effect-dispatch':
                 dispatch[label] = verify_dispatch(disassembly, label, start, end)
+            if args.review == 'provider-factory':
+                retention[label] = verify_retention(disassembly, label, start, end)
             if args.review == 'ownership':
                 ownership[label] = verify_ownership(disassembly, label, start, end)
             write_exclusive(folder / (label + "-disassembly.txt"), disassembly)
@@ -852,6 +1088,14 @@ def main():
             record['native_registration_ABI'] = 'UNKNOWN'
             record['actual_procedure_and_provider_identity'] = 'NOT OBSERVED'
             record['canonical_state_rollback'] = 'NOT PROVEN'
+            record['receiver_thread_and_provider_lifetime'] = 'NOT PROVEN'
+            record['registration_apply_render'] = 'NOT RUN'
+        if args.review == 'provider-factory':
+            record['provider_factory_evidence'] = retention
+            record['native_registration_ABI'] = 'UNKNOWN'
+            record['actual_provider_and_canonical_identity'] = 'NOT OBSERVED'
+            record['reference_counts_and_map_changes'] = 'FILE ONLY'
+            record['safe_unregistration_and_failure_rollback'] = 'NOT PROVEN'
             record['receiver_thread_and_provider_lifetime'] = 'NOT PROVEN'
             record['registration_apply_render'] = 'NOT RUN'
         if args.review == 'ownership':

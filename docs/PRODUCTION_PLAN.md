@@ -1,6 +1,6 @@
 # AE Hot Loader — current development and release plan
 
-Updated: 2026-10-02. Branch: `research/ordinary-plugin-discovery`.
+Updated: 2026-10-03. Branch: `research/ordinary-plugin-discovery`.
 
 Source of current verified state: [DEVELOPMENT_STATUS](DEVELOPMENT_STATUS.md).
 Accepted standard: **6.2.0**, `v6.2.0` peeled to
@@ -25,6 +25,17 @@ Primary Stage C goal:
 
 Loaded binaries, registry publication, application and rendering are separate
 claims.
+
+## Latest C1 provider and canonical factory — implementation checkpoint
+
+Fourteen complete pinned PluginSupport/TDB windows / 1365 instructions / 146
+anchors are prepared. Library shared references and canonical/factory tables
+have separate lifetimes; Free is a no-op, and recursive unregister is not a
+proven rollback. See [provider/factory review](C1_PROVIDER_FACTORY_REVIEW_2026-10-03.md).
+TDB pin is confined to a file-only manifest; native profile/helpers/ResourcePassGate
+unchanged. Clean-source collection/regression/CI are pending the implementation
+commit. No live AE operation. Backend NOT READY; registration/apply/render remain
+open. Next: ASL module lifetime and FCSpec's exact provider/virtual reference path.
 
 ## Latest C1 effect dispatch and parameter failure — offline PASS
 

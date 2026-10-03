@@ -173,6 +173,70 @@ class ResourceAbiCollectorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unreviewed'):
             collector.verify_publication(text, 'FLT-if-missing', start, end - 4)
 
+    def test_provider_factory_scope_is_complete_and_file_only(self):
+        windows = collector.review_windows('provider-factory')
+        self.assertEqual({name for _, name, *_ in windows}, {'PluginSupport', 'TDB'})
+        self.assertEqual({label for label, *_ in windows}, set(collector.RETENTION_ANCHORS))
+        self.assertEqual(sum((b-a)//4 for _, _, a, b in windows), 1365)
+        self.assertEqual(collector.RETENTION_ANCHORS['PS-free'], {0x4c55c: ('ret', '')})
+        for _, key, a, b in windows:
+            script = collector.lldb_script(collector.INPUTS[key][0], a, b)
+            self.assertNotIn('process attach', script)
+            self.assertNotIn('process launch', script)
+
+    def test_retention_rejects_changed_ownership_or_erasure_instructions(self):
+        for label, key, start, end in collector.review_windows('provider-factory'):
+            anchors = collector.RETENTION_ANCHORS[label]
+            def transcript(overrides):
+                return ''.join('owned[0x%x] <+%d>: %s %s\n' %
+                    (a, a-start, *overrides.get(a, anchors.get(a, ('nop', ''))))
+                    for a in range(start, end, 4))
+            text = transcript({})
+            result = collector.verify_retention(text, label, start, end)
+            self.assertEqual(result['structural_anchors'], len(anchors))
+            self.assertIn('not-runtime-lifetime-or-rollback', result['claim'])
+            for address in anchors:
+                with self.subTest(label=label, address=hex(address)):
+                    with self.assertRaisesRegex(ValueError, 'structural'):
+                        collector.verify_retention(transcript({address: ('nop', '')}),
+                                                   label, start, end)
+            with self.assertRaisesRegex(ValueError, 'bounds'):
+                collector.verify_retention(text + text.splitlines()[0]+'\n', label, start, end)
+            with self.assertRaisesRegex(ValueError, 'unreviewed'):
+                collector.verify_retention(text, label, start, end+4)
+
+    def test_file_only_pins_cannot_change_scope_or_native_profile(self):
+        record = json.loads(collector.FILE_ONLY_PROFILE.read_text())
+        self.assertEqual(set(record['inputs']), {'TDB'})
+        self.assertNotIn('TDB.dylib', collector.PROFILE.read_text())
+        with tempfile.TemporaryDirectory(prefix='aehl-file-pins-') as tmp:
+            path = Path(tmp)/'pins.json'
+            with mock.patch.object(collector, 'FILE_ONLY_PROFILE', path):
+                path.write_text(json.dumps(record)); collector.profile_agrees()
+                for field, value in (('scope', 'live'), ('schema', 'unreviewed'),
+                                     ('extra', True), ('inputs', {})):
+                    bad = dict(record); bad[field] = value
+                    path.write_text(json.dumps(bad))
+                    with self.subTest(field=field), self.assertRaisesRegex(ValueError, 'file-only'):
+                        collector.profile_agrees()
+                bad = json.loads(json.dumps(record)); bad['inputs']['TDB']['sha256'] = '0'*64
+                path.write_text(json.dumps(bad))
+                with self.assertRaisesRegex(ValueError, 'file-only'):
+                    collector.profile_agrees()
+                path.write_text(json.dumps(record))
+                with mock.patch.dict(collector.INPUTS, {'TDB': (Path('/tmp/other'), '0'*64)}):
+                    with self.assertRaisesRegex(ValueError, 'file-only'):
+                        collector.profile_agrees()
+
+    def test_provider_factory_symbols_exclude_scans(self):
+        text = 'external ML_PluginImpl_Load\nexternal TDB_StreamFactory_RegisterCanonicalInstance\n' \
+               'external Get_AE_StreamFactory\nexternal PLUG_Search\nexternal SetupGeneralPluginScan\n'
+        selected = collector.select_symbols(text, 'provider-factory')
+        for name in ('PluginImpl', 'RegisterCanonicalInstance', 'Get_AE_StreamFactory'):
+            self.assertIn(name, selected)
+        for name in ('PLUG_Search', 'SetupGeneralPluginScan'):
+            self.assertNotIn(name, selected)
+
     def test_dispatch_scope_includes_both_procedure_lanes_and_parameter_body(self):
         windows = collector.review_windows('effect-dispatch')
         self.assertEqual({label for label, *_ in windows}, set(collector.DISPATCH_ANCHORS))
