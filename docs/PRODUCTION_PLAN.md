@@ -26,16 +26,25 @@ Primary Stage C goal:
 Loaded binaries, registry publication, application and rendering are separate
 claims.
 
-## Latest C1 provider and canonical factory — implementation checkpoint
+## Latest C1 provider and canonical factory retention — offline PASS
 
-Fourteen complete pinned PluginSupport/TDB windows / 1365 instructions / 146
-anchors are prepared. Library shared references and canonical/factory tables
-have separate lifetimes; Free is a no-op, and recursive unregister is not a
-proven rollback. See [provider/factory review](C1_PROVIDER_FACTORY_REVIEW_2026-10-03.md).
-TDB pin is confined to a file-only manifest; native profile/helpers/ResourcePassGate
-unchanged. Clean-source collection/regression/CI are pending the implementation
-commit. No live AE operation. Backend NOT READY; registration/apply/render remain
-open. Next: ASL module lifetime and FCSpec's exact provider/virtual reference path.
+Code/test source **49a85318fcfb884315b9d36d3cb4b74a094a0399**. Fourteen complete
+PluginSupport/TDB bodies / 1365 instructions / 146 anchors; all eight archives
+independently PASS, with 257 raw direct and 26 raw indirect branches checked.
+Library shared references and canonical/factory tables have separate lifetimes;
+Free is a no-op, canonical retrieval can mutate a table, and recursive unregister
+is not a proven transactional rollback.
+
+Full local regression **368 Python/no skips, 62 Node, 22 stages PASS**.
+Research CI 37116821256 and macOS CI 37116821279 completed/success at exact
+49a8531. Bounded source/static review complete; sole known local argparse scanner
+false positive retained. See [provider/factory evidence](C1_PROVIDER_FACTORY_REVIEW_2026-10-03.md).
+TDB's new pin is confined to a file-only manifest; native profile/helpers /
+ResourcePassGate unchanged. No live AE operation or executable live packet.
+Next: file-only ASLFoundation Module load/procedure/final lifetime and exact FLT
+FCSpec GetRoutineDescH/SetRoutineDescH/GetEffectProc provider/virtual reference path.
+Backend NOT READY; registration/apply/render/release remain open. This supersedes
+the prepared checkpoint; historical late-registration FAIL remains unchanged.
 
 ## Latest C1 effect dispatch and parameter failure — offline PASS
 

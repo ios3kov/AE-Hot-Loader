@@ -122,3 +122,67 @@ Next file-only discriminator: ASL::Module Load/GetProcAddress/final destruction,
 and the exact FCSpec virtual/provider reference path connecting PLUG preparation
 to dispatch. This block narrows ownership boundaries, not the production ABI.
 No live packet is executable; backend NOT READY and release gates remain open.
+
+## Clean-source local and exact-source CI verification — PASS
+
+Implementation source **49a85318fcfb884315b9d36d3cb4b74a094a0399**.
+Focused collector suite **28 PASS**. Four new tests were first run against the
+prior implementation and failed as expected; the completed mode rejects every
+changed anchor and duplicate/incomplete/unreviewed coverage. File-only pin tests
+reject scope/schema/hash/inventory changes and a retargeted collector input.
+During implementation the first import check caught a misplaced report block;
+it was corrected before the clean commit, and no host action was involved.
+
+All eight modes collected successfully at the same clean source. New archive
+`build-ae-hot-loader/resource-provider-factory-e289a072-0hvk_ie_.zip`, SHA-256
+`840565d3276b899608cb30f8a1226414029dbad494e125da6a3fcba27f9d1b12`,
+contains 32 members; **14 complete bodies / 1365 instructions / 146 anchors**.
+Original PluginSupport/TDB pins match before/after. TDB's separate file-only pin
+manifest SHA-256 `95efd474139c90f322dbfadfed8aeef9570637adf7628bc459646f3cfc080171`;
+the native profile remains unchanged.
+
+Independent verifier `../private-live/verify_provider_factory_20261003.py`,
+SHA-256 `ace588c499bb8dc863ed47ccaffff1074c11919f8c1034cd2835d32023f712cb`,
+verified archive SHA/CRC/exact manifest inventory/member hashes/source, complete
+coverage, original input pins and **all 257 direct B/BL and 26 indirect BR/BLR**
+in the new mode from original arm64 Mach-O bytes. This confirms instructions,
+not actual recipients. All eight archives PASS; result
+`retention-independent-49a8531.json`, SHA-256
+`a9a1d0e450824a90c92571dd95a7744552c87c5d2c5267bcadc54d2c7cfe38d1`.
+
+Full local regression **368 Python/no skips, 62 Node, 22 stages PASS**.
+Report `/private/var/folders/bs/39klz7cd52z6xkm817vj0zjm0000gn/T/AEHL-checks-k5l7kfs_.zip`,
+SHA-256 `e9f0b32e8783972837aa5cef7542d333950130dd428688fc985ca48df3f6be94`.
+Independent ZIP inventory/CRC/member hashes / 302 tracked source hashes / unchanged
+source PASS; receipt `retention-local-independent-49a8531.json`, SHA-256
+`f53814efb0792f7285ffa4ae0e367c0f6f45aa8dfe81512268e8cdb97bd8a841`.
+Live/product/release gates remain BLOCKED/NOT RUN, not promoted by this runner.
+
+Bounded source/static review complete. Scanner `retention-audit-49a8531.json`,
+SHA-256 `8d5cfefe139fb4bb4d822b98cd7d5dca1f0abfa9d4a80961a9209d620bb82cc8`,
+records 657 text files / no inventory omissions / 4 workflow files inspected.
+Scope includes ignored text evidence and omits unsupported files/history/runtime/
+dependency-vulnerability checks. Raw exit 1 retained: the sole known
+`vibe.no_ratelimit_auth` at `tools/artifact_manifest.py:71` is a local argparse
+entrypoint. Manual source review confirms this false positive; no suppression.
+The bounded scanner is not security or release certification.
+
+Both GitHub workflows completed/success on exact implementation source:
+[research CI 37116821256](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37116821256)
+and [macOS CI 37116821279](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37116821279).
+Private final receipt `retention-ci-49a8531-final.json`, SHA-256
+`b598e36c4e6aecbcf74524dd0810e8f075f142e92cc17f170c23319494b21719`.
+CI build/sign/package/synthetic checks are not actual AE loading/rendering.
+RETAIN-001/002/003 PASS in their bounded offline scope.
+No native/live binding or AE action. Backend NOT READY; ordinary-effect late
+registration/apply/render remain NOT RUN, historical registration FAIL unchanged.
+
+## Next-scope locator
+
+Private locator `../private-live/retention-next-locator-crwq107i` rechecked the
+existing FLT file pin and located GetRoutineDescH (`0x5d0dc`), SetRoutineDescH
+(`0x5e26c`) and GetEffectProc (`0x5e2f0`). No bodies/vtable correspondence were
+collected in this locator; actual runtime identity remains unobserved. The next
+review must separately pin ASLFoundation before examining the Module callees,
+and establish the exact FCSpec reference path before calling a saved procedure.
+Do not infer a safe lifetime contract from the slot names or shared-pointer words.

@@ -1,9 +1,10 @@
-# AE Hot Loader — current Stage C handoff, updated 2026-10-02
+# AE Hot Loader — current Stage C handoff, updated 2026-10-03
 
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [dispatch review](C1_EFFECT_DISPATCH_REVIEW_2026-10-02.md),
+Current continuation: [provider/factory review](C1_PROVIDER_FACTORY_REVIEW_2026-10-03.md),
+[dispatch review](C1_EFFECT_DISPATCH_REVIEW_2026-10-02.md),
 [publication review](C1_EFFECT_PUBLICATION_REVIEW_2026-10-02.md),
 [retained names live PASS](C1_RETAINED_NAMES_LIVE_PASS_2026-10-02.md),
 [rules adoption](RULES_ADOPTION_6_2_0_2026-10-02.md),
@@ -12,6 +13,26 @@ Current continuation: [dispatch review](C1_EFFECT_DISPATCH_REVIEW_2026-10-02.md)
 The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
+
+## Latest C1 provider and canonical factory retention — offline PASS
+
+Code/test source **49a85318fcfb884315b9d36d3cb4b74a094a0399**. Fourteen complete
+PluginSupport/TDB bodies / 1365 instructions / 146 anchors; all eight archives
+independently PASS, with 257 raw direct and 26 raw indirect branches checked.
+Library shared references and canonical/factory tables have separate lifetimes;
+Free is a no-op, canonical retrieval can mutate a table, and recursive unregister
+is not a proven transactional rollback.
+
+Full local regression **368 Python/no skips, 62 Node, 22 stages PASS**.
+Research CI 37116821256 and macOS CI 37116821279 completed/success at exact
+49a8531. Bounded source/static review complete; sole known local argparse scanner
+false positive retained. See [provider/factory evidence](C1_PROVIDER_FACTORY_REVIEW_2026-10-03.md).
+TDB's new pin is confined to a file-only manifest; native profile/helpers /
+ResourcePassGate unchanged. No live AE operation or executable live packet.
+Next: file-only ASLFoundation Module load/procedure/final lifetime and exact FLT
+FCSpec GetRoutineDescH/SetRoutineDescH/GetEffectProc provider/virtual reference path.
+Backend NOT READY; registration/apply/render/release remain open. This supersedes
+the prepared checkpoint; historical late-registration FAIL remains unchanged.
 
 ## Latest C1 effect dispatch and parameter failure — offline PASS
 
