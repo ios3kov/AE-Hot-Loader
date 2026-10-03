@@ -3,7 +3,8 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [scoped admission controls and match-name correction](C1_ADMISSION_CONTRACTS_2026-10-03.md),
+Current continuation: [BEE queue controls](C1_WORKQUEUE_CONTROLS_2026-10-03.md),
+[scoped admission controls and match-name correction](C1_ADMISSION_CONTRACTS_2026-10-03.md),
 [actual factory object owners](C1_FACTORY_OBJECT_OWNERS_2026-10-03.md),
 [factory dependency lifetime](C1_FACTORY_DEPENDENCY_LIFETIME_2026-10-03.md),
 [native reference call boundary](C1_CLASSREF_CALL_BOUNDARY_2026-10-03.md),
@@ -21,7 +22,21 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
-## Scoped controls and corrected match-name dependency — current continuation
+## BEE queue controls — current continuation
+
+[QUE checkpoint](C1_WORKQUEUE_CONTROLS_2026-10-03.md), baseline a950085.
+Exact BEE pin/UUID/original nlist;14 complete bodies /2546 instructions.
+Cancel/Pause/Resume act on one ID; cancel flag and terminal stage differ;
+eager completion transfers retained callbacks/RemoveItem via indirect executor.
+Add/Execute remain independent new-work paths. Actual executor/thread/notify/
+worker graph unknown; no caller-held host-wide admission/drain barrier.
+Factory safe initial acquisition/private ABI/thread and whole-effect recovery
+still required. Backend stays unbound, actual adapter/trials BLOCKED / NOT RUN.
+8 parser /77 collector focused PASS; exact full/scanner/original/CI pending.
+No AE operation or new live profile. Do not repeat unchanged scans or treat
+cancel return, item pause/state/map erasure as proof of universal quiescence.
+
+## Scoped controls and corrected match-name dependency — previous continuation
 
 Exact clean tested/pushed code b693169b3b25bfc660ba0bb27f0859965144833c;
 [ADM checkpoint](C1_ADMISSION_CONTRACTS_2026-10-03.md). PluginImpl+e8 is a

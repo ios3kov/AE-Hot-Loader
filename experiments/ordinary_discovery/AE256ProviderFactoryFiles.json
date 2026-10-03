@@ -2,6 +2,10 @@
   "schema": "AEHL-FILE-REVIEW-PINS-1",
   "scope": "offline-only-not-native-host-profile",
   "inputs": {
+    "BEE": {
+      "path": "/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app/Contents/Frameworks/BEE.dylib",
+      "sha256": "817b9de9c6d57b5d6988b634842090e1528fe817a5685c8d1ff358553c6660ca"
+    },
     "TDB": {
       "path": "/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app/Contents/Frameworks/TDB.dylib",
       "sha256": "c40f65989078368f63302050edc42315873dbbd71949324ddc79f01753f2d7d5"

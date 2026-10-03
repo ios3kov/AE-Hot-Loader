@@ -13,7 +13,21 @@ Previous status is preserved at
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
 
-## Current checkpoint — scoped controls and corrected match-name dependency
+## Current checkpoint — BEE queue controls traced, host barrier still open
+
+2026-10-03 QUE-01–11 packet; [checkpoint](C1_WORKQUEUE_CONTROLS_2026-10-03.md).
+Located exact BEE cancellation and reviewed14 complete bodies /2546 instructions.
+Per-ID wrappers, atomic cancel flag, per-item pause/stage transitions, callback
+copy/indirect executor/removal and new-work Add/Execute are now distinguished.
+No continuous all-reader/MFR admission/drain or complete recovery established;
+actual factory acquisition/private ABI/thread still required. Host adapter/trials
+BLOCKED, registration/apply/render NOT RUN. Original product/gates retained.
+
+Bounded selected nlist reader and fixed body-byte/transcript digest checks added
+only to offline collector/profile.8 parser /77 collector focused tests PASS;
+full exact-source runner/scanner/original/CI pending. Final reconciliation follows.
+
+## Previous checkpoint — scoped controls and corrected match-name dependency
 
 2026-10-03 ADM packet continues at exact clean tested/pushed
 **b693169b3b25bfc660ba0bb27f0859965144833c**;

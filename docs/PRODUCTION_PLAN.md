@@ -12,6 +12,60 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## Work-queue admission/completion and conditional host adapter — eleven-block pass
+
+2026-10-03 continuation from clean a9500852c00a95f9e4d5760b34b30558d160bbf0,
+research/ordinary-plugin-discovery. Accepted rules8.0.0 /132b7cd32873ba7328e3128ffbb33e1929b74d45;
+AI_ENTRYPOINT first. Stage C1 Development research; native ABI/thread/admission/
+lifetime Critical, bounded file-only collector Standard. API-SOURCE, RENDER-001,
+exact source, meaningful verification, TASK-CLOSE/CLEANUP and reused
+production-engineering workflow apply. Original ordinary-third-party/no-restart
+product and A/B/C1/C2/D/release retained. No new product/target/API approval inferred.
+
+| ID | Task / observable acceptance | Check and dependency |
+|---|---|---|
+| QUE-01 | Locate original BEE cancellation implementation | File-only framework/dependency/symbol inventory, exact original pin/architecture/UUID; select missing complete bodies before capture |
+| QUE-02 | Establish admission control for new work | Follow queue producer/submit/control boundary; distinguish request cancellation from enforceable caller-held exclusion |
+| QUE-03 | Establish actual completion/drain coverage including MFR | Follow complete selected cancel/wait/join/finish paths and callback/ref ownership; do not infer drain from a return or count snapshot |
+| QUE-04 | Determine coverage of registry/effect consumers | Reconcile queue entry controls with prior original registry readers/dispatch/render/archive evidence; no unproved universal coverage |
+| QUE-05 | Establish safe retained existing factory access | Reuse unchanged factory acquisition/owner/thread evidence; concrete initial receiver/private declaration/thread contract still required |
+| QUE-06 | Establish full failure recovery | Reuse original publication-before-error/cleanup evidence; identify full registry/canonical/preferences inverse or retain UNKNOWN |
+| QUE-07 | Implement substantiated changes/refusal controls | Only an evidenced research component unless actual native contracts established; no further owned/mock stand as host proof |
+| QUE-08 | Verify exact candidate and reconcile packet | Focused/full runner, raw scanner/manual original review, both exact-source CI, source/evidence/docs/commit/push/owned-only cleanup |
+| QUE-09 | Actual AE adapter | Conditional on01–06 supported/reviewed actual acquisition/thread/owners/admission/drain/recovery, otherwise BLOCKED and backend unbound |
+| QUE-10 | Controlled registration → apply → render | Conditional on09 plus current safe disposable AE environment and exact candidate/fixture; otherwise BLOCKED / NOT RUN, no speculative private invoke |
+| QUE-11 | Actual repeat/failure recovery trial | Conditional on10 outcome and demonstrated recovery; preserve original user state; unknown outcome stops once, no automatic retry |
+
+Initial new scope: locate only BEE candidate files and aelib dependency imports;
+bounded named work-queue cancel/admit/submit/wait/join/stop/finish symbol inventory
+in that candidate and already-pinned aelib/dvacore/FLT. Record new file pin and
+exact selected complete-body ends before disassembly. Reuse ADM SDK header and
+factory/registry evidence with original source identities/byte/pin checks.
+No AE install/launch/attach/session read/unchanged scan, user-thread suspension,
+foreign retain/release/teardown or host gate bypass; no main mutation/merge/release.
+Unknown contracts block dependent native design/operation; independent bounded
+research continues. Packet count is a scoped plan, not a numeric rules maximum.
+
+Original BEE.dylib31,373,056 bytes, arm64 UUID161300f373f83ebca751959df40a073b,
+SHA256817b9de9c6d57b5d6988b634842090e1528fe817a5685c8d1ff358553c6660ca.
+aelib original dependency names BEE.dylib. Ordinary nm output exceeds2MiB and
+8MiB caps; preliminary refusals retained, no global collector cap relaxed.
+Use selected original arm64 nlist records instead (271,537 entries,7,871,712
+string bytes). Initial complete missing bodies (next-defined-text symbol ends):
+BEE_WorkQueue_Cancel78e840–78ea80, Pause78ec34–78f100,
+Resume78f2b4–78f7b4 and bee::WorkQueue_Item::SetCancel7e2250–7e2374.
+Four windows /844 instructions. Inspect complete wrappers first; select only
+concrete missing transitive producer/wait/complete targets afterwards if needed.
+
+Selected transitive scope before capture: Table_Cancel_Item7b8d34–7b9b38,
+Table_Add7975b4–797778, RemoveItem7b4e48–7b5028,
+GetCancelHandlerCopy7e16e4–7e17b0, SetStage7e18b4–7e19e0,
+Canceled7e1fcc–7e1fe0, SchedulerPause7e1fe0–7e2048,
+SchedulerPaused7e2048–7e2100, SchedulerStarted7e2100–7e21d4,
+Execute7ac8f4–7acde4. Ten next-defined-text bodies /1702 instructions.
+These fill the concrete cancellation/transition/producer gaps exposed by the
+first four bodies; no claim of a complete host call graph.
+
 ## Host admission, render drain and concrete remaining owners — ten-task pass
 
 2026-10-03 continuation from clean **2685ca657dba7c2613b1902e9937697f3c78cc36**.

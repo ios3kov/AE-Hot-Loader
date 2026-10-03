@@ -18,6 +18,20 @@ spec.loader.exec_module(collector)
 
 
 class ResourceAbiCollectorTests(unittest.TestCase):
+    def test_workqueue_scope_is_fixed_file_only_with_unchanged_tool_caps(self):
+        windows = collector.review_windows('workqueue-control')
+        self.assertEqual(len(windows),14)
+        self.assertEqual(sum((end-start)//4 for _,_,start,end in windows),2546)
+        self.assertEqual({name for _,name,*_ in windows},{'BEE'})
+        self.assertEqual({label for label,*_ in windows},set(collector.workqueue.WINDOWS))
+        self.assertEqual(collector.MAX_OUTPUT,2*1024*1024)
+        self.assertEqual(collector.DVACORE_SYMBOL_OUTPUT,4*1024*1024)
+        for _,name,start,end in windows:
+            script = collector.lldb_script(collector.INPUTS[name][0],start,end)
+            self.assertIn('target create --no-dependents --arch arm64',script)
+            self.assertNotRegex(script,r'process|expression|call ')
+        self.assertNotIn('BEE.dylib',collector.PROFILE.read_text())
+
     def test_admission_contracts_fixed_complete_file_scope(self):
         windows = collector.review_windows('admission-contracts')
         self.assertEqual(len(windows), 6)
@@ -907,7 +921,7 @@ class ResourceAbiCollectorTests(unittest.TestCase):
 
     def test_file_only_pins_cannot_change_scope_or_native_profile(self):
         record = json.loads(collector.FILE_ONLY_PROFILE.read_text())
-        self.assertEqual(set(record['inputs']), {'TDB', 'ASLFoundation'})
+        self.assertEqual(set(record['inputs']), {'TDB', 'ASLFoundation', 'BEE'})
         self.assertNotIn('TDB.dylib', collector.PROFILE.read_text())
         self.assertNotIn('ASLFoundation.framework', collector.PROFILE.read_text())
         with tempfile.TemporaryDirectory(prefix='aehl-file-pins-') as tmp:

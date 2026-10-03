@@ -6,6 +6,7 @@ Adobe code. Captures fixed arm64 disassembly windows plus selected symbols.
 """
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -20,6 +21,10 @@ ROOT = Path(__file__).resolve().parents[2]
 APP = Path("/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app")
 PROFILE = ROOT / "experiments/ordinary_discovery/AE256ResourceProfile.hpp"
 FILE_ONLY_PROFILE = ROOT / "experiments/ordinary_discovery/AE256ProviderFactoryFiles.json"
+_queue_spec = importlib.util.spec_from_file_location(
+    'aehl_workqueue_file_review', Path(__file__).with_name('workqueue_file_review.py'))
+workqueue = importlib.util.module_from_spec(_queue_spec)
+_queue_spec.loader.exec_module(workqueue)
 MAX_OUTPUT = 2 * 1024 * 1024
 DVACORE_SYMBOL_OUTPUT = 4 * 1024 * 1024
 WINDOWS = {
@@ -29,6 +34,8 @@ WINDOWS = {
     "PLUG": (0x8A6C, 0x9028),
 }
 REVIEWS = {
+    'workqueue-control': tuple((label, 'BEE', row[0], row[1])
+                              for label, row in workqueue.WINDOWS.items()),
     "admission-contracts": (
         ('adm-match-get', 'PluginSupport', 0x4d25c, 0x4d264),
         ('adm-match-set', 'PluginSupport', 0x4d264, 0x4d330),
@@ -397,6 +404,8 @@ INPUTS = {
 }
 # Additional pins are offline collector inputs, not a native/live profile extension.
 FILE_ONLY_INPUTS = {
+    "BEE": (APP / "Contents/Frameworks/BEE.dylib",
+            "817b9de9c6d57b5d6988b634842090e1528fe817a5685c8d1ff358553c6660ca"),
     "TDB": (APP / "Contents/Frameworks/TDB.dylib",
             "c40f65989078368f63302050edc42315873dbbd71949324ddc79f01753f2d7d5"),
     "ASLFoundation": (
@@ -7352,12 +7361,23 @@ def main():
         transitive = {}
         objects = {}
         admission_contracts = {}
+        queue_evidence = {}
+        queue_symbols = None
         sdk_contract = None
         if args.review == 'admission-contracts':
             sdk_contract, sdk_excerpt = admission_sdk_contract()
             write_exclusive(folder / 'SDK-admission-contracts.txt', sdk_excerpt)
         for name in names:
             path, _ = INPUTS[name]
+            if name == 'BEE':
+                require(args.review == 'workqueue-control', 'BEE file-only scope mismatch')
+                raw = path.read_bytes()
+                require(hashlib.sha256(raw).hexdigest() == observed[name],
+                        'BEE bytes changed before symbol review')
+                queue_symbols = workqueue.collect_symbols(raw)
+                write_exclusive(folder / 'BEE-symbols.json',
+                                json.dumps(queue_symbols,indent=2,sort_keys=True)+'\n')
+                continue
             nm, nm_err = run_tool(["/usr/bin/nm", "-arch", "arm64", "-n", "-m", str(path)],
                                   output_limit=DVACORE_SYMBOL_OUTPUT if name == "dvacore" else MAX_OUTPUT)
             require(not nm_err.strip(), "nm produced unexpected diagnostics")
@@ -7372,6 +7392,14 @@ def main():
                  "--source", str(folder / (label + "-inspect.lldb"))],
                 timeout=60)
             instruction_count = verify_lldb_disassembly(disassembly, diagnostics, start, end)
+            if args.review == 'workqueue-control':
+                count = workqueue.verify_transcript(disassembly,start,end,
+                                                     workqueue.WINDOWS[label][4])
+                queue_evidence[label] = {
+                    'decoded_instructions': count,
+                    'all_instruction_digest': workqueue.WINDOWS[label][4],
+                    'original_instruction_bytes_sha256': workqueue.WINDOWS[label][3],
+                    'claim': 'file-only-scoped-workqueue-not-host-admission-or-drain'}
             if args.review == 'admission-contracts':
                 admission_contracts[label] = verify_admission_contracts(disassembly, label, start, end)
             if args.review == 'factory-objects':
@@ -7489,6 +7517,18 @@ def main():
             "inputs": outputs,
             "data_windows": data_outputs,
         }
+        if args.review == 'workqueue-control':
+            record['workqueue_evidence'] = queue_evidence
+            record['original_symbol_inventory'] = queue_symbols
+            record['queue_control_scope'] = 'ONE-ID-PER-ITEM-NOT-CALLER-HELD-HOST-LEASE'
+            record['cancel_flag_vs_completion'] = 'DISTINCT-ATOMIC-FLAG-AND-ITEM-STAGE'
+            record['cancel_removal_callback'] = 'RETAINED-BIND-THROUGH-INDIRECT-EXECUTOR'
+            record['actual_executor_and_notify_contract'] = 'UNKNOWN'
+            record['supported_host_owner_thread_contract'] = 'UNKNOWN'
+            record['host_wide_reader_render_exclusion'] = 'NOT PROVEN'
+            record['whole_effect_rollback'] = 'NOT PROVEN'
+            record['native_experiment'] = 'BLOCKED'
+            record['registration_apply_render'] = 'NOT RUN'
         if args.review == 'admission-contracts':
             record['admission_contract_evidence'] = admission_contracts
             record['sdk_contract'] = sdk_contract
@@ -7664,6 +7704,8 @@ def main():
             record['actual_record_identities'] = 'NOT OBSERVED'
             record['allocation_lifetime_quiescence'] = 'NOT PROVEN'
             record['safe_repeat_invocation'] = 'NOT PROVEN'
+        if args.review == 'workqueue-control':
+            require(source_identity() == commit, 'source changed during workqueue collection')
         archive = package(folder, record)
         print("PASS: bounded offline " + args.review + " evidence only; Adobe calls=0")
         print("Report: " + str(archive))
