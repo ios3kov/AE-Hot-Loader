@@ -49,6 +49,19 @@ and must receive full regression. No AE operation and no
 merge/release. Generic launch request remains received; technical gaps must be
 resolved before an identified live packet is executable.
 
+Final reconciliation: [factory findings and exact receipts](C1_FACTORY_IDENTITY_2026-10-03.md).
+Clean code e70d13c693977449e27cf50dcb3e5a388e08a87e: FACTORY-01/02 bounded original-file
+findings documented;03 native code identity component and separate immutable profile
+implemented;04 real owned arm64 address/refusal controls + original-file profile PASS;
+05 fixed collector/refusals PASS;06 clean capture, independent byte/fixup/ZIP/
+341-source-file review, 440 Python/no skips,62 Node/22 stages, scanner review and
+both exact-source CI 37137765177/37137765153 complete;07 status/handoff/
+compatibility/durable retention and ownership-aware cleanup reconciled. FACTORY-08
+BLOCKED on actual retained receiver/supported late ABI/continuous host admission/
+drain/full effect rollback; AE and registration/apply/render NOT RUN. Native code
+identity is implemented; real ResourcePassGate backend NOT READY. Original product
+and A/B/C1/C2/D/release retained. No merge/release or host change.
+
 ## Loader dispatch, ownership and failure — combined ten-block pass
 
 2026-10-03. User “давай снова целый пак шагов в одном прогоне” authorizes this

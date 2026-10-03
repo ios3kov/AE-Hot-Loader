@@ -127,3 +127,79 @@ continuous host reader/render admission, completion/drain and full effect rollba
 are still missing. Generic launch authorization is received; these are technical
 gaps. AE launch/attach/install/private invocation, registration/apply/render NOT RUN.
 Code identity progress is not completion of the real ResourcePassGate backend.
+
+## Exact clean-source closeout
+
+This supersedes the pre-commit PENDING research checks above. Exact clean tested
+code e70d13c693977449e27cf50dcb3e5a388e08a87e. Subsequent closeout changes documentation only;
+its later SHA does not receive the preceding code checks by implication.
+
+| Task | Acceptance / procedure | Actual result |
+|---|---|---|
+| FACTORY-01 | Complete factory insertion/ownership versus metadata holder | Bounded file findings documented, raw root/node fields verified; actual receiver UNKNOWN |
+| FACTORY-02 | Complete ctor/classref/allocation/metadata initialization, normal and unwind exits | Bounded file findings documented; mutex/creation flag/weak/shared owner/base adjustment separated from host transaction |
+| FACTORY-03 | Concrete bounded resident code identity and immutable exact MEE profile | IMPLEMENTED; no callable ABI/receiver/lease/gate capability returned |
+| FACTORY-04 | Actual owned dylib address correspondence, absent/hash/UUID/code/count/bounds/thread refusals; exact original-file profile | PASS; zero Adobe load/call, original profile resident binding NOT RUN |
+| FACTORY-05 | Narrow fixed collector, complete coverage/symbol/table/anchor refusal controls | PASS; 61 collector +3 native focused tests; actual owned LLDB and dylib controls separately identified |
+| FACTORY-06 | Exact clean source collection, separate raw-byte/fixup/archive/source review, all checks/scanner/CI | PASS research verification; raw scanner review-required exit1 retained, no runtime/release certification |
+| FACTORY-07 | Status/plan/handoff/compatibility, immutable private receipts, ownership-aware cleanup | COMPLETE this bounded block; original product and open acceptance retained |
+| FACTORY-08 | Actual retained receiver + callable late ABI + continuous host admission/drain/rollback + native trial | BLOCKED missing technical contracts; AE/registration/apply/render NOT RUN |
+
+- Clean file-only collection `resource-factory-identity-6311418b-umyhgeul.zip`,
+  SHA256 b10b56a1b6b3edae3246a7de7b6192a139901f27590f9cc72d5102fd6ecbf472, 26 members;
+  exact fixed bounds/533 anchors/decoded coverage/pins before-after, CRC/payload
+  hashes and equality to exclusive owned output PASS. Adobe calls zero.
+- Separate verifier `aehl-factory-independent.py`, SHA256
+  2eeca65c7a3de640b172224d6301b360350011a4e89ec3f4800f3f6b70e90330; no collector import.
+  Independently maps original fat arm64 Mach-O bytes: 643
+  instructions, 88 direct/55 conditional/
+  8 indirect branches/9 returns verified.
+  Raw registry0xb1218 versus metadata0xb0f00, ctor primary/secondary tables,
+  interface output/base adjustment, eleven serialized words/rebase fixups and
+  three literal profile fingerprints PASS. Receipt SHA256
+  cf7ae440539443f4805143f37ead4907d234a73dd15654345496fc4d8312f0b6. This corroborates selected
+  original fields, not every transitive semantic side effect.
+- Full runner `AEHL-checks-tkgzfqbo.zip`, SHA256 cef9fbfb86a960ce79a8aacc4304fe96e84a81454135e6dd2fd2efc20a4a12bc,
+  25 members; 440 Python tests, zero skips/failures/errors/expected
+  failures/unexpected successes, 62 Node, all22 stages PASS. Python73.417 seconds.
+  Original parser regression included. Independent ZIP CRC/manifest/payload
+  hashes/all341 tracked working bytes and exact-source Git blob checks PASS.
+  Inventory SHA256 fb7dbba616d931674d1a1be28f9c321326abd7356d570ac6d26ee6713952318f;
+  clean source and source_unchanged_after=true. Source-proof SHA256
+  a74af52793827ad46b753d579195b0610dfe36a6d744b4c137eddea7653d3ccc.
+- Clean-source strict C++17 original-file profile check PASS, three span hashes/
+  UUID/direct export/text; zero Adobe loads/calls, resident binding NOT RUN.
+  Receipt SHA256 24785d29ee7184805b9af555bd8382d79cf51d2f5883cdc50361dbea52ec28dd;
+  owned executable removed by lifecycle. TDD preserves initial missing-header
+  failures, real protection-ceiling failure, corrected/final focused logs and
+  initial four expected missing-mode collector errors. No test acceptance relaxed.
+- Scanner `aehl-factory-e70d13c-audit.json`, SHA256
+  861bf06f08fa1b6970cce587a9b99f5e230683d5498a04368ab35743d6cc8f97; raw exit1,
+  review_required, release_readiness=not_assessed. Sole vibe.no_ratelimit_auth
+  at tools/artifact_manifest.py:71 inspected in exact source: local argparse
+  manifest CLI, no HTTP/auth route/listener. False positive, original raw output
+  retained without suppression. Separate code/scanner review SHA256
+  80b9dcabddedfe981e9e060866541df9c4f47097790fa0d83c40576c4519829e.
+- Research CI [37137765177](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37137765177) and macOS CI
+  [37137765153](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37137765153) both completed/success at exact e70d13c693977449e27cf50dcb3e5a388e08a87e.
+  Research/native internal build checks do not establish AE registration/render.
+
+## Retention, cleanup and next dependency
+
+Private owned receipts retained under
+`build-ae-hot-loader/factory-closeout-e70d13c-s7hx1tq2`: byte-identical collection/runner archives,
+separate verifier/receipt/source proof, raw scanner/code review, TDD/native/focused
+logs, original profile fingerprint inventory and clean-source compiled profile
+check. Original RETENTION.json SHA256 e9c85645f8391539eb90b1c955692efba960dd81fa10db33edb578c1a511771a;
+CI.json SHA256 e92cf1ac59418f1352810eb0935cc486320d6190deb4d672fdfcc64ae7ea5bc4. Final complete receipt hash
+inventory recorded separately in CLOSEOUT.json after documentation reconciliation.
+Only temporary binaries created by these tests were removed; old/shared/loaded/
+unknown/preliminary evidence preserved. SDK/app/plugin/project/session untouched.
+No rescan, AE launch/attach/install/private call, teardown/unload, preferences/cache
+cleanup, merge or release. Rules/product/remaining stage obligations retained.
+
+Next dependency remains actual supported retained receiver acquisition plus a
+continuous late host transaction providing all-reader/render exclusion, completion
+and whole-effect rollback. File classref signatures/pointer offsets/private symbols
+are discovery evidence only. Identity fingerprints and diagnostic integer addresses
+cannot establish call consent/ABI/ownership or satisfy ResourcePassGate on their own.

@@ -17,6 +17,28 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
+## Factory code identity — implemented, actual receiver open
+
+[Factory identity review](C1_FACTORY_IDENTITY_2026-10-03.md): real native code-identity
+component implemented and verified against a fresh owned arm64 dylib. Exact code
+addresses/hash/UUID/text/thread/bounds refusals PASS. A separate immutable identity-only
+MEE profile has three original-file span hashes verified; no callable ABI/receiver/
+reference lease or ResourcePassGate capability is provided. Shared parser protection
+ceiling defect corrected and full regression passed. Nine complete file windows /
+643 instructions /533 anchors distinguish factory tree from KnownPlugins metadata
+holder and trace weak/shared construction and virtual-base pointer adjustment.
+At exact clean research code e70d13c693977449e27cf50dcb3e5a388e08a87e: 61 collector +3
+native focused, 440 full Python/no skips, 62 Node/22 stages PASS. Separate original
+byte/11 serialized rebases/three profile spans/ZIP/341-source-file proof PASS.
+Scanner raw exit1 retained; sole local-CLI false positive reviewed. Research CI
+37137765177 and macOS CI 37137765153 completed/success at exact e70d13c.
+FACTORY-01–07 bounded implementation/review/checks/docs/retention/cleanup complete;
+08 real retained receiver, supported callable late ABI and continuous host admission/
+drain/full effect rollback BLOCKED. Backend NOT READY; AE operation and
+registration/apply/render NOT RUN. Original product/A/B/C1/C2/D/release retained.
+Next: a supported retained receiver acquisition and real host transaction contract;
+integer code identity cannot supply these or authorize a private invocation.
+
 ## Loader dispatch — research checks complete, native contract open
 
 [Loader dispatch review](C1_LOADER_DISPATCH_2026-10-03.md): 23 complete fixed
