@@ -33,7 +33,9 @@ int main(){try{int cases=0;
         Need(d.run(b,"owned-claim").reason=="already-consumed"&&b.acquired==2);
         if(!b.empty)Need(b.records.at("next-finished-0")==SerializePlugin(r.plugins[0]));++cases;}
     for(int mode=0;mode<5;++mode){Fake b;b.unavailable=mode==0;b.changed=mode==1;b.endless=mode==2;b.invalid=mode==3;if(mode==4){b.endless=true;b.large=true;}
-        Diagnostic d;const auto r=d.run(b,"owned-claim");Need(r.status=="STOPPED"&&b.deleted<=1&&b.created==b.deleted);++cases;}
+        Diagnostic d;const auto r=d.run(b,"owned-claim");Need(r.status=="STOPPED"&&b.deleted<=1&&b.created==b.deleted);
+        if(mode==2)Need(r.reason=="plugin-limit");
+        if(mode==4)Need(r.reason=="inventory-payload-limit");++cases;}
     for(const std::string n:{"record:claim","observe","acquire","new","next","delete",
                             "record:before","record:next-finished-0","record:after","record:result"}){
         Fake b;b.inject=[&](const auto& x){if(x==n)throw std::runtime_error("injected");};
