@@ -1,6 +1,6 @@
 # AE Hot Loader — current development and release plan
 
-Updated: 2026-10-03. Branch: `research/ordinary-plugin-discovery`.
+Updated: 2026-10-04. Branch: `research/ordinary-plugin-discovery`.
 
 Source of current verified state: [DEVELOPMENT_STATUS](DEVELOPMENT_STATUS.md).
 Accepted standard: **8.0.0**, `v8.0.0` peeled to
@@ -12,9 +12,36 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
-## Checkpoint correction — current text-only scope
+## Current reader bridge — offline continuation
 
-The user's latest explicit instruction limits this pass to checkpoint corrections
+Clean baseline `f22671b88e91945423e8ae87935d4caec780e1b3`, rules8.0.0 /
+AI_ENTRYPOINT; C1 Development research. The user's continuation resumes the
+previously deferred READ tasks. Standard file-only collection; private host work
+remains Critical/BLOCKED. [Exact evidence](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md).
+No AE process access, install, preferences/project change, callback replay or
+private call. Product and existing ResourcePassGate refusal policy retained.
+
+| ID | Acceptance / check | State |
+|---|---|---|
+| READ-01 | Reconcile supplied reports against exact SDK and original evidence | DONE for bounded facts; seven SDK pins match |
+| READ-02 | Map original suite table to complete reader bodies | DONE;23 rebases/SDK slots,12 bodies/1787 instructions,417 raw branch checks |
+| READ-03 | Trace key consumers to writer storage and identify ownership boundary | Static bridge DONE; common FLT singleton/vector and local FCSpec owner; live suite/effect identity PARTIAL/NOT RUN |
+| READ-04 | Separate catalog mutation, descriptor lifetime, reentry and partial failure | PARTIAL; actual full render/UI/callback read set, late context and recovery UNKNOWN |
+| READ-05 | Verify/document/publish bounded evidence and preserve source/SDK/history | DONE for documentation;217 links/39 tables/diff,241 non-Markdown/372 other baseline files unchanged, raw scanner1 reviewed; exact checks/publication receipt retained; native gates remain open |
+| NEXT-CTX | Trace complete per-module host context creation, prepare/commit and error outcomes | Next offline block; distinguish registration, first apply and first render |
+| NEXT-LIVE | Calibrate one known-good startup effect through actual acquired suite/key/apply | BLOCKED until instrumentation/safety/current authority; no late writer trial |
+
+The suite/key→FLT writer correspondence is now established statically for the
+selected files, replacing the earlier symbol-only lead. It does not establish
+safe late host invocation or render-independent publication. Preserve all
+A/B/C1/C2/D/release and append/reload/recovery obligations. Full local executable
+regression NOT RUN for these Markdown edits; no old CI/scanner/runtime result
+is promoted to current verification. Capture/check/publication receipts retained
+under `/private/tmp/aehl-effect-suite-readers-gxz1e__3`; no deletion needed.
+
+## Checkpoint correction — previous text-only scope
+
+The user's instruction limited that pass to checkpoint corrections
 without new search. Baseline clean `0d29d70070cd1131b56255052962c962d66a3a6d`.
 Rules8.0.0 /AI_ENTRYPOINT, API-SOURCE, AI-STATE, TASK-CLOSE and CLEANUP apply.
 Reuse already inspected crash-log and exact SDK sources; no further file-body
@@ -41,7 +68,7 @@ regression NOT RUN for this text-only scope; no old scanner/CI is promoted to a
 new source PASS. Exact commit/remote/automatically triggered CI state and retained
 receipts: `/private/tmp/aehl-reader-route-d6u09f1y`. No cleanup removal needed.
 
-## Reader-side registration route — preliminary work, deferred by scope correction
+## Reader-side registration route — historical preliminary pass
 
 The user's next independent report sharpens the question from a presumed global
 render stop to the actual mutable read set. Start from clean
@@ -63,10 +90,11 @@ every hypothetical insertion route. All consumers of actually changed state must
 remain safe, including lifetime and reentry. Rollback of partial failure differs
 from unregister of a successfully published record. These research distinctions
 do not yet establish an alternative executable safety contract.
-The user's later text-only instruction supersedes further READ collection in this
-pass. Saved symbols are locations for a possible future investigation, not proof
+The user's later text-only instruction superseded further READ collection in that
+pass. Saved symbols were locations for a possible future investigation, not proof
 that the acquired live Effect Suite points to them. No additional source search
-or original-body capture follows that instruction.
+or original-body capture followed in that pass. The 2026-10-04 continuation above
+resumes this research while retaining the live-operation boundary.
 
 ## External research reconciliation — previous bounded pass
 

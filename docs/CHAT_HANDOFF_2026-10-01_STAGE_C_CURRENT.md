@@ -1,9 +1,10 @@
-# AE Hot Loader — current Stage C handoff, updated 2026-10-03
+# AE Hot Loader — current Stage C handoff, updated 2026-10-04
 
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [online research reconciliation](C1_WEB_RESEARCH_RECONCILIATION_2026-10-03.md),
+Current continuation: [static Effect Suite reader bridge](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md),
+[online research reconciliation](C1_WEB_RESEARCH_RECONCILIATION_2026-10-03.md),
 [suspend contexts](C1_SUSPEND_CONTEXTS_2026-10-03.md),
 [concrete executor](C1_CONCRETE_EXECUTOR_2026-10-03.md),
 [BEE queue controls](C1_WORKQUEUE_CONTROLS_2026-10-03.md),
@@ -25,10 +26,34 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
-## Checkpoint correction — current scope
+## Reader bridge — current offline continuation
 
-The user's latest instruction requests only checkpoint text correction, no new
-search. Baseline0d29d70; [revised hypotheses](C1_WEB_RESEARCH_RECONCILIATION_2026-10-03.md).
+2026-10-04 baseline f22671b; rules8.0.0 pinned source unchanged. The user's
+continuation resumes original-file research. Effect Suite5's original23-member
+table and decoded rebases identify the selected readers; key conversion and
+imports lead to the same FLT singleton/vector as the startup registration writer.
+12 complete new bodies/1787 instructions,417 raw branch checks,23 original table
+words/rebases and historical source checks PASS. [Scope, ownership boundaries
+and exact evidence](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md).
+
+Progress: reader/writer storage bridge established statically; live suite mapping,
+known-good effect identity, full render/UI/callback dependencies, fresh late
+context and partial-failure recovery remain UNKNOWN. Local owner retention does
+not close mutation safety. Native adapter/trials BLOCKED; registration/apply/render
+NOT RUN. No AE launch/attach/install/private call or executable policy change.
+Next: complete per-module host operation and changed read set, then conditional
+known-good startup calibration with valid instrumentation/current authority.
+Keep late writer calls blocked until the full prerequisites are demonstrated.
+Scoped source/SDK/documentation checks, raw audit and exact publication/CI state
+are retained under `/private/tmp/aehl-effect-suite-readers-gxz1e__3`.
+Full executable regression NOT RUN locally for these Markdown changes. Preserve
+all product/A/B/C1/C2/D/release obligations and historical/shared evidence.
+No cleanup deletion needed. This section supersedes the previous text-only scope.
+
+## Checkpoint correction — previous scope
+
+That pass requested only checkpoint text correction, no new search.
+Baseline0d29d70; [revised hypotheses](C1_WEB_RESEARCH_RECONCILIATION_2026-10-03.md).
 Use actual changed-state/read-set safety, distinguish partial failure from
 successful-record unregister, and main-thread AEGP reentry from unsupported
 worker calls. Historical crash stacks corroborate scan/ML symbols only; Effect

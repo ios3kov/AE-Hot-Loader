@@ -1,6 +1,6 @@
 # AE Hot Loader — current development status
 
-Updated: 2026-10-03. Branch: `research/ordinary-plugin-discovery`.
+Updated: 2026-10-04. Branch: `research/ordinary-plugin-discovery`.
 Stage **C of A–D**; core registration, A/B/D and release gates remain open.
 Current continuation handoff: [CHAT_HANDOFF_2026-10-01_STAGE_C_CURRENT.md](CHAT_HANDOFF_2026-10-01_STAGE_C_CURRENT.md).
 AGENTS.md and PRODUCTION_PLAN apply. Current canonical rules:
@@ -13,10 +13,40 @@ Previous status is preserved at
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
 
-## Current packet — checkpoint text correction
+## Current packet — static Effect Suite reader bridge
+
+2026-10-04, clean baseline `f22671b88e91945423e8ae87935d4caec780e1b3`;
+[reader bridge and next dependency](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md).
+The user's continuation resumes bounded original-file research after comparison
+of the supplied three-question model reports. Exact SDK25.6_61 layout and all23
+rebases link the original Effect Suite5 table to inspected readers. Those readers
+convert installed keys to FLT indices and use the same singleton/vector as the
+previously reviewed registration writer.12 complete new bodies/1787 instructions,
+417 independently decoded branch targets and historical ZIP/member/pin checks
+PASS. This establishes static storage correspondence; the acquired live suite,
+one real effect's startup/key/apply identity and full render ownership remain
+UNKNOWN/NOT RUN. Local FCSpec retention is not all-reader mutation safety.
+
+READ-01/02 DONE for bounded sources/file mapping; READ-03 static bridge DONE,
+live identity PARTIAL; READ-04 safety PARTIAL; READ-05 documentation DONE.
+217 local links/39 tables/diff PASS,241 non-Markdown and372 other baseline files
+unchanged. Raw scanner1/review_required,255 text/123 unsupported/no omissions,
+nine completed checks; unchanged local CLI false positive reviewed without
+suppression. Research packet remains PARTIAL.
+No executable/profile/refusal/product scope change, AE launch/attach/install or
+private call. Next offline block: complete per-module host context/commit/failure
+operation and actual changed read set; safe startup calibration is conditional.
+Documentation checks, raw audit review, source/SDK preservation and exact
+publication/CI state are retained in
+`/private/tmp/aehl-effect-suite-readers-gxz1e__3`. Full executable regression
+NOT RUN locally for this Markdown-only change. Native adapter unbound,
+implementation/trials BLOCKED, registration/apply/render NOT RUN. All
+A/B/C1/C2/D/release obligations retained; owned evidence retained, no deletion.
+
+## Previous packet — checkpoint text correction
 
 2026-10-03, baseline `0d29d70070cd1131b56255052962c962d66a3a6d`;
-the user's latest instruction requests checkpoint corrections without new search.
+that pass was limited to checkpoint corrections without new search.
 [Revised source audit and hypotheses](C1_WEB_RESEARCH_RECONCILIATION_2026-10-03.md).
 Historical AE17/x86-64 crash logs corroborate three scan symbols and ML loading in
 a MediaCore stack; no ML→ordinary-registry or late-call contract follows.

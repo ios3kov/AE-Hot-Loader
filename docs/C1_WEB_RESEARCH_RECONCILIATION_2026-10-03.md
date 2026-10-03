@@ -13,6 +13,14 @@ macOS arm64, SDK25.6_61. Product scope and A/B/C1/C2/D/release are retained.
 
 ## Result and scope
 
+Later continuation, 2026-10-04: comparison of the supplied three-question model
+reports led to [original-file reader research](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md).
+The static Effect Suite5/key→FLT writer storage bridge is now substantiated for
+the selected files. Actually acquired live suite/known-good effect identity,
+late host operation, full consumer lifetime and partial recovery remain UNKNOWN.
+This later file result does not relabel the source-only packet below as a host
+test or hot-load proof. The completed DOCFIX pass remains historical.
+
 No supported public late-publication mechanism was found in the reviewed SDK
 and sources. That result does not prove that every internal route is impossible.
 No ordinary third-party effect absent at startup has been registered, applied
