@@ -3,7 +3,8 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [registry transaction batch](C1_REGISTRY_TRANSACTION_BATCH_2026-10-03.md),
+Current continuation: [native reference call boundary](C1_CLASSREF_CALL_BOUNDARY_2026-10-03.md),
+[registry transaction batch](C1_REGISTRY_TRANSACTION_BATCH_2026-10-03.md),
 [provider/isolation batch](C1_PROVIDER_ISOLATION_BATCH_2026-10-03.md),
 [entry/lifetime batch](C1_ENTRY_LIFETIME_BATCH_2026-10-03.md),
 [provider/factory review](C1_PROVIDER_FACTORY_REVIEW_2026-10-03.md),
@@ -16,6 +17,26 @@ Current continuation: [registry transaction batch](C1_REGISTRY_TRANSACTION_BATCH
 The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
+
+## Native reference — calling and complete-result cleanup prototype checked
+
+[Current CALL packet](C1_CLASSREF_CALL_BOUNDARY_2026-10-03.md) supersedes the
+previous owned-ABI implementation checkpoint. Complete original caller/cleanup
+shows whole24-byte destructor base; raw nlist confirms12 shared-entry aliases.
+Actual owned nontrivial C++ return uses new hardwired-false arm64 carrier/CFI and
+stable raw heap output; whole-base destruction/moves/exception/no-create/continuous
+code lifetime/refusals and ASan/UBSan PASS. AE identity-only profile refused before
+original file/resident access; no actual Adobe private call/helper integration.
+Exact tested code ddfe06c1733b8e77c3912b0a45495adcb0ab9551:459 Python/no skips,62 Node/
+22 stages;360-source/ZIP/original/native-artifact review PASS. Scanner raw1/CLI
+false positive retained,240 text/120 unsupported/omissions[], native checked
+separately. CI37143658830/37143658832 completed/success. Private evidence/artifacts
+and preliminary results retained; only owned clean scanner clone removed.
+Eight-block bounded research packet complete; product PARTIAL, actual AE adapter
+BLOCKED, acquisition/release/registration/apply/render NOT RUN. Next substantive
+actual retained receiver/acquisition/release/thread contract, then late-host
+admission/render drain/atomic whole-effect rollback. Original gates retained;
+no unchanged scan, foreign lifetime operation, gate bypass, merge or release.
 
 ## Existing factory — owned acquisition and code lifetime implemented
 

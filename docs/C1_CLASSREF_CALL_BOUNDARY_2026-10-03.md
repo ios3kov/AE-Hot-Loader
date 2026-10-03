@@ -106,6 +106,77 @@ native controls FAIL with creation-request-forbidden, while bind-refusal control
 PASS. Replacing carrier flag with constant false makes all focused checks PASS.
 Final ABI/lifetime results do not retroactively mark that preliminary bridge PASS.
 
-Full exact-source regression/scanner/CI and final evidence/documentation/cleanup
-reconciliation pending at this implementation checkpoint. Real AE private
-acquisition/release/registration/apply/render NOT RUN; actual adapter BLOCKED.
+## Exact-source checks and final reconciliation
+
+Tested clean code **ddfe06c1733b8e77c3912b0a45495adcb0ab9551**. Unified private runner
+/private/tmp/AEHL-checks-94sarfnl.zip SHA **b7308a6be1f2d4ba42aa4497ca7e7d9c91a497335d4952c1677ba84103b7faa9**:
+459 Python/no skips, zero failures/errors/expected failures/unexpected successes;
+62 Node (51+11), all22 stages PASS. Python81.219 seconds. Independent ZIP CRC,
+all25 member identities/every manifest payload and all360 Git/working/copied source
+hashes checked; source_unchanged_after=true. Source proof SHA
+**ffa4e5f8ec3794bf0abf25c88c7fd8207cccd3cfa9baf78705ef8a00bd2dc2fe**. Product package/live AE NOT RUN.
+
+Raw scanner exit1 / review_required / release_readiness=not_assessed preserved:
+240 supported text files,120 unsupported types, omissions[], all selected checks
+complete. Sole candidate vibe.no_ratelimit_auth at tools/artifact_manifest.py:71
+matches the local argparse mode choice 'verify'; complete CLI has no HTTP/auth
+route/listener. Manual false-positive review, no suppression or rewritten exit.
+Raw scanner SHA **f3728ff1fa208c73ee2bd7766fa809bdd35658734fb071d882485321b7927c5f**;
+manual review SHA **86a6c562a79382595682c9c7cb796c51a2db538dd1f1f34c5d047b7a3f0fece1**. Native C++/headers/assembly
+unsupported by regex scope received separate strict compilation, real native and
+ASan/UBSan execution and source/semantic/lifetime/refusal review.
+
+Research CI [37143658830](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37143658830)
+and macOS CI [37143658832](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37143658832)
+completed/success at the exact code SHA above. Local459/no-skips is macOS arm64;
+Linux own platform exclusions do not establish native ABI behavior there. CI native
+build/smoke/archive remains offline, not proof of AE discovery/registration/render.
+
+Independent complete original-file review SHA
+**c22405826df40bc0e1870062f0a676e2d1b3045dd84f3cac6cafe9fb99e1f368** binds four historical bodies399 rows, selected
+call/cleanup register dataflow and12-entry original nlist shared destructor address,
+all original archive payloads/pin/UUID before/after. Historical archives retain their
+original source IDs. Current compiled file-only identity profile validates original
+MEE spans without resident access or private invocation.
+
+Separate exact-artifact normal and ASan/UBSan stands retain consumer/dylib bytes,
+commands, SHA hashes, raw stdout/stderr and unchanged-after evidence. Native receipt
+SHA **ff00de702173a8e8833ba0236c605ec8a7e7f2c03e6fc03c77961138420efff6**; both observe unload_observed=1
+only after actual reference release→owned object destruction. Actual owned nontrivial
+C++ return, whole-result destructor base, stable output moves and exception CFI PASS.
+These tests prove our owned module contract; Adobe invocation/thread/lifecycle remain
+UNKNOWN. No foreign reference counts/deleting destructor or original image unload.
+
+Durable private evidence: build-ae-hot-loader/call-closeout-ddfe06c-adwqm4qk; native artifacts:
+build-ae-hot-loader/call-native-ddfe06c-4wuq33oy. RETENTION.json SHA
+**c556caca21678156adcc677b70f9a88e4b43f9202b2fd9c4c9509b8ace644e53** covers runner/source/scan/manual/original verifier/receipt,
+compiled file-only profile, TDD/focused/compiler/platform sources, exact native
+artifacts and CI/cleanup. Preliminary flag=true runtime FAIL logs preserved; no
+retroactive PASS. Initial prefix-nm/one-name assertion and one preliminary Node log
+parser assumption are recorded as scope/receipt corrections; their raw stderr was
+not retained and is not fabricated as an original observation.
+
+Only this packet's fresh scanner clone removed after full360-byte proof retention,
+clean/no-untracked/no-unique-commit checks and pushed source confirmation. Focused
+fixtures clean their own TemporaryDirectory. Historical/shared/native receipts,
+app/SDK/projects/installed plugins/session untouched. Docs-only closeout compares
+every non-document source byte with tested code; later docs SHA is not relabeled
+as runner/CI-tested code or as the same rebuilt installable artifact.
+
+| Requirement | Final bounded result | Remaining dependency |
+|---|---|---|
+| CALL-01 | Complete original four-body/nlist/pin/archive review PASS; destructor takes whole result,12 aliases corroborated | Supported host private ABI not established |
+| CALL-02 | Static w0/x8/24-byte/x0 contract recorded; general Arm source and actual owned compiled return checked | Apple page unavailable; private Adobe call/thread/lifetime UNKNOWN |
+| CALL-03 | Hardwired-false macOS arm64 machine carrier with actual exception CFI PASS | No AE dispatch/helper/gate integration |
+| CALL-04 | Exact own anchor/exports/code identity + continuous image and stable raw result lifetime implemented/tested | Actual AE acquisition/release/initial reachability BLOCKED |
+| CALL-05 | Real nontrivial owned return/destructor/moves/absence/expiry/exception/lifetime, ASan/UBSan PASS | Actual Adobe factory NOT RUN |
+| CALL-06 | Source/UUID/span/role/anchor/version/target/thread refusals, balanced completed malformed result cleanup PASS; identity-only MEE spans checked | Wrong/missing host semantics cannot be supplied by owned fixtures |
+| CALL-07 |459 Python/62 Node/22 stages; raw scanner/manual/source/ZIP/artifact review and both exact-code CI reconciled | Full AE pipeline and wider compatibility NOT RUN |
+| CALL-08 | Plan/status/handoff/compatibility/checkpoint, evidence/retention/preliminary results and owned cleanup reconciled | Original A/B/C1/C2/D/release gates remain OPEN |
+
+Eight blocks close this **bounded owned calling-mechanism research packet**. Full
+product remains PARTIAL; actual AE adapter BLOCKED. Next substantive dependency:
+establish actual retained acquisition/release/thread contract and initial live
+receiver; then safe late-host admission/render drain/atomic whole-effect rollback
+before registration/apply/render. No unchanged scan, ResourcePassGate bypass, merge
+or release is justified by this packet.

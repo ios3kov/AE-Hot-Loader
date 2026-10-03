@@ -51,6 +51,22 @@ are corroborated; the precise compiler/linker folding mechanism and supported
 private C++ ABI are not inferred. Preserve the preliminary one-name view as scope
 history, not the final original-symbol count.
 
+Final CALL reconciliation: [native class-reference call boundary](C1_CLASSREF_CALL_BOUNDARY_2026-10-03.md).
+CALL-01/02 original whole-result cleanup/shared-nlist address and static call
+boundary reviewed;03/04 hardwired-false arm64 carrier/CFI and stable raw output
+with exact owned code/image lifetime implemented;05/06 real nontrivial cross-module
+return/destruction/exception/move/absence/expiry/refusal/sanitizer PASS. Clean code
+ddfe06c1733b8e77c3912b0a45495adcb0ab9551:459 Python/no skips,62 Node/22 stages PASS;
+360-source/ZIP/original/native artifact review PASS. Scanner raw1 preserved,
+240 supported text/120 unsupported types/omissions[]; local CLI verify false
+positive reviewed; native types separately compiled/executed/manually reviewed.
+CI37143658830/37143658832 completed/success at exact source. CALL-07/08 evidence,
+retention/owned cleanup and docs reconciled. Bounded research packet complete;
+actual AE adapter BLOCKED, registration/apply/render NOT RUN; product PARTIAL,
+all original A/B/C1/C2/D/release gates retained. Next actual retained AE acquisition/
+release/thread/initial reachability, then late admission/drain/whole-effect rollback.
+This owned contract does not establish supported Adobe ABI or grant foreign calls.
+
 ## Existing factory and code lifetime — eight-block pass
 
 2026-10-03 continuation, baseline clean147761b0755da43f1008baf6a34a064a8513ce31.

@@ -12,6 +12,27 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
+## Current checkpoint — native class-reference call boundary
+
+2026-10-03 CALL-01–08 packet reconciled under rules8.0.0. Tested clean code
+**ddfe06c1733b8e77c3912b0a45495adcb0ab9551**; [checkpoint](C1_CLASSREF_CALL_BOUNDARY_2026-10-03.md).
+Original caller/cleanup confirms destructor needs whole24-byte result base; raw
+nlist resolves12 same-address names, preserving preliminary limited-view history.
+Implemented hardwired-false arm64 carrier with CFI, stable raw result storage and
+exact owned call/code/image lifetime. Actual fresh nontrivial C++ reference return,
+whole-base destruction, stable move identity, exception unwind/cleanup, no-create
+absence/expiry and wrong source/profile/thread/target refusals PASS, ASan/UBSan PASS.
+MEE two-span reference profile is identity-only and own binder refuses it.
+459 Python/no skips,62 Node/22 stages;360-source/ZIP/original/native-artifact review
+PASS. Raw scanner1/review_required retained, CLI false positive reviewed;240 text/
+120 unsupported types/omissions[], native separate manual/strict/sanitizer review.
+CI37143658830/37143658832 completed/success at exact tested code. Private evidence,
+native artifacts and preliminary failures retained; only fresh scanner clone removed.
+Eight bounded blocks complete; product PARTIAL, actual AE adapter BLOCKED. AE factory
+acquisition/release/registration/apply/render NOT RUN. Next actual retained receiver/
+call/release/thread contract, then late-host admission/drain/whole-effect rollback.
+Original product/gates retained; no unchanged scan, private call, merge or release.
+
 ## Current checkpoint — existing factory and continuous code lifetime
 
 2026-10-03: eight-block LEASE packet reconciled under rules8.0.0. Tested clean
