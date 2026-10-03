@@ -13,6 +13,14 @@ macOS arm64, SDK25.6_61. Product scope and A/B/C1/C2/D/release are retained.
 
 ## Result and scope
 
+Further original-file continuation, 2026-10-04:
+[host-operation boundaries](C1_COMPLETE_HOST_OPERATION_2026-10-04.md) establishes
+retained routine transfer into FCSpec, branch-specific readiness after add and
+queued numeric-index apply with conditional later catalog lookup. No complete
+late context/commit/recovery or full frame-read/lifetime contract follows.
+These are local original-file findings, not independent model/web runtime proof.
+The source-only and text-correction packets below retain their historical scope.
+
 Later continuation, 2026-10-04: comparison of the supplied three-question model
 reports led to [original-file reader research](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md).
 The static Effect Suite5/key→FLT writer storage bridge is now substantiated for

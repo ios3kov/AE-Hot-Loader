@@ -11,6 +11,12 @@ text-only DOCFIX pass and comparison of the supplied model reports.
 
 ## Result
 
+Later continuation: [host-operation boundaries](C1_COMPLETE_HOST_OPERATION_2026-10-04.md)
+extends downstream apply and descriptor transfer. A queued index and conditional
+later lookup are now identified; complete command/sequence/frame ownership and
+safe late publication remain UNKNOWN. This original reader checkpoint retains
+its own source/check identity and is not relabelled as a live host result.
+
 The selected original files now establish a static bridge from the registered
 Effect Suite5 table through installed-key consumers to the same FLT registry
 storage modified by the previously reviewed writer. This is stronger than a

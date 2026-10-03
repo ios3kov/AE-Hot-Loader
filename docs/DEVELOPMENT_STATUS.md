@@ -13,7 +13,39 @@ Previous status is preserved at
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
 
-## Current packet — static Effect Suite reader bridge
+## Current packet — host-operation boundaries
+
+2026-10-04, clean baseline `12ef175fb72b6f9047127b8466bb6c5eb52747af`;
+[complete findings and next dependency](C1_COMPLETE_HOST_OPERATION_2026-10-04.md).
+CTX-01/02/06 DONE for bounded sources/static transfer/closure; CTX-03/04/05
+PARTIAL.22 complete new original bodies/2267 instructions,629 independently
+decoded branch targets,7 scalar/2 owner fields and four historical archives/
+48 windows/11212 instructions PASS; seven SDK pins and original files unchanged.
+Historical findings are not recounted as new.
+
+Progress: FCSpec independently retains its routine descriptor; provider setup
+can prepare globals/parameters after add and then fail; resource scan's normal
+zero is not per-effect readiness proof. Apply can queue a numeric-index operation
+on a project clone and conditionally perform later catalog lookup. Local suite
+owner retention therefore does not settle downstream consumer safety. Complete
+late context/phase/error contract, sequence/frame ownership and actual live
+suite/startup identity remain UNKNOWN. Research/product PARTIAL; native adapter
+unbound and implementation/trials BLOCKED; registration/apply/render NOT RUN.
+
+Documentation checks, raw scanner review, baseline source preservation and exact
+publication/CI state retained in `/private/tmp/aehl-complete-operation-7gyvoc6k`;
+357 local links/189 tables/diff PASS,241 non-Markdown and372 other baseline
+files byte-identical. Raw scanner1/review_required,256 text/123 unsupported/no
+omissions, eight completed checks/Git-index N/A on owned snapshot; sole unchanged
+CLI false positive reviewed without suppression and candidate hashes bound.
+original archive139 members/138 hashed payloads with CRC/hash PASS. Full local
+executable regression NOT RUN for Markdown-only edits. No executable/refusal/
+profile/product change or AE launch/attach/install/private call. All original
+A/B/C1/C2/D/reload/recovery/release obligations and historical Evidence retained.
+No cleanup deletion. Next offline: command16 selection, sequence descriptor
+transfer and host frame/callback dependencies, plus per-module completion/errors.
+
+## Previous packet — static Effect Suite reader bridge
 
 2026-10-04, clean baseline `f22671b88e91945423e8ae87935d4caec780e1b3`;
 [reader bridge and next dependency](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md).

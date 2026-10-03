@@ -12,7 +12,41 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
-## Current reader bridge — offline continuation
+## Current packet — complete host operation
+
+2026-10-04, clean baseline `12ef175fb72b6f9047127b8466bb6c5eb52747af`.
+The user requested the maximum connected offline packet after the supplied model
+reports were reconciled. Rules8.0.0 / AI_ENTRYPOINT, API-SOURCE, TASK-CLOSE,
+NATIVE ownership/thread and TOOLS bounded diagnostics apply. Standard file-only
+research; dependent private host execution remains Critical/BLOCKED.
+
+| ID | Observable acceptance / check | State / evidence |
+|---|---|---|
+| CTX-01 | Reconcile existing metadata/context/owner/publication evidence and exact source pins; do not recount historical findings as new | DONE; four archives/48 historical windows, seven SDK pins |
+| CTX-02 | Trace ordinary FCSpec construction and transfer into the known writer; complete selected original bodies and ownership/error exits | DONE statically; retained routine owner at FCSpec+c0/c8; live identity NOT RUN |
+| CTX-03 | Follow the enclosing setup/caller through mandatory post-publication work; separate per-module operation from startup batch | PARTIAL; resource/provider setup lanes and post-add readiness differ; complete phase/virtual contract UNKNOWN |
+| CTX-04 | Distinguish reader visibility V from completed registration C and partial failure; mark unresolved transitive/indirect behavior UNKNOWN | PARTIAL; error after add possible, complete compensation/atomicity unproved |
+| CTX-05 | Correlate changed state with selected apply/render dependencies and retained lifetimes; do not infer complete reader coverage | PARTIAL; queued numeric-index apply and conditional later catalog lookup identified; full frame/sequence ownership UNKNOWN |
+| CTX-06 | Independently check original bytes/capture/archive/source preservation, review actual changes, update status/handoff and commit | DONE for bounded closure;22 bodies/2267 instructions,629 raw branches,7 scalar/2 owner fields; exact source/docs/audit/publication receipts retained |
+
+No AE launch/attach/process read, install, scan, callback replay, private call,
+fault injection or teardown. The original product and A/B/C1/C2/D/reload/recovery/
+release obligations and executable refusal policy remain unchanged. This packet
+can finish its bounded research checks while a legal late-entry and actual
+registration/apply/render remain unproved. Preserve originals and private evidence.
+
+[CTX checkpoint and next dependency](C1_COMPLETE_HOST_OPERATION_2026-10-04.md).
+Packet PARTIAL:3 DONE /3 PARTIAL; bounded offline collection/checks completed.
+Next: command16→apply-task selection, sequence/FCSpec owner transfer and actual
+frame dispatch/callback read set, plus complete per-module phase/error boundaries.
+Do not repeat callback-context discovery or the established static reader bridge.
+Evidence retained in `/private/tmp/aehl-complete-operation-7gyvoc6k`; full local
+executable regression NOT RUN for Markdown-only changes. Native gates remain open.
+357 tracked-Markdown local links/189 tables/diff PASS;241 non-Markdown and372
+other baseline files preserved. Raw scanner1/review_required reviewed without
+suppression; eight checks completed/Git-index N/A on the owned exact-hash snapshot.
+
+## Previous reader bridge — offline continuation
 
 Clean baseline `f22671b88e91945423e8ae87935d4caec780e1b3`, rules8.0.0 /
 AI_ENTRYPOINT; C1 Development research. The user's continuation resumes the

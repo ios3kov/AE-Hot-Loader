@@ -3,7 +3,8 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [static Effect Suite reader bridge](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md),
+Current continuation: [host-operation boundaries](C1_COMPLETE_HOST_OPERATION_2026-10-04.md),
+[static Effect Suite reader bridge](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md),
 [online research reconciliation](C1_WEB_RESEARCH_RECONCILIATION_2026-10-03.md),
 [suspend contexts](C1_SUSPEND_CONTEXTS_2026-10-03.md),
 [concrete executor](C1_CONCRETE_EXECUTOR_2026-10-03.md),
@@ -26,7 +27,29 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
-## Reader bridge — current offline continuation
+## Host-operation boundaries — current offline continuation
+
+2026-10-04 baseline12ef175; rules8.0.0 unchanged. The maximum connected CTX
+packet completed22 original bodies/2267 instructions and629 raw branch checks,
+7 scalar/2 owner-field checks, seven SDK pins and four historical archives/
+48 windows/11212 instructions. FCSpec retains its routine owner; resource and
+provider setup have different preparation timing; readiness can fail after add.
+Queued project-clone apply carries an index and can later look up FCSpec.
+[Exact evidence, V/C distinction and limits](C1_COMPLETE_HOST_OPERATION_2026-10-04.md).
+
+3 bounded tasks DONE /3 PARTIAL; packet/product PARTIAL. No fresh legal late
+entry, complete failure compensation or all-reader/lifetime contract established.
+Next: command16 selection→apply task→FLT sequence/FCSpec owner transfer→actual
+frame dispatch/callback read set, and per-module phase/error completion. Preserve
+the established static reader bridge; do not repeat unchanged scans/context work.
+Known-good startup calibration remains conditional on a reviewed instrumentation
+contract and current authority; no late mutation/fault injection is authorized.
+Adapter/trials BLOCKED, registration/apply/render NOT RUN. No native/executable
+or product/refusal/release scope change. Source/docs/raw-audit/exact publication
+receipts and original archive retained at
+`/private/tmp/aehl-complete-operation-7gyvoc6k`; no deletion.
+
+## Reader bridge — previous offline continuation
 
 2026-10-04 baseline f22671b; rules8.0.0 pinned source unchanged. The user's
 continuation resumes original-file research. Effect Suite5's original23-member
