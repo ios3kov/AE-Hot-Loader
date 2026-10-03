@@ -173,6 +173,74 @@ class ResourceAbiCollectorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unreviewed'):
             collector.verify_publication(text, 'FLT-if-missing', start, end - 4)
 
+    def test_factory_identity_scope_is_complete_offline_and_separate_from_receiver(self):
+        windows = collector.review_windows('factory-identity')
+        self.assertEqual(len(windows), 9)
+        self.assertEqual(sum((end-start)//4 for _, _, start, end in windows), 643)
+        self.assertEqual({image for _, image, *_ in windows}, {'PluginSupport', 'MEE'})
+        self.assertEqual({label for label, *_ in windows}, set(collector.FACTORY_IDENTITY_ANCHORS))
+        self.assertEqual(collector.DATA_WINDOWS['factory-identity'],
+                         (('factory-primary-table', 'MEE', 0xef640, 11),))
+        for _, image, start, end in windows:
+            script = collector.lldb_script(collector.INPUTS[image][0], start, end)
+            self.assertIn('target create --no-dependents --arch arm64', script)
+            self.assertNotRegex(script, r'process|expression|call ')
+
+    def test_factory_identity_refuses_changed_ownership_guards_and_base_adjustment(self):
+        for label, _, start, end in collector.review_windows('factory-identity'):
+            anchors = collector.FACTORY_IDENTITY_ANCHORS[label]
+            def transcript(overrides):
+                return ''.join('owned[0x%x] <+%d>: %s %s\n' %
+                    (a, a-start, *overrides.get(a, anchors.get(a, ('nop', ''))))
+                    for a in range(start, end, 4))
+            text = transcript({})
+            self.assertEqual(collector.verify_factory_identity(text, label, start, end)['claim'],
+                             'file-only-factory-identity-not-runtime-receiver-or-registration-ABI')
+            for address, (op, args) in anchors.items():
+                for wrong in [('nop', ''), (op, args+'x0')]:
+                    with self.subTest(label=label, address=hex(address)), self.assertRaises(ValueError):
+                        collector.verify_factory_identity(transcript({address: wrong}), label, start, end)
+            for bad in [text+text.splitlines()[0]+'\n', '\n'.join(text.splitlines()[:-1]),
+                        text.replace(': ', ': .long ', 1)]:
+                with self.assertRaises(ValueError):
+                    collector.verify_factory_identity(bad, label, start, end)
+            with self.assertRaisesRegex(ValueError, 'unreviewed'):
+                collector.verify_factory_identity(text, label, start, end+4)
+
+    def test_factory_primary_table_refuses_retargeting_binding_and_incomplete_fixups(self):
+        label = 'factory-primary-table'; start = 0xef640
+        targets = collector.FACTORY_TABLE_TARGETS
+        words = [(2 << 51) | target for target in targets]
+        rows = ['__DATA_CONST __const 0x%x rebase 0x%x' % (start+i*8, target)
+                for i, target in enumerate(targets)]
+        fixups = '\n'.join(rows); chains = 'pointer_format: 6 (DYLD_CHAINED_PTR_64_OFFSET)'
+        result = collector.verify_factory_table(words, fixups, chains, label)
+        self.assertEqual(result['rebases'], 11)
+        self.assertEqual(result['file_targets'][5], '0x7b1c')
+        for i in range(11):
+            for mask in (1, 1 << 44, 1 << 63):
+                bad = list(words); bad[i] ^= mask
+                with self.subTest(index=i, mask=mask), self.assertRaises(ValueError):
+                    collector.verify_factory_table(bad, fixups, chains, label)
+        for bad in (fixups+'\n'+rows[0], '\n'.join(rows[1:]), fixups.replace('rebase', 'bind')):
+            with self.assertRaises(ValueError):
+                collector.verify_factory_table(words, bad, chains, label)
+        for bad_words, bad_chains, bad_label in [(words[:-1], chains, label),
+                (words, chains.replace('6 (', '2 ('), label), (words, chains, 'unknown')]:
+            with self.assertRaises(ValueError):
+                collector.verify_factory_table(bad_words, fixups, bad_chains, bad_label)
+
+    def test_factory_catalog_keeps_metadata_holder_distinct_and_excludes_scan(self):
+        names = ['RegisterPluginModuleFactory', 'GetKnownPluginsHolder',
+                 'KnownPluginsHolder', 'AELibraryVideoFilterFactoryC1Ev',
+                 'AELibraryVideoFilterFactoryCreateClassRefInternal',
+                 'AELibraryVideoFilterFactoryCreateUnknown']
+        chosen = collector.select_symbols('\n'.join('external '+n for n in names)+
+                                          '\nexternal PLUG_Search\n', 'factory-identity')
+        for name in names:
+            self.assertIn(name, chosen)
+        self.assertNotIn('PLUG_Search', chosen)
+
     def test_loader_dispatch_scope_requires_complete_fixed_bodies(self):
         windows = collector.review_windows('loader-dispatch')
         self.assertEqual(len(windows), 23)

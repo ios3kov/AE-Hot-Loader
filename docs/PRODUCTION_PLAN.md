@@ -12,6 +12,43 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## Factory identity binding — implementation and source review
+
+2026-10-03 user “делай” continues the real host-adapter dependency from the blocked
+launch preflight. Starting clean fcc99577601ead31c6f8a365dd5eb677252b920a;
+accepted rules v8.0.0 /132b7cd32873ba7328e3128ffbb33e1929b74d45, AI_ENTRYPOINT first.
+Stage C1 Development; native identity component Critical, offline collector Standard.
+Apply source/thread/ownership/repro/refusal/task-close/cleanup. Reuse verified SDK
+25.6_61 API inventory: no new SDK/Adobe call introduced. Selected pinned AE25.6x101
+arm64 files only. No inferred private ABI, function invocation, retain/release or
+registry mutation. Original product and A/B/C1/C2/D/release retained.
+
+| ID | Acceptance | Check / dependency |
+|---|---|---|
+| FACTORY-01 | Establish actual factory registry insertion/ownership | Complete PluginSupport RegisterPluginModuleFactory; distinguish KnownPlugins metadata holder from the actual factory registry |
+| FACTORY-02 | Establish factory construction and class-reference lifetime | Complete MEE ctor/CreateClassRefInternal and holder Get/initializer; bounded adaptive direct delegates/same-pin metadata where required |
+| FACTORY-03 | Implement concrete native code-identity component | Parse reviewed fixed code spans from pinned arm64 image, bind only already resident identity, verify UUID/hash/header/text, return integer diagnostic addresses; no callable function/receiver approval |
+| FACTORY-04 | Verify owned native behavior and refusals | Real owned arm64 dylib binding with matching addresses; absent/hash/UUID/code/bounds/thread refusals; no Adobe load/invocation |
+| FACTORY-05 | Pin source evidence with collector/refusals | Complete windows <=4096 bytes, original byte/branch review, malformed/tampered/output/source guards |
+| FACTORY-06 | Verify exact research source | Clean collection, separate raw-byte/archive/source review, full runner/scanner and exact-source CI |
+| FACTORY-07 | Reconcile status/handoff/compatibility/retention/cleanup | Explicit completed component versus unbound actual receiver/host transaction; preserve history |
+| FACTORY-08 | Connect receiver and native registration trial | Conditional on actual retained receiver, supported ABI and continuous host admission/drain/rollback; otherwise BLOCKED/NOT RUN |
+
+Initial file windows: PluginSupport RegisterPluginModuleFactory 0x52d28–0x52fec,
+GetKnownPluginsHolder 0x5f404–0x5f46c, actual initializer 0x65dec–0x65df0,
+static-group Get 0x65df0–0x65ed4; MEE factory ctor 0x73e4–0x7410 and complete
+CreateClassRefInternal at actual next text symbol. Adaptive direct delegates remain
+in the same pinned files and this identity/ownership scope. Native component must
+require exact reviewed byte spans and make address identity distinct from receiver,
+ABI, lifetime and registration authority. Owned controls may load only their fresh
+fixture. Existing host helpers/profiles/gates remain unconnected; add a separate
+immutable identity-only MEE profile. The meaningful owned refusal test exposed
+a shared parser omission: require read/execute protection ceiling as well as initial
+protection for reviewed text. This scoped correction preserves the pinned files
+and must receive full regression. No AE operation and no
+merge/release. Generic launch request remains received; technical gaps must be
+resolved before an identified live packet is executable.
+
 ## Loader dispatch, ownership and failure — combined ten-block pass
 
 2026-10-03. User “давай снова целый пак шагов в одном прогоне” authorizes this

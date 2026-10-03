@@ -118,7 +118,8 @@ inline Image Parse(const Bytes& b, const std::vector<std::string>& names) {
                 Require(!text_segment); text_segment = true;
                 im.base_vm = U(b, p + 24, 8); auto vmsize = U(b, p + 32, 8), filesize = U(b, p + 48, 8);
                 Require(U(b, p + 40, 8) == 0 && filesize >= im.header_size && filesize <= im.slice_size);
-                Require(U(b, p + 60, 4) == 5); // mapped read/execute, never writable text
+                Require(U(b, p + 56, 4) == 5 && U(b, p + 60, 4) == 5);
+                // Reviewed pins permit read/execute only, including the protection ceiling.
                 for (std::size_t j = 0; j < sections; ++j) {
                     auto s = p + 72 + j * 80;
                     if (!Name16(b, s, "__text")) continue;
