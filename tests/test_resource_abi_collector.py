@@ -173,6 +173,39 @@ class ResourceAbiCollectorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unreviewed'):
             collector.verify_publication(text, 'FLT-if-missing', start, end - 4)
 
+    def test_registry_transaction_scope_is_complete_and_file_only(self):
+        windows = collector.review_windows('registry-transaction')
+        self.assertEqual(len(windows), 17)
+        self.assertEqual(sum((b-a)//4 for _, _, a, b in windows), 3063)
+        self.assertEqual({label for label, *_ in windows}, set(collector.REGISTRY_ANCHORS))
+        self.assertEqual({key for _, key, *_ in windows}, {'aelib', 'FLT'})
+        for _, key, a, b in windows:
+            script = collector.lldb_script(collector.INPUTS[key][0], a, b)
+            self.assertNotIn('process attach', script)
+            self.assertNotIn('process launch', script)
+        self.assertEqual(collector.REGISTRY_ANCHORS['FLT-render-count'][0x30e6c],
+                         ('ldr', 'w0,[x8,#0xaf8]'))
+        self.assertEqual(collector.REGISTRY_ANCHORS['FLT-registry-done'][0x6098],
+                         ('strb', 'w8,[x20,#0x48]'))
+
+    def test_registry_transaction_refuses_altered_lock_counter_and_completion_paths(self):
+        for label, _, start, end in collector.review_windows('registry-transaction'):
+            anchors = collector.REGISTRY_ANCHORS[label]
+            def transcript(overrides):
+                return ''.join('owned[0x%x] <+%d>: %s %s\n' %
+                    (a, a-start, *overrides.get(a, anchors.get(a, ('nop', ''))))
+                    for a in range(start, end, 4))
+            text = transcript({})
+            self.assertIn('not-native-exclusion',
+                          collector.verify_registry_transaction(text, label, start, end)['claim'])
+            for a in anchors:
+                with self.subTest(label=label, address=hex(a)), self.assertRaisesRegex(ValueError, 'structural'):
+                    collector.verify_registry_transaction(transcript({a: ('nop', '')}), label, start, end)
+            with self.assertRaisesRegex(ValueError, 'unreviewed'):
+                collector.verify_registry_transaction(text, label, start, end+4)
+            with self.assertRaisesRegex(ValueError, 'bounds'):
+                collector.verify_registry_transaction(text+text.splitlines()[0]+'\n', label, start, end)
+
     def test_provider_isolation_scope_is_complete_and_keeps_live_boundary(self):
         windows = collector.review_windows('provider-isolation')
         self.assertEqual({key for _, key, *_ in windows}, {'PluginSupport', 'PLUG', 'FLT'})

@@ -21,6 +21,7 @@ static Plan TestPlan() {
     p.provider_contract_sha256 = std::string(64, '7');
     p.isolation_contract_sha256 = std::string(64, '8');
     p.completion_contract_sha256 = std::string(64, '9');
+    p.publication_window_id = std::string(64, 'a');
     p.executable="/owned/host/After Effects"; p.root="/owned/fresh/scan-root"; p.match="AEHL.Embedded.123456789abc";
     for (const auto& key : {"AfterEffects","FILE","U","dvacore","FLT","MEE","PLUG","PluginSupport","aelib"}) p.images[key]=std::string(64,'5');
     return p;
@@ -39,13 +40,17 @@ struct Model final : JournaledBackend {
         base.main_thread=true; base.unsaved=true; base.dirty=false;
         base.rendering=false; base.revision=1; base.registry={"ADBE.A","ADBE.B"};
         base.cleanup={true,true,p.cleanup_inventory_sha256,0};
+        base.publication = {true, true, true, p.isolation_contract_sha256, p.publication_window_id, 1, 0, true};
     }
     std::uint64_t now_ms() override { return clock++; }
     Observation observe() override { ++observations; auto o=base; if (searches) o.registry.push_back(p.match); return o; }
     void verify_fixture(const Plan& q) override { Check(q.root==p.root); } // no fixture/AE proof
     Spec create_spec(const std::string& root) override { Check(root==p.root); ++creates; if (on_create) on_create(); return {this}; }
     std::string spec_path(Spec s) override { Check(s.value==this); return p.root; }
-    SearchResult search_one_root(Spec s, std::uint64_t) override {
+    SearchResult search_one_root(Spec s, std::uint64_t, const PublicationObservation& expected_lease) override {
+        SafePublication(p, base); // synthetic entry-boundary check, no Adobe barrier
+        Check(expected_lease.window_id==base.publication.window_id &&
+              expected_lease.lease_epoch==base.publication.lease_epoch && base.publication.exclusive);
         Check(s.value==this); ++searches; if (on_search) on_search();
         if (search_throws) throw std::runtime_error("synthetic search error");
         return {0,0,false};
@@ -85,11 +90,41 @@ int main(int argc, char** argv) {
                 Check(bytes.find("provider_contract=64:"+b.p.provider_contract_sha256+"\n")!=std::string::npos);
                 Check(bytes.find("isolation_contract=64:"+b.p.isolation_contract_sha256+"\n")!=std::string::npos);
                 Check(bytes.find("completion_contract=64:"+b.p.completion_contract_sha256+"\n")!=std::string::npos);
+                Check(bytes.find("publication_window_id=64:"+b.p.publication_window_id+"\n")!=std::string::npos);
+            }
+            for (const auto& name : {"before.txt", "call-started.txt", "after.txt"}) {
+                const auto bytes = Read(d/name);
+                Check(bytes.find("publication_window_id=64:"+b.p.publication_window_id+"\n")!=std::string::npos);
+                Check(bytes.find("publication_contract=64:"+b.p.isolation_contract_sha256+"\n")!=std::string::npos);
+                for (const auto& field : {"publication_observed", "publication_complete", "publication_exclusive",
+                                           "publication_lease_epoch", "registry_loading_done"})
+                    Check(bytes.find(std::string(field)+"=1:1\n")!=std::string::npos);
+                Check(bytes.find("active_render_scopes=1:0\n")!=std::string::npos);
             }
             Check(Read(d/"native.txt").find("scope=21:resource-registration\n")!=std::string::npos);
             Check(Read(d/"native.txt").find("code=1:0\n")!=std::string::npos);
             Check(Read(d/"result.txt").find("search_observed=1:1\n")!=std::string::npos);
             Check(Read(d/"result.txt").find("status=4:PASS\n")!=std::string::npos);
+        });
+        test("publication-window-retarget-preserves-claim", [](const fs::path& d) {
+            Model b(d); b.claim(b.p,b.base); b.save_observation("before",b.base);
+            const auto claim=Read(d/"claim.txt"); auto other=b.p; other.publication_window_id[0]='b';
+            Rejected([&]{b.mark_call_started(other,b.base);});
+            Check(b.searches==0 && Read(d/"claim.txt")==claim && !fs::exists(d/"call-started.txt"));
+        });
+        test("publication-lease-loss-before-call-keeps-failed-run", [](const fs::path& d) {
+            Model b(d); b.on_create=[&]{ b.base.publication.exclusive=false; };
+            Check(b.run().status=="FAIL" && b.searches==0 && b.releases==1);
+            Check(!fs::exists(d/"call-started.txt") && Read(d/"after.txt").find("publication_exclusive=1:0\n")!=std::string::npos);
+            Model retry(d); Check(retry.run().status=="BLOCKED" && retry.searches==0);
+        });
+        test("publication-lease-loss-after-call-cannot-promote-pass", [](const fs::path& d) {
+            Model b(d); b.on_search=[&]{ ++b.base.publication.lease_epoch; };
+            Check(b.run().status=="FAIL" && b.searches==1);
+            Check(Read(d/"call-started.txt").find("publication_lease_epoch=1:1\n")!=std::string::npos);
+            Check(Read(d/"after.txt").find("publication_lease_epoch=1:2\n")!=std::string::npos);
+            Check(Read(d/"result.txt").find("status=4:FAIL\n")!=std::string::npos);
+            Model retry(d); Check(retry.run().status=="BLOCKED" && retry.searches==0);
         });
         test("new-backend-cannot-replay-completed-run", [](const fs::path& d) {
             { Model a(d); Check(a.run().status=="PASS"); }

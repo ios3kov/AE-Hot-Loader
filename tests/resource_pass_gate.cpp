@@ -16,6 +16,7 @@ static Plan TestPlan() {
     p.provider_contract_sha256 = std::string(64, '7');
     p.isolation_contract_sha256 = std::string(64, '8');
     p.completion_contract_sha256 = std::string(64, '9');
+    p.publication_window_id = std::string(64, 'a');
     p.executable = "/owned/host/After Effects";
     p.root = "/owned/fresh/scan-root";
     p.match = "AEHL.Embedded.123456789abc";
@@ -35,6 +36,7 @@ struct Model final : Backend {
     bool fail_claim = false, fail_before_save = false, fail_search_save = false, fail_after_save = false;
     SearchResult answer{0, 0, false};
     std::function<void(Observation&, int)> change = [](Observation&, int) {};
+    std::function<void()> on_marker = []() {};
     std::vector<std::string> events;
     Model() {
         base.pid = 42; base.process_start = "new-process-start"; base.executable = p.executable;
@@ -48,6 +50,7 @@ struct Model final : Backend {
         base.unsaved = true; base.dirty = false; base.rendering = false; base.revision = 1;
         base.registry = {"ADBE.A", "ADBE.B"};
         base.cleanup = {true, true, p.cleanup_inventory_sha256, 0};
+        base.publication = {true, true, true, p.isolation_contract_sha256, p.publication_window_id, 1, 0, true};
     }
     std::uint64_t now_ms() override { return clock; }
     Observation observe() override {
@@ -73,7 +76,7 @@ struct Model final : Backend {
     }
     void mark_call_started(const Plan&, const Observation&) override {
         if (fail_marker) throw std::runtime_error("marker failed");
-        marker = true; events.push_back("marker");
+        marker = true; events.push_back("marker"); on_marker();
     }
     Spec create_spec(const std::string& root) override {
         Check(root == p.root && claimed); ++creates; events.push_back("create");
@@ -81,7 +84,10 @@ struct Model final : Backend {
         return {null_spec ? nullptr : this};
     }
     std::string spec_path(Spec s) override { Check(s.value == this); return fail_path ? "/wrong" : p.root; }
-    SearchResult search_one_root(Spec s, std::uint64_t deadline) override {
+    SearchResult search_one_root(Spec s, std::uint64_t deadline, const PublicationObservation& expected_lease) override {
+        SafePublication(p, base); // synthetic entry-boundary check, no Adobe barrier
+        Check(expected_lease.window_id == base.publication.window_id &&
+              expected_lease.lease_epoch == base.publication.lease_epoch && base.publication.exclusive);
         Check(s.value == this && marker && claimed); ++searches; events.push_back("search");
         if (late) clock = deadline;
         if (backclock) clock = 0;
@@ -102,6 +108,20 @@ struct Model final : Backend {
 int main() {
     using Mutate = std::function<void(Model&)>;
     const std::vector<std::pair<std::string, Mutate>> preblocked = {
+        {"missing-publication-observation", [](Model& m) { m.base.publication = {}; }},
+        {"missing-publication-window", [](Model& m) { m.p.publication_window_id.clear(); }},
+        {"malformed-publication-window", [](Model& m) { m.p.publication_window_id[0] = 'z'; }},
+        {"retargeted-publication-window", [](Model& m) { m.a.scope.publication_window_id[0] = 'b'; }},
+        {"unobserved-publication", [](Model& m) { m.base.publication.observed = false; }},
+        {"incomplete-publication", [](Model& m) { m.base.publication.complete = false; }},
+        {"nonexclusive-publication", [](Model& m) { m.base.publication.exclusive = false; }},
+        {"wrong-publication-contract", [](Model& m) { m.base.publication.isolation_contract_sha256[0] = 'b'; }},
+        {"wrong-publication-window", [](Model& m) { m.base.publication.window_id[0] = 'b'; }},
+        {"malformed-observed-window", [](Model& m) { m.base.publication.window_id[0] = 'z'; }},
+        {"unknown-publication-epoch", [](Model& m) { m.base.publication.lease_epoch = 0; }},
+        {"active-render-scope", [](Model& m) { m.base.publication.active_render_scopes = 1; }},
+        {"unknown-render-scopes", [](Model& m) { m.base.publication.active_render_scopes = UINT64_MAX; }},
+        {"loading-not-done", [](Model& m) { m.base.publication.registry_loading_done = false; }},
         {"no-new-authorization", [](Model& m) { m.a.new_private_call_authorized = false; }},
         {"missing-provider-contract", [](Model& m) { m.p.provider_contract_sha256.clear(); }},
         {"malformed-provider-contract", [](Model& m) { m.p.provider_contract_sha256[0] = 'z'; }},
@@ -205,6 +225,36 @@ int main() {
             const auto first_searches = m.searches;
             Check(m.run().status == "BLOCKED" && m.searches == first_searches);
             passed(test.first);
+        }
+        const std::vector<std::pair<std::string, std::function<void(PublicationObservation&)>>> lease_changes = {
+            {"lost-exclusion", [](PublicationObservation& w) { w.exclusive = false; }},
+            {"lost-observation", [](PublicationObservation& w) { w.observed = false; }},
+            {"lease-reacquired", [](PublicationObservation& w) { ++w.lease_epoch; }},
+            {"worker-started", [](PublicationObservation& w) { w.active_render_scopes = 1; }},
+            {"lifecycle-reset", [](PublicationObservation& w) { w.registry_loading_done = false; }},
+            {"contract-changed", [](PublicationObservation& w) { w.isolation_contract_sha256[0] = 'b'; }},
+            {"window-changed", [](PublicationObservation& w) { w.window_id[0] = 'b'; }},
+        };
+        for (int stage : {2, 3}) for (const auto& test : lease_changes) {
+            Model m;
+            m.change = [stage, mutate=test.second](Observation& o, int n) {
+                if (n == stage) mutate(o.publication);
+            };
+            const auto result = m.run();
+            Check(result.status == "FAIL" && result.claimed && m.releases == 1 &&
+                  m.searches == (stage == 3 ? 1 : 0) && m.marker == (stage == 3));
+            const auto calls = m.searches;
+            Check(m.run().status == "BLOCKED" && m.searches == calls);
+            passed(test.first + (stage == 2 ? "-before-call" : "-after-call"));
+        }
+        for (const auto& test : lease_changes) {
+            Model entry_loss;
+            entry_loss.on_marker = [&] { test.second(entry_loss.base.publication); };
+            const auto entry_result = entry_loss.run();
+            Check(entry_result.status == "FAIL" && entry_result.call_started && entry_loss.marker &&
+                  entry_loss.searches == 0 && entry_loss.releases == 1);
+            Check(entry_loss.run().status == "BLOCKED" && entry_loss.searches == 0);
+            passed("adapter-refuses-"+test.first+"-after-marker-without-call-or-retry");
         }
         Model good; auto r = good.run();
         Check(r.status == "PASS" && r.claimed && r.call_started && r.search_observed &&

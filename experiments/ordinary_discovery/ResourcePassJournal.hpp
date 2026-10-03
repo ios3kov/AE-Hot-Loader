@@ -66,6 +66,7 @@ inline std::string PlanBytes(const Plan& p) {
     Field(s, "provider_contract", p.provider_contract_sha256);
     Field(s, "isolation_contract", p.isolation_contract_sha256);
     Field(s, "completion_contract", p.completion_contract_sha256);
+    Field(s, "publication_window_id", p.publication_window_id);
     Field(s, "executable", p.executable); Field(s, "root", p.root); Field(s, "match", p.match);
     Field(s, "timeout_ms", std::to_string(p.timeout_ms));
     for (const auto& image : p.images) { Field(s, "image_name", image.first); Field(s, "image_hash", image.second); }
@@ -84,6 +85,14 @@ inline std::string ObservationBytes(const Observation& o) {
     Field(s, "cleanup_complete", std::to_string(o.cleanup.complete));
     Field(s, "cleanup_inventory", o.cleanup.inventory_sha256);
     Field(s, "general_plugin_records", std::to_string(o.cleanup.general_plugin_records));
+    Field(s, "publication_observed", std::to_string(o.publication.observed));
+    Field(s, "publication_complete", std::to_string(o.publication.complete));
+    Field(s, "publication_exclusive", std::to_string(o.publication.exclusive));
+    Field(s, "publication_contract", o.publication.isolation_contract_sha256);
+    Field(s, "publication_window_id", o.publication.window_id);
+    Field(s, "publication_lease_epoch", std::to_string(o.publication.lease_epoch));
+    Field(s, "active_render_scopes", std::to_string(o.publication.active_render_scopes));
+    Field(s, "registry_loading_done", std::to_string(o.publication.registry_loading_done));
     for (const auto& image : o.images) { Field(s, "image_name", image.first); Field(s, "image_hash", image.second); }
     Field(s, "runtime_image_count", std::to_string(o.runtime_images.size()));
     for (const auto& image : o.runtime_images) {

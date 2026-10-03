@@ -30,6 +30,9 @@ struct Plan {
     // partial-failure stop-and-preserve semantics. Supervisor must verify their
     // contents and scope; a digest or synthetic attestation proves neither.
     std::string provider_contract_sha256, isolation_contract_sha256, completion_contract_sha256;
+    // Supervisor-issued identity of one uninterrupted, externally enforced lease.
+    // It is not a native registry revision, mutex address or consent token.
+    std::string publication_window_id;
     std::string executable, root, match;
     Images images;
     std::uint64_t timeout_ms = 15000;
@@ -51,6 +54,15 @@ struct CleanupObservation {
     std::string inventory_sha256;
     std::uint64_t general_plugin_records = 0;
 };
+struct PublicationObservation {
+    // Fresh adapter evidence only; an idle snapshot cannot establish exclusion.
+    // A future native adapter must prove all readers, reentrant callbacks and MFR
+    // are excluded through postflight. This policy implements no Adobe barrier.
+    bool observed = false, complete = false, exclusive = false;
+    std::string isolation_contract_sha256, window_id;
+    std::uint64_t lease_epoch = 0, active_render_scopes = UINT64_MAX;
+    bool registry_loading_done = false;
+};
 struct Observation {
     std::int64_t pid = 0;
     std::string process_start, executable, version, arch, bridge_sha256;
@@ -61,6 +73,7 @@ struct Observation {
     std::uint64_t items = 0, queued = 0, revision = 0;
     std::vector<std::string> registry;
     CleanupObservation cleanup;
+    PublicationObservation publication;
 };
 struct SearchResult { int code = -1; int errors = -1; bool cancelled = true; };
 struct Spec { const void* value = nullptr; }; // opaque token, NOT a FILE_Spec layout
@@ -84,7 +97,11 @@ struct Backend {
     // Native adapter MUST use host-owned creation, exact path roundtrip and release.
     virtual Spec create_spec(const std::string& root) = 0;
     virtual std::string spec_path(Spec) = 0;
-    virtual SearchResult search_one_root(Spec, std::uint64_t deadline_ms) = 0;
+    // Adapter must atomically verify this SAME still-held lease at native entry
+    // and hold it through callbacks/postflight. No check-then-lock or reacquire.
+    // Loss after the durable marker consumes the run without a native call.
+    virtual SearchResult search_one_root(Spec, std::uint64_t deadline_ms,
+                                        const PublicationObservation& expected_lease) = 0;
     virtual void save_search_result(const SearchResult&) = 0;
     virtual bool release_spec(Spec) noexcept = 0;
 };
@@ -119,6 +136,7 @@ inline void Validate(const Plan& p, const Approval& a) {
          "isolation-contract-required");
     Need(Hex(p.completion_contract_sha256, 64) && a.completion_contract_reviewed,
          "completion-contract-required");
+    Need(Hex(p.publication_window_id, 64), "publication-window-identity-required");
     Need(Canonical(p.root) && Canonical(p.executable) &&
          p.root.size() >= 10 && p.root.substr(p.root.size() - 10) == "/scan-root",
          "invalid-owned-root-or-executable");
@@ -142,6 +160,7 @@ inline void Validate(const Plan& p, const Approval& a) {
          q.provider_contract_sha256 == p.provider_contract_sha256 &&
          q.isolation_contract_sha256 == p.isolation_contract_sha256 &&
          q.completion_contract_sha256 == p.completion_contract_sha256 &&
+         q.publication_window_id == p.publication_window_id &&
          q.root == p.root && q.match == p.match && q.images == p.images && q.timeout_ms == p.timeout_ms,
          "fresh-exact-authorization-required");
 }
@@ -210,6 +229,20 @@ inline void SafeCleanup(const Plan& p, const Observation& o) {
     // Empty observed state is necessary, not sufficient: all callback effects,
     // readers and the private call still require separate native-contract review.
 }
+inline void SafePublication(const Plan& p, const Observation& o) {
+    const auto& w = o.publication;
+    Need(w.observed && w.complete && w.exclusive && w.lease_epoch > 0 &&
+         Hex(w.window_id, 64) && w.window_id == p.publication_window_id &&
+         w.isolation_contract_sha256 == p.isolation_contract_sha256,
+         "publication-lease-not-observed-or-reviewed");
+    Need(w.active_render_scopes == 0 && w.registry_loading_done,
+         "publication-workers-or-lifecycle-not-ready");
+}
+inline bool SamePublication(const Observation& a, const Observation& b) {
+    return a.publication.window_id == b.publication.window_id &&
+           a.publication.lease_epoch == b.publication.lease_epoch &&
+           a.publication.registry_loading_done == b.publication.registry_loading_done;
+}
 // A returned Result is NOT durable evidence until the external supervisor saves
 // it and independently verifies the same PID/start, bytes and postflight.
 inline Result Run(const Plan& supplied, const Approval& supplied_approval, Backend& backend) {
@@ -237,6 +270,7 @@ inline Result Run(const Plan& supplied, const Approval& supplied_approval, Backe
         before = backend.observe();
         Safe(p, before);
         SafeCleanup(p, before);
+        SafePublication(p, before);
         expected = Names(before);
         Need(!std::binary_search(expected.begin(), expected.end(), p.match), "fixture-already-present");
         tick();
@@ -254,6 +288,8 @@ inline Result Run(const Plan& supplied, const Approval& supplied_approval, Backe
         const auto immediately_before = backend.observe();
         Safe(p, immediately_before);
         SafeCleanup(p, immediately_before);
+        SafePublication(p, immediately_before);
+        Need(SamePublication(before, immediately_before), "publication-lease-changed-before-call");
         Need(SameHost(p, before, immediately_before) && before.revision == immediately_before.revision &&
              expected == Names(immediately_before), "baseline-changed-before-call");
         tick();
@@ -262,7 +298,7 @@ inline Result Run(const Plan& supplied, const Approval& supplied_approval, Backe
         tick();
         r.call_started = true; // persisted marker exists; exception cannot authorize retry
         r.stage = "search";
-        const auto search = backend.search_one_root(spec, deadline);
+        const auto search = backend.search_one_root(spec, deadline, immediately_before.publication);
         backend.save_search_result(search);
         r.search_observed = true;
         r.cleanup_ok = backend.release_spec(spec);
@@ -274,6 +310,8 @@ inline Result Run(const Plan& supplied, const Approval& supplied_approval, Backe
         backend.save_observation("after", after);
         Safe(p, after);
         SafeCleanup(p, after);
+        SafePublication(p, after);
+        Need(SamePublication(before, after), "publication-lease-changed-after-call");
         Need(SameHost(p, before, after) && before.revision == after.revision, "host-or-project-changed");
         tick();
         Need(search.code == 0 && search.errors == 0 && !search.cancelled, "search-error-or-cancel");

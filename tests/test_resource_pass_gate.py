@@ -25,10 +25,10 @@ class ResourcePassGateTests(unittest.TestCase):
             self.assertEqual(result.stderr, '')
             lines = result.stdout.splitlines()
             passed = [line for line in lines if line.startswith('PASS ')]
-            self.assertEqual(len(passed), 94)
-            self.assertEqual(len(set(passed)), 94)
+            self.assertEqual(len(passed), 129)
+            self.assertEqual(len(set(passed)), 129)
             self.assertRegex(lines[-1], re.compile(
-                r'^RESOURCE_GATE_TESTS=94 PASS; scope=synthetic-unbound-backend$'))
+                r'^RESOURCE_GATE_TESTS=129 PASS; scope=synthetic-unbound-backend$'))
             print(result.stdout, end='')
 
 
