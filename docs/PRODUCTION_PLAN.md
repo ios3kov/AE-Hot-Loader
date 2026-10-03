@@ -12,6 +12,71 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## Factory receiver acquisition — seven-block pass
+
+2026-10-03 user “делай” accepts the preceding seven-step proposal. Baseline clean
+research d27449a885713398877bc1a014063b090fb405b1, original product and A/B/C1/C2/D/
+release retained. Rules8.0.0 /132b7cd32873ba7328e3128ffbb33e1929b74d45, AI_ENTRYPOINT
+first. Stage C1 Development research; receiver/lifetime component Critical,
+offline collector Standard. Apply API-SOURCE/thread/ownership/refusal/repro/task-close/
+cleanup; existing SDK25.6_61 inventory reused, no new Adobe API call. Existing
+factory-code identity is implementation evidence only, not host receiver proof.
+
+| ID | Acceptance / requested outcome | Check / dependency |
+|---|---|---|
+| RECV-01 | Trace who creates/registers the factory | Complete MEE Instance/global initializer and actual direct same-pin delegates; registry insertion remains factory-only |
+| RECV-02 | Establish the returned interface path | Complete QueryMap/conversion/CreateInstanceRef; actual query identifiers/base adjustment, not guessed object equivalence |
+| RECV-03 | Establish retention/destruction boundaries | Selected shared/weak owners, complete direct release/zero-owner delegates as needed; supported callable host owner contract must be proved separately |
+| RECV-04 | Establish acquisition/call/thread/error contract | Exact export/private boundary and entry/return/error dataflow; missing callable ABI blocks dependent AE invocation |
+| RECV-05 | Implement only substantiated adapter component | Choose after original-file review; explicit refusal for unsupported host ownership/call contracts; do not fabricate AE std::shared_ptr ownership or gate capabilities |
+| RECV-06 | Verify receiver/lifetime behavior in owned native stand | Real owned object/interface with lifetime/pointer-change/invalid-pointer controls; distinguish owned C++ contract from actual Adobe ownership |
+| RECV-07 | Verify/reconcile exact pass | Fixed collector/refusals; clean capture + separate original byte/data/archive/source review; full runner/scanner/exact-source CI; docs/handoff/compatibility/private retention/cleanup |
+
+Initial windows from verified same-pin symbol inventory: MEE Instance0x71b4–0x73e4,
+QueryMap0x92b0–0x938c, conversion0x938c–0x9414,
+global initializer0xb5e8–0xb610, CreateInstanceRef0x3e150–0x3e234.
+Adaptive direct delegates/xrefs/data are bounded to receiver creation/query/registration/
+retention in the same MEE/PluginSupport pins, complete bodies <=4096-byte windows.
+Existing exact factory/classref/insertion evidence may be reused after pin verification;
+unchanged bodies need not be repeated without a concrete dataflow dependency.
+Original-file/private symbol patterns are discovery only. No AE launch/attach/install/
+private call/retain/release/read of an active host session, speculative teardown,
+unchanged scan, merge/release or existing gate bypass. Owned controls may create/
+retain/release/load only fresh test objects/modules. Conditional host launch remains
+BLOCKED until actual retained receiver/callable late ABI/continuous admission/drain/
+whole-effect rollback contracts are independently established.
+
+Adaptive receiver scope: direct branch inventory of the pinned MEE text selects
+exported MEE_RegisterVideoFilterFactory0x3dfb8–0x3e150 (RegisterClass +
+CreateClassRefInternal + RegisterPluginModuleFactory). Selected interface/shared/
+weak destructor aliases and control-block zero-owner delegates below are required
+to distinguish pointer identity from object/storage lifetime. Add raw primary table
+header word0xef608 solely as signed base adjustment, never a callable pointer.
+Only these complete same-pin bodies/header metadata are added; transitive dvacore
+ClassFactory/GetSharedFromThis ABI remains UNKNOWN until separately substantiated.
+
+Implementation decision after original review: implement a concrete copied-reference
+identity decoder for the reviewed24-byte primary/UnknownBase/control tuple. Actual
+primary vtable[-0x38] header at0xef608 is0; shared-from-this adjustment at0xef628
+is0x38. These distinct fields must not be conflated. The previous hypothesis of
+nonzero UnknownBase shift is refuted by original bytes. Reuse prior allocation
+helper evidence for object=control+0x18. Decoder returns diagnostic integers only,
+not liveness or a callable/retained host receiver. TDD includes malformed/overflow/
+absent tuples and a real owned native C++ object with separately acquired strong
+ownership, transfer/release/replacement and copied stale tuple controls. The owned
+stand's standard C++ control block is not an Adobe object/control ABI. Actual AE
+ownership acquisition/call implementation remains conditional; no fabricated private
+std::shared_ptr construction or foreign count mutation. Complete new receiver file
+bodies can substantiate dataflow, but transitive ClassFactory/GetSharedFromThis
+contract/thread safety remain UNKNOWN.
+
+Final selected lifetime delegate: __on_zero_shared jumps through the object's
+first vtable slot; previous pinned primary table identifies complete D1 at0x7540–
+0x7584. Add that body to explain its hidden construction-table argument before D2.
+Also capture the three-instruction MEE registration import stub0x9fe48–0x9fe54;
+selected original indirect-symbol inventory maps it to PluginSupport registration.
+These are file-only correspondences, not an invocation or ABI certification.
+
 ## Factory identity binding — implementation and source review
 
 2026-10-03 user “делай” continues the real host-adapter dependency from the blocked

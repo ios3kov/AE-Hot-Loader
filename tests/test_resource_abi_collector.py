@@ -173,6 +173,60 @@ class ResourceAbiCollectorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unreviewed'):
             collector.verify_publication(text, 'FLT-if-missing', start, end - 4)
 
+    def test_factory_receiver_scope_is_complete_and_excludes_live_calls(self):
+        windows=collector.review_windows('factory-receiver')
+        self.assertEqual(len(windows),14)
+        self.assertEqual(sum((b-a)//4 for _,_,a,b in windows),563)
+        self.assertEqual({image for _,image,*_ in windows},{'MEE'})
+        self.assertEqual({label for label,*_ in windows},set(collector.RECEIVER_ANCHORS))
+        self.assertIn(('recv-register','MEE',0x3dfb8,0x3e150),windows)
+        for _,image,a,b in windows:
+            script=collector.lldb_script(collector.INPUTS[image][0],a,b)
+            self.assertIn('target create --no-dependents --arch arm64',script)
+            self.assertNotRegex(script,r'process|expression|call ')
+        self.assertEqual(collector.DATA_WINDOWS['factory-receiver'],
+                         (('recv-base-adjust','MEE',0xef608,1),('recv-shared-adjust','MEE',0xef628,1)))
+
+    def test_factory_receiver_refuses_changed_query_creation_retention_and_destruction(self):
+        for label,_,start,end in collector.review_windows('factory-receiver'):
+            anchors=collector.RECEIVER_ANCHORS[label]
+            def transcript(overrides):
+                return ''.join('owned[0x%x] <+%d>: %s %s\n'%
+                    (a,a-start,*overrides.get(a,anchors.get(a,('nop','')))) for a in range(start,end,4))
+            text=transcript({})
+            self.assertEqual(collector.verify_receiver(text,label,start,end)['claim'],
+                             'file-only-receiver-acquisition-not-supported-host-ownership-or-call-ABI')
+            for address,(op,args) in anchors.items():
+                for wrong in [('nop',''),(op,args+'x0')]:
+                    with self.subTest(label=label,address=hex(address)),self.assertRaises(ValueError):
+                        collector.verify_receiver(transcript({address:wrong}),label,start,end)
+            for bad in (text+text.splitlines()[0]+'\n','\n'.join(text.splitlines()[:-1]),
+                        text.replace(': ',': .long ',1)):
+                with self.assertRaises(ValueError):collector.verify_receiver(bad,label,start,end)
+            with self.assertRaises(ValueError):collector.verify_receiver(text,label,start,end+4)
+
+    def test_factory_receiver_adjustments_are_distinct_signed_metadata_not_pointers(self):
+        chains='pointer_format: 6 (DYLD_CHAINED_PTR_64_OFFSET)'
+        for label,_,start,count in collector.DATA_WINDOWS['factory-receiver']:
+            expected=0 if label=='recv-base-adjust' else 0x38
+            result=collector.verify_receiver_adjustment([expected],'',chains,label)
+            self.assertEqual(result['signed_adjustment'],expected)
+            self.assertEqual(result['claim'],'file-header-adjustment-not-live-pointer-or-lifetime')
+            for words,fixups,formats,name in [([False],'',chains,label),([expected^1],'',chains,label),([], '',chains,label),
+                    ([expected,expected],'',chains,label),([expected],'__DATA_CONST __const 0x%x rebase 0x0'%start,chains,label),
+                    ([expected],'',chains.replace('6 (','2 ('),label),([expected],'',chains,'unreviewed')]:
+                with self.assertRaises(ValueError):collector.verify_receiver_adjustment(words,fixups,formats,name)
+
+    def test_factory_receiver_catalog_keeps_registration_acquisition_and_owner_boundaries(self):
+        names=['MEE_RegisterVideoFilterFactory','AELibraryVideoFilterFactoryInstance',
+               'AELibraryVideoFilterFactoryQueryMap','AELibraryVideoFilterFactoryCreateInstanceRef',
+               'AELibraryVideoFilterFactoryD2Ev','shared_ptrAELibraryVideoFilterFactoryD1Ev',
+               'UnknownBaseGetSharedFromThis','ClassFactoryRegisterClass','CreateClassInstanceRef']
+        chosen=collector.select_symbols('\n'.join('external '+n for n in names)+
+                                        '\nexternal PLUG_Search\n','factory-receiver')
+        for name in names:self.assertIn(name,chosen)
+        self.assertNotIn('PLUG_Search',chosen)
+
     def test_factory_identity_scope_is_complete_offline_and_separate_from_receiver(self):
         windows = collector.review_windows('factory-identity')
         self.assertEqual(len(windows), 9)
