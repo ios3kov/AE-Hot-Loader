@@ -12,6 +12,45 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## Native class-reference call boundary — eight-block pass
+
+2026-10-03 next authorized packet, starting clean72fefe9f2cdac41422fe8c1210791a4fc881a494.
+Stage C1 Development research; rules8.0.0 /132b7cd32873ba7328e3128ffbb33e1929b74d45,
+AI_ENTRYPOINT first. Native ABI/unwind/lifetime Critical; API-SOURCE/thread/
+ownership/repro/refusal/task-close/cleanup apply. SDK25.6_61 inventory reused.
+Original arbitrary ordinary-effect/no-restart product and A/B/C1/C2/D/release retained.
+No new Adobe call; private callable ABI/actual host receiver/admission/drain/rollback
+remain UNKNOWN. Owned ABI experiment is authorized research, not production support.
+
+| ID | Task / observable acceptance | Required check / dependency |
+|---|---|---|
+| CALL-01 | Resolve full reference destructor base and folded-symbol ambiguity | Reuse receiver complete3e9c–3efc and instance71b4–73e4/create-instance3e150–3e234 bodies, classref43944–43c0c; independent original bytes/nlist/import/output dataflow/archive/pins |
+| CALL-02 | Record acquisition/release call carrier and exception limits | Bool w0, indirect result x8,24-byte layout, destructor x0=whole-reference base; official Arm/Apple ABI and actual owned compiled nontrivial return; no inferred Adobe C++ declaration |
+| CALL-03 | Implement narrow native machine bridge | macOS arm64 only, acquisition hardwired false, full-result destructor argument, unwind CFI; no runtime creation flag or Adobe dispatch integration |
+| CALL-04 | Bind owned call targets and stable result lifetime | Continuous resident ImageLease + exact reviewed code fingerprints; opaque raw heap result slot stays at same address across lease moves; call-owned destructor before image release, no guessed shared_ptr/count reconstruction |
+| CALL-05 | Prove actual nontrivial return/destruction/unwind | Fresh owned dylib typed reference with real internal shared ownership: acquire existing/absent/expired, flagfalse, move/slot-address identity, last original owner dropped, malformed result cleanup, throw before construction, code residency and sanitizer controls |
+| CALL-06 | Refuse altered source/profile/thread or missing target | Meaningful TDD, wrong code span/UUID/hash/version/role, worker thread, stable no-callback refusal and balanced completed-result destruction; AE release span added only to separate identity profile |
+| CALL-07 | Verify exact code candidate | Focused native/ASan/UBSan plus full runner/raw scanner/manual native review, both exact-source CI; retain source/artifact identities and actual logs |
+| CALL-08 | Reconcile packet and cleanup | Plan/status/handoff/compatibility/checkpoint, all source/ZIP/original/native artifact/CI receipts, preliminary failures preserved, owned-only cleanup and every remaining host gate |
+
+No new Adobe body capture initially needed: retained complete four bodies suffice
+for initial selected call/cleanup scope. Before any missing direct dependency is
+captured, record bounded selection. Owned native call binder requires repo-owned
+version export and reviewed acquisition/destruction code spans; MEE identity-only
+profile cannot be used to invoke the bridge. No AE launch/attach/install/session
+read/private invoke/foreign retain/release/destructor/unload, unchanged scan, main
+mutation, merge/release or ResourcePassGate bypass. This packet prepares a native
+calling prototype; live diagnostic is BLOCKED until actual Adobe invocation,
+thread/lifetime and safe operation conditions are substantiated separately.
+
+Preliminary retained-nm prefix search showed one factory InterfaceRef D1 name at
+3e9c while LLDB rendered IPiPL. Independent original raw nlist resolves that limited
+view:12 defined text symbols share3e9c, including both factory and IPiPL D1 entries.
+CALL-01 binds this exact shared body/address/output dataflow. Shared-entry aliases
+are corroborated; the precise compiler/linker folding mechanism and supported
+private C++ ABI are not inferred. Preserve the preliminary one-name view as scope
+history, not the final original-symbol count.
+
 ## Existing factory and code lifetime — eight-block pass
 
 2026-10-03 continuation, baseline clean147761b0755da43f1008baf6a34a064a8513ce31.
