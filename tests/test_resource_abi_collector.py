@@ -18,6 +18,53 @@ spec.loader.exec_module(collector)
 
 
 class ResourceAbiCollectorTests(unittest.TestCase):
+    def test_admission_contracts_fixed_complete_file_scope(self):
+        windows = collector.review_windows('admission-contracts')
+        self.assertEqual(len(windows), 6)
+        self.assertEqual(sum((end-start)//4 for _, _, start, end in windows), 247)
+        self.assertEqual({image for _, image, *_ in windows}, {'PluginSupport', 'dvacore', 'aelib'})
+        self.assertEqual({label for label, *_ in windows}, set(collector.ADMISSION_CONTRACT_ANCHORS))
+        for label, image, start, end in windows:
+            self.assertEqual(set(collector.ADMISSION_CONTRACT_ANCHORS[label]), set(range(start,end,4)))
+            script = collector.lldb_script(collector.INPUTS[image][0],start,end)
+            self.assertIn('target create --no-dependents --arch arm64',script)
+            self.assertNotRegex(script,r'process|expression|call ')
+
+    def test_admission_contracts_refuse_changed_field_cancel_resume_and_unwind(self):
+        # Transcript controls test refusal; they never simulate an AE contract.
+        for label, _, start, end in collector.review_windows('admission-contracts'):
+            anchors = collector.ADMISSION_CONTRACT_ANCHORS[label]
+            def transcript(overrides):
+                return ''.join('owned[0x%x] <+%d>: %s %s\n' %
+                    (a,a-start,*overrides.get(a,anchors[a])) for a in range(start,end,4))
+            text = transcript({})
+            self.assertEqual(collector.verify_admission_contracts(text,label,start,end)['claim'],
+                             'file-only-scoped-controls-not-host-admission-or-drain')
+            for address,(op,args) in anchors.items():
+                for wrong in [('nop','') if op!='nop' else ('ret',''),(op,args+'x0')]:
+                    with self.subTest(label=label,address=hex(address),wrong=wrong), self.assertRaisesRegex(ValueError,'structural'):
+                        collector.verify_admission_contracts(transcript({address:wrong}),label,start,end)
+            for bad in [text+text.splitlines()[0]+'\n','\n'.join(text.splitlines()[:-1]),text.replace(': ',': .long ',1)]:
+                with self.assertRaises(ValueError):
+                    collector.verify_admission_contracts(bad,label,start,end)
+            for bad_label,bad_end in [('unknown',end),(label,end+4)]:
+                with self.assertRaisesRegex(ValueError,'unreviewed'):
+                    collector.verify_admission_contracts(text,bad_label,start,bad_end)
+
+    def test_admission_symbols_and_sdk_drift_do_not_grant_host_access(self):
+        names = ['__ZN2ML10PluginImpl12SetMatchNameERKN7dvacore7utility15ImmutableStringE',
+                 '__ZN2ML10PluginImpl12GetMatchNameEv',
+                 '__ZN7dvacore7utility15ImmutableStringD1Ev',
+                 '__ZN7dvacore7threads7details19ScopedThreadSuspendD1Ev',
+                 '__ZN5aelib7capsule12CancelRenderERKN7dvacore7utility4GuidE']
+        selected = collector.select_symbols('\n'.join(names+['FLT_RegisterNewFilter','CreateClassRefInternal']), 'admission-contracts')
+        for name in names:
+            self.assertIn(name,selected)
+        self.assertNotIn('FLT_RegisterNewFilter',selected)
+        self.assertNotIn('CreateClassRefInternal',selected)
+        with mock.patch.object(Path,'read_bytes',return_value=b'changed SDK contract'), self.assertRaisesRegex(ValueError,'SDK admission header'):
+            collector.admission_sdk_contract()
+
     def test_factory_objects_fixed_complete_scope_is_file_only(self):
         windows = collector.review_windows('factory-objects')
         self.assertEqual(len(windows), 8)

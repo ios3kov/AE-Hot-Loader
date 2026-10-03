@@ -29,6 +29,14 @@ WINDOWS = {
     "PLUG": (0x8A6C, 0x9028),
 }
 REVIEWS = {
+    "admission-contracts": (
+        ('adm-match-get', 'PluginSupport', 0x4d25c, 0x4d264),
+        ('adm-match-set', 'PluginSupport', 0x4d264, 0x4d330),
+        ('adm-string-plugin-dtor', 'PluginSupport', 0x2714, 0x275c),
+        ('adm-string-core-dtor', 'dvacore', 0xde00, 0xde48),
+        ('adm-thread-resume', 'dvacore', 0x2d1fc4, 0x2d1ff4),
+        ('adm-cancel-render', 'aelib', 0x2dd68, 0x2dfb0),
+    ),
     "factory-objects": (
         ('obj-module-ctor', 'MEE', 0x3df8, 0x3e9c),
         ('obj-module-dtor', 'MEE', 0x3efc, 0x3fe8),
@@ -397,6 +405,8 @@ FILE_ONLY_INPUTS = {
 }
 INPUTS.update(FILE_ONLY_INPUTS)
 SYMBOL_WANTED = {
+    'admission-contracts': re.compile(r'(PluginImpl.*(GetMatchName|SetMatchName)|'
+                                     r'ImmutableStringD[012]Ev|ScopedThreadSuspendD[012]Ev|capsule12CancelRender)'),
     "factory-objects": re.compile(r"(AELibraryPluginVideoFilterModule|AELibraryVideoFilterModule|PluginImpl.*D[012]Ev)"),
     "factory-transitive": re.compile(r"(ClassFactory|CreateClassInstanceRef|UnknownBase|SharedAsVirtualBase|"
                                      r"__shared_weak_count|GuidC[12]|sub_I_MEE_Plugins|"
@@ -4533,6 +4543,304 @@ TRANSITIVE_ANCHORS = {
 # Every instruction in the selected complete bodies is fixed, including unwind
 # tails and transitive release sites. This is file correspondence only; no private
 # object address, owner count or callable capability is obtained.
+ADMISSION_CONTRACT_ANCHORS = {
+    'adm-match-get': {
+        0x4d25c: ('add', 'x0,x0,#0xe8'),
+        0x4d260: ('ret', ''),
+    },
+    'adm-match-set': {
+        0x4d264: ('stp', 'x20,x19,[sp,#-0x20]!'),
+        0x4d268: ('stp', 'x29,x30,[sp,#0x10]'),
+        0x4d26c: ('add', 'x29,sp,#0x10'),
+        0x4d270: ('add', 'x19,x0,#0xe8'),
+        0x4d274: ('cmp', 'x19,x1'),
+        0x4d278: ('b.eq', '0x4d2f4'),
+        0x4d27c: ('ldr', 'x20,[x1]'),
+        0x4d280: ('cbz', 'x20,0x4d2d0'),
+        0x4d284: ('ldr', 'x8,[x20]'),
+        0x4d288: ('ldur', 'x8,[x8,#-0x30]'),
+        0x4d28c: ('add', 'x0,x20,x8'),
+        0x4d290: ('ldr', 'x8,[x0]'),
+        0x4d294: ('ldr', 'x8,[x8]'),
+        0x4d298: ('blr', 'x8'),
+        0x4d29c: ('ldr', 'x8,[x19]'),
+        0x4d2a0: ('str', 'xzr,[x19]'),
+        0x4d2a4: ('cbz', 'x8,0x4d2c0'),
+        0x4d2a8: ('ldr', 'x9,[x8]'),
+        0x4d2ac: ('ldur', 'x9,[x9,#-0x30]'),
+        0x4d2b0: ('add', 'x0,x8,x9'),
+        0x4d2b4: ('ldr', 'x8,[x0]'),
+        0x4d2b8: ('ldr', 'x8,[x8,#0x8]'),
+        0x4d2bc: ('blr', 'x8'),
+        0x4d2c0: ('str', 'x20,[x19]'),
+        0x4d2c4: ('ldp', 'x29,x30,[sp,#0x10]'),
+        0x4d2c8: ('ldp', 'x20,x19,[sp],#0x20'),
+        0x4d2cc: ('ret', ''),
+        0x4d2d0: ('ldr', 'x8,[x19]'),
+        0x4d2d4: ('str', 'xzr,[x19]'),
+        0x4d2d8: ('cbz', 'x8,0x4d2f4'),
+        0x4d2dc: ('ldr', 'x9,[x8]'),
+        0x4d2e0: ('ldur', 'x9,[x9,#-0x30]'),
+        0x4d2e4: ('add', 'x0,x8,x9'),
+        0x4d2e8: ('ldr', 'x8,[x0]'),
+        0x4d2ec: ('ldr', 'x8,[x8,#0x8]'),
+        0x4d2f0: ('blr', 'x8'),
+        0x4d2f4: ('ldp', 'x29,x30,[sp,#0x10]'),
+        0x4d2f8: ('ldp', 'x20,x19,[sp],#0x20'),
+        0x4d2fc: ('ret', ''),
+        0x4d300: ('mov', 'x19,x0'),
+        0x4d304: ('ldr', 'x8,[x20]'),
+        0x4d308: ('ldur', 'x8,[x8,#-0x30]'),
+        0x4d30c: ('add', 'x0,x20,x8'),
+        0x4d310: ('ldr', 'x8,[x0]'),
+        0x4d314: ('ldr', 'x8,[x8,#0x8]'),
+        0x4d318: ('blr', 'x8'),
+        0x4d31c: ('b', '0x4d328'),
+        0x4d320: ('bl', '0x2704'),
+        0x4d324: ('mov', 'x19,x0'),
+        0x4d328: ('mov', 'x0,x19'),
+        0x4d32c: ('bl', '0x2704'),
+    },
+    'adm-string-plugin-dtor': {
+        0x2714: ('stp', 'x20,x19,[sp,#-0x20]!'),
+        0x2718: ('stp', 'x29,x30,[sp,#0x10]'),
+        0x271c: ('add', 'x29,sp,#0x10'),
+        0x2720: ('mov', 'x19,x0'),
+        0x2724: ('ldr', 'x8,[x0]'),
+        0x2728: ('str', 'xzr,[x0]'),
+        0x272c: ('cbz', 'x8,0x2748'),
+        0x2730: ('ldr', 'x9,[x8]'),
+        0x2734: ('ldur', 'x9,[x9,#-0x30]'),
+        0x2738: ('add', 'x0,x8,x9'),
+        0x273c: ('ldr', 'x8,[x0]'),
+        0x2740: ('ldr', 'x8,[x8,#0x8]'),
+        0x2744: ('blr', 'x8'),
+        0x2748: ('mov', 'x0,x19'),
+        0x274c: ('ldp', 'x29,x30,[sp,#0x10]'),
+        0x2750: ('ldp', 'x20,x19,[sp],#0x20'),
+        0x2754: ('ret', ''),
+        0x2758: ('bl', '0x2704'),
+    },
+    'adm-string-core-dtor': {
+        0xde00: ('stp', 'x20,x19,[sp,#-0x20]!'),
+        0xde04: ('stp', 'x29,x30,[sp,#0x10]'),
+        0xde08: ('add', 'x29,sp,#0x10'),
+        0xde0c: ('mov', 'x19,x0'),
+        0xde10: ('ldr', 'x8,[x0]'),
+        0xde14: ('str', 'xzr,[x0]'),
+        0xde18: ('cbz', 'x8,0xde34'),
+        0xde1c: ('ldr', 'x9,[x8]'),
+        0xde20: ('ldur', 'x9,[x9,#-0x30]'),
+        0xde24: ('add', 'x0,x8,x9'),
+        0xde28: ('ldr', 'x8,[x0]'),
+        0xde2c: ('ldr', 'x8,[x8,#0x8]'),
+        0xde30: ('blr', 'x8'),
+        0xde34: ('mov', 'x0,x19'),
+        0xde38: ('ldp', 'x29,x30,[sp,#0x10]'),
+        0xde3c: ('ldp', 'x20,x19,[sp],#0x20'),
+        0xde40: ('ret', ''),
+        0xde44: ('bl', '0x4c68'),
+    },
+    'adm-thread-resume': {
+        0x2d1fc4: ('stp', 'x20,x19,[sp,#-0x20]!'),
+        0x2d1fc8: ('stp', 'x29,x30,[sp,#0x10]'),
+        0x2d1fcc: ('add', 'x29,sp,#0x10'),
+        0x2d1fd0: ('mov', 'x19,x0'),
+        0x2d1fd4: ('ldr', 'w0,[x0]'),
+        0x2d1fd8: ('cbz', 'w0,0x2d1fe0'),
+        0x2d1fdc: ('bl', '0x2ffa5c'),
+        0x2d1fe0: ('mov', 'x0,x19'),
+        0x2d1fe4: ('ldp', 'x29,x30,[sp,#0x10]'),
+        0x2d1fe8: ('ldp', 'x20,x19,[sp],#0x20'),
+        0x2d1fec: ('ret', ''),
+        0x2d1ff0: ('bl', '0x4c68'),
+    },
+    'adm-cancel-render': {
+        0x2dd68: ('sub', 'sp,sp,#0x1d0'),
+        0x2dd6c: ('stp', 'x28,x27,[sp,#0x180]'),
+        0x2dd70: ('stp', 'x24,x23,[sp,#0x190]'),
+        0x2dd74: ('stp', 'x22,x21,[sp,#0x1a0]'),
+        0x2dd78: ('stp', 'x20,x19,[sp,#0x1b0]'),
+        0x2dd7c: ('stp', 'x29,x30,[sp,#0x1c0]'),
+        0x2dd80: ('add', 'x29,sp,#0x1c0'),
+        0x2dd84: ('mov', 'x19,x0'),
+        0x2dd88: ('adrp', 'x8,136'),
+        0x2dd8c: ('ldr', 'x8,[x8,#0xc70]'),
+        0x2dd90: ('ldr', 'x8,[x8]'),
+        0x2dd94: ('stur', 'x8,[x29,#-0x48]'),
+        0x2dd98: ('adrp', 'x20,154'),
+        0x2dd9c: ('add', 'x20,x20,#0x248'),
+        0x2dda0: ('stp', 'x20,x20,[sp]'),
+        0x2dda4: ('mov', 'w21,#0x1'),
+        0x2dda8: ('strb', 'w21,[sp,#0x10]'),
+        0x2ddac: ('adrp', 'x2,121'),
+        0x2ddb0: ('add', 'x2,x2,#0xb30'),
+        0x2ddb4: ('mov', 'x0,x20'),
+        0x2ddb8: ('mov', 'x1,#0x0'),
+        0x2ddbc: ('bl', '0x8d27c'),
+        0x2ddc0: ('stp', 'x20,x20,[sp,#0x18]'),
+        0x2ddc4: ('strb', 'w21,[sp,#0x28]'),
+        0x2ddc8: ('adrp', 'x2,121'),
+        0x2ddcc: ('add', 'x2,x2,#0xb30'),
+        0x2ddd0: ('mov', 'x0,x20'),
+        0x2ddd4: ('mov', 'x1,#0x0'),
+        0x2ddd8: ('bl', '0x8d27c'),
+        0x2dddc: ('adrp', 'x8,154'),
+        0x2dde0: ('add', 'x8,x8,#0x218'),
+        0x2dde4: ('ldr', 'x24,[x8],#0x8'),
+        0x2dde8: ('cmp', 'x24,x8'),
+        0x2ddec: ('b.eq', '0x2deac'),
+        0x2ddf0: ('add', 'x8,sp,#0x30'),
+        0x2ddf4: ('add', 'x20,x8,#0x10'),
+        0x2ddf8: ('add', 'x21,x8,#0xf8'),
+        0x2ddfc: ('add', 'x22,x8,#0x128'),
+        0x2de00: ('adrp', 'x23,154'),
+        0x2de04: ('add', 'x23,x23,#0x220'),
+        0x2de08: ('b', '0x2de18'),
+        0x2de0c: ('mov', 'x24,x8'),
+        0x2de10: ('cmp', 'x8,x23'),
+        0x2de14: ('b.eq', '0x2deac'),
+        0x2de18: ('ldr', 'x8,[x24,#0x20]'),
+        0x2de1c: ('str', 'x8,[sp,#0x30]'),
+        0x2de20: ('ldrb', 'w8,[x24,#0x28]'),
+        0x2de24: ('strb', 'w8,[sp,#0x38]'),
+        0x2de28: ('add', 'x1,x24,#0x30'),
+        0x2de2c: ('mov', 'x0,x20'),
+        0x2de30: ('bl', '0x8bc8c'),
+        0x2de34: ('add', 'x1,x24,#0x118'),
+        0x2de38: ('mov', 'x0,x21'),
+        0x2de3c: ('bl', '0x8bc20'),
+        0x2de40: ('add', 'x8,x24,#0x28'),
+        0x2de44: ('ldp', 'q1,q0,[x8,#0x120]'),
+        0x2de48: ('stp', 'q1,q0,[x22]'),
+        0x2de4c: ('ldr', 'x8,[sp,#0x168]'),
+        0x2de50: ('ldr', 'x9,[x19]'),
+        0x2de54: ('cmp', 'x8,x9'),
+        0x2de58: ('b.ne', '0x2de6c'),
+        0x2de5c: ('ldr', 'x8,[sp,#0x170]'),
+        0x2de60: ('ldr', 'x9,[x19,#0x8]'),
+        0x2de64: ('cmp', 'x8,x9'),
+        0x2de68: ('b.eq', '0x2debc'),
+        0x2de6c: ('mov', 'x0,x21'),
+        0x2de70: ('bl', '0x8bc38'),
+        0x2de74: ('mov', 'x0,x20'),
+        0x2de78: ('bl', '0x8bca4'),
+        0x2de7c: ('ldr', 'x9,[x24,#0x8]'),
+        0x2de80: ('cbz', 'x9,0x2de94'),
+        0x2de84: ('mov', 'x8,x9'),
+        0x2de88: ('ldr', 'x9,[x9]'),
+        0x2de8c: ('cbnz', 'x9,0x2de84'),
+        0x2de90: ('b', '0x2de0c'),
+        0x2de94: ('ldr', 'x8,[x24,#0x10]'),
+        0x2de98: ('ldr', 'x9,[x8]'),
+        0x2de9c: ('cmp', 'x9,x24'),
+        0x2dea0: ('mov', 'x24,x8'),
+        0x2dea4: ('b.ne', '0x2de94'),
+        0x2dea8: ('b', '0x2de0c'),
+        0x2deac: ('mov', 'w20,#0x0'),
+        0x2deb0: ('ldrb', 'w8,[sp,#0x28]'),
+        0x2deb4: ('cbnz', 'w8,0x2dedc'),
+        0x2deb8: ('b', '0x2dee4'),
+        0x2debc: ('ldr', 'x19,[sp,#0x30]'),
+        0x2dec0: ('mov', 'x0,x21'),
+        0x2dec4: ('bl', '0x8bc38'),
+        0x2dec8: ('mov', 'x0,x20'),
+        0x2decc: ('bl', '0x8bca4'),
+        0x2ded0: ('mov', 'w20,#0x1'),
+        0x2ded4: ('ldrb', 'w8,[sp,#0x28]'),
+        0x2ded8: ('cbz', 'w8,0x2dee4'),
+        0x2dedc: ('ldr', 'x0,[sp,#0x20]'),
+        0x2dee0: ('bl', '0x8d288'),
+        0x2dee4: ('cbz', 'w20,0x2def0'),
+        0x2dee8: ('mov', 'x0,x19'),
+        0x2deec: ('bl', '0x8b6e0'),
+        0x2def0: ('ldrb', 'w8,[sp,#0x10]'),
+        0x2def4: ('cbz', 'w8,0x2df00'),
+        0x2def8: ('ldr', 'x0,[sp,#0x8]'),
+        0x2defc: ('bl', '0x8d288'),
+        0x2df00: ('ldur', 'x8,[x29,#-0x48]'),
+        0x2df04: ('adrp', 'x9,136'),
+        0x2df08: ('ldr', 'x9,[x9,#0xc70]'),
+        0x2df0c: ('ldr', 'x9,[x9]'),
+        0x2df10: ('cmp', 'x9,x8'),
+        0x2df14: ('b.ne', '0x2df34'),
+        0x2df18: ('ldp', 'x29,x30,[sp,#0x1c0]'),
+        0x2df1c: ('ldp', 'x20,x19,[sp,#0x1b0]'),
+        0x2df20: ('ldp', 'x22,x21,[sp,#0x1a0]'),
+        0x2df24: ('ldp', 'x24,x23,[sp,#0x190]'),
+        0x2df28: ('ldp', 'x28,x27,[sp,#0x180]'),
+        0x2df2c: ('add', 'sp,sp,#0x1d0'),
+        0x2df30: ('ret', ''),
+        0x2df34: ('bl', '0x8d804'),
+        0x2df38: ('mov', 'x19,x0'),
+        0x2df3c: ('b', '0x2dfa0'),
+        0x2df40: ('b', '0x2df74'),
+        0x2df44: ('b', '0x2df74'),
+        0x2df48: ('mov', 'x19,x0'),
+        0x2df4c: ('adrp', 'x0,154'),
+        0x2df50: ('add', 'x0,x0,#0x248'),
+        0x2df54: ('bl', '0x8d288'),
+        0x2df58: ('b', '0x2dfa0'),
+        0x2df5c: ('b', '0x2df74'),
+        0x2df60: ('mov', 'x19,x0'),
+        0x2df64: ('adrp', 'x0,154'),
+        0x2df68: ('add', 'x0,x0,#0x248'),
+        0x2df6c: ('bl', '0x8d288'),
+        0x2df70: ('b', '0x2dfa8'),
+        0x2df74: ('mov', 'x19,x0'),
+        0x2df78: ('cbz', 'w1,0x2dfa8'),
+        0x2df7c: ('mov', 'x0,x19'),
+        0x2df80: ('bl', '0x7748'),
+        0x2df84: ('mov', 'x19,x0'),
+        0x2df88: ('mov', 'x0,x20'),
+        0x2df8c: ('bl', '0x8bca4'),
+        0x2df90: ('b', '0x2df98'),
+        0x2df94: ('mov', 'x19,x0'),
+        0x2df98: ('add', 'x0,sp,#0x18'),
+        0x2df9c: ('bl', '0xfee8'),
+        0x2dfa0: ('mov', 'x0,sp'),
+        0x2dfa4: ('bl', '0xfee8'),
+        0x2dfa8: ('mov', 'x0,x19'),
+        0x2dfac: ('bl', '0x8b4d0'),
+    },
+}
+
+def verify_admission_contracts(text, label, start, end):
+    require(any((row[0], row[2], row[3]) == (label, start, end)
+                for row in REVIEWS['admission-contracts']), 'unreviewed admission contract window')
+    count = validate_disassembly(text, start, end)
+    rows = {int(a, 16): (op, re.sub(r'\s+', '', args.split(';')[0]))
+            for a, op, args in re.findall(
+                r'^.*\[0x([0-9a-fA-F]+)\]\s+<[^>]*>:[ \t]+(\S+)[ \t]*([^\n]*)', text, re.M)}
+    anchors = ADMISSION_CONTRACT_ANCHORS[label]
+    require(rows == anchors, 'admission contract structural instructions differ')
+    return {'decoded_instructions': count, 'structural_anchors': len(anchors),
+            'claim': 'file-only-scoped-controls-not-host-admission-or-drain'}
+
+
+SDK_ADMISSION_HEADER = Path(
+    '/Users/os3kov/Downloads/AfterEffectsSDK_25.6_61_mac/'
+    'ae25.6_61.64bit.AfterEffectsSDK/Examples/Headers/AE_GeneralPlug.h')
+SDK_ADMISSION_SHA256 = '30d12ec3eb5af1a902c7414053b1be1da0204b226e0b1cdc71272be1e137000c'
+SDK_ADMISSION_RANGES = ((2734, 2738), (2797, 2803), (3199, 3240), (5330, 5385))
+
+
+def admission_sdk_contract():
+    raw = SDK_ADMISSION_HEADER.read_bytes()
+    require(hashlib.sha256(raw).hexdigest() == SDK_ADMISSION_SHA256,
+            'SDK admission header differs from exact25.6_61 pin')
+    lines = raw.decode('utf-8').splitlines()
+    excerpt = '\n'.join('Lines %d-%d:\n' % (a, b) + '\n'.join(lines[a-1:b])
+                        for a, b in SDK_ADMISSION_RANGES) + '\n'
+    return {'path': str(SDK_ADMISSION_HEADER), 'sha256': SDK_ADMISSION_SHA256,
+            'ranges': SDK_ADMISSION_RANGES,
+            'queue_suite_version': 1, 'render_suite5_version': 8,
+            'queue_control_scope': 'RENDER-QUEUE-STATE',
+            'async_cancel_scope': 'ONE-REQUEST-ID',
+            'callback_guarantee_exception': 'AE-SHUTDOWN',
+            'idle_as_all_reader_MFR_drain': 'NOT-ESTABLISHED',
+            'claim': 'selected-exact-header-contracts-not-universal-API-absence'}, excerpt
+
 OBJECT_ANCHORS = {
     'obj-module-ctor': {
         0x3df8: ('stp', 'x20,x19,[sp,#-0x20]!'),
@@ -7043,6 +7351,11 @@ def main():
         receiver = {}
         transitive = {}
         objects = {}
+        admission_contracts = {}
+        sdk_contract = None
+        if args.review == 'admission-contracts':
+            sdk_contract, sdk_excerpt = admission_sdk_contract()
+            write_exclusive(folder / 'SDK-admission-contracts.txt', sdk_excerpt)
         for name in names:
             path, _ = INPUTS[name]
             nm, nm_err = run_tool(["/usr/bin/nm", "-arch", "arm64", "-n", "-m", str(path)],
@@ -7059,6 +7372,8 @@ def main():
                  "--source", str(folder / (label + "-inspect.lldb"))],
                 timeout=60)
             instruction_count = verify_lldb_disassembly(disassembly, diagnostics, start, end)
+            if args.review == 'admission-contracts':
+                admission_contracts[label] = verify_admission_contracts(disassembly, label, start, end)
             if args.review == 'factory-objects':
                 objects[label] = verify_objects(disassembly, label, start, end)
             if args.review == 'factory-transitive':
@@ -7162,6 +7477,8 @@ def main():
             write_exclusive(folder / "PLUG-fixup-chains.txt", fixups)
         after = {name: validate_input(*INPUTS[name]) for name in names}
         require(observed == after, "input files changed during collection")
+        if sdk_contract is not None:
+            require(admission_sdk_contract()[0] == sdk_contract, 'SDK contract changed during collection')
         record = {
             "schema": "AEHL-C1-RESOURCE-ABI-1",
             "scope": "offline-bounded-resource-" + args.review + "-only",
@@ -7172,6 +7489,18 @@ def main():
             "inputs": outputs,
             "data_windows": data_outputs,
         }
+        if args.review == 'admission-contracts':
+            record['admission_contract_evidence'] = admission_contracts
+            record['sdk_contract'] = sdk_contract
+            record['PluginImpl_e8_selected_field'] = 'MATCH-NAME-IMMUTABLE-STRING-NOT-SEPARATE-PLUGIN-PROVIDER'
+            record['actual_string_implementation_callbacks'] = 'NOT OBSERVED'
+            record['capsule_cancel_scope'] = 'GUID-MATCHED-REQUEST-TO-BEE-WORKQUEUE-CANCEL'
+            record['thread_suspend_dtor_scope'] = 'ONE-MACH-THREAD-RESUME-NOT-HOST-ADMISSION'
+            record['supported_host_owner_thread_contract'] = 'UNKNOWN'
+            record['host_wide_reader_render_exclusion'] = 'NOT PROVEN'
+            record['whole_effect_rollback'] = 'NOT PROVEN'
+            record['native_experiment'] = 'BLOCKED'
+            record['registration_apply_render'] = 'NOT RUN'
         if args.review == 'factory-transitive':
             record['transitive_evidence'] = transitive
             record['class_guid_initialization'] = 'SAME-LITERAL-AND-CONSTRUCTOR-DISTINCT-STORAGE'

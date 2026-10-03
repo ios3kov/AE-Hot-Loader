@@ -12,6 +12,58 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## Host admission, render drain and concrete remaining owners — ten-task pass
+
+2026-10-03 continuation from clean **2685ca657dba7c2613b1902e9937697f3c78cc36**.
+Stage C1 Development research, rules8.0.0 /132b7cd32873ba7328e3128ffbb33e1929b74d45;
+AI_ENTRYPOINT first. Native admission/lifetime/thread/ABI Critical; bounded
+file-only research/collector Standard. API-SOURCE, RENDER-001, meaningful checks,
+exact source, TASK-CLOSE and CLEANUP apply; production-engineering workflow reused.
+Original arbitrary ordinary-effect/no-restart scope and A/B/C1/C2/D/release retained.
+
+| ID | Task / observable acceptance | Check / dependency |
+|---|---|---|
+| ADM-01 | Identify a concrete provider preventing new registry/dispatch entry | Exact SDK25.6_61 render queue/idle/async contracts and bounded FLT/aelib/dvacore admission-related symbol inventory; private candidate bodies selected before capture |
+| ADM-02 | Establish completion/drain coverage including MFR | Distinguish queue/request/foreground/host-wide controls; reviewed complete selected bodies and official contracts, no zero-count/idle shortcut |
+| ADM-03 | Establish safe existing factory acquisition and retention | Reuse existing-only/full-owner code; actual initial reachability/thread/private ABI still required, no foreign call based on matching symbols |
+| ADM-04 | Resolve concrete remaining object and callback dependencies | Follow PluginImpl+e8 through typed GetMatchName/SetMatchName and exact original fields before labelling it a provider; selected missing bodies only |
+| ADM-05 | Establish full failure recovery | Reconcile original publication-before-error/inverse scope; admission control alone cannot supply registry/preferences/canonical rollback |
+| ADM-06 | Implement evidenced adapter | Actual host adapter conditional on01–05; otherwise implement only newly substantiated research scope, keep backend unbound |
+| ADM-07 | Verify refusal/error/reentry/lifetime behavior | Meaningful controls for newly changed collector/boundary, no synthetic host PASS or weakened gates |
+| ADM-08 | Verify exact candidate | Full runner/raw scanner/manual original review and both exact-source CI; exact artifacts/evidence retained |
+| ADM-09 | Controlled registration/apply/render experiment | Only after01–05 contracts/safe identified adapter/current disposable AE environment established; otherwise BLOCKED, no install/launch/attach/read/scan/private invoke |
+| ADM-10 | Reconcile all tasks, evidence/docs/status and cleanup | Preserve historical/mistaken preliminary interpretations with correction; explicit partials/blockers/owned-only cleanup |
+
+Initial scope: exact public SDK queue state, idle hooks and async request APIs;
+file-only admission/cancel/suspend/lock/drain/guard symbol inventory in already
+pinned FLT/aelib/dvacore, plus PluginImpl match-name methods and the referenced
+dvacore ImmutableString lifetime methods. Reuse original receiver/render/registry/
+object-owner/admission archives rather than recollect unchanged bodies. Record
+concrete missing window bounds before disassembly. No app/SDK/project/plugin/
+preferences mutation, user-process suspension/termination, foreign retain/release/
+teardown, unchanged scan, main mutation, merge or release. Unknown contracts block
+dependent native design/operation; independent bounded research continues.
+
+Selected complete missing bodies (next-defined-text symbol ends, original arm64
+nlist): PluginSupport GetMatchName4d25c–4d264, SetMatchName4d264–4d330 and
+ImmutableString D1 2714–275c; dvacore ImmutableString D1 de00–de48 and
+ScopedThreadSuspend D1 2d1fc4–2d1ff4; aelib capsule CancelRender2dd68–2dfb0.
+Six windows /247 instructions (initial arithmetic252 corrected before acceptance). Candidate names are discovery, not host contracts;
+the suspend destructor is inspected only for its scope, never invoked. No new
+body from the unchanged factory/registry/render archives is captured.
+
+Implementation checkpoint: [selected admission contracts and field correction](C1_ADMISSION_CONTRACTS_2026-10-03.md).
+PluginImpl+e8 identified as match-name ImmutableString using typed SetMatchName,
+GetMatchName and two complete string destructors; earlier provider interpretation
+is corrected with history preserved. Scoped GUID cancellation and one-thread
+resume do not establish host-wide admission/drain. Added fixed six-body/247-anchor
+collector and exact SDK25.6_61 header excerpts/pin. Three new refusal tests first
+failed against missing implementation; duplicate anchor-name regression caught
+and corrected;76 focused methods PASS. Actual safe acquisition/thread/full
+callback graph/admission/drain/whole-effect rollback still UNKNOWN. Full clean
+candidate runner/raw scanner/original review/both CI pending; adapter/trial
+BLOCKED, registration/apply/render NOT RUN.
+
 ## Actual factory object owners and host prerequisites — twelve-task pass
 
 2026-10-03 continuation from clean **4a89b3ffeea929015156f65b32a8bcdc0ef3c637**.
