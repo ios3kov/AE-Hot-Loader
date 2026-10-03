@@ -229,7 +229,8 @@ FILE_ONLY_INPUTS = {
 INPUTS.update(FILE_ONLY_INPUTS)
 SYMBOL_WANTED = {
     'registry-transaction': re.compile(r'(InitIterator|Egg_PlugSearch|FLT_FilterRegistry|'
-                                       r'RenderState.*(Scoper|ActivelyRendering)|FLT_GetActivelyRendering)'),
+                                       r'RenderState.*(Scoper|ActivelyRendering)|GetNumThreadsRenderingEffects|'
+                                       r'FLT_NotifyFilterLoadingDone)'),
     "search-abi": re.compile(r"(PLUG_Search|Egg_PlugSearch|SearchStatFunc)"),
     "cleanup": re.compile(r"(PLUG_InstallScan|PLUGp_DoCleanups|FLT_Birth|"
                           r"SetupGeneralPluginScan|PluginScanFunc|PluginCleanupFunc|"

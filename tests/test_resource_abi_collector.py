@@ -173,6 +173,17 @@ class ResourceAbiCollectorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unreviewed'):
             collector.verify_publication(text, 'FLT-if-missing', start, end - 4)
 
+    def test_registry_catalog_contains_notifier_counter_and_wrapper_symbols(self):
+        names = ('__ZN15FLT_RenderState12RenderScoperD1Ev',
+                 '__ZN15FLT_RenderState29CreateScoper_RenderingEffectsEv',
+                 '__ZN15FLT_RenderState29GetNumThreadsRenderingEffectsEv',
+                 '__Z33FLT_GetNumThreadsRenderingEffectsv',
+                 '__Z27FLT_NotifyFilterLoadingDoneRKSt3__16vector')
+        text = '\n'.join('0000000000000000 (__TEXT,__text) external '+n for n in names)
+        selected = collector.select_symbols(text, 'registry-transaction')
+        for name in names:
+            self.assertIn(name, selected)
+
     def test_registry_transaction_scope_is_complete_and_file_only(self):
         windows = collector.review_windows('registry-transaction')
         self.assertEqual(len(windows), 17)

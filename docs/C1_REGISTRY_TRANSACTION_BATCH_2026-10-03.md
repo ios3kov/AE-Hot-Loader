@@ -78,7 +78,10 @@ claim/marker bindings reject a retargeted window and never overwrite evidence.
 Focused red regression reproduced the previous policy accepting a model without
 any publication observation (test assertion failed before the change). Focused
 checks now PASS: 129 gate cases (+35), 38 real-file/process journal cases (+3),
-38 Python collector cases (+2); all host observations/calls are synthetic.
+39 Python collector cases (+3); all host observations/calls are synthetic.
+Final catalog review also reproduced and fixed omitted counter/wrapper/notifier
+symbols in the selected symbol inventory. Their disassembly/bytes were already
+captured; the focused regression now requires all five actual symbol families.
 No weakened tests, native profile changes, installable candidate or host operation.
 
 ## Verification / closeout (REG-006)
