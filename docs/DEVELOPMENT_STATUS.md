@@ -12,6 +12,34 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
+## Factory receiver — acquisition route traced, actual ownership open
+
+[Receiver review](C1_FACTORY_RECEIVER_2026-10-03.md): exported registration links
+class creation callback, typed query, retained-owner transfer and factory-registry
+insertion. Instance may create; it is not proved a read-only existing-object lookup.
+Original final-vtable UnknownBase shift is0, distinct shared-from-this shift0x38;
+exact31/24-byte query names independently reconstructed without the closing bracket
+shown after the source literal in LLDB comments. Runtime equality of distinct class
+GUID cells/transitive ClassFactory and GetSharedFromThis contracts remain UNKNOWN.
+A concrete copied24-byte reference decoder implemented; diagnostic integers only,
+no object read/retain/callable pointer or gate capability. Real owned C++ lifetime/
+alias transfer/last destruction/weak expiry/replacement/stale-byte controls PASS with
+ASan/UBSan. The stand's layout token is not a C++/Adobe shared control block. Copied
+plausible pointers survive object destruction; shape cannot prove ownership/liveness.
+At exact clean research code 4ca1e665ec418b2bc7cde008b48ac67b1832865a:65 collector +2
+native focused,446 full Python/no skips,62 Node/22 stages PASS. Clean14-window/
+563-instruction/481-anchor collection and separate original-byte/query/header/import
+linkage/ZIP/345-source-file proof PASS. Raw scanner exit1 retained; local-CLI false
+positive reviewed. Research CI 37138868803 /macOS CI 37138868787 success at
+exact4ca1e66. RECV-01/02 bounded findings recorded;03/04 actual AE ownership/
+call/thread contracts unresolved;05 diagnostic component done, retained host adapter
+BLOCKED;06 owned native controls PASS/AE NOT RUN;07 checks/docs/retention/cleanup
+complete. This is partial implementation of the seven-block packet, not completion
+of its actual AE ownership/call dependency. Backend NOT READY; registration/apply/
+render NOT RUN, original product/A/B/C1/C2/D/release retained. Next: substantiate
+transitive ClassFactory/GetSharedFromThis/acquisition contract and actual retained
+receiver before a live packet; host-wide admission/drain/full rollback still required.
+
 ## Factory code identity — implemented, actual receiver open
 
 [Factory identity review](C1_FACTORY_IDENTITY_2026-10-03.md): real native code-identity

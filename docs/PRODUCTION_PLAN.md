@@ -77,6 +77,21 @@ Also capture the three-instruction MEE registration import stub0x9fe48–0x9fe54
 selected original indirect-symbol inventory maps it to PluginSupport registration.
 These are file-only correspondences, not an invocation or ABI certification.
 
+Final reconciliation: [receiver findings and exact receipts](C1_FACTORY_RECEIVER_2026-10-03.md).
+Clean code4ca1e665ec418b2bc7cde008b48ac67b1832865a: RECV-01/02 bounded original creation/
+registration/query findings recorded;03 selected retained-owner/destructor fields
+reviewed, actual supported AE retention UNKNOWN;04 callable ABI/thread/transitive
+ClassFactory/GetSharedFromThis UNKNOWN;05 copied-reference diagnostic component
+implemented, actual retained host adapter BLOCKED;06 two real owned native controls
+including ASan/UBSan PASS, actual AE lifetime NOT RUN;07 clean collection/separate
+byte/query/header/import/ZIP/345-source-file review,446 Python/no skips,62 Node/
+22 stages, raw scanner review, exact-source CI37138868803/37138868787 and
+status/handoff/compatibility/private retention/ownership-aware cleanup complete.
+This closes independent research/component work only; no claim that all seven
+AE-dependent acceptance items are complete. Original product/A/B/C1/C2/D/release
+retained. Conditional native registration still BLOCKED; actual receiver/late ABI/
+continuous host admission/drain/full rollback missing. No AE operation/merge/release.
+
 ## Factory identity binding — implementation and source review
 
 2026-10-03 user “делай” continues the real host-adapter dependency from the blocked

@@ -52,7 +52,7 @@ Exported MEE_RegisterVideoFilterFactory first calls dvacore ClassFactory::Regist
 (0x3dff8), supplying callback0x3e150 selected by ADRP/add0x3dff0/0x3dff4. It then
 calls CreateClassRefInternal with creation flag true (0x3e040/0x3e044), queries the
 returned UnknownBase virtually at slot+0x18 for24-byte identifier
-ML::IPluginModuleFactory], transfers retained owner fields (0x3e080–0x3e088),
+ML::IPluginModuleFactory, transfers retained owner fields (0x3e080–0x3e088),
 and calls the MEE import stub for PluginSupport RegisterPluginModuleFactory
 (0x3e0a0→0x9fe48). Original indirect-symbol inventory maps stub0x9fe48 /slot0xed738
 to that PluginSupport import; body ADRP/ldr/br is linkage, not a supported late ABI.
@@ -64,7 +64,7 @@ once/mutex guard in this complete exported body; repeating it late is unproved.
 Global initializer0xb5e8 merely initializes named class GUID storage0x10f080 from
 7a7d3cd3-6b81-48f8-bee0-ec40018a4432; it does not register the factory. Instance
 uses named GUID storage0x10f080, calls dvacore CreateClassInstanceRef (0x71dc),
-queries31-byte identifier ML::AELibraryVideoFilterFactory] through slot+0x18
+queries31-byte identifier ML::AELibraryVideoFilterFactory through slot+0x18
 (0x7204), and moves retained owner fields to its output (0x7220–0x7228).
 Missing interface has assert/log/cleanup paths, not an acceptable valid receiver.
 Class registration's GUID input points to distinct storage0x10fa38; class/name/callback
@@ -83,7 +83,9 @@ creation form a bounded original-file path, not a harmless late acquisition cont
 
 Complete QueryMap compares exact31-byte factory identifier and24-byte module-factory
 identifier, returning its incoming object address on match or null on mismatch.
-The literal constants include trailing ]; no generic RTTI/string guessing is valid.
+Independent raw MOVZ/MOVK comparison proves exact31/24-byte string_view content
+excludes the trailing ] printed after the pointed-to literal in LLDB comments.
+No generic RTTI/string/comment guessing is valid.
 Conversion to UnknownBase loads primary vtable[-0x38] (0x93a4), adjusts object,
 then calls external dvacore UnknownBase::GetSharedFromThis (0x93b0), transferring
 paired reference fields. Prior classref output uses the same header adjustment.
@@ -158,3 +160,80 @@ late ABI/continuous host reader/render admission/drain/full-effect rollback miss
 Launch authorization remains received; technical contracts are not implemented by
 consent. AE launch/attach/install/read active session/private invoke/retain/release,
 registration/apply/render NOT RUN. Original product/A/B/C1/C2/D/release retained.
+
+## Exact clean-source reconciliation
+
+This supersedes PENDING research checks above. Exact clean tested code
+4ca1e665ec418b2bc7cde008b48ac67b1832865a. Independent review also corrected preliminary query-name
+wording: the closing bracket in LLDB's pointed-to literal comment is excluded from
+the actual31/24-byte string_view comparison. Only documentation changes at final
+closeout; no code/anchor/decoder change was needed. Later documentation SHA is not
+claimed to have run preceding exact-source code checks.
+
+| Task | Exact bounded acceptance / result | Remaining dependent scope |
+|---|---|---|
+| RECV-01 | Exported registration/class callback/creation/query/factory-map insertion route traced and raw import linkage verified | Actual runtime GUID values/equality and transitive class registry UNKNOWN |
+| RECV-02 | Complete Instance/QueryMap/conversion/CreateInstanceRef and raw signed adjustments reviewed | Actual native acquisition/receiver NOT OBSERVED |
+| RECV-03 | Complete selected strong/weak/interface/zero-owner/D1/D2 lifetime boundaries reviewed; own real-object lifetime controls PASS | Supported actual AE retention/storage lifetime UNKNOWN |
+| RECV-04 | Private/static argument/return/error/hidden-VTT/transitive/thread limitations explicitly established | Supported callable late ABI/thread/admission/drain/full rollback BLOCKED |
+| RECV-05 | Copied-reference shape decoder IMPLEMENTED, rejects unsupported layout/partial/misaligned/inconsistent/overflow data | Actual retained receiver/call adapter BLOCKED; no object read/ownership/call capability |
+| RECV-06 | Real owned C++ object/alias/move/destruction/weak expiry/replacement/stale copied data, ASan/UBSan PASS | Actual AE lifetime/registration/apply/render NOT RUN |
+| RECV-07 | Clean collection, separate original byte/query/header/import/ZIP/source review, all checks/scanner/CI/docs/retention/cleanup COMPLETE | Full product/A/B/C1/C2/D/release remain open |
+
+- Clean collection `resource-factory-receiver-6d31b658-jnlvecb2.zip`, SHA256
+  cce2f22dd3d8708e31c792848d9203a10a5468ad638ed7cbd7180731564c9c2e, 37 members. Complete14 fixed windows/563 rows/
+  481 anchors, two distinct raw non-fixup header words, exact input pins before/
+  after, CRC/hash inventory and byte equality to exclusive owned outputs PASS.
+  Zero Adobe calls/load/process activity; no scan/native acquire/release.
+- Separate verifier `aehl-receiver-independent.py`, SHA256
+  b9c3528115648595aaa5de5a0acfc3f7213abb06f4e2d70da0de1f4fc694f5c3; no collector import.
+  Original arm64 fat Mach-O mapping and instruction decoding:563 instructions,
+  61 direct/47 conditional/14
+  indirect branches/18 returns PASS. Raw callback/data GUID roots,
+  MOVZ/MOVK exact query identifiers, zero UnknownBase versus0x38 shared adjustment,
+  MEE stub/GOT0xed738/nlist/import ordinal→PluginSupport PASS. Source GUID storage
+  distinct; actual runtime equality UNKNOWN. Receipt SHA256
+  2c6516e5bf8dfe2251030838ace69a6b5a82095f51f30e992bb8016694c21b39. This is selected original
+  file dataflow, not every transitive semantic effect or supported host ABI.
+- Full runner `AEHL-checks-q0r6rla0.zip`, SHA256 83712e3493b6143f330367d5ab5ad01c6331693ae379fbd6062eff5cd0b94085,
+  25 members;446 Python, zero skips/failures/errors/expected failures/
+  unexpected successes,62 Node, all22 stages PASS; Python63.932 seconds. Owned
+  native stand compiled/executed with ASan/UBSan, no sanitizer report. C++ owner
+  contract only; no AE native ABI/lifetime certification. TDD logs preserve two
+  missing-header compile failures and four missing-mode collector errors, followed
+  by focused65+2 PASS; no lowered acceptance.
+- Independent runner ZIP CRC/manifest/payload hashes and all345 tracked working
+  bytes/exact-code Git blob hashes PASS. Inventory SHA256
+  4848de3885313cebe7967adb257686ab42f86af9032a0493521baef2d03b18fc; clean source/source_unchanged_after=true.
+  Source-proof SHA256 5dac7978a15e2ddb7f2d058e8a5e94c35226350e9d94dcc33eeaacafe071186c.
+- Scanner `aehl-receiver-4ca1e66-audit.json`, SHA256
+  13a2e7ff8e01129accd41f035c8c79855a25dfac96057d1cbdd49b4a8f65d249; raw exit1/review_required,
+  release_readiness=not_assessed. Sole vibe.no_ratelimit_auth at
+  tools/artifact_manifest.py:71 reviewed: local argparse manifest CLI, no HTTP/
+  auth route/listener. False positive; raw finding/exit retained without suppression.
+  Separate source/scanner review (including corrected query-name interpretation)
+  SHA256 6aeaa35f72c4a31c50280aa60d10536571f29ba788ea0f86a9cf00d3944d8f40.
+- Research CI [37138868803](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37138868803) and macOS CI
+  [37138868787](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37138868787) completed/success at exact4ca1e665ec418b2bc7cde008b48ac67b1832865a.
+  Internal build/offline controls only; no AE registration/render claim.
+
+## Retention, cleanup and next dependency
+
+Durable private owned receipts under
+`build-ae-hot-loader/receiver-closeout-4ca1e66-l8bxu5bm`. Byte-identical collection/runner archives,
+independent verifier/review/source proof, raw scanner/manual review, TDD/focused
+logs and preliminary direct-branch/GUID/adjustment-hypothesis inventories preserved.
+RETENTION.json SHA256 ef9befeb3c7d17bb8490a6684542a2b07bd6b2a9a3daecc685a51306d967ea5b; CI.json SHA256
+aeb6dfc8353a76f22e2abd0e4af6106bbff1302c4f9a301cffa2dd03942b316f; final CLOSEOUT.json binds subsequent docs commit
+and full retained receipt inventory. Temporary test executable removed by owned
+lifecycle; preliminary/historical/shared/loaded/unknown evidence untouched.
+SDK/app/plugins/projects/AE session unchanged; no preferences/cache purge, scan,
+AE launch/attach/install/read session/private invocation/refcount/destructor/unload,
+merge or release. Rule/product/remaining acceptance preserved.
+
+Next: substantiate transitive dvacore ClassFactory/GetSharedFromThis/acquisition
+contracts and actual retained factory receiver. Separate supported late-call ABI/
+thread/continuous host-wide reader/render admission/drain/full effect rollback
+remain mandatory. Do not call the creation/registration wrappers as harmless getters,
+reconstruct foreign shared_ptr ownership from tuple bytes, use saved integers after
+release, or mistake destructor/control-storage retention for render completion.
