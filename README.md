@@ -53,7 +53,11 @@ all four requested suite revisions are available; the complete global adapter li
 contains only the standard **Sweet Pea 2 Adapter v1**. Project/effect registry and
 loaded image inventories stayed unchanged. [Actual result and exact evidence](docs/PICA_AVAILABILITY_REVIEW_2026-10-03.md).
 This confirms PICA access, not ordinary-effect registration. Its one-shot scope is
-consumed; a new inventory/publication experiment needs its own reviewed packet.
+consumed. A separate bounded public plug-in inventory helper is now built and
+locally validated at source 525000b, with 418 Python/no skips, 62 Node and 22 stages
+PASS. Its live question is whether exact known ordinary-effect files occur in
+PICA's global list. [Contracts, preparation receipts and conditional live scope](docs/PICA_INVENTORY_REVIEW_2026-10-03.md).
+That new AE inventory is NOT RUN and needs its own reviewed packet/actual authority.
 A safe ordinary-effect registration adapter remains BLOCKED on provider ownership,
 continuous host-wide exclusion and complete publication/failure semantics.
 Current-candidate late registration/apply/render are NOT RUN. Historical scope

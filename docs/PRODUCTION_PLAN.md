@@ -44,6 +44,15 @@ mutation, scan, unload, preferences/security changes. Cleanup preserves old
 installed inert helper/session, SDK, other plugins and historical evidence.
 Results will be recorded in [inventory review](PICA_INVENTORY_REVIEW_2026-10-03.md).
 
+INV-01–06 complete at code/test source **525000b6915423b7d387f10e846f972472570754**;
+build **inventory-a96d55e17240**, actual SDK arm64 build/sign/inert PASS;
+418 Python/no skips, 62 Node and 22 local stages PASS. Research CI 37124717978 and
+macOS CI 37124718156 completed/success at that exact source. Independent private
+ZIP/source/hash review and final acceptance mapping recorded in the inventory review.
+INV-07/08 NOT RUN pending exact new live scope and closed-host installation guard.
+No installation, AE inspection/launch, registration/apply/render, merge or release
+in this preparation pass. All A/B/C1/C2/D/release obligations retained.
+
 ## PICA-07/08 runtime closeout — original product obligations retained
 
 All eight scoped pass tasks completed at identified code/helper source f21064a:
