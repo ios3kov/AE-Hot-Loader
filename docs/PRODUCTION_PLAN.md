@@ -49,12 +49,16 @@ Preserve native helpers/profiles/gates, actual SDK/app/session/projects/third-pa
 plugins/history. No merge/release. Complete independent 01–09 research even if 10
 blocked; do not label ten host steps or the original product complete.
 
-Preparation: [bounded dispatch findings](C1_LOADER_DISPATCH_2026-10-03.md),
-23 windows/11754 instructions/792 anchors; 57 focused tests PASS after three
-expected TDD missing-mode errors. DISPATCH-01–06 bounded findings documented with
-native contracts UNKNOWN/BLOCKED; 07 tooling/refusals prepared; 08 clean-source
-checks/review/CI NOT RUN; 09 final receipts/cleanup pending; 10 native BLOCKED,
-registration/apply/render NOT RUN.
+Final research reconciliation: [dispatch findings/receipts](C1_LOADER_DISPATCH_2026-10-03.md).
+At clean code 2a2dabb68d442355e97e0d1053d84bccef60c825, 57 focused /433 full
+Python/no skips, 62 Node/22 stages PASS; clean collection/separate original-byte/
+archive/336-source-file verification PASS. Raw scanner exit 1 retained with one
+reviewed local-CLI false positive. Research CI 37136115466 and macOS CI
+37136115496 completed/success at exact 2a2dabb. DISPATCH-01–06 bounded findings
+and native limits recorded, 07 tooling/refusals PASS, 08 verification complete,
+09 docs/retention/cleanup reconciled. DISPATCH-10 native packet/execution BLOCKED,
+registration/apply/render NOT RUN. Backend NOT READY; original obligations retained.
+No product/runtime/release completion claimed.
 
 ## Module admission and initialization — bounded continuation
 

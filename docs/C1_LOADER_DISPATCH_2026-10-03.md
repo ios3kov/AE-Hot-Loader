@@ -164,3 +164,81 @@ The next engineering dependency is the actual factory receiver/capability bindin
 and a supported continuous admission/drain/rollback transaction; another unchanged
 scan cannot supply it. Product acceptance still requires new registration, applying
 that same effect and rendering successfully without restarting AE.
+
+## Exact clean-source closeout
+
+Preparation above is historical; this section supersedes its NOT RUN research
+checks. Exact clean tested code 2a2dabb68d442355e97e0d1053d84bccef60c825, published to the
+existing research branch. Local/source proof, clean collection and source unchanged
+through checks verified. Subsequent closeout modifies documentation only; no claim
+that the later documentation SHA itself ran these code checks.
+
+| Gate / task | Procedure / exact scope | Result / Evidence |
+|---|---|---|
+| DISPATCH-01 | Complete LoadPluginList with actual ordinary/meta routing, bool/signed-status separation | Bounded original-file finding documented; callable late orchestration UNKNOWN |
+| DISPATCH-02 | Complete call_once/HeavyInit/static dispatch, CreatePlugin/FindFactory/five selection helpers | File order and fallback/owner fields documented; actual virtual receiver/thread UNKNOWN |
+| DISPATCH-03 | Selected normal/unwind retained-owner transfers and collection writes, prior MEE/FLT findings reconciled | File finding complete; actual executable owner and host lifetime UNKNOWN |
+| DISPATCH-04 | Selected task/atomic/local scope versus continuous all-reader/render exclusion | File limits documented; supported host admission/drain BLOCKED |
+| DISPATCH-05 | Output bool, signed status, virtual status-out, caught exceptions/cache cleanup | Distinctions documented; actual registration/apply/render NOT RUN |
+| DISPATCH-06 | Local policy/scoper restoration/releases versus whole-effect inverse | File limits documented; full effect rollback BLOCKED |
+| DISPATCH-07 | New fixed offline mode + missing/duplicate/undecoded/tampered/scope refusal tests and owned actual arm64 LLDB | 57 focused tests PASS; TDD first run exactly three expected missing-mode errors |
+| DISPATCH-08 | Clean capture, independent original-byte/archive/source proof, full runner/scanner, both exact-source workflows | PASS research verification, detailed identities below; no AE-runtime claim |
+| DISPATCH-09 | Existing status/plan/handoff/compatibility, retained receipts and ownership-aware cleanup | Complete; no historical/shared/loaded cleanup |
+| DISPATCH-10 | Supported executable host packet + live result | BLOCKED ABI/receiver/thread/admission/drain/rollback; concrete current live scope absent; registration/apply/render NOT RUN |
+
+- Clean file-only collection: `resource-loader-dispatch-df242246-0bv0ep2z.zip`,
+  SHA-256 82d221364af8b270a5107107086650e28bee6e6936c966a2336adfa12bcb09d7, 49 ZIP members;
+  exact bounds, decoded rows, structural anchors, before/after pin and CRC/hash
+  manifest PASS. Adobe/native host calls zero; no scan/AE invocation.
+- Separate verifier `/private/tmp/aehl-dispatch-independent.py`, SHA-256
+  6c58acbab1fc3e027cdae5891e97162d7a08d774be30af4ec34eacf16cd76b24;
+  no collector import. Original arm64 Mach-O mapping and branch decoding:
+  11754 instructions, 2157 direct,
+  1295 conditional, 209 indirect branches,
+  16 returns PASS. Three retained-owner pair writes,
+  two vtable-slot loads and two signed-status gates independently decoded.
+  Receipt SHA-256 5c07477c7b33927beea4a3938c158a4de63a3a90e21692cfd859144314e36190.
+  This corroborates selected file structure, not every transitive semantic effect.
+- Full runner `/private/tmp/AEHL-checks-8agpl138.zip`, SHA-256
+  e91bff07edf48e0a14da6aba4b718aec59db9574de66b988370505e1438abe39, 25 members; 433 Python, zero skips,
+  failures/errors/unexpected successes; 62 Node; all 22 stages PASS. Python
+  duration 55.5 seconds. Native syntax/owned controls are offline; actual complete
+  AE pipeline BLOCKED. Package/host identity is not release approval.
+- Independent runner ZIP CRC/exact inventory/payload hashes and all 336 tracked
+  working-file/exact-commit Git blob SHA-256 values PASS. Source inventory
+  e1260f5ac6b900c43394ff85bbe255fc735f9011c520acfc8e030916207343f2 recomputed separately;
+  clean source and `source_unchanged_after=true`. Source-proof SHA-256
+  7d61fdf05911a11af04a884f49a7b90de43ead1ee6ea4d4658e47328151338a0.
+- Scanner `/private/tmp/aehl-dispatch-2a2dabb-audit.json`, SHA-256
+  aeabbbe12037a796e77f22d25636f2e831c70ca0fba64a32114af1e79c1dbda2, exact clean
+  2a2dabb source; raw exit 1 /`review_required`, release readiness `not_assessed`.
+  Sole `vibe.no_ratelimit_auth` at tools/artifact_manifest.py:71 inspected: local
+  argparse package-manifest CLI, no HTTP/auth route or listener. False positive;
+  original scanner output retained, no suppression or weakened test. Separate
+  manual code/scanner review SHA-256
+  9107f6c33e2a50f5694a2bcffbdbb88de7b35247cc0e398395352701e9ba5e29.
+- Research CI [37136115466](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37136115466) and macOS CI
+  [37136115496](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37136115496) both completed/success at exact
+  2a2dabb68d442355e97e0d1053d84bccef60c825. Current exact result, not prior green CI;
+  workflow jobs are offline research/internal build, no AE runtime certification.
+
+## Retention, cleanup and next dependency
+
+Durable private owned receipts:
+`build-ae-hot-loader/dispatch-closeout-2a2dabb-_c_bnmmn`. Byte-identical copies of the
+collection/runner ZIPs, independent verifier/review, raw scanner/manual review,
+TDD logs and source proof retained. RETENTION.json SHA-256
+3b83f47c735824460ade297dfbea32e6663cec95c08edeb952628dcb0132fa47; CI.json SHA-256
+3a448d0721373e2a0e936e3f2eb860bfbedd836229281b4fb512503e4be2ec9a binds final workflow results.
+Fresh exclusive owned outputs, temporary test binaries already removed by owned
+test lifecycle, historical/preliminary/shared/loaded/unknown evidence preserved.
+No files removed from SDK/app/plugins/projects or an AE session. No cache purge,
+unload, reinstall, merge or release. Original product and A/B/C1/C2/D/release still
+open; only this bounded research pass is reconciled.
+
+Next dependency: establish actual factory receiver/capability binding and a
+supported late transaction that continuously excludes reader/render/MFR work,
+provides completion and reverses all effect publication on failure. Only after
+those are proven may an identified inert native packet be prepared for a new
+concrete live scope. Prior startup/metadata contexts and exception-policy changes
+must not be replayed by guesswork. An unchanged ordinary scan is not a discriminator.

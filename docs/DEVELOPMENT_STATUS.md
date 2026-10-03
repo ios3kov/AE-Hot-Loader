@@ -12,19 +12,26 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
-## Loader dispatch — preparation complete, host contract open
+## Loader dispatch — research checks complete, native contract open
 
-[Loader dispatch review](C1_LOADER_DISPATCH_2026-10-03.md): 23 fixed windows /
-11754 instructions /792 anchors. LoadPluginList routes candidates to AddPlugin;
-factories are selected with retained interfaces, and creation is delegated virtually.
-The actual receiver/late ABI is unproven. HeavyInit continuations do not prove drain;
-cache cleanup/local unwinding do not prove whole-effect rollback. Startup code also
-changes global exception policy. All observations file-only, no current AE operation.
-57 focused tests PASS; clean collection/full checks/independent review/exact CI
-NOT RUN at preparation. DISPATCH-01–07 research findings/tooling prepared,
-08/09 verification/closeout pending, 10 native packet/execution BLOCKED;
-registration/apply/render NOT RUN. Backend NOT READY; original product and
-A/B/C1/C2/D/release obligations retained.
+[Loader dispatch review](C1_LOADER_DISPATCH_2026-10-03.md): 23 complete fixed
+windows /11754 instructions /792 anchors. LoadPluginList routes candidates to
+AddPlugin; factory selection retains interfaces and creation is delegated virtually.
+Actual receiver/supported late ABI unproven; HeavyInit success is not render drain,
+cache cleanup/local unwind not full effect rollback. Startup exception-policy
+mutation documented as original-file evidence only. No current AE operation.
+At exact clean research code 2a2dabb68d442355e97e0d1053d84bccef60c825: 57 focused /
+433 full Python tests, zero skips/errors/failures, 62 Node /22 stages PASS.
+Clean collection and separate original-byte/archive/336-source-file review PASS;
+raw scanner exit 1 retained, sole local-CLI false positive independently inspected.
+Research CI 37136115466 and macOS CI 37136115496 both completed/success
+at exact 2a2dabb. DISPATCH-01–06 bounded findings/limits documented;
+07 collector/refusals PASS, 08 checks/review/CI complete, 09 docs/retention/cleanup
+reconciled, 10 executable native packet/host trial BLOCKED. Registration/apply/render
+NOT RUN; backend NOT READY. Original product and A/B/C1/C2/D/release retained.
+Next: actual factory receiver/capability binding and supported continuous
+admission/drain/rollback transaction, before any new host packet.
+
 
 ## Module admission — list membership and readiness separated
 
