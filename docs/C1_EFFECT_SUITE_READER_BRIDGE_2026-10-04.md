@@ -179,3 +179,16 @@ contract and current live authority are substantiated; acquire the actual suite
 in a valid main-thread context and prove one effect's writer→key→apply identity.
 Late calls follow demonstrated context/ABI/thread/lifetime/mutation/recovery
 prerequisites. The static bridge does not authorize a direct writer invocation.
+
+## Sequence/render continuation — 2026-10-04
+
+The [next checkpoint](C1_SEQUENCE_RENDER_DEPENDENCIES_2026-10-04.md), baseline
+`983a28b16d005b6854e696626877cd8c6052096d`, supplies the static command16→apply-
+task table/virtual bridge and a selected SmartRender sequence-index→same FLT
+registry→retained FCSpec→dispatch path.33 complete bodies/6558 instructions,
+including26 new/6085 (historical bodies excluded), raw branch/field/rebase checks
+PASS. This narrows the render read-set uncertainty for the exact existing file
+pins; actual live route, complete readers/ownership/reentry/partial recovery
+remain unproved. Product and native gates stay open; no executable/profile/refusal
+change, host operation, compatibility-range expansion or release claim.
+Historical evidence and all original obligations remain preserved.

@@ -12,7 +12,37 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
-## Current packet — complete host operation
+## Current packet — sequence and render dependencies
+
+2026-10-04, clean baseline `983a28b16d005b6854e696626877cd8c6052096d`.
+Rules8.0.0 / AI_ENTRYPOINT first; API-SOURCE, TASK-CLOSE, CLEANUP,
+NATIVE ownership/threads and TOOLS bounded diagnostics. User authorizes the
+maximum connected offline continuation. Existing executable refusal policy,
+product and all A/B/C1/C2/D/reload/recovery/release obligations are retained.
+
+| ID | Observable acceptance / check | State / evidence |
+|---|---|---|
+| SEQ-01 | Reconcile CTX/reader/dispatch evidence, exact files/SDK/source and remote baseline | DONE; unchanged original/SDK/archives; baseline remote and both workflows success |
+| SEQ-02 | Trace command16 selection into actual apply task, including table binding | DONE statically;3 encoded rebases and full DoCommand/DoTask bodies; live NOT RUN |
+| SEQ-03 | Trace ordinary sequence creation and canonical-effect resolution | PARTIAL; NewGuts/constructor/canonical lookup boundary inspected; full TDB factory/virtual selection unresolved |
+| SEQ-04 | Establish selected sequence construction/clone/destruction owner transfers | PARTIAL; index/sequence-data/parameter handles versus local FCSpec owner distinguished; transitive ownership open |
+| SEQ-05 | Follow selected frame/node/dispatch consumers to retained objects or later catalog lookup | DONE for selected static SmartRender path; sequence index→same FLT registry→retained FCSpec→dispatch |
+| SEQ-06 | Compare affected writer state with selected consumer dependencies, synchronization and reentry | PARTIAL; shared registry mutex/retain-before-unlock established for selected lookup; complete coverage/reentry/atomicity open |
+| SEQ-07 | Trace bounded errors/partial cleanup; distinguish local unwind from full registry recovery | PARTIAL; local cleanup paths reviewed; full compensation UNKNOWN; native fault injection NOT RUN |
+| SEQ-08 | Independently check original bytes, review/docs/source/audit, retain evidence and commit/push | DONE for bounded closure;33 bodies/6558 instructions,26 new/6085;1673 branches,7 fields,3 rebases PASS |
+
+[Exact sequence/render checkpoint](C1_SEQUENCE_RENDER_DEPENDENCIES_2026-10-04.md).
+Packet/product PARTIAL:4 bounded tasks DONE /4 PARTIAL. No executable/refusal/
+profile/product change or AE launch/attach/process read/install/private call.
+Original A/B/C1/C2/D/append/reload/recovery/release obligations retained.
+Private live work remains Critical/BLOCKED; registration/apply/render NOT RUN.
+Source/docs/audit/exact publication receipts retained beside the original archive
+at `/private/tmp/aehl-sequence-render-3vrnri_6`; full local executable regression
+NOT RUN for Markdown-only changes. No deletion of evidence/originals.
+Next: concrete factory/derived sequence ownership and code/callback lifetime,
+writer callback/reentry and remaining reader/partial-failure boundaries.
+
+## Previous packet — complete host operation
 
 2026-10-04, clean baseline `12ef175fb72b6f9047127b8466bb6c5eb52747af`.
 The user requested the maximum connected offline packet after the supplied model

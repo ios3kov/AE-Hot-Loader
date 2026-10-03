@@ -13,7 +13,31 @@ Previous status is preserved at
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
 
-## Current packet — host-operation boundaries
+## Current packet — sequence and render dependencies
+
+2026-10-04, clean baseline `983a28b16d005b6854e696626877cd8c6052096d`;
+[sequence/render findings and exact next dependency](C1_SEQUENCE_RENDER_DEPENDENCIES_2026-10-04.md).
+SEQ-01/02/05/08 DONE for bounded source/table/render-path/closure;
+SEQ-03/04/06/07 PARTIAL.33 complete bodies/35 windows/6558 instructions checked,
+including26 new bodies/6085 instructions; seven repeated bodies excluded from
+novelty.1673 direct branch checks,7 fields,3 original table rebases and exact
+SDK selectors/pins PASS. Command16 selects the actual apply task; a SmartRender
+path reads the same FLT registry through the sequence index, then retains FCSpec
+under the registry mutex before dispatch. This establishes a mixed lookup/owner
+path for these files, not complete reader coverage or live frame execution.
+
+Complete factory/derived sequence ownership, code/callback lifetime, publication
+reentry/atomicity and full partial-error compensation remain UNKNOWN.
+Research/product PARTIAL; adapter unbound, implementation/trials BLOCKED;
+registration/apply/render NOT RUN. Current bounded source/docs/audit/commit/remote/
+CI receipts retained at `/private/tmp/aehl-sequence-render-3vrnri_6`.
+No executable/profile/refusal/product scope change, AE launch/attach/install or
+private call. All original A/B/C1/C2/D/append/reload/recovery/release obligations
+and evidence remain. Full local executable regression NOT RUN for Markdown-only
+changes; no cleanup deletion. Next: concrete factory/sequence-data ownership,
+writer callback/reentry and remaining reader/failure boundaries.
+
+## Previous packet — host-operation boundaries
 
 2026-10-04, clean baseline `12ef175fb72b6f9047127b8466bb6c5eb52747af`;
 [complete findings and next dependency](C1_COMPLETE_HOST_OPERATION_2026-10-04.md).
