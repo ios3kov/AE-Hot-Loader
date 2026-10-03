@@ -18,12 +18,15 @@ static Plan TestPlan() {
     Plan p; p.run_id="resource-pass-"+std::string(32,'1'); p.source_commit=std::string(40,'2');
     p.bridge_sha256=std::string(64,'3'); p.fixture_manifest_sha256=std::string(64,'4');
     p.cleanup_inventory_sha256=std::string(64,'6');
+    p.provider_contract_sha256 = std::string(64, '7');
+    p.isolation_contract_sha256 = std::string(64, '8');
+    p.completion_contract_sha256 = std::string(64, '9');
     p.executable="/owned/host/After Effects"; p.root="/owned/fresh/scan-root"; p.match="AEHL.Embedded.123456789abc";
     for (const auto& key : {"AfterEffects","FILE","U","dvacore","FLT","MEE","PLUG","PluginSupport","aelib"}) p.images[key]=std::string(64,'5');
     return p;
 }
 struct Model final : JournaledBackend {
-    Plan p=TestPlan(); Approval a{p,true,true}; Observation base;
+    Plan p=TestPlan(); Approval a{p,true,true,true,true,true}; Observation base;
     fs::path dir; int creates=0, searches=0, releases=0, observations=0;
     bool search_throws=false, release_fails=false; std::uint64_t clock=1;
     std::function<void()> on_create, on_search, on_release;
@@ -76,6 +79,12 @@ int main(int argc, char** argv) {
                 Check(Read(d/name).find("cleanup_observed=1:1\n")!=std::string::npos);
                 Check(Read(d/name).find("cleanup_complete=1:1\n")!=std::string::npos);
                 Check(Read(d/name).find("general_plugin_records=1:0\n")!=std::string::npos);
+            }
+            for (const auto& name : {"claim.txt", "call-started.txt"}) {
+                const auto bytes = Read(d/name);
+                Check(bytes.find("provider_contract=64:"+b.p.provider_contract_sha256+"\n")!=std::string::npos);
+                Check(bytes.find("isolation_contract=64:"+b.p.isolation_contract_sha256+"\n")!=std::string::npos);
+                Check(bytes.find("completion_contract=64:"+b.p.completion_contract_sha256+"\n")!=std::string::npos);
             }
             Check(Read(d/"native.txt").find("scope=21:resource-registration\n")!=std::string::npos);
             Check(Read(d/"native.txt").find("code=1:0\n")!=std::string::npos);
@@ -161,6 +170,18 @@ int main(int argc, char** argv) {
         test("new-authorization-still-required", [](const fs::path& d) {
             Model b(d); b.a.new_private_call_authorized=false; Check(b.run().status=="BLOCKED" && b.creates==0 && fs::is_empty(d));
         });
+        for (const auto& field : std::vector<std::pair<std::string, std::string Plan::*>>{
+            {"provider", &Plan::provider_contract_sha256},
+            {"isolation", &Plan::isolation_contract_sha256},
+            {"completion", &Plan::completion_contract_sha256}}) {
+            test("changed-"+field.first+"-receipt-stops-marker", [&](const fs::path& d) {
+                Model b(d); b.claim(b.p,b.base); b.save_observation("before",b.base);
+                const auto preserved = Read(d/"claim.txt");
+                auto other=b.p; (other.*field.second)[0]='a';
+                Rejected([&]{b.mark_call_started(other,b.base);});
+                Check(!fs::exists(d/"call-started.txt") && Read(d/"claim.txt")==preserved && b.searches==0);
+            });
+        }
         test("changed-plan-cannot-write-call-marker", [](const fs::path& d) {
             Model b(d); b.claim(b.p,b.base); b.save_observation("before",b.base); auto other=b.p; other.root="/other/scan-root";
             Rejected([&]{b.mark_call_started(other,b.base);}); Check(!fs::exists(d/"call-started.txt"));

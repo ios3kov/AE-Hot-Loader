@@ -25,6 +25,11 @@ struct Plan {
     // Digest of the complete reviewed callback target/context inventory, bound
     // by the external supervisor to this run and resident provider identities.
     std::string cleanup_inventory_sha256;
+    // Exact review receipts: provider/interface ownership through dispatch,
+    // exclusive publication window (including readers/MFR), and completion /
+    // partial-failure stop-and-preserve semantics. Supervisor must verify their
+    // contents and scope; a digest or synthetic attestation proves neither.
+    std::string provider_contract_sha256, isolation_contract_sha256, completion_contract_sha256;
     std::string executable, root, match;
     Images images;
     std::uint64_t timeout_ms = 15000;
@@ -34,6 +39,10 @@ struct Approval {
     Plan scope;
     bool new_private_call_authorized = false;
     bool native_contract_reviewed = false;
+    // Independent, mandatory reviews; old aggregate approvals default to refusal.
+    bool provider_contract_reviewed = false;
+    bool isolation_contract_reviewed = false;
+    bool completion_contract_reviewed = false;
 };
 struct CleanupObservation {
     // Missing information must never be interpreted as an empty vector.
@@ -104,6 +113,12 @@ inline void Validate(const Plan& p, const Approval& a) {
     Need(Hex(p.source_commit, 40) && Hex(p.bridge_sha256, 64) &&
          Hex(p.fixture_manifest_sha256, 64), "invalid-source-or-artifact-identity");
     Need(Hex(p.cleanup_inventory_sha256, 64), "reviewed-cleanup-inventory-required");
+    Need(Hex(p.provider_contract_sha256, 64) && a.provider_contract_reviewed,
+         "provider-contract-required");
+    Need(Hex(p.isolation_contract_sha256, 64) && a.isolation_contract_reviewed,
+         "isolation-contract-required");
+    Need(Hex(p.completion_contract_sha256, 64) && a.completion_contract_reviewed,
+         "completion-contract-required");
     Need(Canonical(p.root) && Canonical(p.executable) &&
          p.root.size() >= 10 && p.root.substr(p.root.size() - 10) == "/scan-root",
          "invalid-owned-root-or-executable");
@@ -124,6 +139,9 @@ inline void Validate(const Plan& p, const Approval& a) {
          q.source_commit == p.source_commit && q.bridge_sha256 == p.bridge_sha256 &&
          q.fixture_manifest_sha256 == p.fixture_manifest_sha256 && q.executable == p.executable &&
          q.cleanup_inventory_sha256 == p.cleanup_inventory_sha256 &&
+         q.provider_contract_sha256 == p.provider_contract_sha256 &&
+         q.isolation_contract_sha256 == p.isolation_contract_sha256 &&
+         q.completion_contract_sha256 == p.completion_contract_sha256 &&
          q.root == p.root && q.match == p.match && q.images == p.images && q.timeout_ms == p.timeout_ms,
          "fresh-exact-authorization-required");
 }

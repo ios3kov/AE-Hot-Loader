@@ -26,10 +26,10 @@ class ResourcePassJournalTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             self.assertEqual(result.stderr, '')
             passed = [line for line in result.stdout.splitlines() if line.startswith('PASS ')]
-            self.assertEqual(len(passed), 32)
-            self.assertEqual(len(set(passed)), 32)
+            self.assertEqual(len(passed), 35)
+            self.assertEqual(len(set(passed)), 35)
             self.assertEqual(result.stdout.splitlines()[-1],
-                             'RESOURCE_JOURNAL_TESTS=32 PASS; scope=real-files-processes-synthetic-host')
+                             'RESOURCE_JOURNAL_TESTS=35 PASS; scope=real-files-processes-synthetic-host')
             print(result.stdout, end='')
 
 

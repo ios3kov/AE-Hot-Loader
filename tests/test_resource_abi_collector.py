@@ -173,6 +173,59 @@ class ResourceAbiCollectorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unreviewed'):
             collector.verify_publication(text, 'FLT-if-missing', start, end - 4)
 
+    def test_provider_isolation_scope_is_complete_and_keeps_live_boundary(self):
+        windows = collector.review_windows('provider-isolation')
+        self.assertEqual({key for _, key, *_ in windows}, {'PluginSupport', 'PLUG', 'FLT'})
+        self.assertEqual({label for label, *_ in windows}, set(collector.ISOLATION_ANCHORS))
+        self.assertEqual(len(windows), 16)
+        self.assertEqual(sum((b-a)//4 for _, _, a, b in windows), 884)
+        self.assertEqual({x[0] for x in collector.DATA_WINDOWS['provider-isolation']},
+                         set(collector.ISOLATION_SLOTS))
+        for _, key, a, b in windows:
+            script = collector.lldb_script(collector.INPUTS[key][0], a, b)
+            self.assertNotIn('process attach', script)
+            self.assertNotIn('process launch', script)
+
+    def test_provider_isolation_refuses_changed_counter_and_owner_paths(self):
+        for label, _, start, end in collector.review_windows('provider-isolation'):
+            anchors = collector.ISOLATION_ANCHORS[label]
+            def transcript(overrides):
+                return ''.join('owned[0x%x] <+%d>: %s %s\n' %
+                    (a, a-start, *overrides.get(a, anchors.get(a, ('nop', ''))))
+                    for a in range(start, end, 4))
+            text = transcript({})
+            self.assertIn('not-host-wide', collector.verify_isolation(text, label, start, end)['claim'])
+            for a in anchors:
+                with self.subTest(label=label, address=hex(a)), self.assertRaisesRegex(ValueError, 'structural'):
+                    collector.verify_isolation(transcript({a: ('nop', '')}), label, start, end)
+            with self.assertRaisesRegex(ValueError, 'unreviewed'):
+                collector.verify_isolation(text, label, start, end+4)
+            with self.assertRaisesRegex(ValueError, 'bounds'):
+                collector.verify_isolation(text+text.splitlines()[0]+'\n', label, start, end)
+
+    def test_provider_slots_require_exact_bind_or_rebase_and_unique_fixup(self):
+        chains = 'pointer_format: 6 (DYLD_CHAINED_PTR_64_OFFSET)'
+        for label, _, start, _ in collector.DATA_WINDOWS['provider-isolation']:
+            raw, kind, target = collector.ISOLATION_SLOTS[label]
+            fixup = '__DATA_CONST __const 0x%x %s %s\n' % (start, kind, target)
+            result = collector.verify_isolation_slot([raw], fixup, chains, label)
+            self.assertEqual(result['target'], target)
+            self.assertIn('not-runtime-receiver', result['claim'])
+            for words in ([], [raw, raw], [raw ^ 1], [raw ^ (1 << 63)]):
+                with self.subTest(label=label, words=words), self.assertRaisesRegex(ValueError, 'serialized'):
+                    collector.verify_isolation_slot(words, fixup, chains, label)
+            for bad in ('', fixup+fixup, fixup.replace(target, 'WrongTarget'),
+                        fixup.replace(' %s ' % kind, ' wrong '),
+                        fixup.replace('0x%x' % start, '0x%x' % (start+8))):
+                with self.subTest(label=label, fixup=bad), self.assertRaisesRegex(ValueError, 'fixup target'):
+                    collector.verify_isolation_slot([raw], bad, chains, label)
+            with self.assertRaisesRegex(ValueError, 'format'):
+                collector.verify_isolation_slot([raw], fixup, chains.replace('6 (', '2 ('), label)
+
+    def test_provider_slot_unknown_label_cannot_extend_review_scope(self):
+        with self.assertRaisesRegex(ValueError, 'unreviewed'):
+            collector.verify_isolation_slot([0], '', '', 'unreviewed-live-slot')
+
     def test_provider_factory_scope_is_complete_and_file_only(self):
         windows = collector.review_windows('provider-factory')
         self.assertEqual({name for _, name, *_ in windows}, {'PluginSupport', 'TDB'})

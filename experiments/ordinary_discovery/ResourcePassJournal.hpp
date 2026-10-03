@@ -63,6 +63,9 @@ inline std::string PlanBytes(const Plan& p) {
     Field(s, "run", p.run_id); Field(s, "source", p.source_commit);
     Field(s, "bridge", p.bridge_sha256); Field(s, "fixture", p.fixture_manifest_sha256);
     Field(s, "cleanup_inventory", p.cleanup_inventory_sha256);
+    Field(s, "provider_contract", p.provider_contract_sha256);
+    Field(s, "isolation_contract", p.isolation_contract_sha256);
+    Field(s, "completion_contract", p.completion_contract_sha256);
     Field(s, "executable", p.executable); Field(s, "root", p.root); Field(s, "match", p.match);
     Field(s, "timeout_ms", std::to_string(p.timeout_ms));
     for (const auto& image : p.images) { Field(s, "image_name", image.first); Field(s, "image_hash", image.second); }

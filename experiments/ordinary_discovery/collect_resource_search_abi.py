@@ -125,6 +125,24 @@ REVIEWS = {
         ("PLUG-unload-plugin", "PLUG", 0x87a0, 0x87a4),
         ("PLUG-desc-dtor", "PLUG", 0xe720, 0xe7f0),
     ),
+    "provider-isolation": (
+        ('PS-complete-ctor', 'PluginSupport', 0x4bb34, 0x4bbd0),
+        ('PLUG-provider-allocate', 'PLUG', 0xe040, 0xe1dc),
+        ('PLUG-provider-query', 'PLUG', 0xe274, 0xe304),
+        ('PLUG-provider-last-owner', 'PLUG', 0xe24c, 0xe258),
+        ('PLUG-provider-dtor', 'PLUG', 0xe304, 0xe348),
+        ('PLUG-incoming-ctor', 'PLUG', 0xcd78, 0xd030),
+        ('PLUG-classref', 'PLUG', 0xcc9c, 0xcd74),
+        ('FLT-effect-lock', 'FLT', 0x98c80, 0x98ce0),
+        ('FLT-scope-guard', 'FLT', 0x98ce0, 0x98d44),
+        ('FLT-dispatch-guard-zero', 'FLT', 0x9af34, 0x9af3c),
+        ('FLT-dispatch-guard-one', 'FLT', 0x9b1ac, 0x9b1d0),
+        ('FLT-publication-finish', 'FLT', 0x9284c, 0x92ab8),
+        ('PLUG-plugin-query', 'PLUG', 0xe494, 0xe558),
+        ('FLT-dispatch-increment', 'FLT', 0x5e1d4, 0x5e1e4),
+        ('FLT-dispatch-decrement', 'FLT', 0x5e1e4, 0x5e1f4),
+        ('PLUG-path-ctor', 'PLUG', 0xc9b4, 0xcc9c),
+    ),
     "ownership": (
         ("MEE-setup", "MEE", 0x36C58, 0x36DA4),
         ("MEE-scan", "MEE", 0x36DA4, 0x376EC),
@@ -134,6 +152,14 @@ REVIEWS = {
     ),
 }
 DATA_WINDOWS = {
+    'provider-isolation': (
+        ('PLUG-owner-final-slot', 'PLUG', 0x149d0, 1),
+        ('PLUG-dtor-slot', 'PLUG', 0x14a38, 1),
+        ('PS-load-slot', 'PluginSupport', 0xab558, 1),
+        ('PS-entry-slot', 'PluginSupport', 0xab5a0, 1),
+        ('PLUG-load-slot', 'PLUG', 0x14a58, 1),
+        ('PLUG-entry-slot', 'PLUG', 0x14aa0, 1),
+    ),
     "lifecycle": (("PLUG-vtable", "PLUG", 0x14920, 12),),
     "entry-lifetime": (
         ("FLT-vtable", "FLT", 0xd5c70, 14),
@@ -205,6 +231,8 @@ SYMBOL_WANTED = {
                                  r"PLUGp_(Load|Unload)PlatRoutine|"
                                  r"PLUG_RoutineDescPriv.*(GetEntryPoint|UnloadPlugin|D2)|"
                                  r"ZTV.*(ASL6Module|FLT_FCSpec))"),
+    'provider-isolation': re.compile(r'(PluginImpl|ML6Plugin|PLUG_RoutineDescPriv|CreateClassRef|'
+                                     r'FLT.*(DispatchCount|EffectLock)|ScopeGuard|FLTp_FiltPostSetup)'),
     "ownership": re.compile(r"(SetupGeneralPluginScan|PluginScanFunc|PluginCleanupFunc|"
                             r"CleanupGeneralPluginScan|SetdownGeneralPlugins|vectorI13GeneralPlugin)"),
 }
@@ -1037,6 +1065,375 @@ ENTRY_ANCHORS = {
     },
 }
 
+# Exact serialized slots only, not complete C++ tables or live receivers.
+ISOLATION_SLOTS = {
+    'PLUG-owner-final-slot': (0x001000000000e24c, 'rebase', '0x0000E24C'),
+    'PLUG-dtor-slot': (0x001000000000e304, 'rebase', '0x0000E304'),
+    'PS-load-slot': (0x001000000004c440, 'rebase', '0x0004C440'),
+    'PS-entry-slot': (0x001000000004c568, 'rebase', '0x0004C568'),
+    'PLUG-load-slot': (0x80100000000000c2, 'bind', 'PluginSupport/__ZN2ML10PluginImpl4LoadEPj'),
+    'PLUG-entry-slot': (0x80100000000000cb, 'bind', 'PluginSupport/__ZN2ML10PluginImpl13GetEntryPointERKNSt3__112basic_stringItNS1_11char_traitsItEEN7dvacore9allocator12STLAllocatorItEEEE'),
+}
+
+ISOLATION_ANCHORS = {
+    'PS-complete-ctor': {
+        0x4bb44: ('adrp', 'x8,96'),
+        0x4bb48: ('add', 'x8,x8,#0x538'),
+        0x4bb50: ('str', 'x8,[x0]'),
+        0x4bb58: ('str', 'x8,[x0,#0x1d0]'),
+        0x4bb64: ('bl', '0x8ca54'),
+        0x4bb90: ('stp', 'xzr,xzr,[x19,#0x128]'),
+        0x4bba4: ('ret', ''),
+        0x4bbb8: ('bl', '0x8cd24'),
+        0x4bbc0: ('cbz', 'x0,0x4bbc8'),
+        0x4bbc4: ('bl', '0x8d300'),
+        0x4bbcc: ('bl', '0x8c334'),
+    },
+    'PLUG-provider-allocate': {
+        0xe06c: ('mov', 'w0,#0x200'),
+        0xe070: ('bl', '0x112e4'),
+        0xe0a8: ('str', 'x9,[x21,#0x18]!'),
+        0xe0bc: ('add', 'x23,x23,#0xaf8'),
+        0xe0c0: ('add', 'x1,x23,#0x8'),
+        0xe0c8: ('bl', '0x11128'),
+        0xe0d4: ('add', 'x9,x9,#0xa00'),
+        0xe0d8: ('add', 'x10,x9,#0x38'),
+        0xe0dc: ('str', 'x10,[x19,#0x18]'),
+        0xe0e4: ('str', 'x9,[x19,#0x1e8]'),
+        0xe0ec: ('stp', 'x21,x19,[x20]'),
+        0xe0f4: ('cbz', 'x0,0xe130'),
+        0xe100: ('b.ne', '0xe154'),
+        0xe10c: ('ldadd', 'x10,x9,[x9]'),
+        0xe114: ('ldadd', 'x10,x9,[x9]'),
+        0xe118: ('stp', 'x8,x19,[x19,#0x1f0]'),
+        0xe11c: ('bl', '0x114dc'),
+        0xe124: ('ldaddal', 'x8,x8,[x22]'),
+        0xe128: ('cbnz', 'x8,0xe154'),
+        0xe12c: ('b', '0xe180'),
+        0xe138: ('ldadd', 'x10,x9,[x9]'),
+        0xe140: ('ldadd', 'x10,x9,[x9]'),
+        0xe144: ('stp', 'x8,x19,[x19,#0x1f0]'),
+        0xe14c: ('ldaddal', 'x8,x8,[x22]'),
+        0xe150: ('cbz', 'x8,0xe180'),
+        0xe158: ('cbz', 'x0,0xe168'),
+        0xe164: ('bl', '0x112d8'),
+        0xe17c: ('ret', ''),
+        0xe18c: ('blr', 'x8'),
+        0xe194: ('bl', '0x114dc'),
+        0xe19c: ('cbnz', 'x0,0xe15c'),
+        0xe1a0: ('b', '0xe168'),
+        0xe1a4: ('bl', '0x3b68'),
+        0xe1b4: ('bl', '0x112c0'),
+        0xe1bc: ('cbz', 'x0,0xe1c4'),
+        0xe1c0: ('bl', '0x114dc'),
+        0xe1c8: ('bl', '0x114e8'),
+        0xe1d0: ('bl', '0xe1dc'),
+        0xe1d8: ('bl', '0x110a4'),
+    },
+    'PLUG-provider-query': {
+        0xe278: ('cmp', 'x9,#0xb'),
+        0xe27c: ('b.eq', '0xe2c8'),
+        0xe280: ('cmp', 'x9,#0xe'),
+        0xe284: ('b.ne', '0xe2fc'),
+        0xe2c0: ('csel', 'x0,xzr,x0,ne'),
+        0xe2c4: ('ret', ''),
+        0xe2f8: ('b.eq', '0xe300'),
+        0xe300: ('ret', ''),
+    },
+    'PLUG-provider-last-owner': {
+        0xe254: ('br', 'x1'),
+    },
+    'PLUG-provider-dtor': {
+        0xe320: ('bl', '0x11134'),
+        0xe328: ('bl', '0x112c0'),
+        0xe330: ('cbz', 'x0,0xe338'),
+        0xe334: ('bl', '0x114dc'),
+        0xe344: ('ret', ''),
+    },
+    'PLUG-incoming-ctor': {
+        0xcd9c: ('cbz', 'x0,0xcf88'),
+        0xcda8: ('cbz', 'x8,0xcf88'),
+        0xcdb8: ('blr', 'x8'),
+        0xcdd0: ('tbnz', 'w9,#0x1f,0xcde8'),
+        0xcde4: ('b', '0xcdf4'),
+        0xcdf0: ('bl', '0x11440'),
+        0xce24: ('cbz', 'x8,0xce70'),
+        0xce2c: ('cbz', 'x9,0xced8'),
+        0xce38: ('ldadd', 'x11,x10,[x10]'),
+        0xce40: ('stp', 'x8,x9,[x19,#0x38]'),
+        0xce44: ('cbz', 'x22,0xce70'),
+        0xce50: ('ldaddal', 'x9,x8,[x8]'),
+        0xce54: ('cbnz', 'x8,0xce70'),
+        0xce64: ('blr', 'x8'),
+        0xce6c: ('bl', '0x114dc'),
+        0xce78: ('cbz', 'x8,0xcee8'),
+        0xce80: ('cbz', 'x23,0xce90'),
+        0xce8c: ('ldadd', 'x9,x8,[x8]'),
+        0xce90: ('cbz', 'x24,0xceec'),
+        0xceb4: ('blr', 'x8'),
+        0xceb8: ('stp', 'xzr,xzr,[x19,#0x50]'),
+        0xcebc: ('str', 'x0,[x19,#0x48]'),
+        0xcec0: ('cbz', 'x0,0xcef4'),
+        0xcec4: ('stp', 'x24,x23,[x19,#0x50]'),
+        0xced0: ('cbnz', 'x8,0xcf14'),
+        0xced4: ('b', '0xcf40'),
+        0xcee4: ('cbnz', 'x8,0xce7c'),
+        0xcef0: ('str', 'xzr,[x22,#0x10]'),
+        0xcef4: ('cbz', 'x23,0xcf08'),
+        0xcf00: ('ldaddal', 'x9,x8,[x8]'),
+        0xcf04: ('cbz', 'x8,0xcf60'),
+        0xcf10: ('cbz', 'x8,0xcf40'),
+        0xcf18: ('cbz', 'x8,0xcf40'),
+        0xcf20: ('cbz', 'x0,0xcfb4'),
+        0xcf28: ('cbz', 'x8,0xcfb4'),
+        0xcf34: ('blr', 'x8'),
+        0xcf5c: ('ret', ''),
+        0xcf6c: ('blr', 'x8'),
+        0xcf74: ('bl', '0x114dc'),
+        0xcf80: ('cbnz', 'x8,0xcf14'),
+        0xcf84: ('b', '0xcf40'),
+        0xcf94: ('bl', '0x11224'),
+        0xcf9c: ('bl', '0x11260'),
+        0xcfac: ('bl', '0x112d8'),
+        0xcfb0: ('b', '0xcfdc'),
+        0xcfc0: ('bl', '0x11224'),
+        0xcfc8: ('bl', '0x11260'),
+        0xcfd8: ('bl', '0x112d8'),
+        0xcfdc: ('brk', '#0x1'),
+        0xcfe0: ('bl', '0x3b68'),
+        0xcfec: ('bl', '0x11434'),
+        0xcff0: ('b', '0xcff8'),
+        0xcffc: ('bl', '0x6cbc'),
+        0xd004: ('bl', '0x6cbc'),
+        0xd00c: ('bl', '0xc964'),
+        0xd014: ('bl', '0x110a4'),
+        0xd018: ('bl', '0x3b68'),
+        0xd024: ('bl', '0x11434'),
+        0xd02c: ('bl', '0x110a4'),
+    },
+    'PLUG-classref': {
+        0xccb8: ('bl', '0xe040'),
+        0xccc0: ('cbz', 'x8,0xcd14'),
+        0xccc8: ('ldur', 'x9,[x9,#-0x38]'),
+        0xcccc: ('add', 'x0,x8,x9'),
+        0xccd0: ('bl', '0x112cc'),
+        0xccdc: ('str', 'x8,[x19]'),
+        0xcce0: ('cbz', 'x8,0xccfc'),
+        0xccf8: ('stp', 'x8,x9,[x19,#0x8]'),
+        0xcd00: ('cbnz', 'x19,0xcd24'),
+        0xcd10: ('ret', ''),
+        0xcd20: ('cbz', 'x19,0xcd04'),
+        0xcd2c: ('ldaddal', 'x9,x8,[x8]'),
+        0xcd30: ('cbnz', 'x8,0xcd04'),
+        0xcd40: ('blr', 'x8'),
+        0xcd48: ('bl', '0x114dc'),
+        0xcd58: ('ret', ''),
+        0xcd64: ('cbz', 'x0,0xcd6c'),
+        0xcd68: ('bl', '0x10e8c'),
+        0xcd70: ('bl', '0x110a4'),
+    },
+    'FLT-effect-lock': {
+        0x98c90: ('bl', '0x5e138'),
+        0x98c94: ('tbz', 'w0,#0x0,0x98cac'),
+        0x98ca8: ('ret', ''),
+        0x98cb0: ('bl', '0xa7158'),
+        0x98cb8: ('bl', '0x2e3d8'),
+        0x98cc8: ('ret', ''),
+        0x98cd4: ('bl', '0xa7128'),
+        0x98cdc: ('bl', '0xa5820'),
+    },
+    'FLT-scope-guard': {
+        0x98cf4: ('cbz', 'x0,0x98d30'),
+        0x98d00: ('blr', 'x8'),
+        0x98d0c: ('b.eq', '0x98d1c'),
+        0x98d10: ('cbz', 'x0,0x98d30'),
+        0x98d18: ('b', '0x98d24'),
+        0x98d2c: ('blr', 'x8'),
+        0x98d3c: ('ret', ''),
+        0x98d40: ('bl', '0x4250'),
+    },
+    'FLT-dispatch-guard-zero': {
+        0x9af38: ('b', '0x5e1e4'),
+    },
+    'FLT-dispatch-guard-one': {
+        0x9b1b8: ('bl', '0x580a8'),
+        0x9b1bc: ('ldr', 'w8,[x0]'),
+        0x9b1c0: ('sub', 'w8,w8,#0x1'),
+        0x9b1c4: ('str', 'w8,[x0]'),
+        0x9b1cc: ('ret', ''),
+    },
+    'FLT-publication-finish': {
+        0x9287c: ('blr', 'x8'),
+        0x92880: ('tbz', 'w0,#0xa,0x928f0'),
+        0x9288c: ('bl', '0x5d0dc'),
+        0x9289c: ('blr', 'x8'),
+        0x928a4: ('cbz', 'x20,0x928f0'),
+        0x928b0: ('ldaddal', 'w9,w8,[x8]'),
+        0x928b8: ('b.ne', '0x928f0'),
+        0x928c8: ('blr', 'x8'),
+        0x928d4: ('ldaddal', 'w9,w8,[x8]'),
+        0x928dc: ('b.ne', '0x928f0'),
+        0x928ec: ('blr', 'x8'),
+        0x928f8: ('bl', '0x5d0dc'),
+        0x92900: ('cbz', 'x20,0x9294c'),
+        0x9290c: ('ldaddal', 'w9,w8,[x8]'),
+        0x92914: ('b.ne', '0x9294c'),
+        0x92924: ('blr', 'x8'),
+        0x92930: ('ldaddal', 'w9,w8,[x8]'),
+        0x92938: ('b.ne', '0x9294c'),
+        0x92948: ('blr', 'x8'),
+        0x9294c: ('cbnz', 'x21,0x929b0'),
+        0x92968: ('bl', '0xa57cc'),
+        0x9297c: ('blr', 'x8'),
+        0x9298c: ('bl', '0xa72f0'),
+        0x92998: ('bl', '0x5df88'),
+        0x929a0: ('bl', '0x5ce3c'),
+        0x929ac: ('bl', '0x5ce9c'),
+        0x929bc: ('blr', 'x8'),
+        0x929c0: ('tbz', 'w0,#0x15,0x929e8'),
+        0x929d0: ('bl', '0x5e028'),
+        0x929d8: ('bl', '0x5ce3c'),
+        0x929e4: ('bl', '0x5ce9c'),
+        0x929f4: ('blr', 'x8'),
+        0x929f8: ('tbz', 'w0,#0xe,0x92a38'),
+        0x92a0c: ('bl', '0xa5b50'),
+        0x92a24: ('bl', '0x5e028'),
+        0x92a2c: ('tbz', 'w8,#0x1f,0x92a38'),
+        0x92a34: ('bl', '0xa7128'),
+        0x92a4c: ('b.ne', '0x92a64'),
+        0x92a60: ('ret', ''),
+        0x92a64: ('bl', '0xa7200'),
+        0x92a68: ('b', '0x92a6c'),
+        0x92a70: ('cbz', 'w1,0x92ab0'),
+        0x92a78: ('bl', '0x4250'),
+        0x92a84: ('tbz', 'w8,#0x1f,0x92ab0'),
+        0x92a8c: ('bl', '0xa7128'),
+        0x92a94: ('bl', '0xa5820'),
+        0x92aa0: ('bl', '0x5cbec'),
+        0x92aa8: ('bl', '0xa5820'),
+        0x92ab4: ('bl', '0xa5820'),
+    },
+    'PLUG-plugin-query': {
+        0xe498: ('cmp', 'x9,#0xe'),
+        0xe49c: ('b.eq', '0xe4dc'),
+        0xe4a0: ('cmp', 'x9,#0xb'),
+        0xe4a4: ('b.eq', '0xe51c'),
+        0xe4a8: ('cmp', 'x9,#0xa'),
+        0xe4ac: ('b.ne', '0xe550'),
+        0xe4d4: ('b.ne', '0xe550'),
+        0xe4d8: ('b', '0xe554'),
+        0xe514: ('csel', 'x0,xzr,x0,ne'),
+        0xe518: ('ret', ''),
+        0xe54c: ('b.eq', '0xe554'),
+        0xe554: ('ret', ''),
+    },
+    'FLT-dispatch-increment': {
+        0x5e1d4: ('add', 'x8,x0,#0xbc'),
+        0x5e1dc: ('ldaddal', 'w9,w8,[x8]'),
+        0x5e1e0: ('ret', ''),
+    },
+    'FLT-dispatch-decrement': {
+        0x5e1e4: ('add', 'x8,x0,#0xbc'),
+        0x5e1ec: ('ldaddal', 'w9,w8,[x8]'),
+        0x5e1f0: ('ret', ''),
+    },
+    'PLUG-path-ctor': {
+        0xc9ec: ('tbnz', 'w8,#0x1f,0xca04'),
+        0xca00: ('b', '0xca0c'),
+        0xca08: ('bl', '0x11440'),
+        0xca3c: ('cbz', 'x8,0xca90'),
+        0xca44: ('cbz', 'x9,0xca8c'),
+        0xca50: ('ldadd', 'x11,x10,[x10]'),
+        0xca5c: ('cbz', 'x22,0xca90'),
+        0xca68: ('ldaddal', 'x9,x8,[x8]'),
+        0xca6c: ('cbnz', 'x8,0xca90'),
+        0xca7c: ('blr', 'x8'),
+        0xca84: ('bl', '0x114dc'),
+        0xca88: ('b', '0xca90'),
+        0xcab4: ('cbz', 'x8,0xcbd8'),
+        0xcac0: ('bl', '0xcc9c'),
+        0xcacc: ('cbz', 'x0,0xcb00'),
+        0xcaec: ('blr', 'x8'),
+        0xcaf0: ('cbz', 'x0,0xcb3c'),
+        0xcaf8: ('ldur', 'q0,[sp,#0x8]'),
+        0xcafc: ('stp', 'xzr,xzr,[x8]'),
+        0xcb04: ('str', 'q0,[x19,#0x50]'),
+        0xcb08: ('str', 'x0,[x19,#0x48]'),
+        0xcb0c: ('cbz', 'x24,0xcb50'),
+        0xcb18: ('ldaddal', 'x9,x8,[x8]'),
+        0xcb1c: ('cbnz', 'x8,0xcb50'),
+        0xcb2c: ('blr', 'x8'),
+        0xcb34: ('bl', '0x114dc'),
+        0xcb38: ('b', '0xcb50'),
+        0xcb4c: ('cbnz', 'x24,0xcb10'),
+        0xcb54: ('cbz', 'x24,0xcb68'),
+        0xcb60: ('ldaddal', 'x9,x8,[x8]'),
+        0xcb64: ('cbz', 'x8,0xcb7c'),
+        0xcb6c: ('cbz', 'x0,0xcb9c'),
+        0xcb74: ('cbnz', 'x8,0xcbd0'),
+        0xcb78: ('b', '0xcb9c'),
+        0xcb88: ('blr', 'x8'),
+        0xcb90: ('bl', '0x114dc'),
+        0xcb98: ('cbnz', 'x0,0xcb70'),
+        0xcba8: ('bl', '0x11224'),
+        0xcbb0: ('bl', '0x11260'),
+        0xcbb8: ('tbz', 'w8,#0x1f,0xcbcc'),
+        0xcbc8: ('bl', '0x112d8'),
+        0xcbd4: ('bl', '0x1111c'),
+        0xcbdc: ('cbz', 'x8,0xcc0c'),
+        0xcbe4: ('cbz', 'x8,0xcc0c'),
+        0xcbec: ('cbz', 'x0,0xcc2c'),
+        0xcbf4: ('cbz', 'x8,0xcc2c'),
+        0xcc00: ('blr', 'x8'),
+        0xcc28: ('ret', ''),
+        0xcc38: ('bl', '0x11224'),
+        0xcc40: ('bl', '0x11260'),
+        0xcc50: ('bl', '0x112d8'),
+        0xcc54: ('brk', '#0x1'),
+        0xcc58: ('bl', '0x3b68'),
+        0xcc5c: ('bl', '0x3b68'),
+        0xcc60: ('b', '0xcc64'),
+        0xcc6c: ('bl', '0x11434'),
+        0xcc70: ('b', '0xcc7c'),
+        0xcc74: ('b', '0xcc78'),
+        0xcc80: ('bl', '0x6cbc'),
+        0xcc88: ('bl', '0x6cbc'),
+        0xcc90: ('bl', '0xc964'),
+        0xcc98: ('bl', '0x110a4'),
+    },
+}
+
+def verify_isolation(text, label, start, end):
+    require(any((row[0], row[2], row[3]) == (label, start, end)
+                for row in REVIEWS['provider-isolation']), 'unreviewed provider isolation window')
+    count = validate_disassembly(text, start, end)
+    rows = {int(address, 16): (op, re.sub(r'\s+', '', args.split(';')[0]))
+            for address, op, args in re.findall(
+                r'^.*\[0x([0-9a-fA-F]+)\]\s+<[^>]*>:[ \t]+(\S+)[ \t]*([^\n]*)', text, re.M)}
+    anchors = ISOLATION_ANCHORS[label]
+    require(all(rows.get(a) == v for a, v in anchors.items()), 'provider isolation structural anchors differ')
+    return {'decoded_instructions': count, 'structural_anchors': len(anchors),
+            'claim': 'file-only-provider-not-host-wide-isolation-or-completion'}
+
+
+def verify_isolation_slot(words, fixups, chains, label):
+    require(label in ISOLATION_SLOTS, 'unreviewed provider slot')
+    _, _, start, count = next(row for row in DATA_WINDOWS['provider-isolation'] if row[0] == label)
+    formats = re.findall(r'pointer_format:\s+(\d+)\s+\(([^)]+)\)', chains)
+    require(formats and all(pair == ('6', 'DYLD_CHAINED_PTR_64_OFFSET') for pair in formats),
+            'provider slot fixup format differs')
+    raw, kind, target = ISOLATION_SLOTS[label]
+    require(words == [raw] and count == 1, 'provider slot serialized word differs')
+    rows = []
+    for address, actual_kind, actual_target in re.findall(
+            r'^\s*__DATA_CONST\s+__const\s+0x([0-9a-fA-F]+)\s+(\S+)\s+([^\n]+)', fixups, re.M):
+        if start <= int(address, 16) < start + 8:
+            rows.append((int(address, 16), actual_kind, actual_target.strip()))
+    require(rows == [(start, kind, target)], 'provider slot fixup target differs or is incomplete')
+    return {'kind': kind, 'target': target,
+            'claim': 'serialized-slot-correspondence-not-runtime-receiver-or-callable-ABI'}
+
+
 def verify_entry_lifetime(text, label, start, end):
     require(any((row[0], row[2], row[3]) == (label, start, end)
                 for row in REVIEWS['entry-lifetime']),
@@ -1376,6 +1773,7 @@ def main():
         dispatch = {}
         retention = {}
         entry = {}
+        isolation = {}
         for name in names:
             path, _ = INPUTS[name]
             nm, nm_err = run_tool(["/usr/bin/nm", "-arch", "arm64", "-n", "-m", str(path)])
@@ -1399,6 +1797,8 @@ def main():
                 dispatch[label] = verify_dispatch(disassembly, label, start, end)
             if args.review == 'provider-factory':
                 retention[label] = verify_retention(disassembly, label, start, end)
+            if args.review == 'provider-isolation':
+                isolation[label] = verify_isolation(disassembly, label, start, end)
             if args.review == 'entry-lifetime':
                 entry[label] = verify_entry_lifetime(disassembly, label, start, end)
             if args.review == 'ownership':
@@ -1413,8 +1813,8 @@ def main():
             }
         data_outputs = {}
         table_fixups = {}
-        if args.review == 'entry-lifetime':
-            for name in ('FLT', 'ASLFoundation'):
+        if args.review in ('entry-lifetime', 'provider-isolation'):
+            for name in dict.fromkeys(row[1] for row in DATA_WINDOWS[args.review]):
                 chains, diagnostics = run_tool(
                     ['/usr/bin/xcrun', 'dyld_info', '-arch', 'arm64', '-fixup_chains', str(INPUTS[name][0])])
                 require(not diagnostics.strip(), 'entry fixup chains produced diagnostics')
@@ -1446,6 +1846,9 @@ def main():
                 write_exclusive(folder / (label + "-stderr.txt"), diagnostics)
             data_outputs[label] = {"image": name, "start": hex(start), "word_count": len(values),
                                    "interpretation": "file-backed serialized words, not runtime pointers"}
+            if args.review == 'provider-isolation':
+                data_outputs[label]['slot_evidence'] = verify_isolation_slot(
+                    values, *table_fixups[name], label)
             if args.review == 'entry-lifetime':
                 data_outputs[label]['table_evidence'] = verify_entry_table(
                     values, *table_fixups[name], label)
@@ -1494,6 +1897,13 @@ def main():
             record['reference_counts_and_map_changes'] = 'FILE ONLY'
             record['safe_unregistration_and_failure_rollback'] = 'NOT PROVEN'
             record['receiver_thread_and_provider_lifetime'] = 'NOT PROVEN'
+            record['registration_apply_render'] = 'NOT RUN'
+        if args.review == 'provider-isolation':
+            record['provider_isolation_evidence'] = isolation
+            record['native_registration_ABI'] = 'UNKNOWN'
+            record['actual_provider_interface_identity'] = 'NOT OBSERVED'
+            record['host_wide_publication_isolation'] = 'NOT PROVEN'
+            record['publication_completion_and_safe_rollback'] = 'NOT PROVEN'
             record['registration_apply_render'] = 'NOT RUN'
         if args.review == 'entry-lifetime':
             record['entry_lifetime_evidence'] = entry

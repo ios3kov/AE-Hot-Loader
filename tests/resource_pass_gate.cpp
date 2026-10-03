@@ -13,6 +13,9 @@ static Plan TestPlan() {
     p.bridge_sha256 = std::string(64, '3');
     p.fixture_manifest_sha256 = std::string(64, '4');
     p.cleanup_inventory_sha256 = std::string(64, '6');
+    p.provider_contract_sha256 = std::string(64, '7');
+    p.isolation_contract_sha256 = std::string(64, '8');
+    p.completion_contract_sha256 = std::string(64, '9');
     p.executable = "/owned/host/After Effects";
     p.root = "/owned/fresh/scan-root";
     p.match = "AEHL.Embedded.123456789abc";
@@ -22,7 +25,7 @@ static Plan TestPlan() {
 }
 struct Model final : Backend {
     Plan p = TestPlan();
-    Approval a{p, true, true};
+    Approval a{p, true, true, true, true, true};
     Observation base;
     std::uint64_t clock = 1;
     int creates = 0, releases = 0, searches = 0, observations = 0, checks = 0;
@@ -100,6 +103,18 @@ int main() {
     using Mutate = std::function<void(Model&)>;
     const std::vector<std::pair<std::string, Mutate>> preblocked = {
         {"no-new-authorization", [](Model& m) { m.a.new_private_call_authorized = false; }},
+        {"missing-provider-contract", [](Model& m) { m.p.provider_contract_sha256.clear(); }},
+        {"malformed-provider-contract", [](Model& m) { m.p.provider_contract_sha256[0] = 'z'; }},
+        {"retargeted-provider-contract", [](Model& m) { m.a.scope.provider_contract_sha256[0] = 'a'; }},
+        {"unreviewed-provider-contract", [](Model& m) { m.a.provider_contract_reviewed = false; }},
+        {"missing-isolation-contract", [](Model& m) { m.p.isolation_contract_sha256.clear(); }},
+        {"malformed-isolation-contract", [](Model& m) { m.p.isolation_contract_sha256[0] = 'z'; }},
+        {"retargeted-isolation-contract", [](Model& m) { m.a.scope.isolation_contract_sha256[0] = 'a'; }},
+        {"unreviewed-isolation-contract", [](Model& m) { m.a.isolation_contract_reviewed = false; }},
+        {"missing-completion-contract", [](Model& m) { m.p.completion_contract_sha256.clear(); }},
+        {"malformed-completion-contract", [](Model& m) { m.p.completion_contract_sha256[0] = 'z'; }},
+        {"retargeted-completion-contract", [](Model& m) { m.a.scope.completion_contract_sha256[0] = 'a'; }},
+        {"unreviewed-completion-contract", [](Model& m) { m.a.completion_contract_reviewed = false; }},
         {"unreviewed-native-contract", [](Model& m) { m.a.native_contract_reviewed = false; }},
         {"missing-reviewed-cleanup", [](Model& m) { m.p.cleanup_inventory_sha256.clear(); }},
         {"different-approved-cleanup", [](Model& m) { m.a.scope.cleanup_inventory_sha256[0] = '7'; }},
@@ -147,7 +162,7 @@ int main() {
     try {
         for (const auto& test : preblocked) {
             Model m; test.second(m); auto r = m.run();
-            Check(r.status == "BLOCKED" && !r.call_started && m.creates == 0 && m.searches == 0);
+            Check(r.status == "BLOCKED" && !r.claimed && !r.call_started && m.creates == 0 && m.searches == 0);
             passed(test.first);
         }
         const std::vector<std::pair<std::string, Mutate>> fails = {
