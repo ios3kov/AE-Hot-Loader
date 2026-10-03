@@ -75,10 +75,26 @@ Selected completion/Gate bodies: BEE scoper78f8b0–78fb6c /78fc28–78fe90,
 completion worker7ac64c–7ac8a4; dvacore Gate Open243bbc–243c24 /
 Close243c24–243c38. Total23 complete bodies /24 windows /5901 instructions /
 14 rebases. [EXE implementation checkpoint](C1_CONCRETE_EXECUTOR_2026-10-03.md).
-10 parser/5 executor/78 collector focused PASS; full clean exact candidate /
-independent original/raw scanner/manual/both CI pending. EXE-01 bounded research
-DONE,02–07 PARTIAL,08 research implemented/checks pending,09 IN PROGRESS,
-10–12 BLOCKED / NOT RUN. Backend unbound; original product/all gates retained.
+Exact clean tested/pushed code9921ab0df7ee20d601854821431cf1aedc45d66b.
+10 parser/5 executor/78 collector focused,489 Python/no skips,62 Node/all22 steps
+PASS;373 tracked files match Git/working/scanner/runner. Independent original
+5901-instruction/32-field/14-rebase review and11 historical archive/pin checks
+PASS, exact SDK/Apple layouts unchanged. Raw scanner1/review_required retained:
+250 text/123 unsupported/no omissions/all9 checks completed; local argparse
+false positive manually reviewed without suppression. Research CI37152252624
+and macOS CI37152252660 completed/success at exact9921ab0; CI synthetic controls
+and archive checks are not AE runtime proof or release approval.
+
+Final reconciliation in [EXE checkpoint](C1_CONCRETE_EXECUTOR_2026-10-03.md):
+**PARTIAL:3 DONE /6 PARTIAL /3 BLOCKED**. EXE-01 bounded original identification,
+08 research implementation and09 verified closure DONE;02–07 PARTIAL;
+10–12 BLOCKED / NOT RUN. All original captures/corrections/history retained;
+only proven fresh scanner checkout removed. Five Markdown closure records,
+239 non-Markdown files unchanged from tested source, final private receipts in
+build-ae-hot-loader/executor-closeout-9921ab0-of5lojlu. Backend unbound, actual
+registration/apply/render NOT RUN; original product and all gates retained.
+Next requires continuous all-consumer/MFR admission/drain, safe retained factory
+acquisition/private ABI/thread and full registry/canonical/preferences recovery.
 
 ## Work-queue admission/completion and conditional host adapter — eleven-block pass
 

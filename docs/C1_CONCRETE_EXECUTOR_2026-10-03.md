@@ -100,22 +100,80 @@ Focused10 parser /5 executor /78 collector methods PASS. Two partition tests and
 new executor module test first failed against missing implementation; malformed
 fixture refusal fixed without loosening parser. Original23 bodies/24 windows/
 5901 instructions and14 rebases pass preliminary implementation comparison.
-Full clean-candidate runner, independent archive/original review, raw scanner/manual
-review and both exact-source CI: NOT RUN yet, pending identified candidate.
+Exact clean tested/pushed code **9921ab0df7ee20d601854821431cf1aedc45d66b**.
+Full runner: **489 Python/no skips,62 Node and all22 steps PASS**. Owned macOS
+native smoke PASS; actual AE pipeline BLOCKED, product package acceptance NOT RUN.
+All373 tracked files matched Git, working tree, fresh scanner checkout and runner
+source digest. Production native profile/backend and all unrelated source unchanged.
+
+Independent review does not import the current collector: original Mach-O/nlist,
+complete body ends/bytes, all24 transcript hashes and5901 instruction words,
+909 direct/508 conditional/157 indirect branches/25 returns,32 scalar/add fields
+and14 original chain rebases checked. Eleven unchanged historical archive/manifest/
+pin checks and exact SDK25.6_61/Apple layout headers PASS. Preliminary decoder
+refused a MOV at14eec where a scalar load was expected; selected actual LDR14ee8
+instead, preserving the initial script/log. No collector guard or evidence weakened.
+
+Raw scanner: **exit1/review_required**,250 text/123 unsupported/no omissions;
+all9 checks completed, release readiness not_assessed. Its sole heuristic finding
+at tools/artifact_manifest.py:71 is local argparse create/verify mode selection,
+not an HTTP authentication route. Exact context/diff manually reviewed and raw
+finding retained; no suppression and no scanner PASS claim.
+
+Both exact-source CI completed/success at9921ab0:
+[research37152252624](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37152252624)
+and [macOS37152252660](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37152252660).
+Required jobs/steps and artifact metadata preserved. CI builds, ad-hoc signing,
+synthetic reload/busy/rollback and archive roundtrip are not AE runtime proof or
+an installable/release handoff. No CI artifact downloaded or installed.
+
+Private evidence (not a public shipping artifact):
+
+| Evidence | Identity / result |
+|---|---|
+| Clean collector ZIP | build-ae-hot-loader/resource-workqueue-executor-e1fb1d2c-ov4np3kr.zip; SHA256 c3b3bb95889136d2793c8253aeec7e2effe0bd3263b4dc2e696751ec7dc9d729 |
+| Full runner ZIP | executor-closeout-9921ab0-of5lojlu/AEHL-checks-r2w97j3n.zip; SHA256 f7610b256ead55d6c202c5f8bdbf756010beafd68d5d4f3700f03e5d55944f82 |
+| Independent original receipt | executor-closeout-9921ab0-of5lojlu/aehl-executor-original-review.json; SHA256 2996f21d98942dabc1b0cf9c80d7ad99434a0330c149607fd3f678a554bc137d |
+| Before-implementation original manifest | executor-original-9sb3o200/fixed-manifest.json; SHA256 3e8479c1fe8a32ff562052ecad0143fd97180c9a047585288e232b25c2d32ab8 |
+| Source/manual/CI/cleanup | build-ae-hot-loader/executor-closeout-9921ab0-of5lojlu; original captures, initial refusals and historical archives retained |
+
+Only the fresh owned scanner checkout was removed after all373 byte checks,
+clean/no-untracked/no-ignored/UID/no-symlink proof and raw receipt retention.
+Application/SDK/project/plugin state and historical/unknown materials untouched.
+Final documentation closure changes only five Markdown records; all239
+non-Markdown tracked files remain byte-identical to tested9921ab0. Local links
+and documentation diff checked; final source/remote/retention proof preserved
+in the private closeout folder.
 
 ## Task state and remaining gates
 
-EXE-01 DONE for bounded original-file concrete executor/owner identification;
-EXE-02–07 PARTIAL. EXE-08 implemented research scope, verification pending;
-EXE-09 IN PROGRESS. EXE-10–12 BLOCKED / NOT RUN. Final task reconciliation
-will bind actual source/artifacts/check results after verification.
+Packet **PARTIAL:3 DONE /6 PARTIAL /3 BLOCKED**. Checks above close the bounded
+research component; no native registration implementation or host acceptance.
 
-Unchanged factory/registry/render/SDK evidence must be rechecked with original
-archive identities and pins. Safe initial factory receiver/private declaration/
+| ID | Final task status | Observable result / evidence and remaining condition |
+|---|---|---|
+| EXE-01 | DONE, bounded file identification | Birth/factory/vtable and retained executor fields checked in originals; safe live acquisition/private ABI still unknown |
+| EXE-02 | PARTIAL | ScheduleWork unlocks before submit; resource lease/Worker Gate lacks continuous all-registry-reader exclusion |
+| EXE-03 | PARTIAL | Worker and full Flush branches traced; single executor completion lacks universal MFR/consumer coverage |
+| EXE-04 | PARTIAL | Retained item/notify/completion/housekeeper removal traced; observer reentry and downstream owners remain unknown |
+| EXE-05 | PARTIAL | Historical registry/render archives and exact pins rechecked; all-reader coverage still unproved |
+| EXE-06 | PARTIAL | Existing-only factory/initial receiver/owner evidence rechecked; retained initial receiver/private ABI/thread/full owner graph missing |
+| EXE-07 | PARTIAL | Publication-before-failure evidence retained; complete registry/canonical/preferences inverse missing |
+| EXE-08 | DONE, research only | Fixed collector/helper, complete-body partition/refusal controls;10/5/78 focused and full checks PASS, native backend unbound |
+| EXE-09 | DONE | Exact source/full/original/manual/CI evidence, five documentation records, commit/push and owned-only cleanup; final byte/remote receipt |
+| EXE-10 | BLOCKED | Actual AE adapter depends on unresolved02–07 and safe01 acquisition; native implementation NOT RUN |
+| EXE-11 | BLOCKED / NOT RUN | Actual registration→apply→render depends on10 and current safe exact-candidate environment |
+| EXE-12 | BLOCKED / NOT RUN | Repeat/error trial depends on11 and demonstrated full recovery |
+
+Unchanged factory/registry/render/SDK evidence rechecked against original archive
+identities and pins. Safe initial factory receiver/private declaration/
 thread/full owner graph, all registry consumer/MFR admission/drain and complete
 registry/canonical/preferences inverse remain required. Scope of reviewed
 executor controls is insufficient; native ResourcePassGate backend stays unbound.
 No AE install/launch/attach/session read/scan, host private call/foreign retain/
 release/teardown, thread suspension, user-state mutation, main/merge/release.
-Owned evidence and preliminary corrections retained; only proven fresh owned
-scanner checkout eligible for later cleanup. Unknown/history material preserved.
+Owned evidence and preliminary corrections retained; fresh owned scanner checkout
+removed after proof. Unknown/history material preserved. Next work must establish
+an actual continuous admission/drain owner and complete recovery contract, plus
+safe retained factory acquisition. Another Pause/Flush/cancel call or unchanged
+ordinary plug-in scan cannot establish those prerequisites.

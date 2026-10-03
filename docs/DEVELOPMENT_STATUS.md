@@ -15,7 +15,7 @@ Dated evidence is unchanged; previous instructions do not renew permissions.
 
 ## Current packet — concrete executor and completion scope
 
-2026-10-03 EXE-01–12 in progress from clean5f2230f;
+2026-10-03 EXE-01–12 closed as a partial research packet from clean5f2230f;
 [original executor findings and checks](C1_CONCRETE_EXECUTOR_2026-10-03.md).
 Actual ThreadedWorkQueue creation/owner/vtable now identified. Pause gates future
 workers; Flush has executor-thread/marker/sync/join branches. Death destroys
@@ -26,8 +26,26 @@ factory acquisition/thread/private ABI or full registry/preferences inverse.
 Actual adapter/trials BLOCKED; registration/apply/render NOT RUN.
 23 complete bodies /24 bounded windows /5901 instructions /14 rebases;
 fixed collector/helper and exact complete-group refusals added.10 parser /
-5 executor /78 collector focused PASS. Full exact-source runner/scanner/original
-review/both CI pending. Original product and A/B/C1/C2/D/release retained.
+5 executor /78 collector focused PASS. Exact clean tested/pushed code
+**9921ab0df7ee20d601854821431cf1aedc45d66b**:489 full Python/no skips,62 Node,
+all22 steps PASS;373 source-byte proof. Independent original5901-instruction/
+32-field/14-rebase review,11 historical archive/pin checks and SDK/Apple layouts
+PASS. Raw scanner1/review_required preserved:250 text/123 unsupported/no omissions,
+9 checks completed; local CLI false positive manually reviewed, no suppression.
+[Research CI37152252624](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37152252624)
+and [macOS CI37152252660](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37152252660)
+completed/success on exact9921ab0. Synthetic builds/reload/rollback/archive checks
+are not actual AE acceptance or release approval.
+
+Packet **PARTIAL:3 DONE /6 PARTIAL /3 BLOCKED**;01/08/09 DONE,02–07 PARTIAL,
+10–12 BLOCKED / NOT RUN. Evidence/corrections/history retained in
+build-ae-hot-loader/executor-closeout-9921ab0-of5lojlu and original capture folder;
+only proven fresh scanner checkout removed. Five Markdown closure records with
+239 non-Markdown files unchanged; final source/remote/retention receipt preserved.
+Progress: concrete executor and retained completion/removal chain identified;
+Pause/Flush/Death are insufficient as a safe registry transaction. Next needs
+actual continuous all-consumer/MFR exclusion/drain, safe retained factory access
+and full recovery. Original product and A/B/C1/C2/D/release retained.
 
 ## Previous checkpoint — BEE queue controls traced, host barrier still open
 

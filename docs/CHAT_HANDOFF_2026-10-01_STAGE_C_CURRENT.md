@@ -25,15 +25,30 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
 ## Concrete executor — current packet
 
-[EXE checkpoint](C1_CONCRETE_EXECUTOR_2026-10-03.md),12-block packet in progress.
+[EXE checkpoint](C1_CONCRETE_EXECUTOR_2026-10-03.md),12-block packet closed as
+**PARTIAL:3 DONE /6 PARTIAL /3 BLOCKED**,01/08/09 DONE,02–07 PARTIAL,
+10–12 BLOCKED / NOT RUN. Exact clean tested/pushed code
+9921ab0df7ee20d601854821431cf1aedc45d66b.
 23 complete original bodies /24 windows /5901 instructions /14 rebases.
 Concrete ThreadedWorkQueue identified; Pause is a Gate close, Flush has distinct
 same-executor/marker/sync/join paths, Death destroys subsystem state. Notification
 and completion retain callbacks/items and transfer removal to housekeeper.
 All-reader/MFR admission, safe initial factory/thread/private ABI and full inverse
 remain required; actual adapter/trials BLOCKED, registration/apply/render NOT RUN.
-10 parser/5 executor/78 collector focused PASS; exact full/CI closure pending.
-Keep backend unbound; no destructive lifecycle call or unchanged scan.
+10 parser/5 executor/78 collector focused,489 full Python/no skips,62 Node/all22
+steps PASS;373 Git/working/scanner/runner source-byte proof. Independent original
+5901-instruction/32-field/14-rebase review and11 historical archive/pin checks
+PASS; SDK/Apple layouts unchanged. Raw scanner1/review_required,250 text/123
+unsupported/no omissions,9 completed checks; one local CLI false positive manually
+reviewed without suppression. Both exact-source CI37152252624/37152252660
+completed/success; synthetic checks are not AE proof or release acceptance.
+Private receipts executor-closeout-9921ab0-of5lojlu, original captures/corrections
+and history retained; only proven fresh owned scanner checkout removed.
+Five Markdown closure records with239 non-Markdown files unchanged from tested
+source; final remote/source/retention receipt. Keep backend unbound and original
+product/all gates; next requires safe factory receiver/private ABI/thread,
+continuous all-consumer/MFR admission/drain and whole-effect recovery contract.
+No destructive lifecycle call or unchanged scan can establish those contracts.
 
 ## BEE queue controls — previous continuation
 
