@@ -13,7 +13,33 @@ Previous status is preserved at
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
 
-## Current packet — suspend contexts and continuous admission
+## Current packet — online and independent research reconciliation
+
+2026-10-03 documentation research from clean
+`ecc6c28eeea72bcca81e1aae7d1ad70abd95bcec`;
+[source audit and next checks](C1_WEB_RESEARCH_RECONCILIATION_2026-10-03.md).
+Exact SDK25.6_61 and pinned guide/original-author sources reconcile14 material
+claims. No supported public late-publication route found; universal impossibility
+is unproved. Registration macro/context lifetime, dynamic flags, selected registry
+locking and Premiere next-launch cache semantics corrected. Original AEXCompat
+evidence adds plugin-owned threads/deferred callbacks to consumer coverage;
+its Windows/other-host observations are not native AE2025 arm64 proof.
+
+Next original-file research: startup callback context/receiver owners, outer host
+dispatch/admission callers and per-record error/unwind recovery. Safe startup
+calibration follows a substantiated instrumentation contract and current live
+authority; late publication/error trials follow demonstrated safety prerequisites.
+No speculative callback replay, concurrent registry mutation or fault injection.
+NET-01–05 documentation research DONE:164 local links/diff PASS,241 non-Markdown
+and seven SDK files unchanged; raw scanner1/review_required,254 text/123 unsupported,
+no omissions/all nine checks completed, unchanged local CLI false positive reviewed
+without suppression. Exact publication/CI state and final byte checks are retained
+in `/private/tmp/aehl-web-research-9wj5i8wr`; no previous b01ae48 CI is inherited.
+Local full executable regression NOT RUN for Markdown-only changes. Owned research
+snapshot/receipts retained; no cleanup removal needed. Product PARTIAL, adapter unbound, native trials BLOCKED,
+registration/apply/render NOT RUN. All A/B/C1/C2/D/release obligations retained.
+
+## Previous packet — suspend contexts and continuous admission
 
 2026-10-03 continuation at clean45a7aa4, accepted9 main/3 conditional steps;
 [SUS checkpoint](C1_SUSPEND_CONTEXTS_2026-10-03.md). Actual U_SuspendContext

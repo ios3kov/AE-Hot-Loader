@@ -3,7 +3,8 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [suspend contexts](C1_SUSPEND_CONTEXTS_2026-10-03.md),
+Current continuation: [online research reconciliation](C1_WEB_RESEARCH_RECONCILIATION_2026-10-03.md),
+[suspend contexts](C1_SUSPEND_CONTEXTS_2026-10-03.md),
 [concrete executor](C1_CONCRETE_EXECUTOR_2026-10-03.md),
 [BEE queue controls](C1_WORKQUEUE_CONTROLS_2026-10-03.md),
 [scoped admission controls and match-name correction](C1_ADMISSION_CONTRACTS_2026-10-03.md),
@@ -24,7 +25,28 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
-## Suspend contexts — current packet
+## External research — current packet
+
+Research/documentation from clean ecc6c28; exact SDK25.6_61, pinned guide and
+original-author sources reconcile14 claims from independent reports. Public late
+publication is unsupported in reviewed sources; universal impossibility is not
+proved. Add plugin-owned threads/deferred callbacks to coverage; AEXCompat's
+Windows substitute-host evidence is not native AE2025 arm64 acceptance.
+[Full audit and dependency order](C1_WEB_RESEARCH_RECONCILIATION_2026-10-03.md).
+Next bounded original-file work: startup callback context/receiver owners, outer
+dispatch/admission callers and full per-record error/unwind inverse. Preserve
+existing captures rather than repeat unchanged Pause/Flush/SUS/PICA research.
+Calibration requires safe instrumentation/current authority; late and fault trials
+require the technical safety prerequisites first. External suggested operations
+are not authority to execute them. NET-01–05 documentation research DONE;164 local
+links/diff PASS,241 non-Markdown/seven SDK sources unchanged; raw scanner1 reviewed
+as the unchanged CLI false positive, no suppression. Exact publication/CI results
+and source checks retained in `/private/tmp/aehl-web-research-9wj5i8wr`.
+Local full executable regression NOT RUN for these Markdown changes; old CI is
+historical. Owned snapshot/receipts retained, no cleanup removal needed.
+Product PARTIAL, adapter unbound, trials BLOCKED, registry/apply/render NOT RUN.
+
+## Suspend contexts — previous packet
 
 [SUS checkpoint](C1_SUSPEND_CONTEXTS_2026-10-03.md),12 accepted steps from
 clean45a7aa4.27 complete original U bodies/3788 instructions: current-context TLS

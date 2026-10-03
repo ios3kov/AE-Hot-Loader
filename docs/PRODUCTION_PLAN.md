@@ -12,7 +12,36 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
-## Suspend-context scope and conditional host adapter — current twelve-block pass
+## External research reconciliation — current bounded pass
+
+The user's online-research request and supplied independent reports continue C1
+research from clean `ecc6c28eeea72bcca81e1aae7d1ad70abd95bcec`. Rules8.0.0,
+AI_ENTRYPOINT first; API-SOURCE-001, AI-STATE-001, TASK-CLOSE-001 and CLEANUP-001.
+Research/documentation scope; native ABI/thread/admission/recovery remains Critical.
+Preserve AE2025/macOS arm64/SDK25.6_61, ordinary third-party registration→apply→render
+without restart, and A/B/C1/C2/D/release. External proposals are evidence to review,
+not authorization for installing, launching/attaching AE or invoking private code.
+
+| ID | Acceptance | Check / dependency | State |
+|---|---|---|---|
+| NET-01 | Pin external primary sources and exact local baseline/SDK | Seven exact SDK files, immutable guide/author commits, attachment hashes | DONE |
+| NET-02 | Reconcile registration, selector, flags, locking and rollback claims |14 claim verdicts against exact SDK and original repository evidence | DONE |
+| NET-03 | Identify useful new evidence without substituting another host | Plugin-owned callback/thread coverage added; Windows/substitute-host scope retained | DONE |
+| NET-04 | Order falsifiable next checks around actual safety prerequisites | Context/owner/admission/inverse proof before dependent live calibration/late trials | DONE |
+| NET-05 | Close documentation packet with current checks and retained evidence |164 local links/diff PASS,241 non-Markdown/seven SDK files unchanged; raw scanner1 manually reviewed; exact publication/CI state in private closeout receipt | DONE for documentation research |
+
+No product implementation or native experiment is included in this packet.
+[Source audit and next dependency order](C1_WEB_RESEARCH_RECONCILIATION_2026-10-03.md)
+retain native UNKNOWN/BLOCKED/NOT RUN and product PARTIAL explicitly. No supported
+public late route was found; absence of a documented API is not proof of universal
+impossibility. No product implementation, safety contract or release gate is closed
+by source/documentation checks.
+Local full executable regression is NOT RUN for these four Markdown-only changes;
+automatically triggered CI is tracked for the exact published SHA in the closeout
+receipt, never inherited from b01ae48. Retain the owned scanner snapshot, raw
+finding/review and source checks; no deletion or historical evidence rewrite needed.
+
+## Suspend-context scope and conditional host adapter — previous twelve-block pass
 
 User accepted the next9 main /3 conditional steps with “делай”. Start from clean
 45a7aa4d6ab92e87e0db81ee419166b1db094e92 on research/ordinary-plugin-discovery;
