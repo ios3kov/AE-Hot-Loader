@@ -9,7 +9,8 @@ effect/no-restart product and A/B/C1/C2/D/release obligations retained.
 Collector Standard; dependent native invocation Critical/gated. No current AE
 operation or native helper/profile/ResourcePassGate/SDK modification.
 
-Preparation checkpoint: 54 focused collector tests PASS, including three new
+Historical preparation checkpoint, superseded by the exact closeout below:
+54 focused collector tests PASS, including three new
 refusal/scope controls and the actual owned arm64 file-disassembly control.
 TDD first run had exactly three expected missing-mode errors; second run 54/54,
 zero skips/failures/errors. Full checks/clean collection/independent review/CI
@@ -116,7 +117,7 @@ LoadPluginList literals absent in that one header; not global API absence. No ne
 SDK call/signature or callback control introduced; earlier SDK results keep their
 original source identity. Private InterfaceRef/ownership/virtual contracts UNKNOWN.
 
-## Current task reconciliation
+## Preparation reconciliation (historical; superseded below)
 
 ADMIT-01 bounded outer-loader and factory→Init→SetupFilter route documented;
 full loader dispatch/ABI remains UNKNOWN. ADMIT-02 normal/unwind retention and
@@ -137,3 +138,80 @@ Cleanup: only fresh owned research folders/test temporaries created; preserve al
 original SDK/app/session/plugins/projects, consumed helpers and historical evidence.
 Private reproducibility receipts will be retained locally; no shared-state purge,
 no installable artifact handoff, merge or release.
+
+
+## Exact clean research closeout
+
+Checked code: **59f1e7ae1a8e279adfb7a9891ff5de6494d203cc**, clean branch
+research/ordinary-plugin-discovery, pushed without merge/release. All bodies above
+collected again at this clean source; preliminary dirty collection is not acceptance.
+
+- Focused collector: 54 PASS, zero skips/failures/errors, including actual owned
+  arm64 LLDB control. Full runner: **430 Python**, zero skips/failures/errors,
+  **62 Node** (51 panel +11 snapshot), all **22 stages PASS**. Original logs reviewed;
+  Python 59.141 seconds, existing timeout 120 unchanged. Nested native guards count
+  as one Python test, not an inflated total. Offline/macOS-native PASS; full AE
+  pipeline BLOCKED, product package NOT RUN, live operations requested false.
+- Clean collection: `resource-module-admission-1f84f6a9-26oic50m.zip`, SHA-256
+  `eba646b5a22d3f0bd476c589106e77779d045b7cd6b64f8398d19cde610f9358`.
+  28 unique members / CRC / exact manifest hashes and corresponding folder bytes
+  independently verified. Twelve windows /3446 instructions /232 anchors. Private
+  archive remains in the owned ignored build directory; not an installable handoff.
+- Independent original arm64 byte review: **634 direct**, **347 conditional**,
+  **61 indirect** branches and **14 returns** agree with transcripts. Three retained
+  interface pair writes and three null/cache/setup decisions independently decoded
+  from original words/registers/offsets/bits/targets. No collector verifier imported
+  and no Adobe execution. `independent-review.json` SHA-256
+  `0c0fb752c71e0bc269cf7e1a391568f557c69eb521623c1891a0aaacec11e20b`;
+  independent script SHA-256
+  `80b6b9d89b6de11c362631e3fa5c91edb68b4e1f648a22b385ce424f42f4570e`.
+- Full runner `/private/tmp/AEHL-checks-111oe9uf.zip`, SHA-256
+  `e51d9244ba68308e644a17e65e03283dd6b25d777d7f415a7ff84ed4dc32d0f2`.
+  All 25 unique ZIP members /CRC/exact manifest hashes and **335 tracked source
+  hashes** independently matched the clean candidate; source unchanged after run.
+  Source inventory SHA-256
+  `d5e111b8f5ec580f7d7eedc520caa0510f61dc45d0f71decba6afc215042ca73`.
+  Independent source-proof SHA-256
+  `a0c27d50dc43171c80f60620a9969e6d081b236e376526042a7b0592edeca358`.
+- Manual source/structural and safety-output review separately recorded in private
+  `manual-review.json`, SHA-256
+  `a4a7c2d6f9914bddbc66baf07aa79979de09d340412a30d4de44bc253dbdd2b8`.
+  Scanner exact clean 59f1e7a: raw exit **1**, `review_required`, readiness
+  `not_assessed`; SHA-256
+  `c220f83e474fc86854a304a0be133b66f6ef1ddd7d8aaf39b721d2c5e71f2dc4`.
+  Sole `vibe.no_ratelimit_auth` at tools/artifact_manifest.py:71 manually reviewed:
+  local argparse CLI, no auth/network route, false positive. Raw finding/exit
+  retained without suppression; do not report scanner PASS or release clearance.
+- Both exact-source workflows **completed/success** at clean 59f1e7a:
+  [research CI 37135099702](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37135099702)
+  and [macOS CI 37135099694](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37135099694).
+  macOS build/sign/package/owned smoke/archive checks are not AE runtime proof.
+- Durable byte-identical private copies of collection/full runner/scanner/independent
+  verifier/independent review/manual review/source proof retained at owned ignored
+  `build-ae-hot-loader/admission-closeout-59f1e7a-mhal2a7u`.
+  RETENTION.json SHA-256
+  `5771eb743602b45492620216783bbaf890276c727294f88554e88ef11b79e5b7`.
+  Originals preserved; no cleanup of shared or loaded state.
+
+| Requirement / task | Actual acceptance / check / Evidence | Remaining readiness impact |
+|---|---|---|
+| AI-STATE/API-SOURCE; ADMIT-01 | Baseline/rules/actual SDK pin verified; complete outer loader and factory→Init→SetupFilter file route identified | Full LoadPluginList/one-time/virtual dispatch and supported late ABI UNKNOWN |
+| Native ownership; ADMIT-02 | Retained fields, vector writes before/after setup, normal/unwind release independently reviewed | Actual owner/lifetime and full rollback BLOCKED |
+| SAFE/native thread; ADMIT-03 | Complete selected list/read bodies and default ready-future reviewed | Continuous all-reader/render/MFR admission/drain/thread BLOCKED |
+| Completion/rollback; ADMIT-04 | Null/status/cache gates and partial retained state documented; no guessed private teardown | Full transaction/semantic completion/whole-effect inverse BLOCKED |
+| TEST-CONTROL/bounded tools; ADMIT-05 | Fixed mode implemented, three new expected TDD failures then 54 focused PASS; tampered/incomplete outputs rejected | Research parser evidence only, not host certification |
+| REPRO/regression/review; ADMIT-06 | Clean collection, original bytes/archive/335 source hashes, 430 Python/62 Node/22 stages PASS, scanner finding manually dispositioned | Both exact-source research/macOS CI completed/success; AE runtime BLOCKED/NOT RUN |
+| TASK-CLOSE/CLEANUP; ADMIT-07 | All eight blocks reconciled; canonical status/plan/handoff updated and owned durable receipts retained | Final docs-only publication leaves checked research code unchanged; original product/A/B/C1/C2/D/release retained |
+| Native experiment; ADMIT-08 | No safe supported executable packet yet; current live scope absent | BLOCKED; registration/apply/render NOT RUN |
+
+Bounded research progress is verified. No product completion percentage or claim
+that eight live-host steps passed; required runtime gates remain open. Next:
+complete LoadPluginList admission/dispatch/ownership/error contract, rather than
+retrying unchanged scans or interpreting a factory list/default future as safety.
+
+Docs-only closeout is published separately with `[skip ci]`; all non-document
+tracked bytes must still match clean 59f1e7a. This does not transfer runtime/release
+acceptance to a newer artifact. ADMIT-01–07 bounded research/review/checks/docs
+accounted for; required native contracts within 01–04 remain BLOCKED. ADMIT-08
+executable host experiment BLOCKED, registration/apply/render NOT RUN. All eight
+blocks reconciled; no requested product obligation silently removed.

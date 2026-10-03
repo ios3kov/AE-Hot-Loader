@@ -20,16 +20,24 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 ## Module admission — list membership and readiness separated
 
 [Admission review](C1_MODULE_ADMISSION_2026-10-03.md): 12 pinned windows /
-3446 instructions / 232 anchors. Factory Create inserts a module before Init;
-CreateUnknown checks SetupFilter before returning a module; cache/virtual paths
-remain conditional. GetModules has no explicit body lock/readiness check;
-default AddModuleToList is a no-op and SetdownAsync constructs a ready future,
-not a proved host drain. Outer LoadPlugins delegates to LoadPluginList; full
-transitive late ABI/owner/thread/admission/drain/rollback UNKNOWN. Backend NOT READY.
-New bounded collector/refusal implementation: 54 focused tests PASS; clean full
-checks/independent review/CI pending. ADMIT-08 executable host experiment BLOCKED,
-registration/apply/render NOT RUN. No current AE operation; original obligations
-retained. Next: complete LoadPluginList dispatch/ownership/error transaction.
+3446 instructions /232 anchors. Factory Create inserts before Init; CreateUnknown
+checks SetupFilter before returning a module; cache/virtual paths remain conditional.
+GetModules has no explicit body lock/readiness check; default AddModuleToList is
+no-op and SetdownAsync constructs a ready future, not a proved host drain. Outer
+LoadPlugins delegates to LoadPluginList; full transitive late ABI/owner/thread/
+admission/drain/rollback UNKNOWN. Backend NOT READY. At exact clean research code
+59f1e7ae1a8e279adfb7a9891ff5de6494d203cc: 54 focused /430 full Python, no skips,
+62 Node/22 stages PASS; clean collection and independent original-byte/archive/
+335-source-file review PASS. Sole raw scanner finding reviewed as a local-CLI false
+positive; raw exit 1 retained. Research CI 37135099702 and macOS CI 37135099694
+both completed/success at exact 59f1e7a. ADMIT-01–04 bounded file findings documented,
+required native contracts BLOCKED; 05 research implementation/refusal checks done;
+06 checks/review/both CI complete, 07 docs/cleanup reconciled,
+08 executable host experiment BLOCKED,
+registration/apply/render NOT RUN. No current AE operation; original product and
+A/B/C1/C2/D/release obligations retained. Owned private receipts durably retained;
+no shared/loaded cleanup. Next: complete LoadPluginList dispatch/ownership/error
+transaction and relevant one-time/virtual delegates.
 
 ## Routine-to-effect handoff — internal route found, safe late contract open
 

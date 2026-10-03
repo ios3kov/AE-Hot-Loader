@@ -42,6 +42,24 @@ scopes consumed. Native helpers/profiles/ResourcePassGate, SDK, user sessions,
 projects/third-party plugins/history preserved. No merge/release. Complete 01–07
 research even if 08 blocked; file evidence is not product runtime acceptance.
 
+ADMIT closeout: [admission findings, exact receipts and eight-block reconciliation](C1_MODULE_ADMISSION_2026-10-03.md).
+At clean code 59f1e7a, 01 outer loader and factory→Init→SetupFilter file route
+identified; full LoadPluginList/one-time/virtual contract UNKNOWN. 02 ownership and
+vector-before-init/after-setup ordering reviewed; actual lifetime/rollback BLOCKED.
+03/04 selected list/read/default ready-future/cache/status/failure boundaries
+reviewed; required thread/continuous all-reader/render drain/completion/full
+rollback BLOCKED. 05 bounded collector/refusal implementation complete, 54 focused
+PASS. 06 clean research collection/independent original-byte/archive/335-source-file
+review, 430 Python/no skips, 62 Node/22 stages PASS; one raw scanner finding reviewed
+as local-CLI false positive, raw exit 1 retained; exact research CI 37135099702
+and macOS CI 37135099694 both completed/success at exact 59f1e7a.
+07 final docs/cleanup reconciled,
+owned receipts durably retained. 08 executable native packet BLOCKED; AE
+registration/apply/render NOT RUN. No current host operation, product completion,
+merge or release; original A/B/C1/C2/D gates retained. Next: complete LoadPluginList
+admission/dispatch/ownership/error transaction; preserve SDK/native helpers/session/
+projects/third-party/history and do not treat default ready-future as render drain.
+
 ## Routine-to-effect handoff — accepted conditional twelve-step pass
 
 2026-10-03. User “делай” accepts the twelve-block proposal in this chat. Starting
