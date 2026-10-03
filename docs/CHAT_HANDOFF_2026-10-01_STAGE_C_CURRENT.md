@@ -3,7 +3,7 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [native reference call boundary](C1_CLASSREF_CALL_BOUNDARY_2026-10-03.md),
+Current continuation: [factory dependency lifetime](C1_FACTORY_DEPENDENCY_LIFETIME_2026-10-03.md),\n[native reference call boundary](C1_CLASSREF_CALL_BOUNDARY_2026-10-03.md),
 [registry transaction batch](C1_REGISTRY_TRANSACTION_BATCH_2026-10-03.md),
 [provider/isolation batch](C1_PROVIDER_ISOLATION_BATCH_2026-10-03.md),
 [entry/lifetime batch](C1_ENTRY_LIFETIME_BATCH_2026-10-03.md),
@@ -17,6 +17,14 @@ Current continuation: [native reference call boundary](C1_CLASSREF_CALL_BOUNDARY
 The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
+
+## Factory callback dependencies — owned teardown order demonstrated
+
+[DEP checkpoint](C1_FACTORY_DEPENDENCY_LIFETIME_2026-10-03.md) follows the native reference packet. Complete reused MEE cleanup bodies map selected factory/vector release paths. The bounded owned lease holds listed provider images through result destruction. Two dynamic callbacks ran after harness handles/original owner dropped; order2→30→40→1→3→41→31 confirms reference release, both callbacks, object/factory destruction and reverse provider unload. Same-lease reentrant Diagnostic/Reset/transfer guards pass; wrong-order TDD and initial observer failure remain preserved.
+
+Exact source **a75a5aa15044b4a4606e5fe39a4185f018fbfab4**:464 Python/no skips,62 Node/22 stages,365 tracked source bytes unchanged. Scanner raw1 and the CLI false positive are retained/reviewed without suppression;242 text/123 unsupported/no omissions. Both exact-source CI succeeded. Five focused methods/eight native processes; preliminary count corrected to eight.
+
+Actual AE callback graph/provider-object ownership, ABI/thread and host admission/drain/rollback remain unknown. AE registration/apply/render not run. Next prove real callback/provider lifetime, then host-wide entry exclusion, render drain and rollback. Product remains partial.
 
 ## Native reference — calling and complete-result cleanup prototype checked
 

@@ -41,6 +41,34 @@ private acquisition/release/destructor/unload, unchanged scan, host gate bypass,
 merge/main mutation or release. Actual AE factory/host transaction remains BLOCKED;
 registration/apply/render NOT RUN. Proceed with independent bounded owned research.
 
+## Final DEP-01–08 reconciliation
+
+The bounded owned callback-code lifetime packet is complete at clean tested source **a75a5aa15044b4a4606e5fe39a4185f018fbfab4**. Fresh unified runner /private/tmp/AEHL-checks-1aqo0h86.zip, SHA **b59cea43e8fe5b6fb32400379535d2f56e6d43226c7ad8ed07b91477dc4b4f2c**: 464 Python tests/no skips, 62 Node, all 22 stages PASS. All 365 tracked Git/working/copied bytes matched before and after; source-proof SHA **84c579aa63ba01905a065f080f831485412c4e1df68df6313c102bc5f911c947**. ZIP integrity and all manifest payloads checked.
+
+Fresh-clone scanner reviewed 242 supported text files and 123 unsupported file types, omissions[]. All selected checks completed. Raw exit1/review_required/release_readiness=not_assessed retained. One heuristic at tools/artifact_manifest.py:71 matches the local argparse choice verify; the manifest CLI has no HTTP/auth route. Manual false-positive review, no suppression. Scanner SHA **57f0180eff1155e3357e3ccf7437fb8a0a3c5f72c53c1a3e8709e5fdc8b86711**; manual review SHA **b375f581abbc9ff5cc5268c2e0df46cba81907b10de1888da400968f4efbe925**. Native files received separate strict compilation, actual execution and ASan/UBSan.
+
+Research CI [37144996949](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37144996949) and macOS CI [37144996954](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37144996954) both completed successfully at exact source; panel-contract, native-syntax and macOS build jobs passed.
+
+Independent original review SHA **4fe54e64d6ee112c0099e967b23df0314d90f9278989559df6592f065635ab15** binds five complete reused MEE cleanup bodies: 127 instructions, 15 direct, 13 conditional, 4 indirect sites, 5 returns. Pinned MEE bytes and UUID unchanged. Selected paths release the factory and two retained vectors/weak owners. Actual indirect provider targets/full host callback graph remain unknown.
+
+Retained regular and ASan/UBSan three-module stands SHA **f7d12f87492fbde9eda51c2c9ff14188090854fc7739d3fdd00b86c045c8eeda** bind exact binaries, commands, output, and unchanged-after hashes. Actual dynamically supplied callbacks ran during factory destruction after harness handles and original owner dropped. Event order 2,30,40,1,3,41,31 records reference release, both callbacks, object destruction, factory unload, then provider unload in reverse. Reentrant Diagnostic refuses, nested Reset is idempotent, reentrant transfer terminates before state transfer. Five focused methods run eight fresh consumer processes; nine was an incorrect preliminary count.
+
+Wrong-order and reentry TDD failures and fixes remain preserved. The first unload observer that omitted factory unload remains labelled FAIL. Private evidence under build-ae-hot-loader/dep-closeout-final-a75a5aa-hhb7z2ok; RETENTION.json SHA **c7f7f95cdb807f47980872587137f779f8fdfe04f9b2e8eda92fc61f84e1e95b** binds source, runner, scanner, manual/original review, CI and native files. Only the packet-owned clean scanner clone was removed after byte-proof checks; historical/shared/app/SDK/project/plugin state untouched.
+
+| Requirement | Result | Remaining dependency |
+|---|---|---|
+| DEP-01 | Five complete cleanup bodies independently reviewed against original bytes and control/vector transitions | Complete host callback graph unknown |
+| DEP-02 | Object, factory image, and listed provider code lifetimes distinguished | Provider object ownership/hidden dependencies unknown |
+| DEP-03 | Owned lease retains 1–8 unique, already-resident pinned provider images with exact exports and code fingerprints | No Adobe profile or auto-discovery |
+| DEP-04 | Factory result destroyed before providers; handles close in reverse order; move assignment releases old bundle first | No host-wide admission/render barrier |
+| DEP-05 | Two actual owned callbacks run after harness handles and original owner drop; regular/sanitized sequence pass | Does not establish Adobe behavior |
+| DEP-06 | Wrong-order, profile, source, version, thread, partial, exception and reentry controls checked | Actual host semantics unknown |
+| DEP-07 | 464 Python/no skips, 62 Node, 22 stages; scanner/manual/original/native checks and both exact-source CI complete | AE registration/apply/render NOT RUN |
+| DEP-08 | Plan/status/handoff/compatibility/checkpoint/retention/corrections/cleanup reconciled | A/B/C1/C2/D/release remain open |
+
+Product remains partial; the AE adapter is not ready. Actual AE acquisition/release, provider-object lifetime, full dependency graph, registration, apply and render remain unknown or not run. Next establish the actual receiver's callback/provider-object ownership and thread contract, then prove host-wide late-entry exclusion, render/MFR drain and whole-effect rollback. This packet does not establish ordinary effect discovery or creation without restarting AE.
+
+
 ## Native class-reference call boundary — eight-block pass
 
 2026-10-03 next authorized packet, starting clean72fefe9f2cdac41422fe8c1210791a4fc881a494.

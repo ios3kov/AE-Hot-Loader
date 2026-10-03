@@ -12,6 +12,17 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
+
+## Current checkpoint — factory teardown retains provider code
+
+2026-10-03 DEP-01–08 complete at exact clean, pushed code **a75a5aa15044b4a4606e5fe39a4185f018fbfab4**; [checkpoint](C1_FACTORY_DEPENDENCY_LIFETIME_2026-10-03.md). Five complete reused MEE cleanup bodies were checked against pinned original bytes. Added a bounded lease for1–8 unique, already-resident owned provider images. It holds their code through factory-result destruction, then closes them in reverse order.
+
+In actual owned three-module tests, both dynamic provider callbacks ran after harness handles and the original owner dropped. Event order2→30→40→1→3→41→31 records reference release, both callbacks, object destruction, factory unload, and reverse provider unload. Regular and ASan/UBSan builds pass; wrong-order and reentry failures and fixes are retained. This tests listed owned code lifetime, not provider-object ownership or AE’s full callback graph.
+
+Exact runner:464 Python/no skips,62 Node/22 stages,365 tracked source bytes unchanged. Research CI37144996949 and macOS CI37144996954 succeeded. Raw scanner1/review_required retained:242 text/123 unsupported types/no omissions; one local CLI false positive reviewed without suppression. Original review and exact native artifacts retained; only owned clean scanner clone removed.
+
+Eight bounded steps complete; product partial, AE adapter not ready. Actual AE acquisition/release, registration/apply/render and host dependency/provider-object lifetime remain unknown or not run. Next: establish the real callback/provider-object contract, then host-wide admission, render drain and whole-effect rollback. No unchanged scan or foreign teardown.
+
 ## Current checkpoint — native class-reference call boundary
 
 2026-10-03 CALL-01–08 packet reconciled under rules8.0.0. Tested clean code
