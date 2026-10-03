@@ -116,7 +116,7 @@ def verify(r,observed):
         for phase in ('acquire-started-','acquire-finished-'):envelope(r,observed,phase+str(i))
         common.require(take('suite_name_hex')==name.encode().hex() and integer('suite_version')==version and
           integer('acquire_error')==0 and take('provider_present')=='1','suite unavailable/changed')
-    common.require(take('enumeration_complete')=='1','incomplete enumeration');count=integer('plugin_count')
+    common.require(take('enumeration_complete')=='1','incomplete enumeration');count=integer('plugin_count');payload=0
     common.require(0<=count<=2048,'plugin count out of bounds');plugins=[]
     for i in range(count):
         start=at;file_error=integer('file_error');path_error=integer('path_error');path=decode_hex(take('path_hex'),4095)
@@ -128,6 +128,7 @@ def verify(r,observed):
           not(file_error!=0 and path_error!=0) and not(adapter_error!=0 and (name_error!=0 or version_error!=0)), 'getter-contract mismatch')
         envelope(r,observed,'next-started-'+str(i))
         delta=''.join(k+'='+v+'\n' for k,v in pairs[start:at]).encode()
+        payload+=len(delta);common.require(payload<=1024*1024,'inventory payload out of bounds')
         common.require(envelope(r,observed,'next-finished-'+str(i))==delta,'entry delta differs from terminal')
         plugins.append(dict(file_error=file_error,path_error=path_error,path_hex=path.hex(),adapter_error=adapter_error,
           name_error=name_error,version_error=version_error,adapter_name_hex=adapter.hex(),adapter_version=version))

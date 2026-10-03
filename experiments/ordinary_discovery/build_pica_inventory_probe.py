@@ -112,7 +112,7 @@ def main():
     inert_output = run(str(inert), str(binary), token, sha(binary), str(config))
     if any(control.iterdir()):
         raise ValueError('inert entry produced control state')
-    if any(sha(k['module'])!=k['sha'] or sha(k['resource'])!=k['resource_sha'] or sha(k['info'])!=k['info_sha256'] for k in known):raise ValueError('known effect inputs changed')
+    if any(sha(Path(k['module']))!=k['sha'] or sha(Path(k['resource']))!=k['resource_sha'] or sha(Path(k['info']))!=k['info_sha256'] for k in known):raise ValueError('known effect inputs changed')
     if sha(os_header) != os_header_sha or canonical_existing(Path(run('xcrun', '--show-sdk-path').strip()), 'selected macOS SDK') != os_sdk:
         raise ValueError('OS SDK inputs changed')
     if any(sha(sdk/name) != digest for name, digest in inputs.items()):
