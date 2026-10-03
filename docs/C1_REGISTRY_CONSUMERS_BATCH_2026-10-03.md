@@ -18,7 +18,7 @@ contexts PASS. No feature-set change requested, FEATURE-SET-001 conditional N/A.
 now contain current authority, baseline and retained whole-product obligations.
 Documentation links and final reconciliation remain part of PASS-05.
 
-## PASS-02–03 — bounded file findings
+## PASS-02 and PASS-03 — bounded file findings
 
 Only pinned FLT arm64 file
 SHA-256 `227f0688d4272b1c0be2b2066d53b702e2363fca6002f873ea0acdc6a4d01256`.
@@ -70,9 +70,60 @@ missing/duplicate instructions and retargeted bounds reject; file-only script an
 symbol inventory boundaries checked. All such fixture transcripts are synthetic.
 No installable artifact is created by this mode.
 
-Clean final-source collection, independent original-byte/package verification,
-full regression, bounded static review, both CI and final checkpoint reconciliation
-are pending. Old PASS at 880b55f remains historical, not current evidence.
+Clean code/test source **a293c90e615dd4a67c2d559422ac990756d79908**.
+All twelve collector archives independently PASS: CRC/member uniqueness/hash
+inventory, exact source, complete instruction coverage and original-file hashes.
+For new consumer mode, raw Mach-O corroborates 342 direct/44 indirect branches,
+eight mutation/local-flag stores, five ADRP/ADD address paths to e9d20/e9d28 and
+two original indirect-symbol-table import names for boost get/set_tss_data.
+Across consumer/transaction/entry/isolation modes: 1289 direct/161 indirect
+branches, 33 rebases and two raw import resolutions. No live state read.
+
+Full local regression: **382 Python/no skips, 62 Node, 22 stages PASS** on macOS
+arm64 / Apple clang 21 / Node 24.12.0. Independent runner archive verification:
+25 members, 307 tracked source files and unchanged clean source after execution.
+Local product package NOT RUN; full AE pipeline BLOCKED; live request false.
+Three new collector tests bring the focused suite to 42; guard policy and journal
+are unchanged. Prior 880b55f and the pre-commit exploratory capture stay historical.
+
+Bounded static audit: raw exit 1 / review_required, all selected checks completed;
+1333 inventoried files / 931 unsupported / no omissions; four workflows scanned.
+Sole vibe.no_ratelimit_auth at tools/artifact_manifest.py:71 reviewed as the
+unchanged local argparse CLI false positive; raw finding retained. This does not
+certify dependencies, history, whole-product security, runtime or release.
+
+Research CI [37120969285](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37120969285)
+and macOS CI [37120969284](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37120969284)
+completed/success at exact a293c90; CI uses pinned Node 22.23.2. CI native/package
+and owned-host smoke evidence does not establish Adobe registration/apply/render.
+
+Private local evidence (not an installable handoff):
+
+| Record | SHA-256 |
+|---|---|
+| build-ae-hot-loader/resource-registry-consumers-cb8375b9-mp4r5i1x.zip (31 members) | eb895040ea0bda9f797d2ab922bef5e27a6129d45f78175da8d6ab64fedc7a24 |
+| /private/var/folders/bs/39klz7cd52z6xkm817vj0zjm0000gn/T/AEHL-checks-e_equ6vu.zip | a81d603363633169c01164d3c3928b72fc7a114cdc9c8cc959168c61b8671e18 |
+| ../private-live/consumer-collection-a293c90.json | 0647efb864dfd7474445d8d38613c9b56525ae435678fdecbd38081b9d8220d4 |
+| ../private-live/consumer-independent-a293c90.json | f6f5601ed0dcd925007b8729888e7d9fcda6ad185a89a87af62c8ddb51062ff9 |
+| ../private-live/consumer-fields-a293c90.json | 9660203e0319c3b9e81610f2d492396a52228de52d436b23ef79dc5576005229 |
+| ../private-live/consumer-local-independent-a293c90.json | 80dc0428dc7c3a60c09fd2175b418002929562d79cd0419fc12f1f082d54d5ce |
+| ../private-live/consumer-audit-a293c90.json | 24a8aff506e9f02319e5c3917822f29196c9ce52c35cdeaceffe77b1ad9b7878 |
+| ../private-live/consumer-review-a293c90.json | a999e9ae07ef5c8e3f26903b615b6d1045ad6edbbb9bef5f6f537dfbd5bebab4 |
+| ../private-live/consumer-ci-a293c90.json | 4acf3d224388a1721058794bdf91b5cf3ac2bcf2c7bb487ee46bd2e74b0f080f |
+| ../private-live/rules-v8-adoption-a293c90.json | 0f5a2e15bbb09040514d296ea049a8c371a58904e570f30482edb8f61f150c50 |
+
+Reproduce with collector --review registry-consumers and
+run_research_checks.py --expected-commit a293c90e615dd4a67c2d559422ac990756d79908
+from that clean source. Independent verifier scripts in private-live:
+verify_consumer_final_20261003.py, verify_consumer_fields_20261003.py and
+verify_consumer_local_20261003.py. Their saved receipts above bind exact archives.
+Documentation-only closeout is separate from the tested code/test source.
+
+Acceptance reconciliation: PASS-01–05 complete within the defined offline scope;
+PASS-04 is a NO-GO safety decision for these routes, not native registration PASS.
+Current canonical status/plan/handoff/compatibility/adoption and local links checked.
+All retained whole-product obligations remain explicitly open as below.
+
 
 ## Whole-product reconciliation and cleanup
 

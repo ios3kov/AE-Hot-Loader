@@ -56,4 +56,8 @@ reviewed build profile; its PASS is not install/AE-load PASS. Do not weaken syst
 security or remove quarantine automatically. Windows distribution is outside
 the current Mac-only native research scope; reassess WIN-001 if that scope changes.
 
-For significant multi-block work, TASK-CLOSE-001 requires requirement/task/acceptance/check/Evidence mapping and final reconciliation in the existing plan/checkpoint. FEATURE-SET-001 applies only to a requested feature-set change; preserve retained obligations. CLEANUP-001 requires an ownership-aware cleanup assessment; unknown materials and historical evidence stay in place.
+For significant multi-block work, TASK-CLOSE-001 requires a requirement/task/
+acceptance/check/Evidence mapping and final reconciliation in the existing plan
+and checkpoint. FEATURE-SET-001 applies to requested feature-set changes;
+preserve retained obligations. CLEANUP-001 requires an ownership-aware cleanup
+assessment; unknown materials and historical evidence stay in place.

@@ -51,8 +51,8 @@ No project allowlist for the two new requirement IDs needed changing.
   router PASS; no Product Discovery / Reference Audit required, API-SOURCES selected
   for research/implementation. User authority remains separately constrained.
 - Published tag/commit/VERSION and clean rule checkout: PASS.
-- Product source regression and current documentation links: pending PASS-05,
-  recorded with final exact-source evidence in the consumer batch checkpoint.
+- Product source regression and current documentation links: PASS at exact
+  a293c90; full results and whole-scope reconciliation in the consumer batch checkpoint.
 
 Versioned errata consulted: entries cover historical 5.0.0; no v8.0.0 defect
 asserted there. Local rules release self-test is not publisher CI certification.

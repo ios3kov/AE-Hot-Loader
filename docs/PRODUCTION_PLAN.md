@@ -25,11 +25,11 @@ no installation, AE launch/attach/process read, private invocation or teardown.
 
 | ID / requirement | Block and observable acceptance | Check / phase and dependencies | Status / evidence |
 |---|---|---|---|
-| PASS-01 / STANDARD-VERSION, AI-STATE, TASK-CLOSE | Adopt exact v8.0.0; restore goal, authority, applicability and all remaining obligations in canonical records | Verify VERSION/tag/source; standard self-test/router and current documentation links; Development | NOT RUN; existing v6.2 evidence stays historical |
-| PASS-02 / API-SOURCES, ownership | Bounded registry destruction/replacement/settings-reader and project read/write scope review, identifying owners/locks and limits | Exact pinned FLT file only; complete fixed windows and original-byte verification | NOT RUN; requires acceptance above |
-| PASS-03 / CODE-SAFETY, DEBUGGING | Trace preference/update/replacement errors and publication order; distinguish local cleanup from proven rollback | Same file identity; inspect calls/unwind; unknown transitive contracts stay explicit | NOT RUN; depends on PASS-02 capture |
-| PASS-04 / SAFE, RENDER | Decide whether reviewed paths establish continuous exclusion of registry consumers/dispatch/MFR | Evidence-backed go/no-go, covering reentry and escaped owners; do not treat counters/locks as a barrier without proof | NOT RUN; dependent native adapter remains BLOCKED |
-| PASS-05 / TEST-CONTROL, REPRO, TASK-CLOSE | Implement only an evidenced related change; independently verify evidence, available regression, both CI and reconcile whole current scope | Clean source identity; archive integrity, refusal tests, bounded review, exact-source CI; update checkpoint and cleanup assessment | NOT RUN; runtime/release not implied |
+| PASS-01 / STANDARD-VERSION, AI-STATE, TASK-CLOSE | Adopt exact v8.0.0; restore goal, authority, applicability and all remaining obligations in canonical records | Verify VERSION/tag/source; standard self-test/router and current documentation links; Development | PASS; v8 adoption and current checkpoint; v6.2 history preserved |
+| PASS-02 / API-SOURCES, ownership | Bounded registry destruction/replacement/settings-reader and project read/write scope review, identifying owners/locks and limits | Exact pinned FLT file only; complete fixed windows and original-byte verification | PASS (bounded); 14 windows, raw bytes and owner/lock findings at a293c90 |
+| PASS-03 / CODE-SAFETY, DEBUGGING | Trace preference/update/replacement errors and publication order; distinguish local cleanup from proven rollback | Same file identity; inspect calls/unwind; unknown transitive contracts stay explicit | PASS (bounded); post-publication prefs/error and local-unwind paths; transitive rollback UNKNOWN |
+| PASS-04 / SAFE, RENDER | Decide whether reviewed paths establish continuous exclusion of registry consumers/dispatch/MFR | Evidence-backed go/no-go, covering reentry and escaped owners; do not treat counters/locks as a barrier without proof | PASS decision: NO-GO for reviewed mechanisms; native adapter BLOCKED, product goal retained |
+| PASS-05 / TEST-CONTROL, REPRO, TASK-CLOSE | Implement only an evidenced related change; independently verify evidence, available regression, both CI and reconcile whole current scope | Clean source identity; archive integrity, refusal tests, bounded review, exact-source CI; update checkpoint and cleanup assessment | PASS offline; exact a293c90 regression/archives/both CI; runtime/release still open |
 
 Retained whole-product obligations (no deferral or scope removal):
 
@@ -61,20 +61,37 @@ Primary Stage C goal:
 Loaded binaries, registry publication, application and rendering are separate
 claims.
 
-## Current five-block pass — verification pending
+## Current five-block pass — offline PASS, live adapter NO-GO
 
-Rules v8.0.0 are adopted at the supplied commit. Current acceptance and retained
-whole-product obligations are mapped in PRODUCTION_PLAN. Bounded file review of
-registry destruction/replacement/settings consumers, preference failure and
-thread-local project serialization scopes is complete; the new file-only mode
-captures 14 windows / 2413 instructions / 150 anchors. Focused 42 collector tests
-PASS. Clean-source package/independent byte verification, full regression and
-both CI remain pending; previous 880b55f PASS does not certify these changes.
-[Current batch and no-go decision](C1_REGISTRY_CONSUMERS_BATCH_2026-10-03.md).
-Reviewed paths do not establish continuous all-reader/dispatch/MFR exclusion or
-safe rollback. Native registration adapter remains BLOCKED; backend NOT READY;
-registration/apply/render NOT RUN and A/B/D/release obligations remain open.
-No host action or new live authority. Cleanup assessed, no removal/move required.
+Rules v8.0.0 adopted at the supplied 132b7cd commit. All five scoped offline
+blocks are complete at code/test source **a293c90e615dd4a67c2d559422ac990756d79908**:
+14 fixed FLT windows / 2413 instructions / 150 anchors; original bytes independently
+corroborate 342 direct/44 indirect branches, eight state stores, five TSS-global
+address paths and two imported boost get/set_tss_data identities. All twelve
+clean-source file-mode archives independently verified.
+
+Local regression **382 Python/no skips, 62 Node, 22 stages PASS**. Research CI
+[37120969285](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37120969285) and
+macOS CI [37120969284](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37120969284)
+completed/success at exact a293c90. Bounded static review completed; raw exit 1
+retains the sole reviewed local argparse false positive. [Exact evidence,
+findings and decision](C1_REGISTRY_CONSUMERS_BATCH_2026-10-03.md).
+
+We confirmed that project serialization scopes maintain thread-local data and
+cannot be used as global exclusion; preference errors have a path after registry
+publication, with no proven registration rollback. Individual registry locks,
+settings snapshots and idle/loading counters do not establish the required
+continuous all-reader/dispatch/MFR exclusion. **NO-GO for a live adapter using
+these reviewed mechanisms**; this is not a proof that the product is impossible.
+
+Backend NOT READY; registration/apply/render NOT RUN; historical unchanged scan
+FAIL preserved. A/B integrated acceptance, D compatibility/hardening and release
+remain open; no acceptance was removed or weakened. Next: identify a specific
+prospective admission/drain provider and proof procedure before extending private
+ABI research; actual ownership/completion/error contracts are still required.
+No executable live packet or renewed host authority. Cleanup assessed; preserve
+unique evidence, old/new rule checkouts and installed helpers; no deletion/move.
+Documentation-only closeout must not be presented as the code SHA tested above.
 
 ## Latest C1 registry transaction batch — offline PASS
 
@@ -618,7 +635,7 @@ mandatory checks pass for the exact candidate:
 Historical Control Shell success remains useful research but is not evidence of
 arbitrary ordinary-effect late registration.
 
-## Validation handoff and platform distribution under 6.0.0
+## Validation handoff and platform distribution — current v8.0.0
 
 A diagnostic Validation Build has its own stated question and pre-handoff
 prerequisites (candidate identity/integrity, bounded inert/refusal behavior,

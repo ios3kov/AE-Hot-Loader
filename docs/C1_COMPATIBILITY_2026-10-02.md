@@ -27,7 +27,7 @@ Compatibility Status; do not infer a supported AE range from a single build.
 | File-only registry transaction collector and continuous-lease refusal policy, pinned aelib/FLT arm64 files | source 880b55f; [six-step review](C1_REGISTRY_TRANSACTION_BATCH_2026-10-03.md); native helpers/profile unchanged | 379 local Python/62 Node/22 stages PASS; 3063 instructions/484 anchors/578 direct/71 indirect branches/9 raw fields/3 counter-address paths PASS; Research CI [37120018578](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37120018578) and macOS CI [37120018592](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37120018592) both completed/success at exact 880b55f | UNKNOWN for runtime: startup/selected-lock/counter/completion file findings and unbound refusal policy only; enforceable all-reader/MFR lease, transitive failure semantics and actual registration/apply/render unproven |
 | Full tool, other AE builds/versions/platforms | no complete exact distributed-candidate/runtime evidence | NOT RUN | UNKNOWN; no minimum/current endpoint interpolation |
 
-Current consumer review: [five-block batch](C1_REGISTRY_CONSUMERS_BATCH_2026-10-03.md). Exact pinned AE 25.6x101 FLT arm64 file scope only; full-source checks pending, AE compatibility UNKNOWN. No runtime or broader-host support claim.
+Current consumer review: [five-block batch](C1_REGISTRY_CONSUMERS_BATCH_2026-10-03.md). Exact pinned AE 25.6x101 FLT arm64 file scope only; 382 Python/no skips, 62 Node, 22 stages and both exact-a293c90 CI PASS; AE compatibility UNKNOWN. No runtime or broader-host support claim.
 
 ## Relevant API/layout inventory and omissions
 

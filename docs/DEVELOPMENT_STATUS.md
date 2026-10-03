@@ -12,20 +12,37 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
-## Current five-block pass — verification pending
+## Current five-block pass — offline PASS, live adapter NO-GO
 
-Rules v8.0.0 are adopted at the supplied commit. Current acceptance and retained
-whole-product obligations are mapped in PRODUCTION_PLAN. Bounded file review of
-registry destruction/replacement/settings consumers, preference failure and
-thread-local project serialization scopes is complete; the new file-only mode
-captures 14 windows / 2413 instructions / 150 anchors. Focused 42 collector tests
-PASS. Clean-source package/independent byte verification, full regression and
-both CI remain pending; previous 880b55f PASS does not certify these changes.
-[Current batch and no-go decision](C1_REGISTRY_CONSUMERS_BATCH_2026-10-03.md).
-Reviewed paths do not establish continuous all-reader/dispatch/MFR exclusion or
-safe rollback. Native registration adapter remains BLOCKED; backend NOT READY;
-registration/apply/render NOT RUN and A/B/D/release obligations remain open.
-No host action or new live authority. Cleanup assessed, no removal/move required.
+Rules v8.0.0 adopted at the supplied 132b7cd commit. All five scoped offline
+blocks are complete at code/test source **a293c90e615dd4a67c2d559422ac990756d79908**:
+14 fixed FLT windows / 2413 instructions / 150 anchors; original bytes independently
+corroborate 342 direct/44 indirect branches, eight state stores, five TSS-global
+address paths and two imported boost get/set_tss_data identities. All twelve
+clean-source file-mode archives independently verified.
+
+Local regression **382 Python/no skips, 62 Node, 22 stages PASS**. Research CI
+[37120969285](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37120969285) and
+macOS CI [37120969284](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37120969284)
+completed/success at exact a293c90. Bounded static review completed; raw exit 1
+retains the sole reviewed local argparse false positive. [Exact evidence,
+findings and decision](C1_REGISTRY_CONSUMERS_BATCH_2026-10-03.md).
+
+We confirmed that project serialization scopes maintain thread-local data and
+cannot be used as global exclusion; preference errors have a path after registry
+publication, with no proven registration rollback. Individual registry locks,
+settings snapshots and idle/loading counters do not establish the required
+continuous all-reader/dispatch/MFR exclusion. **NO-GO for a live adapter using
+these reviewed mechanisms**; this is not a proof that the product is impossible.
+
+Backend NOT READY; registration/apply/render NOT RUN; historical unchanged scan
+FAIL preserved. A/B integrated acceptance, D compatibility/hardening and release
+remain open; no acceptance was removed or weakened. Next: identify a specific
+prospective admission/drain provider and proof procedure before extending private
+ABI research; actual ownership/completion/error contracts are still required.
+No executable live packet or renewed host authority. Cleanup assessed; preserve
+unique evidence, old/new rule checkouts and installed helpers; no deletion/move.
+Documentation-only closeout must not be presented as the code SHA tested above.
 
 ## Latest C1 registry transaction batch — offline PASS
 
@@ -242,7 +259,7 @@ Next: file-only ordinary-effect publication/isolation research. Registration/
 apply/render and release remain blocked; no further live action is authorized
 by this consumed diagnostic scope.
 
-## Current rules baseline migration — 6.2.0
+## Historical rules baseline migration — 6.2.0
 
 User explicitly requested v6.2.0. Published annotated tag/source verified;
 AI_ENTRYPOINT and applicable changes read. Standard self-test PASS: 136 files,
