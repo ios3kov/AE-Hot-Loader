@@ -13,7 +13,33 @@ Previous status is preserved at
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
 
-## Current packet — online and independent research reconciliation
+## Current packet — checkpoint text correction
+
+2026-10-03, baseline `0d29d70070cd1131b56255052962c962d66a3a6d`;
+the user's latest instruction requests checkpoint corrections without new search.
+[Revised source audit and hypotheses](C1_WEB_RESEARCH_RECONCILIATION_2026-10-03.md).
+Historical AE17/x86-64 crash logs corroborate three scan symbols and ML loading in
+a MediaCore stack; no ML→ordinary-registry or late-call contract follows.
+H5 uses permitted main-thread reentry and separate preview/MFR observation.
+H6 requires proving safety of the actual changed read set; stable descriptors
+could avoid render drain if all affected lifetime/reentry/state conditions hold.
+H8 separates partial-failure atomicity/recovery from successful-record unregister.
+Effect Manager restart remains a product signal; no internal append prohibition.
+
+No new search follows the scope correction. Preliminary symbol locations captured
+earlier are retained privately; no complete body review or live suite mapping.
+DOCFIX-01–03 documentation DONE:167 local links/table shapes/diff PASS,241
+non-Markdown files and all373 files outside the four edited documents unchanged.
+Local full executable regression NOT RUN for this Markdown-only scope; previous
+scanner/CI remain historical. Exact publication/CI state and retained checks in
+`/private/tmp/aehl-reader-route-d6u09f1y`; no cleanup removal needed.
+Executable gate/profile/SDK bytes unchanged; existing native refusal policy and
+all A/B/C1/C2/D/release obligations retained. Product PARTIAL, adapter unbound,
+native implementation/trials BLOCKED, registration/apply/render NOT RUN.
+Previous exact-source CI37154912122 /37154912113 succeeded on0d29d70 and is not
+relabelled as verification of this edit.
+
+## Previous packet — online and independent research reconciliation
 
 2026-10-03 documentation research from clean
 `ecc6c28eeea72bcca81e1aae7d1ad70abd95bcec`;

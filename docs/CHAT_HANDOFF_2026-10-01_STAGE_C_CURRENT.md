@@ -25,7 +25,25 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
-## External research — current packet
+## Checkpoint correction — current scope
+
+The user's latest instruction requests only checkpoint text correction, no new
+search. Baseline0d29d70; [revised hypotheses](C1_WEB_RESEARCH_RECONCILIATION_2026-10-03.md).
+Use actual changed-state/read-set safety, distinguish partial failure from
+successful-record unregister, and main-thread AEGP reentry from unsupported
+worker calls. Historical crash stacks corroborate scan/ML symbols only; Effect
+Manager restart is a product signal. Product/native gate policies are retained.
+Preliminary MEE reader symbol locations gathered before the scope change are
+private leads; no body tracing or live suite mapping occurred. Further READ
+research is deferred by the user's text-only scope. DOCFIX-01–03 documentation
+DONE:167 local links/table shapes/diff PASS,241 non-Markdown and373 other source
+files unchanged. Local full executable regression NOT RUN; prior CI/scanner remain
+historical. Exact publication/CI state and checks in
+`/private/tmp/aehl-reader-route-d6u09f1y`; owned evidence retained, no deletion.
+Adapter unbound,
+implementation/trials BLOCKED, registry/apply/render NOT RUN. C1 remains research.
+
+## External research — previous packet
 
 Research/documentation from clean ecc6c28; exact SDK25.6_61, pinned guide and
 original-author sources reconcile14 claims from independent reports. Public late

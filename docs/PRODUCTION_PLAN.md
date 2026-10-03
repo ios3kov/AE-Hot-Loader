@@ -12,7 +12,63 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
-## External research reconciliation — current bounded pass
+## Checkpoint correction — current text-only scope
+
+The user's latest explicit instruction limits this pass to checkpoint corrections
+without new search. Baseline clean `0d29d70070cd1131b56255052962c962d66a3a6d`.
+Rules8.0.0 /AI_ENTRYPOINT, API-SOURCE, AI-STATE, TASK-CLOSE and CLEANUP apply.
+Reuse already inspected crash-log and exact SDK sources; no further file-body
+research, native experiment or executable policy change.
+
+| ID | Acceptance / check | State |
+|---|---|---|
+| DOCFIX-01 | Correct crash-log provenance, Effect Manager inference and H5/H6/H8; distinguish public-key mapping, affected readers and partial failure | DONE; scoped text review |
+| DOCFIX-02 | Preserve H1/H2/H3/H9, product/A/B/C1/C2/D/release and current native refusal policy; scope safe conditional H4/H5/H8 plans | DONE; unchanged executable bytes |
+| DOCFIX-03 | Verify links/diff/unchanged executable and SDK bytes; commit/push, record exact CI state and retain evidence | DONE for documentation; exact publication/check states in private closeout |
+
+[Revised checkpoint](C1_WEB_RESEARCH_RECONCILIATION_2026-10-03.md) preserves the
+original report through its immutable commit link. Mutation safety must match
+the actual read set; global render drain is one possible mechanism. Successful
+session-resident append does not inherently require unregister; partial-failure
+atomicity/recovery still requires proof. This distinction does not silently
+remove retained reload/recovery product obligations or weaken ResourcePassGate.
+Adapter remains unbound, native implementation/trials BLOCKED and registration /
+apply / render NOT RUN. Existing research CI37154912122 and macOS CI37154912113
+passed on0d29d70; those results are historical for this documentation revision.
+167 local links/table shapes/diff checks PASS,241 non-Markdown files unchanged,
+all373 files outside the four edited documents preserved. Local full executable
+regression NOT RUN for this text-only scope; no old scanner/CI is promoted to a
+new source PASS. Exact commit/remote/automatically triggered CI state and retained
+receipts: `/private/tmp/aehl-reader-route-d6u09f1y`. No cleanup removal needed.
+
+## Reader-side registration route — preliminary work, deferred by scope correction
+
+The user's next independent report sharpens the question from a presumed global
+render stop to the actual mutable read set. Start from clean
+`0d29d70070cd1131b56255052962c962d66a3a6d`, accepted rules8.0.0 /AI_ENTRYPOINT;
+API-SOURCE, AI-STATE, TASK-CLOSE and CLEANUP. C1 file-only research; native safety
+remains Critical. Preserve product, existing refusal policy and all open gates.
+No AE process access, suite acquisition, launch/attach, install or private call.
+
+| ID | Task / acceptance | Check / dependency | State |
+|---|---|---|---|
+| READ-01 | Reconcile new sources and exact public key/suite contract | Crash-log versions/architecture and SDK25.6_61 Effect Suite5 declarations read before scope correction | DONE for bounded source facts |
+| READ-02 | Locate target reader implementations in original files | Existing aelib/FLT/MEE file pins; six selected MEE symbol/body-boundary candidates, no disassembly or actual suite proof | PARTIAL; further research deferred |
+| READ-03 | Link public key consumers to registry writer if substantiated | No complete reader-body review or live suite mapping performed | NOT RUN; deferred |
+| READ-04 | Separate mutation safety, failure atomicity and successful-record lifetime | Conceptual correction incorporated in DOCFIX; no alternative native contract established | Documentation only |
+| READ-05 | Reconcile documentation and retain evidence | Owned preliminary inventories retained; current closeout is DOCFIX-03 | Retained; body research deferred |
+
+Global render drain is one possible protection, not an established necessity for
+every hypothetical insertion route. All consumers of actually changed state must
+remain safe, including lifetime and reentry. Rollback of partial failure differs
+from unregister of a successfully published record. These research distinctions
+do not yet establish an alternative executable safety contract.
+The user's later text-only instruction supersedes further READ collection in this
+pass. Saved symbols are locations for a possible future investigation, not proof
+that the acquired live Effect Suite points to them. No additional source search
+or original-body capture follows that instruction.
+
+## External research reconciliation — previous bounded pass
 
 The user's online-research request and supplied independent reports continue C1
 research from clean `ecc6c28eeea72bcca81e1aae7d1ad70abd95bcec`. Rules8.0.0,

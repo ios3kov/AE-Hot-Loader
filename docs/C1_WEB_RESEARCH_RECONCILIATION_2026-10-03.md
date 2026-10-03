@@ -2,6 +2,10 @@
 
 Date: 2026-10-03. Branch: `research/ordinary-plugin-discovery`.
 Clean starting source: `ecc6c28eeea72bcca81e1aae7d1ad70abd95bcec`.
+Checkpoint text revised from `0d29d70070cd1131b56255052962c962d66a3a6d` at the
+user's explicit request to correct the checkpoint without further research.
+The [original published checkpoint][original] remains historical; its checks
+and source identities are not reattributed to this revision.
 Accepted rules:8.0.0 / `132b7cd32873ba7328e3128ffbb33e1929b74d45`;
 AI_ENTRYPOINT first, API-SOURCE-001, AI-STATE-001, TASK-CLOSE-001, CLEANUP-001.
 Production-engineering research/review workflow. Target remains AE2025,
@@ -13,8 +17,8 @@ No supported public late-publication mechanism was found in the reviewed SDK
 and sources. That result does not prove that every internal route is impossible.
 No ordinary third-party effect absent at startup has been registered, applied
 and rendered without restarting AE in this packet. Host adapter remains unbound;
-actual admission/drain, initial factory/ABI/thread/owners and whole-effect inverse
-remain UNKNOWN. Native trials remain BLOCKED / NOT RUN.
+mutation safety for the actual changed state, initial factory/ABI/thread/owners
+and partial-failure handling remain UNKNOWN. Native trials remain BLOCKED / NOT RUN.
 
 The user's two supplied research attachments and subsequent architectural
 argument were audited as external evidence. The final attachment improves the
@@ -40,6 +44,8 @@ no SDK or Adobe binary source is redistributed. Paths below are relative to
 | [MFR][mfr], [selectors][selectors] | File commit `1ff44f1326c6a304725d41bbba3ec47f909cc80a`, 2025-02-11; blobs `e065ebdb452d4f157773876ce5c62a11e04db4e2`, `cb2f461d39b6382c3d9e02c3dd0818fb929fd553` | Host dispatch and selected flag semantics; not a registry mutation API |
 | [Premiere reload][ppro] | File commit `8f424b5fb42c41e2ffc15886289f707bb02067f0`, 2025-01-27; blob `03d0b6cd976ab8449ac96acfc0e1e7d504782111` | Premiere launch cache; do not transfer to AE |
 | [Effect Manager][manager] | Adobe Help, read 2026-10-03 | Enable/disable applied at restart; not proof of universal impossibility |
+| [Startup scan crash log][scanlog] | Author's AE17.1.2 / x86-64 report, 2020-08-14; checked before this text-only revision | `PLUGp_ScanFile`, `PLUG_GetPiPL`, `FLT_PLUGScanFunc` observed in a scan/load stack; no late-call/owner/inverse contract |
+| [MediaCore crash log][medialog] | Author's AE17.0.6 / x86-64 report, 2021-01-07; checked before this text-only revision | `ML::LoadPlugins` / `ML::PluginSupport::LoadAllPlugins` and `ae::prem::MediaCoreData`; no installed-effect-registry bridge established |
 | [AEXCompat loading investigation][loading], [world-safety source][worlds] | Commit `7113ebfeccfccfc29c1ba009a06c1cfff6a56c56`, 2026-10-03; blobs `0f6ff85ef1edbfc23acd87069c5d80fcfd361dd7`, `9349d167414ba29e69e1e3221895506f80f88772` | Original author's compatibility-host code/observations; Windows effects and a different host |
 
 The rolling PiPL guide now includes SDK26.5 and Premiere27-only additions; the
@@ -98,32 +104,94 @@ lifecycle tasks. Neither proves ordinary third-party late publication in AE2025.
 The first attachment's lack-of-lock/impossible conclusions and the latest
 attachment's remaining-route priority therefore receive different verdicts.
 
-## Next evidence and safe dependency order
+The public crash logs independently corroborate participation of the three named
+PLUG/FLT scan symbols in those historical builds. `FLTp_FiltSetup`,
+`FLTp_AddEffect` and `FLT_FilterRegistry::RegisterNewFilter` remain grounded in
+this project's original-file artifacts. `ML::LoadPlugins` is present in the
+MediaCore log: do not describe it as absent from public search. Its bridge to
+the ordinary installed-effect registry is not established by that stack.
+Effect Manager's restart behavior remains a product signal, not a prohibition
+of an internal append operation.
+
+## Corrected hypotheses and next evidence
 
 The internal startup publication chain is a retained hypothesis, not the only
-logically possible private solution. The next useful work should test new caller,
-context and recovery edges, rather than recapture unchanged Pause/Flush/SUS bodies.
+logically possible private solution. Trace the Effect Suite readers/apply path
+to the actual owner and then relate it to startup publication; neither a key nor
+a `this` pointer is presumed to encode registry identity. The selected SDK declares
+`AEGP_InstalledEffectKey` as `A_long`, not a pointer type; its internal mapping
+still needs evidence. An adapter, index or copied record can explain different
+objects on the writer/reader paths.
 
-| Order | Bounded research question | Observable evidence / refusal criterion |
-|---|---|---|
-| 1 | Which original host caller creates the metadata callback context and owns the publication receiver? | Exact source-image/body identities, context creation/destruction, module association, retained owners and legal thread; a cached raw pointer alone fails |
-| 2 | What host entry establishes selector exclusion, and which consumers can bypass it? | Trace callers outside the already reviewed dispatcher/per-effect lock; include UI, installed-key readers, future MFR admission, host queues and plugin-owned callbacks. A snapshot counter or one executor flush fails |
-| 3 | Is there a full per-record failure inverse before any late mutation? | Original error/unwind paths restore vector/map/index/canonical/preferences/notifications while preserving old effects and owner lifetimes. Setdown, missing stub or process teardown alone fails |
-| 4 | After a safe instrumentation contract and current live authority exist, calibrate startup publication against public installed keys | Known-good owned fixture, exact native identities, callback/descriptor↔installed-key/match-name correlation. This is calibration, not late-load acceptance |
-| 5 | Only after1–4 and exact safety checks, evaluate late publication and recovery | New ordinary third-party binary absent at startup: registry→apply→render without restart, stable existing effects, bounded repeated/error recovery |
+| Hypothesis | Retained or corrected checkpoint |
+|---|---|
+| H1 | Public late-add route not found; internal impossibility is not proved |
+| H2 | `dlopen` plus an owned `PluginDataEntryFunction2` callback is not target registry proof without a valid host load-context |
+| H3 | PICA is not treated as the ordinary registry without exact ordinary-path LISTED and installed-key correlation; existing NOT_LISTED remains bounded evidence |
+| H4 | Correlate a known-good startup publication through descriptor ownership and reader/key/apply mapping; differing `this` values alone do not reject FLT |
+| H5 | Replace worker-thread AEGP iteration with permitted main-thread enumeration before, at actual reentry opportunities and after publication; observe another effect's preview/MFR separately |
+| H6 | Determine whether in-flight rendering reads the mutable installed catalog or separately retained stable descriptors; prove safety of the actual changed state |
+| H7 | Retain actual descriptor/module/callback owners with a substantiated lifetime and thread contract |
+| H8 | Establish atomic commit or recovery from partial failure; unregister of a successful session-resident record is a separate requirement |
+| H9 | Existing-effect reload, CEP and Premiere cache behavior remain outside ordinary late-add acceptance |
 
-The latest attachment's H2 null/fabricated/retained callback trials, H5 late calls
-under active preview, H6 preference/menu mutation and H8 deliberately interrupted
-insertion are not the next authorized operations. They depend on currently
-missing technical contracts. Public AEGP calls must respect their main-thread
-contract: another AEGP iterator is not license to call suites from a random
-worker thread. A few successful trial windows cannot establish universal race
-freedom; documented coverage and continuous exclusion are required independently.
+For H6, global render drain is one possible protective design, not a requirement
+for every safe append architecture. Stable retained descriptors can remove the
+need to drain rendering only when existing instances do not use invalidated
+mutable state and other changed state, callbacks and reentry remain safe. MFR
+selector guarantees alone say nothing about installed-catalog access. Possible
+alternatives include main-thread confinement with controlled reentry, retained
+immutable snapshots, or complete synchronization of the affected readers.
+None is established for the target build here; the current executable refusal
+policy is unchanged.
+
+| Operation | Requirement for append-only publication until session end |
+|---|---|
+| Rollback of an unfinished insertion | Required if mutation can leave visible partial state on failure; alternatively establish a non-failing commit after preparation |
+| Unregister of a successfully published record | Required only if accepted behavior includes removal/unload/re-registration within that session |
+
+Vector-before-map publication and collision replacement prove neither atomicity
+nor safe rollback. Failure recovery includes whichever indices, names, preferences,
+owners and callbacks the discovered operation changes. Session residency is a
+hypothesis for late-add; retained A/B/C2 and other existing product obligations
+are not silently removed or satisfied by it.
+
+The three proposed actions are conditional experimental plans, not operations
+performed or authorized by this text-only correction:
+
+1. **H4 — known-good startup calibration.** An owned ordinary fixture installed
+   before launch must connect writer arguments to count/iteration/match-name and
+   `AEGP_ApplyEffect`, including descriptor owner after return, thread and
+   destruction/release boundaries. Follow intermediate indexes/copies before
+   rejecting a writer as unrelated.
+2. **H5 — one new match name after launch.** Only a substantiated connection and
+   the technical safety prerequisites permit testing idle without preview/cache,
+   preview/MFR of another effect, and another AEGP's actual main-thread reentry.
+   A key must resolve to the new match name, apply and recognizable real output;
+   existing keys/apply must remain valid. Main-thread code cannot enumerate
+   "during" a synchronous call unless an actual reentry opportunity exists.
+3. **H8 — the interruption boundary inside the calibrated registration.**
+   Establish that a failure before completion leaves the entry unobservable, or
+   that a complete compensating path restores changed state, or that commit
+   cannot fail after preparation. This is partial-failure recovery, not removal
+   of a live successful record. No deliberately interrupted host call is run here.
+
+No worker-thread AEGP call is a valid window. Pause, Flush, U_SuspendContext and
+Death are not publication transactions. Three successful windows do not prove
+race freedom. A failed direct inserter call can expose a missing context or
+completion step and does not disprove all late-publication routes.
+Implementation remains BLOCKED: no substantiated callable host entry, no live
+AE2025 arm64 Effect Suite correlation, no demonstrated render/read-set contract,
+and no partial-failure rule. C1 research is already the current stage; one
+successful late call does not close its acceptance gates.
 
 No startup calibration, install, launch/attach, callback replay, late insertion,
 fault injection, unload, preference mutation or user-project operation ran here.
+No further search or original-body investigation follows the user's correction
+request in this revision. Previously collected preliminary symbol-location
+evidence is retained privately and is not presented as a live suite contract.
 
-## Packet acceptance, verification and retention
+## Previous packet acceptance, verification and retention
 
 NET-01–05: DONE for documentation research: pinned sources/SDK, corrected claim
 matrix, useful new consumer class and explicit next dependency order. No native
@@ -149,6 +217,21 @@ no deletion or relocation is needed. Historical evidence and unknown materials
 remain untouched; the packet creates
 no installable artifact or product/runtime readiness claim.
 
+## Checkpoint correction verification
+
+Current edit baseline: clean `0d29d70070cd1131b56255052962c962d66a3a6d`.
+DOCFIX-01–03 cover the user's text-only correction, preservation of product/native
+refusals, and documentation/source/publication checks; DONE for documentation.
+167 local links/table shapes/diff PASS,241 non-Markdown and373 files outside
+the four edited documents unchanged. Their current results and
+exact publication/CI state are retained in
+`/private/tmp/aehl-reader-route-d6u09f1y`. This is a documentation correction,
+not a new completed reader/body investigation or live safety proof. No executable
+file, native profile, SDK, existing gate or historical evidence is changed.
+Local full executable regression is NOT RUN for this Markdown-only revision.
+Owned preliminary symbol inventories and documentation receipts remain retained;
+no cleanup removal is needed.
+
 [symbol]: https://github.com/docsforadobe/after-effects-plugin-guide/blob/449b8c5eaf4c8619d2abffe00dbbb22a92bc5f1a/docs/intro/symbol-export.md
 [mfr]: https://github.com/docsforadobe/after-effects-plugin-guide/blob/1ff44f1326c6a304725d41bbba3ec47f909cc80a/docs/effect-details/multi-frame-rendering-in-ae.md
 [selectors]: https://github.com/docsforadobe/after-effects-plugin-guide/blob/1ff44f1326c6a304725d41bbba3ec47f909cc80a/docs/effect-basics/command-selectors.md
@@ -157,3 +240,6 @@ no installable artifact or product/runtime readiness claim.
 [plist]: https://community.adobe.com/questions-529/plugin-loading-issue-56930
 [loading]: https://github.com/onmokoworks/AEXCompat/blob/7113ebfeccfccfc29c1ba009a06c1cfff6a56c56/docs/AE_EFFECT_LOADING_INVESTIGATION_2026-07-22.md
 [worlds]: https://github.com/onmokoworks/AEXCompat/blob/7113ebfeccfccfc29c1ba009a06c1cfff6a56c56/minihost/src/worker_world_safety.cpp
+[scanlog]: https://community.adobe.com/t5/after-effects-discussions/after-effects-keeps-crashing-on-startup/td-p/11361271
+[medialog]: https://community.adobe.com/t5/after-effects-discussions/i-have-a-problem-with-after-effects/td-p/11733793
+[original]: https://github.com/ios3kov/AE-Hot-Loader/blob/0d29d70070cd1131b56255052962c962d66a3a6d/docs/C1_WEB_RESEARCH_RECONCILIATION_2026-10-03.md
