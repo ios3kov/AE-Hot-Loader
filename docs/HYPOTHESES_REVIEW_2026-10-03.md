@@ -35,6 +35,16 @@ No Adobe headers or binaries are added to Git.
 - `Examples/Headers/SP/SPPlugs.h:45-54`: exact suite name is
   `SP Plug-ins Suite`; default revision is **4**, with separate 5/6 constants.
   Do not substitute a higher revision or assume it is exposed by AE.
+- `SPPlugs.h:328-378`: revision **6** uses **SPXPlatPluginsSuite** and
+  **AddXPlatPlugin**, with XPlatFileSpec, instead of the revision-4 platform file
+  type. `SPFiles.h:114-129` specifies version 1 and CFURLRef on macOS. A higher
+  revision must use its exact declared structure, not a revision-4 pointer cast.
+  Compile-only assertions for the revision-6 signature and its distinction from
+  AddPlugin also PASS; source SHA-256
+  `6a8c1de64ed8eeebf4db21ffc64b8b6337832cf17ec990a07f70787f354c0c53`,
+  receipt-v6 SHA-256
+  `0c52c5e8e4b255f4189be31615ef26ca3c95ba8e2d7e37ecd36d86da18a765e2`.
+  This offers another declared contract to investigate; AE availability is UNKNOWN.
 - `SPPlugs.h:133-150`: AddPlugin needs a plug-in list, platform file specification,
   PiPL, adapter name and adapter-specific information; its output is SPPluginRef.
   That is not a private FILE_Spec, FLT FCSpec or proof of installed-effect identity.
@@ -156,7 +166,41 @@ descriptor and shell protocol cannot be joined by guessed pointer casts.
 
 ## Closeout and retained acceptance
 
-Current clean-source regression and CI identities will be appended after execution.
+Code/test source **65edce84340fd919e738be65100a8ea73d1c2c31**.
+Full available local regression: **383 Python/no skips, 62 Node, 22 stages PASS**.
+The new fifteen shell transaction checks count as one aggregate Python test.
+Independent archive/source/log verification: 25 members, 309 tracked files,
+CRC/complete hash inventory/source unchanged PASS. Private archive
+`AEHL-checks-dz_04_xh.zip`, SHA-256
+`de171f3e1db08dbfb908b974bc5723cb3db25e718e726f31a491c2611c218054`;
+verification receipt `hypotheses-independent-65edce8.json`, SHA-256
+`7321f18c27f1034e4ec38c87cce4d665751d3ab0e54b122423840f05e98713ee`.
+The first verifier assumed TAP output; it was corrected to the observed Node
+spec formatter without rerunning or relabelling the product tests.
+
+Bounded static audit at clean 65edce8: all nine selected checks completed,
+1538 inventoried / 1089 unsupported files, no omissions, four workflows scanned.
+Raw exit **1 / review_required** retained. Sole finding is the previously reviewed
+`vibe.no_ratelimit_auth` at tools/artifact_manifest.py:71: local argparse CLI,
+not an HTTP authentication route. No suppression or false green exit added.
+Private report `hypotheses-audit-65edce8.json`, SHA-256
+`3c84ac425db40f6aacf9288a8b1e1aed070ae5a1cf307932a5988411895686a3`.
+Source/scope review receipt `hypotheses-review-65edce8.json`, SHA-256
+`8dcdedd54fa353a6e72de841a2e4ed89b41f011caef4aa5752104e2adf68a067`.
+[Research CI 37121857027](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37121857027)
+completed/success at exact 65edce8, with native-syntax and panel-contract jobs
+successful. [macOS CI 37121857015](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37121857015)
+also completed/success at the same exact source, including build/ABI smoke/package
+roundtrip. CI does not run AE. Private CI receipt
+`hypotheses-ci-65edce8.json`, SHA-256 `99308e172cfc57a492521b176fe41c3738991085f96ea6a7798bd83a2cb72552`.
+SDK/hash/unchanged-native-field verification receipt `hypotheses-fields-65edce8.json`,
+SHA-256 `53b08e3dec465189e1a36d6a714000fcea568a972396cd0ecfc20f5f942a1089`.
+
+HYP-01 SDK/file checks complete but runtime mechanism unverified; HYP-02
+reconciliation complete but native call BLOCKED; HYP-03 owned-process check PASS;
+HYP-05 combinations assessed, with no justified executable combined adapter.
+The investigation does not satisfy original registration/apply/render acceptance.
+Documentation-only closeout is distinct from the code/test source above.
 README's stale v6.2 and pending diagnostic statements are corrected to current
 v8/C1 state. No acceptance is weakened: new late ordinary-effect registration,
 apply, render, A/B integration, D hardening/compatibility and release remain open.

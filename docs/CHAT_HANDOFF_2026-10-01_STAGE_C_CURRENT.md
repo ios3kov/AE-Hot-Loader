@@ -17,32 +17,43 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
-## Current combined hypothesis pass — preparation checks complete
+## Current combined hypothesis pass — offline checks complete, runtime open
 
 User requested all three hypotheses together and then their combinations.
-Starting clean source 16986dcc759c7d6d4870218e378b100d6afd28b6; rules remain
-v8.0.0 at 132b7cd32873ba7328e3128ffbb33e1929b74d45. See the acceptance mapping
-in [production plan](PRODUCTION_PLAN.md) and [combined review](HYPOTHESES_REVIEW_2026-10-03.md).
-PICA default suite revisions/signatures compile against the actual supplied SDK;
-AE suite/provider and ordinary-effect adapter/publication availability UNKNOWN.
-Five relevant literals were absent in nine exact hash-verified pinned files;
-that is a bounded lexical result, not proof of runtime absence.
+Code/test source **65edce84340fd919e738be65100a8ea73d1c2c31**; rules remain
+v8.0.0 at 132b7cd32873ba7328e3128ffbb33e1929b74d45. Acceptance mapping is
+in [production plan](PRODUCTION_PLAN.md); findings and exact evidence in
+[combined review](HYPOTHESES_REVIEW_2026-10-03.md).
+PICA revision-4 AddPlugin and revision-6 AddXPlatPlugin contracts compile against
+the actual SDK. The latter requires its own structure/file type; AE suite/provider
+and ordinary-effect adapter/publication availability UNKNOWN. Five relevant
+literals absent in nine exact pinned files: bounded lexical result only.
 Single-effect native invocation remains BLOCKED on ownership, admission/drain
 and completion/failure contracts. Historical dynamic-fixture registration delta
 and scoped apply evidence are preserved separately from incomplete lifecycle,
 render NOT RUN and PiPL/RSMB failures; no broad impossibility claim is justified.
-New owned-process test executes the actual shell transaction with only isolated
-log/home/temp routing: fifteen labelled checks PASS in one aggregate Python test.
-Actual new AE registration/apply/render NOT RUN; this test cannot certify them.
+New owned-process test executes actual shell logic with isolated log/home/temp
+routing. **383 Python/no skips, 62 Node, 22 stages PASS**, including fifteen
+labelled shell checks counted as one aggregate Python test. Archive/source/log
+verification PASS; 25 ZIP members / 309 tracked files. Static audit completed,
+raw exit 1 with sole known local argparse false positive retained.
+Research CI [37121857027](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37121857027)
+completed/success at exact 65edce8. macOS CI
+[37121857015](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37121857015)
+also completed/success at that exact source; CI is not live AE proof.
 
-Combinations reviewed: PICA + the ordinary-effect adapter/publication route is a
-conditional same-goal candidate. A shell cannot remove the unresolved initial
-registration step; a preinstalled shell-only product would require a scope
-decision. No guessed opaque-handle conversion, native adapter or new live packet.
-Full clean-source regression/CI and exact source identity pending closeout.
-README stale baseline and diagnostic authority repaired; all A/B/C1/C2/D/release
-obligations retained. Cleanup preserves historical/installed/unknown inputs;
-only disposable owned test workspaces are removed. No AE operation, merge or release.
+Combinations reviewed: PICA + ordinary-effect adapter/publication is a conditional
+same-goal research candidate. A shell cannot remove initial-registration
+prerequisites; adopting a preinstalled shell-only product requires a scope
+decision. Next: identify exact AE suite provider and ordinary-effect adapter,
+then prepare an identified potential-load availability probe before any
+registration operation. No guessed opaque-handle conversion or executable combined
+adapter. Current AE registration/apply/render NOT RUN, backend NOT READY;
+A/B integration, D compatibility/hardening and release obligations remain open.
+README baseline/diagnostic authority reconciled. Cleanup preserves historical,
+installed and unknown inputs; only disposable owned test workspaces removed.
+No AE operation, merge, release or installable handoff. Documentation-only
+closeout is distinct from the tested code SHA above.
 
 ## Current five-block pass — offline PASS, live adapter NO-GO
 
