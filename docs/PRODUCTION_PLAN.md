@@ -12,6 +12,40 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## Host metadata-to-registry bridge — conditional eight-step pass
+
+2026-10-03. User replied “делай” to the proposed eight steps. Starting clean
+research source e56ef1ea15269478c7f1f4d72f4180f7ae083d12. Rules v8.0.0 pinned
+132b7cd32873ba7328e3128ffbb33e1929b74d45, AI_ENTRYPOINT first. Stage C1 Development
+research, original arbitrary ordinary-effect/no-restart contract retained.
+AI-STATE/API-SOURCE/SAFE/REPRO/TEST-CONTROL/TASK-CLOSE/CLEANUP, native ownership/
+thread and tools diagnostics overlays apply. No feature-set/product change or
+Reference Audit trigger. Collector implementation Standard; speculative private
+host invocation Critical and gated. Available actual target is AE 25.6x101 arm64,
+SDK 25.6_61; no broader compatibility claim. No parallel agents requested.
+
+| ID | Observable acceptance | Planned check/dependency |
+|---|---|---|
+| BRIDGE-01 | Reconcile PICA observations with Dynamic/PiPL, resource and shell hypotheses | Exact named sources/receipts; retain registry/apply/render/lifecycle distinctions |
+| BRIDGE-02 | Identify a remaining evidence-based route into the ordinary registry | Complete bounded file review of PluginData callbacks, conversion and GetPiPLs caller; hash-pinned PluginSupport only |
+| BRIDGE-03 | Establish actual scope/ownership/completion and missing invocation contracts | Actual SDK types/macros + copied metadata/stack/destructor boundaries; unknown receiver/lifetime/exclusion remains explicit |
+| BRIDGE-04 | Minimal executable host experiment | Conditional: only after a confirmed safe bridge; no saved callback replay or opaque-context fabrication |
+| BRIDGE-05 | Failures/build/regression for the identified experiment | Conditional on BRIDGE-04; independently verify the file-only collector change/refusal and actual SDK contract as research tooling |
+| BRIDGE-06 | CI/documentation/final acceptance reconciliation | Exact-source available checks/review/CI for changed research tools, retain earlier raw results |
+| BRIDGE-07 | One new AE diagnostic | Conditional on BRIDGE-04 safety and actual new live permission, none assumed from consumed inventory scope |
+| BRIDGE-08 | Interpret that actual result and select next route | Conditional on BRIDGE-07; file-only interpretation is not an AE test |
+
+New investigation: historical GetPFPluginData/fallback observations did not bind
+complete callback2 body, metadata conversion and temporary-object teardown into
+one fail-closed collection. Establish whether the host-supplied callback publishes
+or only builds metadata; correlate this with the two AE.app PICA records without
+calling either API. No identical PICA scan replay. No current AE process read,
+attach/launch/script/install/scan/private call/retention/unload/termination.
+Preserve native helpers/profiles/gates, installed consumed session/helper, SDK,
+third-party plug-ins and historical private evidence. Permission for repository
+edits, owned fixtures, file-only tools, research commit/push/CI comes from the
+accepted pass and prior development context. No main merge or release.
+
 ## INV-07/08 live closeout — all eight scoped steps complete
 
 Exact human authority “запускай”, normal user Quit “закрыл”, closed-host guards,

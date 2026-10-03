@@ -12,6 +12,23 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
+## Host metadata bridge — lifetime boundary identified, runtime still blocked
+
+[Bounded metadata review](C1_PLUGIN_METADATA_BRIDGE_2026-10-03.md) reconciles PICA
+with the historical Dynamic/PiPL and resource/shell findings. In the reviewed
+uncached GetPiPLs path, the host callback receives a stack-local metadata vector,
+which is destroyed on normal and exceptional exit. Retaining/replaying this
+context is NO-GO. Callback success and PiPL conversion do not by themselves prove
+ordinary-registry publication; actual transitive targets/receiver/host-wide
+admission/drain/completion/rollback remain unproven. Six file-only windows cover
+744 instructions. New refusal controls and actual SDK owned contract prepared;
+clean-source collection/full checks/exact-source CI pending at this checkpoint.
+BRIDGE-01 research complete; usable mechanism in 02 and full contract in 03 remain
+BLOCKED. Host experiment 04 and live 07/08 NOT RUN; no new live scope assumed.
+Backend NOT READY; original product and A/B/C1/C2/D/release obligations retained.
+Next: follow copied PiPL/path to the publication owner and establish its safe
+transaction contract. Preserve previous consumed helpers/session/history.
+
 ## Public PICA inventory — all eight pass steps complete, registration open
 
 User authorized the exact packet with “запускай”, then confirmed normal AE Quit

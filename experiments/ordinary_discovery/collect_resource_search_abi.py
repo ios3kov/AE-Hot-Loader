@@ -28,6 +28,14 @@ WINDOWS = {
     "PLUG": (0x8A6C, 0x9028),
 }
 REVIEWS = {
+    "plugin-metadata": (
+        ('metadata-callback2', "PluginSupport", 0x4b194, 0x4b5b0),
+        ('metadata-callback1', "PluginSupport", 0x4b5b0, 0x4b5d8),
+        ('metadata-get', "PluginSupport", 0x4b5d8, 0x4b754),
+        ('metadata-to-pipl', "PluginSupport", 0x4b754, 0x4ba6c),
+        ('metadata-caller', "PluginSupport", 0x4c72c, 0x4c990),
+        ('metadata-dtor', "PluginSupport", 0x4c990, 0x4c9f4),
+    ),
     "registry-consumers": (
         ('registry-dtor', 'FLT', 0x46cc, 0x4918),
         ('prefs-update', 'FLT', 0x5480, 0x5854),
@@ -244,6 +252,8 @@ FILE_ONLY_INPUTS = {
 }
 INPUTS.update(FILE_ONLY_INPUTS)
 SYMBOL_WANTED = {
+    "plugin-metadata": re.compile(r"(PluginDataCallback|GetPFPluginData|PFPluginDataToPiPL|"
+                                  r"PluginImpl.*GetPiPLs|PF_PluginDataD[012])"),
     'registry-consumers': re.compile(r'(FLT_FilterRegistry|FLT_ScBeginProject(Read|Write))'),
     'registry-transaction': re.compile(r'(InitIterator|Egg_PlugSearch|FLT_FilterRegistry|'
                                        r'RenderState.*(Scoper|ActivelyRendering)|GetNumThreadsRenderingEffects|'
@@ -2147,6 +2157,177 @@ CONSUMER_ANCHORS = {
     },
 }
 
+# Unslid file addresses in the exact PluginSupport pin. Not callable pointers.
+# Anchors bind metadata copying, entry dispatch, conversion and both teardown lanes.
+METADATA_ANCHORS = {
+    'metadata-callback2': {
+        0x4b194: ('sub', 'sp,sp,#0xc0'),
+        0x4b1b4: ('mov', 'x21,x7'),
+        0x4b1b8: ('mov', 'x20,x6'),
+        0x4b1bc: ('mov', 'x22,x5'),
+        0x4b1c0: ('mov', 'x23,x4'),
+        0x4b1c4: ('mov', 'x24,x3'),
+        0x4b1c8: ('mov', 'x25,x2'),
+        0x4b1cc: ('mov', 'x19,x0'),
+        0x4b1d4: ('ldr', 'x26,[x29,#0x18]'),
+        0x4b1d8: ('ldr', 'w27,[x29,#0x10]'),
+        0x4b1ec: ('ldrb', 'w9,[x1,x8]'),
+        0x4b1f4: ('cbnz', 'w9,0x4b1ec'),
+        0x4b208: ('bl', '0x8cbe0'),
+        0x4b268: ('ldrb', 'w9,[x25,x8]'),
+        0x4b284: ('bl', '0x8cbe0'),
+        0x4b2f0: ('ldrb', 'w9,[x24,x8]'),
+        0x4b30c: ('bl', '0x8cbe0'),
+        0x4b378: ('ldrb', 'w9,[x23,x8]'),
+        0x4b394: ('bl', '0x8cbe0'),
+        0x4b3f0: ('stp', 'w22,w21,[sp,#0x40]'),
+        0x4b3f4: ('stp', 'w20,w27,[sp,#0x48]'),
+        0x4b3f8: ('cbnz', 'x26,0x4b410'),
+        0x4b40c: ('cbz', 'x26,0x4b48c'),
+        0x4b434: ('bl', '0x8cbe0'),
+        0x4b48c: ('ldp', 'x21,x8,[x19,#0x8]'),
+        0x4b494: ('b.hs', '0x4b4bc'),
+        0x4b498: ('add', 'x1,sp,#0x20'),
+        0x4b4a0: ('bl', '0x4d6dc'),
+        0x4b4c0: ('mov', 'x0,x19'),
+        0x4b4c4: ('bl', '0x4d518'),
+        0x4b4c8: ('str', 'x0,[x19,#0x8]'),
+        0x4b4cc: ('add', 'x0,sp,#0x20'),
+        0x4b4d0: ('bl', '0x4d430'),
+        0x4b4d4: ('mov', 'w0,#0x0'),
+        0x4b4f4: ('ret', ''),
+        0x4b528: ('str', 'x21,[x19,#0x8]'),
+        0x4b598: ('bl', '0x4d430'),
+        0x4b5a0: ('bl', '0x8d468'),
+        0x4b5a4: ('bl', '0x8d474'),
+        0x4b5a8: ('mov', 'w0,#0x1'),
+        0x4b5ac: ('b', '0x4b4d8'),
+    },
+    'metadata-callback1': {
+        0x4b5bc: ('ldr', 'w8,[x29,#0x10]'),
+        0x4b5c0: ('str', 'xzr,[sp,#0x8]'),
+        0x4b5c4: ('str', 'w8,[sp]'),
+        0x4b5c8: ('bl', '0x4b194'),
+        0x4b5d4: ('ret', ''),
+    },
+    'metadata-get': {
+        0x4b5ec: ('mov', 'x19,x1'),
+        0x4b5f8: ('add', 'x0,x0,#0x3bc'),
+        0x4b60c: ('ldr', 'x8,[x8,#0x68]'),
+        0x4b618: ('blr', 'x8'),
+        0x4b61c: ('mov', 'x21,x0'),
+        0x4b638: ('cbz', 'x21,0x4b680'),
+        0x4b63c: ('bl', '0x8c4fc'),
+        0x4b644: ('bl', '0x8c64c'),
+        0x4b64c: ('bl', '0x8c664'),
+        0x4b658: ('add', 'x1,x1,#0x194'),
+        0x4b65c: ('mov', 'x0,x19'),
+        0x4b660: ('mov', 'x2,x20'),
+        0x4b664: ('mov', 'x3,x22'),
+        0x4b668: ('blr', 'x21'),
+        0x4b67c: ('ret', ''),
+        0x4b684: ('add', 'x0,x0,#0x3d5'),
+        0x4b698: ('ldr', 'x8,[x8,#0x68]'),
+        0x4b6a4: ('blr', 'x8'),
+        0x4b6c4: ('cbz', 'x20,0x4b70c'),
+        0x4b6e4: ('add', 'x1,x1,#0x5b0'),
+        0x4b6e8: ('mov', 'x0,x19'),
+        0x4b6ec: ('mov', 'x2,x21'),
+        0x4b6f0: ('mov', 'x3,x22'),
+        0x4b6f4: ('blr', 'x20'),
+        0x4b70c: ('mov', 'w0,#0x3'),
+        0x4b720: ('ret', ''),
+    },
+    'metadata-to-pipl': {
+        0x4b774: ('ldp', 'x20,x23,[x0]'),
+        0x4b77c: ('b.eq', '0x4b9f4'),
+        0x4b7ac: ('add', 'x20,x20,#0x38'),
+        0x4b7bc: ('bl', '0x192f4'),
+        0x4b7e0: ('bl', '0x8c97c'),
+        0x4b800: ('add', 'x2,x20,#0x8'),
+        0x4b804: ('add', 'x3,x20,#0x10'),
+        0x4b808: ('add', 'x4,x20,#0x18'),
+        0x4b80c: ('ldrh', 'w8,[x20,#0x28]'),
+        0x4b810: ('ldp', 'w5,w9,[x20,#0x20]'),
+        0x4b814: ('orr', 'w7,w8,w9,lsl#16'),
+        0x4b818: ('ldr', 'w8,[x20,#0x2c]'),
+        0x4b81c: ('add', 'x9,x20,#0x30'),
+        0x4b820: ('str', 'x9,[sp,#0x8]'),
+        0x4b824: ('str', 'w8,[sp]'),
+        0x4b828: ('mov', 'x1,x20'),
+        0x4b830: ('bl', '0x43d7c'),
+        0x4b878: ('blr', 'x8'),
+        0x4b890: ('ldp', 'x28,x8,[x19,#0x8]'),
+        0x4b898: ('b.hs', '0x4b924'),
+        0x4b8a0: ('str', 'x0,[x28]'),
+        0x4b92c: ('bl', '0x4d884'),
+        0x4b930: ('str', 'x0,[x19,#0x8]'),
+        0x4ba10: ('ret', ''),
+        0x4ba38: ('bl', '0x8c334'),
+    },
+    'metadata-caller': {
+        0x4c74c: ('stp', 'xzr,xzr,[x8]'),
+        0x4c750: ('str', 'xzr,[x8,#0x10]'),
+        0x4c758: ('ldr', 'x8,[x21,#0xf0]!'),
+        0x4c75c: ('cbz', 'x8,0x4c774'),
+        0x4c768: ('bl', '0x4db20'),
+        0x4c77c: ('bl', '0x45f64'),
+        0x4c780: ('stp', 'xzr,xzr,[sp,#0x20]'),
+        0x4c784: ('str', 'xzr,[sp,#0x30]'),
+        0x4c788: ('add', 'x1,sp,#0x20'),
+        0x4c78c: ('mov', 'x0,x20'),
+        0x4c790: ('bl', '0x4b5d8'),
+        0x4c794: ('cbnz', 'w0,0x4c7a4'),
+        0x4c798: ('add', 'x0,sp,#0x20'),
+        0x4c79c: ('mov', 'x1,x19'),
+        0x4c7a0: ('bl', '0x4b754'),
+        0x4c7d4: ('ldr', 'x9,[x8,#0x88]'),
+        0x4c7e0: ('blr', 'x9'),
+        0x4c888: ('str', 'x9,[x20,#0xf0]'),
+        0x4c8a4: ('stp', 'x9,x8,[x20,#0xf8]'),
+        0x4c8d4: ('ldr', 'x19,[sp,#0x20]'),
+        0x4c8d8: ('cbz', 'x19,0x4c914'),
+        0x4c8ec: ('sub', 'x0,x0,#0x38'),
+        0x4c8f0: ('bl', '0x4d430'),
+        0x4c900: ('str', 'x19,[sp,#0x28]'),
+        0x4c910: ('bl', '0x8cd54'),
+        0x4c918: ('bl', '0x45ff8'),
+        0x4c934: ('ret', ''),
+        0x4c95c: ('add', 'x0,sp,#0x20'),
+        0x4c960: ('bl', '0x4c990'),
+        0x4c968: ('bl', '0x45ff8'),
+    },
+    'metadata-dtor': {
+        0x4c9a0: ('ldr', 'x20,[x0]'),
+        0x4c9a4: ('cbz', 'x20,0x4c9e0'),
+        0x4c9a8: ('ldr', 'x0,[x19,#0x8]'),
+        0x4c9b4: ('b.eq', '0x4c9cc'),
+        0x4c9b8: ('sub', 'x0,x0,#0x38'),
+        0x4c9bc: ('bl', '0x4d430'),
+        0x4c9c4: ('b.ne', '0x4c9b8'),
+        0x4c9cc: ('str', 'x20,[x19,#0x8]'),
+        0x4c9d0: ('ldr', 'x9,[x19,#0x10]'),
+        0x4c9d4: ('sub', 'x1,x9,x8'),
+        0x4c9dc: ('bl', '0x8cd54'),
+        0x4c9ec: ('ret', ''),
+    },
+}
+
+
+def verify_metadata(text, label, start, end):
+    require(any((row[0], row[2], row[3]) == (label, start, end)
+                for row in REVIEWS["plugin-metadata"]), "unreviewed plugin metadata window")
+    count = validate_disassembly(text, start, end)
+    rows = {int(address, 16): (op, re.sub(r"\s+", "", args.split(";")[0]))
+            for address, op, args in re.findall(
+                r"^.*\[0x([0-9a-fA-F]+)\]\s+<[^>]*>:[ \t]+(\S+)[ \t]*([^\n]*)", text, re.M)}
+    anchors = METADATA_ANCHORS[label]
+    require(all(rows.get(a) == v for a, v in anchors.items()),
+            "plugin metadata structural anchors differ")
+    return {"decoded_instructions": count, "structural_anchors": len(anchors),
+            "claim": "file-only-metadata-flow-not-registry-publication"}
+
+
 def verify_consumers(text, label, start, end):
     require(any((row[0], row[2], row[3]) == (label, start, end)
                 for row in REVIEWS['registry-consumers']), 'unreviewed registry consumer window')
@@ -2546,6 +2727,7 @@ def main():
         isolation = {}
         registry_transaction = {}
         registry_consumers = {}
+        metadata = {}
         for name in names:
             path, _ = INPUTS[name]
             nm, nm_err = run_tool(["/usr/bin/nm", "-arch", "arm64", "-n", "-m", str(path)])
@@ -2561,6 +2743,8 @@ def main():
                  "--source", str(folder / (label + "-inspect.lldb"))],
                 timeout=60)
             instruction_count = verify_lldb_disassembly(disassembly, diagnostics, start, end)
+            if args.review == 'plugin-metadata':
+                metadata[label] = verify_metadata(disassembly, label, start, end)
             if args.review == 'publication':
                 publication[label] = verify_publication(disassembly, label, start, end)
             if args.review == 'effect-readiness':
@@ -2647,6 +2831,15 @@ def main():
             "inputs": outputs,
             "data_windows": data_outputs,
         }
+        if args.review == 'plugin-metadata':
+            record['plugin_metadata_evidence'] = metadata
+            record['opaque_context'] = 'STACK-LOCAL-IN-REVIEWED-UNCACHED-GETPIPLS-PATH'
+            record['context_replay_after_return'] = 'NO-GO-TEMPORARY-TEARDOWN'
+            record['native_registration_ABI'] = 'UNKNOWN'
+            record['actual_receiver_and_transitive_callees'] = 'NOT OBSERVED'
+            record['ordinary_registry_publication'] = 'NOT PROVEN'
+            record['host_wide_publication_lease_and_failure_rollback'] = 'NOT PROVEN'
+            record['registration_apply_render'] = 'NOT RUN'
         if args.review == 'registry-consumers':
             record['registry_consumer_evidence'] = registry_consumers
             record['native_registration_ABI'] = 'UNKNOWN'

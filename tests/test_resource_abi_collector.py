@@ -173,6 +173,53 @@ class ResourceAbiCollectorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unreviewed'):
             collector.verify_publication(text, 'FLT-if-missing', start, end - 4)
 
+    def test_plugin_metadata_scope_is_complete_and_offline(self):
+        windows = collector.review_windows('plugin-metadata')
+        self.assertEqual(len(windows), 6)
+        self.assertEqual(sum((end-start)//4 for _, _, start, end in windows), 744)
+        self.assertEqual({image for _, image, *_ in windows}, {'PluginSupport'})
+        self.assertEqual({label for label, *_ in windows}, set(collector.METADATA_ANCHORS))
+        self.assertNotIn('plugin-metadata', collector.DATA_WINDOWS)
+        for _, image, start, end in windows:
+            script = collector.lldb_script(collector.INPUTS[image][0], start, end)
+            self.assertIn('target create --no-dependents --arch arm64', script)
+            self.assertNotRegex(script, r'process|expression|call ')
+
+    def test_plugin_metadata_rejects_changed_context_conversion_and_teardown(self):
+        # Synthetic parser/refusal controls only, never evidence about Adobe execution.
+        for label, _, start, end in collector.review_windows('plugin-metadata'):
+            anchors = collector.METADATA_ANCHORS[label]
+            def transcript(overrides):
+                return ''.join('owned[0x%x] <+%d>: %s %s\n' %
+                    (a, a-start, *overrides.get(a, anchors.get(a, ('nop', ''))))
+                    for a in range(start, end, 4))
+            text = transcript({})
+            result = collector.verify_metadata(text, label, start, end)
+            self.assertEqual(result['claim'], 'file-only-metadata-flow-not-registry-publication')
+            for address, (op, args) in anchors.items():
+                # Same mnemonic with wrong receiver/target must fail as well as removed operation.
+                for wrong in [('nop', ''), (op, args+'x0')]:
+                    with self.subTest(label=label, address=hex(address), wrong=wrong):
+                        with self.assertRaisesRegex(ValueError, 'structural'):
+                            collector.verify_metadata(transcript({address: wrong}), label, start, end)
+            for bad in [text+text.splitlines()[0]+'\n', '\n'.join(text.splitlines()[:-1])]:
+                with self.assertRaisesRegex(ValueError, 'bounds'):
+                    collector.verify_metadata(bad, label, start, end)
+            with self.assertRaisesRegex(ValueError, 'undecoded'):
+                collector.verify_metadata(text.replace(': ', ': .long ', 1), label, start, end)
+            for wrong_label, wrong_end in [('unreviewed', end), (label, end+4)]:
+                with self.assertRaisesRegex(ValueError, 'unreviewed'):
+                    collector.verify_metadata(text, wrong_label, start, wrong_end)
+
+    def test_plugin_metadata_catalog_limits_symbols(self):
+        names = ['PluginDataCallback2', 'PluginDataCallback', 'GetPFPluginData',
+                 'PFPluginDataToPiPL', 'PluginImplGetPiPLs', 'PF_PluginDataD2']
+        selected = collector.select_symbols('\n'.join('external '+n for n in names)+
+                                            '\nexternal PLUG_Search\n', 'plugin-metadata')
+        for name in names:
+            self.assertIn(name, selected)
+        self.assertNotIn('PLUG_Search', selected)
+
     def test_registry_consumers_keeps_fixed_file_scope_and_no_host_calls(self):
         windows = collector.review_windows('registry-consumers')
         self.assertEqual({key for _, key, *_ in windows}, {'FLT'})
