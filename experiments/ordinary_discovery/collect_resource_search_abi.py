@@ -25,6 +25,10 @@ _queue_spec = importlib.util.spec_from_file_location(
     'aehl_workqueue_file_review', Path(__file__).with_name('workqueue_file_review.py'))
 workqueue = importlib.util.module_from_spec(_queue_spec)
 _queue_spec.loader.exec_module(workqueue)
+_executor_spec = importlib.util.spec_from_file_location(
+    'aehl_executor_file_review', Path(__file__).with_name('executor_file_review.py'))
+executor = importlib.util.module_from_spec(_executor_spec)
+_executor_spec.loader.exec_module(executor)
 MAX_OUTPUT = 2 * 1024 * 1024
 DVACORE_SYMBOL_OUTPUT = 4 * 1024 * 1024
 WINDOWS = {
@@ -34,6 +38,8 @@ WINDOWS = {
     "PLUG": (0x8A6C, 0x9028),
 }
 REVIEWS = {
+    'workqueue-executor': tuple((label, row[0], row[1], row[2])
+                               for label, row in executor.WINDOWS.items()),
     'workqueue-control': tuple((label, 'BEE', row[0], row[1])
                               for label, row in workqueue.WINDOWS.items()),
     "admission-contracts": (
@@ -346,6 +352,8 @@ REVIEWS = {
     ),
 }
 DATA_WINDOWS = {
+    'workqueue-executor': (('exe-core-table', 'dvacore', executor.TABLE_START,
+                            len(executor.TABLE_TARGETS)),),
     "factory-objects": (
         ('obj-module-dtors', 'MEE', 0xee760, 2),
         ('obj-control-dtors', 'MEE', 0xef900, 3),
@@ -7363,17 +7371,26 @@ def main():
         admission_contracts = {}
         queue_evidence = {}
         queue_symbols = None
+        executor_evidence = {}
+        executor_symbols = {}
         sdk_contract = None
         if args.review == 'admission-contracts':
             sdk_contract, sdk_excerpt = admission_sdk_contract()
             write_exclusive(folder / 'SDK-admission-contracts.txt', sdk_excerpt)
         for name in names:
             path, _ = INPUTS[name]
-            if name == 'BEE':
-                require(args.review == 'workqueue-control', 'BEE file-only scope mismatch')
+            if name == 'BEE' or args.review == 'workqueue-executor':
+                require(args.review in ('workqueue-control', 'workqueue-executor'),
+                        'BEE file-only scope mismatch')
                 raw = path.read_bytes()
                 require(hashlib.sha256(raw).hexdigest() == observed[name],
-                        'BEE bytes changed before symbol review')
+                        'queue image bytes changed before symbol review')
+                if args.review == 'workqueue-executor':
+                    executor_symbols[name] = executor.collect_symbols(
+                        raw, name, workqueue.inspect_text_symbols)
+                    write_exclusive(folder / (name + '-symbols.json'),
+                                    json.dumps(executor_symbols[name],indent=2,sort_keys=True)+'\n')
+                    continue
                 queue_symbols = workqueue.collect_symbols(raw)
                 write_exclusive(folder / 'BEE-symbols.json',
                                 json.dumps(queue_symbols,indent=2,sort_keys=True)+'\n')
@@ -7392,6 +7409,9 @@ def main():
                  "--source", str(folder / (label + "-inspect.lldb"))],
                 timeout=60)
             instruction_count = verify_lldb_disassembly(disassembly, diagnostics, start, end)
+            if args.review == 'workqueue-executor':
+                executor_evidence[label] = executor.verify_window(
+                    disassembly, label, workqueue.verify_transcript)
             if args.review == 'workqueue-control':
                 count = workqueue.verify_transcript(disassembly,start,end,
                                                      workqueue.WINDOWS[label][4])
@@ -7448,7 +7468,7 @@ def main():
             }
         data_outputs = {}
         table_fixups = {}
-        if args.review in ('entry-lifetime', 'provider-isolation', 'factory-identity', 'factory-receiver', 'factory-objects'):
+        if args.review in ('entry-lifetime', 'provider-isolation', 'factory-identity', 'factory-receiver', 'factory-objects', 'workqueue-executor'):
             for name in dict.fromkeys(row[1] for row in DATA_WINDOWS[args.review]):
                 chains, diagnostics = run_tool(
                     ['/usr/bin/xcrun', 'dyld_info', '-arch', 'arm64', '-fixup_chains', str(INPUTS[name][0])])
@@ -7496,6 +7516,9 @@ def main():
             if args.review == 'entry-lifetime':
                 data_outputs[label]['table_evidence'] = verify_entry_table(
                     values, *table_fixups[name], label)
+            if args.review == 'workqueue-executor':
+                data_outputs[label]['table_evidence'] = executor.verify_table(
+                    values, *table_fixups[name])
         if args.review == "lifecycle":
             fixups, diagnostics = run_tool(
                 ["/usr/bin/xcrun", "dyld_info", "-arch", "arm64", "-fixup_chains", str(INPUTS["PLUG"][0])])
@@ -7517,6 +7540,20 @@ def main():
             "inputs": outputs,
             "data_windows": data_outputs,
         }
+        if args.review == 'workqueue-executor':
+            record['executor_evidence'] = executor_evidence
+            record['original_symbol_inventory'] = executor_symbols
+            record['actual_executor_file_identity'] = 'THREADED-WORK-QUEUE-CREATION-AND-VTABLE'
+            record['ordinary_submit_slot'] = 'CALL-ASYNCHRONOUSLY-NOT-CALLBACK-COMPLETION'
+            record['pause_scope'] = 'WORKER-GATE-NOT-ACTIVE-CALLBACK-JOIN'
+            record['flush_scope'] = 'SINGLE-EXECUTOR-MARKER-OR-SYNC-AND-JOIN'
+            record['notify_scope'] = 'RETAINED-ITEM-CALLBACK-UNDER-SHARED-OBSERVER-LOCK'
+            record['death_as_transaction_gate'] = 'EXCLUDED-DESTRUCTIVE-LIFECYCLE'
+            record['supported_host_owner_thread_contract'] = 'UNKNOWN'
+            record['host_wide_reader_render_exclusion'] = 'NOT PROVEN'
+            record['whole_effect_rollback'] = 'NOT PROVEN'
+            record['native_experiment'] = 'BLOCKED'
+            record['registration_apply_render'] = 'NOT RUN'
         if args.review == 'workqueue-control':
             record['workqueue_evidence'] = queue_evidence
             record['original_symbol_inventory'] = queue_symbols
@@ -7704,7 +7741,7 @@ def main():
             record['actual_record_identities'] = 'NOT OBSERVED'
             record['allocation_lifetime_quiescence'] = 'NOT PROVEN'
             record['safe_repeat_invocation'] = 'NOT PROVEN'
-        if args.review == 'workqueue-control':
+        if args.review in ('workqueue-control', 'workqueue-executor'):
             require(source_identity() == commit, 'source changed during workqueue collection')
         archive = package(folder, record)
         print("PASS: bounded offline " + args.review + " evidence only; Adobe calls=0")

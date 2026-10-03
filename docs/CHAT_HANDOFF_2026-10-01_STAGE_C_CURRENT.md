@@ -3,7 +3,8 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [BEE queue controls](C1_WORKQUEUE_CONTROLS_2026-10-03.md),
+Current continuation: [concrete executor](C1_CONCRETE_EXECUTOR_2026-10-03.md),
+[BEE queue controls](C1_WORKQUEUE_CONTROLS_2026-10-03.md),
 [scoped admission controls and match-name correction](C1_ADMISSION_CONTRACTS_2026-10-03.md),
 [actual factory object owners](C1_FACTORY_OBJECT_OWNERS_2026-10-03.md),
 [factory dependency lifetime](C1_FACTORY_DEPENDENCY_LIFETIME_2026-10-03.md),
@@ -22,7 +23,19 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
-## BEE queue controls — current continuation
+## Concrete executor — current packet
+
+[EXE checkpoint](C1_CONCRETE_EXECUTOR_2026-10-03.md),12-block packet in progress.
+23 complete original bodies /24 windows /5901 instructions /14 rebases.
+Concrete ThreadedWorkQueue identified; Pause is a Gate close, Flush has distinct
+same-executor/marker/sync/join paths, Death destroys subsystem state. Notification
+and completion retain callbacks/items and transfer removal to housekeeper.
+All-reader/MFR admission, safe initial factory/thread/private ABI and full inverse
+remain required; actual adapter/trials BLOCKED, registration/apply/render NOT RUN.
+10 parser/5 executor/78 collector focused PASS; exact full/CI closure pending.
+Keep backend unbound; no destructive lifecycle call or unchanged scan.
+
+## BEE queue controls — previous continuation
 
 Exact clean tested/pushed code a24d8a2f5d0b06234d839005f36cc44749f0478f;
 [QUE checkpoint and reconciliation](C1_WORKQUEUE_CONTROLS_2026-10-03.md).

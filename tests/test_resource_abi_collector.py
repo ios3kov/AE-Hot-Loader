@@ -18,6 +18,23 @@ spec.loader.exec_module(collector)
 
 
 class ResourceAbiCollectorTests(unittest.TestCase):
+    def test_executor_scope_is_complete_grouped_offline_and_preserves_host_profile(self):
+        windows=collector.review_windows('workqueue-executor')
+        self.assertEqual(len(windows),24)
+        self.assertEqual(sum((end-start)//4 for _,_,start,end in windows),5901)
+        self.assertEqual({image for _,image,*_ in windows},{'BEE','dvacore'})
+        self.assertEqual(collector.DATA_WINDOWS['workqueue-executor'],
+                         (('exe-core-table','dvacore',0x39ded0,15),))
+        for _,image,start,end in windows:
+            self.assertLessEqual(end-start,4096)
+            self.assertNotRegex(collector.lldb_script(collector.INPUTS[image][0],start,end),
+                                r'process|expression|call ')
+        self.assertNotRegex(collector.lldb_data_script(collector.INPUTS['dvacore'][0],0x39ded0,15),
+                            r'process|expression|call ')
+        self.assertNotIn('BEE.dylib',collector.PROFILE.read_text())
+        self.assertEqual(collector.MAX_OUTPUT,2*1024*1024)
+        self.assertEqual(collector.DVACORE_SYMBOL_OUTPUT,4*1024*1024)
+
     def test_workqueue_scope_is_fixed_file_only_with_unchanged_tool_caps(self):
         windows = collector.review_windows('workqueue-control')
         self.assertEqual(len(windows),14)

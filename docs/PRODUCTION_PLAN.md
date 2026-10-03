@@ -12,6 +12,74 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## Concrete executor, completion and conditional host adapter — twelve-block pass
+
+2026-10-03 continuation from clean5f2230fcf31bc0b6fe933e12130b02ae2c5b2ef8,
+research/ordinary-plugin-discovery. User accepted the proposed9 main /3 conditional
+blocks with “делай”. Rules8.0.0 /132b7cd32873ba7328e3128ffbb33e1929b74d45,
+AI_ENTRYPOINT first; C1 Development research. Native ABI/thread/admission/lifetime
+Critical; bounded file-only collector Standard. API-SOURCE, RENDER-001,
+exact-source checks, TASK-CLOSE/CLEANUP and production-engineering apply.
+Original ordinary-effect/no-restart product and A/B/C1/C2/D/release retained.
+
+| ID | Task / observable acceptance | Check and dependency |
+|---|---|---|
+| EXE-01 | Identify actual BEE executor and its ownership | Original fixed-pin nlist/body/data review of concrete creation/use/destruction; distinguish indirect slot from established concrete type |
+| EXE-02 | Establish exclusion of new jobs | Trace actual scheduler/admission paths and continuous caller-held scope; request cancellation alone insufficient |
+| EXE-03 | Establish running-job completion including MFR | Complete selected worker/finish/wait paths and owner/thread coverage, no queue-empty shortcut |
+| EXE-04 | Establish notification/completion callback lifetime | Original notify/PostCompletionRoutine and executor ownership; return or local callback destruction does not prove execution/drain |
+| EXE-05 | Reconcile all effect-registry consumers | Reuse original registry/render evidence with archive/pin checks; explicitly retain uncovered consumers |
+| EXE-06 | Establish safe existing factory access | Reuse existing-only acquisition/initial receiver/private ABI/thread findings; unresolved contract remains UNKNOWN |
+| EXE-07 | Establish full failure recovery | Reuse publication-before-error and inverse coverage; registry/canonical/preferences recovery required |
+| EXE-08 | Implement substantiated changes/refusals | Only supported bounded research changes; actual native implementation depends on01–07, no owned mock as host proof |
+| EXE-09 | Verify and close exact packet | Focused/full checks, original independent review, raw scanner/manual review, both exact-source CI, docs/commit/push/owned cleanup |
+| EXE-10 | Actual AE adapter and mandatory checks | Conditional on01–07 contracts; otherwise BLOCKED and native backend unbound |
+| EXE-11 | Controlled registration → apply → render | Conditional on10 plus current safe disposable AE environment/exact candidate; otherwise BLOCKED / NOT RUN |
+| EXE-12 | Actual repeat/error recovery trial | Conditional on11 and demonstrated recovery; unknown outcome stops once, no speculative retry |
+
+Initial missing concrete targets: BEE Birth/Death (executor creation/ownership),
+Scheduler_ScheduleWork79438c, WorkThread_ExecuteRoutine7acde4,
+ItemNotify7e431c, WorkList_RemoveWork7b9cc8 and PostCompletionRoutine7abcc4.
+Select exact original symbol names and next-defined-text ends before capture;
+split bodies over4096 bytes into fixed contiguous windows without relaxing caps.
+Follow only concrete missing targets exposed by those bodies; reuse QUE's14
+unchanged bodies and existing factory/registry archives. File inspection only:
+no AE install/launch/attach/session read/unchanged scan, private host call, foreign
+retain/release/teardown, thread suspension or user-state mutation. Main/merge/
+release remain outside this research packet. Unknown native contracts block
+dependent implementation/trials; independent authorized research continues.
+
+EXE initial selection recorded before capture: Birth7901b4–790918,
+Death790f2c–791170, ScheduleWork79438c–7953f0 (fixed contiguous windows
+79438c–79538c and79538c–7953f0), ExecuteRoutine7acde4–7ad27c,
+RemoveWork7b9cc8–7ba0cc, ItemNotify7e431c–7e48cc and
+PostCompletionRoutine7abcc4–7ac64c. Seven next-defined-text bodies /eight
+windows /3192 instructions. Exact names/pin selected from original nlist;
+no live execution or admission/completion claim. Body over4096 bytes split
+without changing the existing limit.
+
+Concrete target selected before transitive capture: pinned dvacore factory
+139cc–14564 installs ThreadedWorkQueue vptr39dee0. Original table selected
+39ded0 /15 words (zero header plus14 plain chain rebases, not initial22-word
+span that crosses separate RTTI/binds). Actual slots: +10 CallAsynchronously
+14da0, +20 Terminate15004, +48 Flush15450, +50 Pause15b64,
++58 Resume15c70, +60 BlockWhilePaused15d7c. New complete bodies selected:
+WorkerMain147d8–14c30, D1 14c30–14d8c, CallAsynchronously14da0–14ff4,
+Terminate15004–15240, Flush15450–15b64, Pause15b64–15c70,
+Resume15c70–15d7c, BlockWhilePaused15d7c–15ea4, Push17bb0–17dd4,
+Flush callback18644–1864c. Concrete type/slot/owner findings are file evidence,
+not callable private ABI/thread or universal admission/drain proof. Death
+terminates queues and destroys global owners/map; never used as a live gate.
+
+Selected completion/Gate bodies: BEE scoper78f8b0–78fb6c /78fc28–78fe90,
+completion worker7ac64c–7ac8a4; dvacore Gate Open243bbc–243c24 /
+Close243c24–243c38. Total23 complete bodies /24 windows /5901 instructions /
+14 rebases. [EXE implementation checkpoint](C1_CONCRETE_EXECUTOR_2026-10-03.md).
+10 parser/5 executor/78 collector focused PASS; full clean exact candidate /
+independent original/raw scanner/manual/both CI pending. EXE-01 bounded research
+DONE,02–07 PARTIAL,08 research implemented/checks pending,09 IN PROGRESS,
+10–12 BLOCKED / NOT RUN. Backend unbound; original product/all gates retained.
+
 ## Work-queue admission/completion and conditional host adapter — eleven-block pass
 
 2026-10-03 continuation from clean a9500852c00a95f9e4d5760b34b30558d160bbf0,

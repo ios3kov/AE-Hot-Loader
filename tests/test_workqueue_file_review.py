@@ -126,5 +126,43 @@ class WorkQueueFileReviewTests(unittest.TestCase):
             self.assertLessEqual(row[1]-row[0],4096)
         self.assertEqual(review.BEE_UUID,'161300f373f83ebca751959df40a073b')
 
+    def test_partitioned_body_requires_exact_contiguous_bounded_coverage(self):
+        requested = {'_job': (0x1100, 0x1108)}
+        good = {'_job': ((0x1100, 0x1104), (0x1104, 0x1108))}
+        result = review.inspect_text_symbols(bytes(fixture()), b'0123456789abcdef'.hex(),
+                                              requested, partitions=good)
+        self.assertEqual(result['selected']['_job']['instruction_bytes'], 8)
+        for bad in [{}, {'_other': good['_job']}, {'_job': ()},
+                    {'_job': ((0x1100,0x1104),)},
+                    {'_job': ((0x1104,0x1108),(0x1100,0x1104))},
+                    {'_job': ((0x1100,0x1104),(0x1100,0x1108))},
+                    {'_job': ((0x1100,0x1103),(0x1103,0x1108))},
+                    {'_job': ((0x1100,0x1100),(0x1100,0x1108))},
+                    {'_job': ((0x1100,0x1104),(0x1104,0x110c))}]:
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                review.inspect_text_symbols(bytes(fixture()), b'0123456789abcdef'.hex(),
+                                              requested, partitions=bad)
+
+    def test_partitioning_does_not_relax_individual_window_or_original_boundary(self):
+        raw = bytearray(0x1700); raw[:0x1e8] = fixture()[:0x1e8]
+        struct.pack_into('>I',raw,20,0x1600)
+        struct.pack_into('<Q',raw,0x140,0x1600)
+        struct.pack_into('<Q',raw,0x150,0x1600)
+        struct.pack_into('<Q',raw,0x190,0x1100)
+        struct.pack_into('<6I',raw,0x1b8,2,24,0x1300,3,0x1330,16)
+        for i,(sx,address) in enumerate([(1,0x1100),(6,0x2104),(11,0x2110)]):
+            struct.pack_into('<IBBHQ',raw,0x1400+16*i,sx,0xe,1,0,address)
+        raw[0x1430:0x1440] = b'\0_job\0_mid\0_end\0'
+        uuid=b'0123456789abcdef'.hex(); requested={'_job':(0x1100,0x2104)}
+        good={'_job':((0x1100,0x2100),(0x2100,0x2104))}
+        result=review.inspect_text_symbols(bytes(raw),uuid,requested,partitions=good)
+        self.assertEqual(result['selected']['_job']['instruction_bytes'],4100)
+        with self.assertRaises(ValueError): review.inspect_text_symbols(bytes(raw),uuid,requested)
+        with self.assertRaises(ValueError):
+            review.inspect_text_symbols(bytes(raw),uuid,requested,partitions={'_job':((0x1100,0x2104),)})
+        struct.pack_into('<Q',raw,0x1428,0x1900)
+        with self.assertRaises(ValueError):
+            review.inspect_text_symbols(bytes(raw),uuid,requested,partitions=good)
+
 
 if __name__ == '__main__': unittest.main()

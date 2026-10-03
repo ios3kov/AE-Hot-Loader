@@ -20,7 +20,7 @@ def require(value, reason):
         raise ValueError(reason)
 
 
-def inspect_text_symbols(raw, expected_uuid, requested):
+def inspect_text_symbols(raw, expected_uuid, requested, *, partitions=None):
     """Validate slice/commands/tables and exact next-defined-text body bounds."""
     require(28 <= len(raw) <= MAX_FILE_BYTES, 'file size outside bounded scope')
     magic, count, cpu, subtype, base, size, align = struct.unpack_from('>7I', raw)
@@ -34,6 +34,19 @@ def inspect_text_symbols(raw, expected_uuid, requested):
             32+nbytes <= size, 'unreviewed Mach-O header or commands')
     require(re.fullmatch('[0-9a-f]{32}', expected_uuid) and
             0 < len(requested) <= 64, 'invalid selected symbol scope')
+    if partitions is not None:
+        require(set(partitions) == set(requested), 'partitioned symbol scope differs')
+        for name, (start, end) in requested.items():
+            spans = partitions[name]
+            require(0 < len(spans) <= 4 and 0 < end-start <= 16384,
+                    'partitioned body outside bounded scope')
+            cursor = start
+            for low, high in spans:
+                require(low == cursor and low % 4 == high % 4 == 0 and
+                        0 < high-low <= 4096 and high <= end,
+                        'partition gap, overlap or unbounded window')
+                cursor = high
+            require(cursor == end, 'partitioned body coverage incomplete')
     text = None; symtab = None; observed_uuid = None; section_index = 0
     cursor = base+32; command_end = cursor+nbytes
     for _ in range(ncmd):
@@ -102,7 +115,8 @@ def inspect_text_symbols(raw, expected_uuid, requested):
     result = {}
     for name, (start, end) in requested.items():
         require(selected[name] == start and next_address.get(start) == end and
-                0 < end-start <= 4096, 'selected start or next-defined-text boundary drift')
+                0 < end-start <= (4096 if partitions is None else 16384),
+                'selected start or next-defined-text boundary drift')
         payload = raw[base+offset+start-address:base+offset+end-address]
         require(len(payload) == end-start, 'truncated instruction bytes')
         result[name] = {'start': hex(start), 'end': hex(end),

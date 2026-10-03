@@ -13,7 +13,23 @@ Previous status is preserved at
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
 
-## Current checkpoint — BEE queue controls traced, host barrier still open
+## Current packet — concrete executor and completion scope
+
+2026-10-03 EXE-01–12 in progress from clean5f2230f;
+[original executor findings and checks](C1_CONCRETE_EXECUTOR_2026-10-03.md).
+Actual ThreadedWorkQueue creation/owner/vtable now identified. Pause gates future
+workers; Flush has executor-thread/marker/sync/join branches. Death destroys
+subsystem state and is excluded as a transaction gate. Completion/notification
+retain item owners and can transfer removal to housekeeper queue. These original
+file findings do not establish all registry-reader/MFR admission/drain, safe
+factory acquisition/thread/private ABI or full registry/preferences inverse.
+Actual adapter/trials BLOCKED; registration/apply/render NOT RUN.
+23 complete bodies /24 bounded windows /5901 instructions /14 rebases;
+fixed collector/helper and exact complete-group refusals added.10 parser /
+5 executor /78 collector focused PASS. Full exact-source runner/scanner/original
+review/both CI pending. Original product and A/B/C1/C2/D/release retained.
+
+## Previous checkpoint — BEE queue controls traced, host barrier still open
 
 2026-10-03 QUE-01–11 packet at exact clean tested/pushed code
 **a24d8a2f5d0b06234d839005f36cc44749f0478f**;
