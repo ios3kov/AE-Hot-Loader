@@ -8,6 +8,12 @@ TOOLS bounded diagnostics. Standard offline research; dependent private executio
 remains Critical/BLOCKED. The user requested the maximum connected continuation
 of the [host-operation packet](C1_COMPLETE_HOST_OPERATION_2026-10-04.md).
 
+Later continuation: [concrete factory/sequence-data/publication contract](C1_PUBLICATION_CONTRACT_2026-10-04.md)
+resolves the selected ordinary canonical clone and derived sequence-data methods,
+and narrows match-getter reentry. Full nested lifetime/reader coverage/partial
+compensation remain open. This earlier checkpoint retains its original evidence
+and does not become a live registration/apply/render result.
+
 ## Result and practical implication
 
 Two previously missing file bridges are now established for the selected target:

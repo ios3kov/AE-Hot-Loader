@@ -13,7 +13,34 @@ Previous status is preserved at
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
 
-## Current packet — sequence and render dependencies
+## Current packet — publication contract and concrete dependencies
+
+2026-10-04, clean baseline `0ee3317555f4e2f37837724699b9f8f0c70ccd1c`;
+[publication/factory findings and prepared calibration](C1_PUBLICATION_CONTRACT_2026-10-04.md).
+PUB-01/02/06/09/10 DONE for bounded static selection/callback/procedure/closure;
+PUB-03/04/05/07/08 PARTIAL.51 complete bodies/51 windows/4525 instructions checked;
+17 overlapping historical bodies excluded,34 nonoverlapping bodies/2093
+instructions within the stated prior corpus.1133 direct branch checks,nine scalar
+fields,two getter bodies,20 encoded rebases/one import bind and seven SDK pins
+PASS. Concrete ordinary factory→canonical clone and three sequence-data lanes
+are now connected; the selected registration match-name getter cannot reenter.
+Reused registry/preferences/notify bodies sharpen post-mutation error and
+visibility boundaries without demonstrating whole-operation compensation.
+
+Complete nested lifetime, all-reader/reentry coverage, legal late host entry and
+partial-failure compensation remain UNKNOWN. Prepared known-good startup
+calibration needs reviewed marker/suite instrumentation and concrete operation
+authority; it is not an executed diagnostic. Research/product PARTIAL, adapter/
+private implementation/trials BLOCKED; registration/apply/render NOT RUN.
+Source/docs/audit/exact publication receipts retained at
+`/private/tmp/aehl-publication-contract-yd3r3doa`. No executable/profile/refusal/
+product change or AE launch/attach/install/private call. All original
+A/B/C1/C2/D/append/reload/recovery/release obligations and evidence retained.
+Full local executable regression NOT RUN for Markdown-only edits; no deletion.
+Next: override/cache/sequence lifetime and enclosing compensation, then reviewed
+startup marker/suite instrumentation. Do not repeat solved static bridges/scans.
+
+## Previous packet — sequence and render dependencies
 
 2026-10-04, clean baseline `983a28b16d005b6854e696626877cd8c6052096d`;
 [sequence/render findings and exact next dependency](C1_SEQUENCE_RENDER_DEPENDENCIES_2026-10-04.md).

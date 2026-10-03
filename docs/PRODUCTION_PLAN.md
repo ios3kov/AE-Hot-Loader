@@ -12,7 +12,43 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
-## Current packet — sequence and render dependencies
+## Current packet — publication contract and concrete dependencies
+
+2026-10-04, clean baseline `0ee3317555f4e2f37837724699b9f8f0c70ccd1c`. User: execute the proposed ten-stage packet.
+Rules8.0.0; C1 Development, Standard file-only research; dependent private live
+work Critical/BLOCKED. API-SOURCE/TASK-CLOSE/CLEANUP, NATIVE lifetime/threads
+and TOOLS diagnostics apply. Acceptance is bounded original-file dataflow and
+explicit remaining gaps, not runtime safety or hot-add. Existing product,
+executable refusal, A/B/C1/C2/D/reload/recovery/release obligations remain.
+Evidence workspace: `/private/tmp/aehl-publication-contract-yd3r3doa`. No installation/live/private call authorized by this packet.
+
+| ID | Observable acceptance / check | State / evidence |
+|---|---|---|
+| PUB-01 | Concrete ordinary factory/canonical clone selection | DONE statically; actual virtual route checked |
+| PUB-02 | Selected UI/immutable/thread-local sequence-data methods | DONE statically; exact tables and SDK flags |
+| PUB-03 | Descriptor/nested ownership through clone/destruction | PARTIAL; raw factory/sequence links and local owners distinguished; transitive lifetime open |
+| PUB-04 | Retained routine/code/callback lifetime | PARTIAL; queried provider/raw entry/module keep flag distinguished; complete lifetime open |
+| PUB-05 | Selected name/index/UI catalog readers/protection | PARTIAL; selected mutex/owner paths checked; full readers and nested callbacks open |
+| PUB-06 | Registration match-name target/reentry boundary | DONE for selected ordinary two-instruction getter; other callbacks open |
+| PUB-07 | Preparation/publication/commit | PARTIAL; post-mutation preferences can fail; notify byte is not demonstrated commit |
+| PUB-08 | Partial-error compensation | PARTIAL; local unwind checked; whole-operation compensation UNKNOWN |
+| PUB-09 | Known-good startup calibration procedure | DONE as preparation; marker/suite instrumentation missing; live BLOCKED/NOT RUN |
+| PUB-10 | Independent checks/docs/evidence/commit/push/exact CI | DONE for bounded closure; exact receipts retained beside original archive |
+
+[Exact publication/factory checkpoint](C1_PUBLICATION_CONTRACT_2026-10-04.md).
+51 complete bodies/51 windows/4525 instructions,1133 direct branch checks,
+nine scalar fields,two getter bodies,20 encoded rebases/one import bind PASS.
+17 overlapping historical bodies excluded:34 nonoverlapping bodies/2093
+instructions in the stated corpus. Eight original and seven SDK pins/previous
+SEQ archives preserved. Five bounded tasks DONE /five PARTIAL; product PARTIAL,
+adapter/trials BLOCKED, registration/apply/render NOT RUN. No executable/profile/
+refusal/product change. Source/docs/raw-audit/exact publication receipts retained
+at the evidence workspace; full local executable regression NOT RUN for Markdown
+only. Next: override/cache/sequence lifetime and enclosing partial-failure
+compensation; reviewed marker/suite instrumentation for conditional startup
+calibration. No unchanged scan, private trial, merge/release or evidence deletion.
+
+## Previous packet — sequence and render dependencies
 
 2026-10-04, clean baseline `983a28b16d005b6854e696626877cd8c6052096d`.
 Rules8.0.0 / AI_ENTRYPOINT first; API-SOURCE, TASK-CLOSE, CLEANUP,

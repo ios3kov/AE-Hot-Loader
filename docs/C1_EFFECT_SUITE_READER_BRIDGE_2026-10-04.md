@@ -9,6 +9,12 @@ Standard offline research; a private host operation remains Critical and blocked
 The user's continuation resumes original-file research after the completed
 text-only DOCFIX pass and comparison of the supplied model reports.
 
+Later continuation: [concrete factory/sequence-data/publication contract](C1_PUBLICATION_CONTRACT_2026-10-04.md)
+resolves the selected ordinary canonical clone and derived sequence-data methods,
+and narrows match-getter reentry. Full nested lifetime/reader coverage/partial
+compensation remain open. This earlier checkpoint retains its original evidence
+and does not become a live registration/apply/render result.
+
 ## Result
 
 Later continuation: [host-operation boundaries](C1_COMPLETE_HOST_OPERATION_2026-10-04.md)

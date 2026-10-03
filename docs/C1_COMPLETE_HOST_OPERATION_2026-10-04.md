@@ -8,6 +8,12 @@ and TOOLS bounded diagnostics. Standard offline research; dependent private
 execution remains Critical/BLOCKED. The user requested the maximum connected
 packet following the reader bridge and comparison of external model reports.
 
+Later continuation: [concrete factory/sequence-data/publication contract](C1_PUBLICATION_CONTRACT_2026-10-04.md)
+resolves the selected ordinary canonical clone and derived sequence-data methods,
+and narrows match-getter reentry. Full nested lifetime/reader coverage/partial
+compensation remain open. This earlier checkpoint retains its original evidence
+and does not become a live registration/apply/render result.
+
 ## Result
 
 The selected original files now show how an ordinary FCSpec owns its routine
