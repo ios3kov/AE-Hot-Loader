@@ -56,6 +56,22 @@ Boundary review: preliminary map-init range also contained two distinct next-sym
 
 Clean collection at36b3c93 refused oversized3,543,605-byte dvacore nm output. Add a4 MiB budget only for this exact pinned nm command; all other tools remain2 MiB and budgets beyond each ceiling refuse. Additional TDD refusal control required. Preserve incomplete collection/scanner receipts. Final scanner uses an independently byte-matched clean local Git clone of corrected source, preserving generated evidence outside its scope.
 
+Final bounded reconciliation: [transitive findings/receipts](C1_FACTORY_TRANSITIVE_2026-10-03.md).
+Corrected clean code2f5fcb962dd4509e5f485b7d2cf6db017c6ae887: TRANS-01/02 class
+registration/unique map/lookup/callback and distinct error protocols traced;03/04
+shared/weak retain/expiry/throw/destructor boundaries traced, actual supported AE
+ownership UNKNOWN;05 same-input GUID initialization counterpart resolved statically,
+runtime NOT OBSERVED;06 selected class locks end before callback, no host-wide
+transaction;07 collector/refusals implemented,69 focused PASS, actual host adapter
+BLOCKED;08 clean24-window/1369-row/780-anchor collection and separate raw-byte/
+GUID/import/nlist/ZIP/346-source-file review PASS,450 Python/no skips,62 Node/
+22 stages PASS, raw scanner review/retention/docs/cleanup and both exact-source CI completed/success.
+First size refusals and earlier source runner preserved; only final source evidence
+can close final code checks. Actual factory receiver/late ABI/reachability/thread/
+continuous admission/drain/full rollback unresolved; AE/registration/apply/render
+NOT RUN. This closes independent research work only, not actual receiver/call or
+full eight-block product acceptance. Original product/A/B/C1/C2/D/release retained.
+
 ## Factory receiver acquisition — seven-block pass
 
 2026-10-03 user “делай” accepts the preceding seven-step proposal. Baseline clean

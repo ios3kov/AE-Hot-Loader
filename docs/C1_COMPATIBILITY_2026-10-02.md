@@ -11,6 +11,7 @@ Compatibility Status; do not infer a supported AE range from a single build.
 
 | Component / exact configuration | Candidate / evidence | Test Status | Compatibility Status / scope |
 |---|---|---|---|
+| File-only transitive class factory collector, exact pinned dvacore/MEE arm64 files | code2f5fcb962dd4509e5f485b7d2cf6db017c6ae887; [transitive review](C1_FACTORY_TRANSITIVE_2026-10-03.md) |69 focused/450 full Python/no skips,62 Node/22 stages;24 windows/1369 instructions/780 anchors/raw original branch/GUID/import/nlist/ZIP/source review PASS; Research CI37140197009/macOS CI37140197001 completed/success | UNKNOWN for runtime: same GUID initialization inputs, class locks end before creation, actual object reads precede weak lock; supported retained receiver/call ABI/thread/full transaction not proved; AE/registration/apply/render NOT RUN |
 | Historical diagnostic, AE 25.6x101 arm64 | observe-d548b007e316, native source 7c983c5; [live record](C1_DIAGNOSTIC_LIVE_PASS_2026-10-02.md) | PASS | LIMITED: one read-only count/callback diagnostic, no effect registration/apply/render claim |
 | Owned-buffer decoder, C++17 | source 15c528f; [decoder evidence](C1_RETAINED_IDENTITY_DECODER_2026-10-02.md) | PASS | AE compatibility UNKNOWN: owned fixtures and CI only; no native installable candidate |
 | New record/name capture | [owned-chain core](C1_RETAINED_CAPTURE_REVIEW_2026-10-02.md), exact source eb559ed, no native candidate yet | Full available owned-data/CI PASS; NOT RUN in AE | UNKNOWN; offline adapter preparation cannot establish live identity/lifetime |

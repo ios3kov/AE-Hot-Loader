@@ -12,6 +12,33 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
+## Transitive factory — creation and ownership paths traced
+
+[Transitive review](C1_FACTORY_TRANSITIVE_2026-10-03.md):24 complete pinned dvacore/
+MEE windows /1369 instructions /780 anchors. Class-map registration and lookup
+locks found; shared lookup lock ends before the creation callback. Throwing24-byte
+return and status/output-reference variants differ; successful status is not proof
+of a valid receiver. Shared-from-this temporarily retains weak storage, obtains
+strong ownership through libc++ lock, can return empty/throw, and reads object/
+vtable BEFORE that lock. Copied integers cannot establish initial safe reachability.
+Both distinct GUID storage cells use same36-byte literal/address/constructor during
+initialization; earlier missing-counterpart question resolved statically. Actual
+runtime GUID equality NOT OBSERVED. New fixed collector and four TDD/refusal tests
+implemented; exact-command4 MiB dvacore symbol budget correction preserves2 MiB
+for all other inspections. Actual retained host adapter remains BLOCKED.
+At exact clean code2f5fcb962dd4509e5f485b7d2cf6db017c6ae887:69 focused /
+450 full Python/no skips,62 Node/22 stages PASS. Clean collection/separate raw branch/
+GUID/import/nlist/ZIP/346-source-file review PASS. Initial collector/scanner size
+refusals preserved; final scanner scans independently byte-matched clean local Git
+clone, raw exit1/local-CLI false positive retained. Research CI37140197009 and macOS
+CI37140197001: completed/success. TRANS-01–06 bounded file findings documented;
+07 research collector/refusals done, actual supported receiver/call/thread component
+BLOCKED;08 local checks/review/both CI/retention/docs/cleanup complete.
+Backend NOT READY; registration/apply/render NOT RUN. Product/A/B/C1/C2/D/release
+retained. Next: substantiate non-creating existing-factory acquisition, callable ABI/
+initial reachability/retained ownership/thread boundary; host-wide admission/drain/
+whole-effect rollback still required before a live registration packet.
+
 ## Factory receiver — acquisition route traced, actual ownership open
 
 [Receiver review](C1_FACTORY_RECEIVER_2026-10-03.md): exported registration links

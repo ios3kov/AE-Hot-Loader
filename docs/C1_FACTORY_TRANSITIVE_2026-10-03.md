@@ -20,7 +20,7 @@ UUID74A30DBA-A08B-367B-BD99-15D6D77E9D52. AE25.6x101 arm64 only.
 Existing dvacore profile pin reused for offline collection, no native ABI extension.
 Symbol inventories select exact next distinct text boundaries; import stubs12 bytes.
 Preliminary map-init grouped three complete bodies; final collection splits exact
-initializer/destructor/recursive-destroy boundaries. Discovery receipt preserved.
+initializer/destructor/recursive-destroy boundaries. Grouping correction recorded; final separate bodies and discovery inventories retained.
 Named MEE initializer is recaptured solely for new counterpart comparison, not an
 unchanged plug-in scan. No original binaries/unbounded disassembly committed.
 
@@ -178,3 +178,83 @@ Final scanner uses a fresh owned local Git clone at exact corrected SHA with eve
 tracked Git/source byte independently compared and no generated evidence outputs.
 This preserves original generated evidence and scopes scanner to actual tracked
 source. Raw findings and final scanner exit remain review inputs, no suppression.
+
+## Exact clean-source reconciliation
+
+This supersedes PENDING verification above. Corrected tested code
+2f5fcb962dd4509e5f485b7d2cf6db017c6ae887. Subsequent documentation-only SHA is not claimed to have run these
+code checks. First36b3c93 source/runner/raw scanner/refusal remain historical.
+
+| Task | Bounded acceptance/result | Remaining dependent scope |
+|---|---|---|
+| TRANS-01 | Registration/unique insertion/token lookup and exact original boundaries reviewed | Actual live class-map/token lifetime NOT OBSERVED |
+| TRANS-02 | Creation callback,24-byte indirect result, distinct status/out-reference and throw/error paths reviewed | Supported callable private ABI/actual receiver UNKNOWN |
+| TRANS-03 | Shared-from-this virtual adjustment/weak hold/strong lock/paired output traced | Initial object reachability and supported actual ownership UNKNOWN |
+| TRANS-04 | Empty/expired/lock-failure throw/temporary release/control-storage/destructor boundaries reviewed | Installed external libc++ and actual AE lifetime not certified |
+| TRANS-05 | Both distinct GUID cells initialize with same original literal/address/length/constructor | Runtime equality/order/later mutation NOT OBSERVED |
+| TRANS-06 | Selected class registry locks/initialization/normal-unwind unlock established; unlock before callback | Whole-host reader/render exclusion/drain/full rollback NOT PROVEN |
+| TRANS-07 | Fixed collector/refusals and scoped size fix IMPLEMENTED,69 focused PASS | Actual retained host adapter BLOCKED, existing gate unconnected |
+| TRANS-08 | Clean capture/separate raw-byte/archive/source review/full runner/raw scanner/both exact-source CI/retention/docs/cleanup COMPLETE | Original full product/A/B/C1/C2/D/release open |
+
+- Clean collection `resource-factory-transitive-dce50875-7twu1fq1.zip`, SHA256 7699f92179db3621c0ac7209280ec51d789082df599f1dcdbf2725bbfd0eeedc,
+  52 members. Exact input pins before/after,24 complete windows/
+  1369 rows/780 anchors, CRC/manifest hashes and equality to exclusive owned outputs
+  PASS. Zero Adobe calls. Actual registry/apply/render NOT RUN.
+- Separate verifier `aehl-transitive-independent.py`, SHA256
+  3241de59e9abf85789b2b6aeade51dffd43af0c59d527599ec2f3893c8deb07f; no collector import. Original arm64
+  Mach-O mapping/raw1369 instructions,146 direct/79 conditional/7 indirect branches/
+  50 returns, GUID roots/literal/36-byte input/status constants/virtual adjustment/
+  paired result fields PASS. Original nlist confirms21 complete next-symbol bodies
+  plus3 exact12-byte stubs; indirect-symbol/nlist/library ordinal confirms GUID
+  constructor→dvacore, weak lock/release→libc++. Stub GOT file VMs0xedb90/
+  0x39cc00/0x39cbf8, no live pointers. Review receipt SHA256
+  fb6fec69211188bee331609fbcb571d68c9514b5091c1d2c6733949bed6be839. Raw branch checks do not certify all transitive
+  side effects or installed runtime ABI.
+- Full runner `AEHL-checks-_ih8pwrq.zip`, SHA256 47402dae45435753bc2d31ad9744c93fd745627b2f10d0b284a2cb6ebbdc6881,
+  25 members:450 Python, zero skips/errors/failures/expected failures/
+  unexpected successes,62 Node, all22 stages PASS. Python74.131 seconds; actual
+  owned native controls include prior ASan/UBSan stand, no AE ABI claim.
+  TDD logs retain3 absent-mode errors and1 absent-budget argument error, then
+  focused68/69 PASS; original collection size refusal was discovered separately,
+  not hidden by the full runner (which does not run original Adobe collector).
+- Independent runner CRC/manifest/payload review and all346 working/Git/source-copy
+  bytes PASS; clean source/source_unchanged_after=true. Source inventory SHA256
+  36455a8317b19c600e452c5e4a93566aec1e2d2e784a87893c954769ccbbef5c; source-proof SHA256 bcf7bcf3e32bbb7460205dee7bcfbae65466dcdf74aca738b1ba965d920e4955.
+- First raw scanner36b3c93 exit2/incomplete retained for generated oversized file.
+  Final raw scanner2f5fcb9 SHA256 ec4998065d88f1930ece9620a72d7c80ca959af957c4b5fa30f88788e3ffd3a5,
+  exit1/review_required/release_readiness=not_assessed, omissions=[]: independently
+  byte-matched clean local Git clone at exact source;346 tracked files (236 supported
+  UTF-8 text files and110 unsupported types), generated evidence excluded by source
+  snapshot. Source-copy proof SHA256 4b59cbcd1295403e8ec65890dc04f9996039c6d14555d67b640bf0c52fbce5b9.
+  Sole vibe.no_ratelimit_auth tools/artifact_manifest.py:71 is a local argparse
+  manifest CLI, no HTTP/auth route/listener. Separate review disposes as false
+  positive; raw finding/exit retained without suppression. Manual review SHA256
+  fbfa5062d58e6df9ad5796eff60798e993e50bd2f79d811e8298837b01613172.
+- Research CI [37140197009](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37140197009)
+  and macOS CI [37140197001](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37140197001)
+  completed/success at exact2f5fcb962dd4509e5f485b7d2cf6db017c6ae887. Internal/offline checks, no AE runtime gate.
+
+## Retention, cleanup and next dependency
+
+Durable private owned receipts: `build-ae-hot-loader/transitive-closeout-2f5fcb9-k2u3cbg7`.
+Byte-identical clean collection/full runner, separate verifier/review/source proof,
+first and final raw scanners/manual review, initial refusal and earlier runner,
+TDD/focused logs and compressed preliminary symbol/body/xref inventories retained.
+RETENTION.json SHA256 89eaea97d2470ddfe5f365297acfb58551a29a3c2aa55329e6ba0481ce25b668. Final CI.json and CLOSEOUT.json
+bind exact source results and later docs-only commit/full receipt inventory.
+Source scan clone remains private preserved evidence, no shared/loaded/unknown or
+historical materials removed. Owned native temporary binaries cleaned by test
+lifecycle. No SDK/app/plugin/project/AE session mutation, prefs/cache purge, scan,
+launch/attach/install/read active session/private invoke/refcount/destructor/unload,
+main update, merge or release. Cleanup review closes assessment, not blanket deletion.
+
+Next concrete dependency: substantiate non-creating existing-factory acquisition
+(e.g. the previously reviewed CreateClassRefInternal(false) path only after its
+actual callable/owner/thread/reachability contract is established), then obtain and
+retain an actual receiver. File-level creation/ownership findings are now traced;
+supported late ABI/initial reachability/retained host ownership/thread boundaries
+remain UNKNOWN. Continuous host-wide admission/drain/whole-effect rollback remain
+required before registration/apply/render trial. No copied-integer ownership or
+wrapper replay; full product/receiver/call acceptance is not declared complete.
+
+Final exact-source CI receipt CI.json SHA256 7c366af6537eb4760adafcd25bb1e35baaada3085dad50520eff219f9802c72c. Both workflows completed/success at corrected tested code; later docs-only commit retains unchanged non-document source bytes.
