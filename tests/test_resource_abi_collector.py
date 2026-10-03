@@ -18,6 +18,23 @@ spec.loader.exec_module(collector)
 
 
 class ResourceAbiCollectorTests(unittest.TestCase):
+    def test_suspend_context_scope_is_fixed_file_only_and_preserves_live_profile(self):
+        windows=collector.review_windows('suspend-contexts')
+        self.assertEqual(len(windows),27)
+        self.assertEqual(sum((end-start)//4 for _,_,start,end in windows),3788)
+        self.assertEqual({name for _,name,*_ in windows},{'U'})
+        self.assertNotIn('U',collector.FILE_ONLY_INPUTS)
+        path,pin=collector.INPUTS['U']
+        self.assertIn(str(path),collector.PROFILE.read_text())
+        self.assertIn(pin,collector.PROFILE.read_text())
+        self.assertNotIn('suspend-contexts',collector.DATA_WINDOWS)
+        for _,image,start,end in windows:
+            self.assertLessEqual(end-start,4096)
+            self.assertNotRegex(collector.lldb_script(collector.INPUTS[image][0],start,end),
+                                r'process|expression|call ')
+        self.assertEqual(collector.MAX_OUTPUT,2*1024*1024)
+        self.assertEqual(collector.DVACORE_SYMBOL_OUTPUT,4*1024*1024)
+
     def test_executor_scope_is_complete_grouped_offline_and_preserves_host_profile(self):
         windows=collector.review_windows('workqueue-executor')
         self.assertEqual(len(windows),24)

@@ -3,7 +3,8 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [concrete executor](C1_CONCRETE_EXECUTOR_2026-10-03.md),
+Current continuation: [suspend contexts](C1_SUSPEND_CONTEXTS_2026-10-03.md),
+[concrete executor](C1_CONCRETE_EXECUTOR_2026-10-03.md),
 [BEE queue controls](C1_WORKQUEUE_CONTROLS_2026-10-03.md),
 [scoped admission controls and match-name correction](C1_ADMISSION_CONTRACTS_2026-10-03.md),
 [actual factory object owners](C1_FACTORY_OBJECT_OWNERS_2026-10-03.md),
@@ -23,7 +24,19 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
-## Concrete executor — current packet
+## Suspend contexts — current packet
+
+[SUS checkpoint](C1_SUSPEND_CONTEXTS_2026-10-03.md),12 accepted steps from
+clean45a7aa4.27 complete original U bodies/3788 instructions: current-context TLS
+transfer and callback-local Gate, per-context weak activation owners, termination
+flag without worker join. Fixed collector/refusals,4 helper/79 collector focused
+PASS; full clean/source/original/scanner/manual/CI pending. Native safety contracts
+remain UNKNOWN: continuous all-registry-consumer/MFR admission/drain, safe retained
+factory acquisition/private ABI/thread and whole-effect inverse. Adapter/trials
+BLOCKED, registration/apply/render NOT RUN; no speculative private invocation.
+Original product/all gates retained; preserve all original evidence/corrections.
+
+## Concrete executor — previous packet
 
 [EXE checkpoint](C1_CONCRETE_EXECUTOR_2026-10-03.md),12-block packet closed as
 **PARTIAL:3 DONE /6 PARTIAL /3 BLOCKED**,01/08/09 DONE,02–07 PARTIAL,

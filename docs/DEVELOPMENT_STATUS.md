@@ -13,7 +13,21 @@ Previous status is preserved at
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
 
-## Current packet — concrete executor and completion scope
+## Current packet — suspend contexts and continuous admission
+
+2026-10-03 continuation at clean45a7aa4, accepted9 main/3 conditional steps;
+[SUS checkpoint](C1_SUSPEND_CONTEXTS_2026-10-03.md). Actual U_SuspendContext
+definitions located through BEE/aelib dependency ordinals.27 complete original
+bodies/3788 instructions identify current-context TLS transfer, one dispatched
+callback Gate and per-context activation owners; the process termination method
+sets a flag, not a global worker join. All-reader/MFR exclusion, safe factory
+acquisition/private ABI/thread and full registry/preferences recovery unproved.
+Fixed bounded collector/refusals added,4 helper/79 collector focused PASS;
+full clean source/original/scanner/manual/CI pending. Backend unbound, actual
+adapter/trials BLOCKED, registration/apply/render NOT RUN. Original product and
+A/B/C1/C2/D/release retained.
+
+## Previous packet — concrete executor and completion scope
 
 2026-10-03 EXE-01–12 closed as a partial research packet from clean5f2230f;
 [original executor findings and checks](C1_CONCRETE_EXECUTOR_2026-10-03.md).

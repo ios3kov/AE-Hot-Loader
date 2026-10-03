@@ -29,6 +29,10 @@ _executor_spec = importlib.util.spec_from_file_location(
     'aehl_executor_file_review', Path(__file__).with_name('executor_file_review.py'))
 executor = importlib.util.module_from_spec(_executor_spec)
 _executor_spec.loader.exec_module(executor)
+_suspend_spec = importlib.util.spec_from_file_location(
+    'aehl_suspend_file_review', Path(__file__).with_name('suspend_file_review.py'))
+suspend = importlib.util.module_from_spec(_suspend_spec)
+_suspend_spec.loader.exec_module(suspend)
 MAX_OUTPUT = 2 * 1024 * 1024
 DVACORE_SYMBOL_OUTPUT = 4 * 1024 * 1024
 WINDOWS = {
@@ -38,6 +42,8 @@ WINDOWS = {
     "PLUG": (0x8A6C, 0x9028),
 }
 REVIEWS = {
+    'suspend-contexts': tuple((label, row[0], row[1], row[2])
+                             for label, row in suspend.WINDOWS.items()),
     'workqueue-executor': tuple((label, row[0], row[1], row[2])
                                for label, row in executor.WINDOWS.items()),
     'workqueue-control': tuple((label, 'BEE', row[0], row[1])
@@ -387,6 +393,8 @@ ENTRY_TABLE_TARGETS = {
     "ASL-owner-vtable": (0, 0x31830, 0x27c90, 0x27c94, 0x27ca8, 0x27cc0, 0x27d3c),
 }
 INPUTS = {
+    'U': (APP / 'Contents/Frameworks/U.dylib',
+          'aecabb33c5ac5948ad742848c46588398bc690411b70aae7ca3f08a919362daa'),
     "dvacore": (APP / "Contents/Frameworks/dvacore.framework/Versions/A/dvacore",
                 "cb6faaf5b745903b80b44105b658ab68186d5065ae47c8a57c9b23e26aa8ecb0"),
     "aelib": (
@@ -7373,12 +7381,23 @@ def main():
         queue_symbols = None
         executor_evidence = {}
         executor_symbols = {}
+        suspend_evidence = {}
+        suspend_symbols = None
         sdk_contract = None
         if args.review == 'admission-contracts':
             sdk_contract, sdk_excerpt = admission_sdk_contract()
             write_exclusive(folder / 'SDK-admission-contracts.txt', sdk_excerpt)
         for name in names:
             path, _ = INPUTS[name]
+            if args.review == 'suspend-contexts':
+                require(name == 'U', 'suspend-context file-only scope mismatch')
+                raw = path.read_bytes()
+                require(hashlib.sha256(raw).hexdigest() == observed[name],
+                        'suspend-context image changed before symbol review')
+                suspend_symbols = suspend.collect_symbols(raw, workqueue.inspect_text_symbols)
+                write_exclusive(folder / 'U-symbols.json',
+                                json.dumps(suspend_symbols,indent=2,sort_keys=True)+'\n')
+                continue
             if name == 'BEE' or args.review == 'workqueue-executor':
                 require(args.review in ('workqueue-control', 'workqueue-executor'),
                         'BEE file-only scope mismatch')
@@ -7409,6 +7428,9 @@ def main():
                  "--source", str(folder / (label + "-inspect.lldb"))],
                 timeout=60)
             instruction_count = verify_lldb_disassembly(disassembly, diagnostics, start, end)
+            if args.review == 'suspend-contexts':
+                suspend_evidence[label] = suspend.verify_window(
+                    disassembly, label, workqueue.verify_transcript)
             if args.review == 'workqueue-executor':
                 executor_evidence[label] = executor.verify_window(
                     disassembly, label, workqueue.verify_transcript)
@@ -7540,6 +7562,10 @@ def main():
             "inputs": outputs,
             "data_windows": data_outputs,
         }
+        if args.review == 'suspend-contexts':
+            record['suspend_context_evidence'] = suspend_evidence
+            record['original_symbol_inventory'] = suspend_symbols
+            record.update(suspend.claims())
         if args.review == 'workqueue-executor':
             record['executor_evidence'] = executor_evidence
             record['original_symbol_inventory'] = executor_symbols
@@ -7741,8 +7767,8 @@ def main():
             record['actual_record_identities'] = 'NOT OBSERVED'
             record['allocation_lifetime_quiescence'] = 'NOT PROVEN'
             record['safe_repeat_invocation'] = 'NOT PROVEN'
-        if args.review in ('workqueue-control', 'workqueue-executor'):
-            require(source_identity() == commit, 'source changed during workqueue collection')
+        if args.review in ('workqueue-control', 'workqueue-executor', 'suspend-contexts'):
+            require(source_identity() == commit, 'source changed during fixed file collection')
         archive = package(folder, record)
         print("PASS: bounded offline " + args.review + " evidence only; Adobe calls=0")
         print("Report: " + str(archive))

@@ -12,7 +12,41 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
-## Concrete executor, completion and conditional host adapter — twelve-block pass
+## Suspend-context scope and conditional host adapter — current twelve-block pass
+
+User accepted the next9 main /3 conditional steps with “делай”. Start from clean
+45a7aa4d6ab92e87e0db81ee419166b1db094e92 on research/ordinary-plugin-discovery;
+tested historical code9921ab0. Rules8.0.0 /132b7cd32873ba7328e3128ffbb33e1929b74d45,
+AI_ENTRYPOINT first. C1 Development research; native owner/thread/admission/ABI
+Critical, bounded original-file collector Standard. API-SOURCE, RENDER-001,
+TASK-CLOSE/CLEANUP and production-engineering apply. Retain ordinary-third-party
+no-restart product and A/B/C1/C2/D/release. No arbitrary private invocation,
+destructive lifecycle, thread suspension, unchanged scan or user-state mutation.
+
+| ID | Task / observable acceptance | Check and dependency |
+|---|---|---|
+| SUS-01 | Determine actual suspend-context mechanism and scope | Fixed-pin original definition/import inventory, selected complete bodies before capture; distinguish cooperative context from host transaction |
+| SUS-02 | Establish continuous new-work exclusion | Trace scope enter/leave/control/admission; demonstrate caller-held exclusion throughout registration or retain UNKNOWN |
+| SUS-03 | Establish actual running work/MFR and callback drain | Selected suspend/wait/resume paths reconciled with EXE worker/housekeeper/notify; complete coverage required |
+| SUS-04 | Cover all registry consumers | Original registry/render archive/pin reconciliation; uncovered readers stay explicit |
+| SUS-05 | Safe actual existing factory acquisition | Initial receiver/retention/private ABI/thread/full owners; do not substitute guessed invocation |
+| SUS-06 | Whole-effect failure recovery | Registry/canonical/preferences inverse across publication/error; prior evidence retained |
+| SUS-07 | Implement substantiated research/refusals | Fixed bounded original-evidence collection, no mock as native host proof; actual native design depends on01–06 |
+| SUS-08 | Verify exact implementation | Focused/full tests, original independent review, raw scanner/manual review and exact-source CI |
+| SUS-09 | Close packet | Docs/task reconciliation, commit/push, source-byte and owned-only cleanup/retention evidence |
+| SUS-10 | Actual AE adapter | Conditional on supported01–06 contracts and mandatory checks; otherwise BLOCKED/unbound |
+| SUS-11 | Registration→apply→render without restart | Conditional on10 and current safe exact-candidate environment; otherwise BLOCKED/NOT RUN |
+| SUS-12 | Repeat/error recovery trial | Conditional on11 and complete demonstrated recovery; unknown outcome stops once |
+
+Initial research follows only U_SuspendContext targets exposed by EXE item stage
+scopers and lifecycle import; identify original defining image and complete
+symbol boundaries before capture. Reuse unchanged EXE/factory/registry evidence
+with original identities; no repeated whole-body capture. Each capture<=4096,
+existing output caps unchanged. Unknown native contracts block dependent work;
+independent authorized research continues. SUS-01–09 IN PROGRESS,10–12 pending
+prerequisites. [Current checkpoint](C1_SUSPEND_CONTEXTS_2026-10-03.md).
+
+## Concrete executor, completion and conditional host adapter — previous twelve-block pass
 
 2026-10-03 continuation from clean5f2230fcf31bc0b6fe933e12130b02ae2c5b2ef8,
 research/ordinary-plugin-discovery. User accepted the proposed9 main /3 conditional
