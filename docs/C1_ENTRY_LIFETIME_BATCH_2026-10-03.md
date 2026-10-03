@@ -185,3 +185,71 @@ on owned offline fixtures. A later host failure trial requires a separate packet
 the positive registration trial cannot silently add intentional-crash cases.
 This sequence is a prepared validation design, **NOT RUN** and **BLOCKED** on the
 mandatory semantics/safety/identity/authority above. Backend NOT READY.
+
+
+## Clean-source verification — local and exact-source CI PASS
+
+Code/test source **50e93973309fbff0b65e37b7c6cbb26e4b9422ad**. Focused collector
+suite **32 PASS**. Four new tests and the extended offline pin expectation first
+failed against the previous implementation as expected. Refusal coverage binds
+all 225 changed anchors, duplicate/incomplete/unreviewed windows and altered table
+rebases/targets/bind/reserved/format/coverage. Both offline-only input hashes and
+retargeted collector inputs are checked; neither enters the native profile.
+
+All **nine** modes collected at this clean source. New archive
+`build-ae-hot-loader/resource-entry-lifetime-e3a0a2f8-7icvxdxa.zip`, SHA-256
+`16422ccf644f8045b1b4ba30d83e64620ea6d1a73626e390c2feff537abe7588`,
+contains 61 members. Original ASLFoundation/FLT/PLUG pins unchanged before/after.
+Offline pin manifest SHA-256
+`f9dba1e09f96d937f25eb0c4d22b4b872a8c570408b22324e45137a79ad745f1`.
+
+Independent verifier `../private-live/verify_entry_lifetime_20261003.py`, SHA-256
+`97378b67f632fbdf9a975231b8e2273c9b3d9c2712f8c99df1878796a0ea24ed`,
+checks exact ZIP inventory/CRC/member hashes/source and complete decoded coverage
+for all nine archives. For the new mode it independently decodes **all 264 direct
+B/BL and 22 indirect BR/BLR** from original arm64 Mach-O bytes, compares all 32
+serialized words to original bytes and walks original LC_DYLD_CHAINED_FIXUPS pages
+to prove membership/targets of **29 rebases**. This supports file correspondence,
+not an actual live receiver or safe lifetime. Result
+`entry-independent-50e9397.json`, SHA-256
+`318214e378aaa6c25995dfdd0e0c4fae25bd75c8ac6056c2e729282c058b8b35`.
+
+Full local available regression **372 Python/no skips, 62 Node, 22 stages PASS**.
+Report `/private/var/folders/bs/39klz7cd52z6xkm817vj0zjm0000gn/T/AEHL-checks-ycl86uds.zip`,
+SHA-256 `4c39bf96cb11d7344e06022d6471422eb2f6004a397184e2333af15821a84e4e`.
+Independent archive/303 tracked source hashes/unchanged-source verification PASS;
+`entry-local-independent-50e9397.json`, SHA-256
+`f379658d59e35eeea4df8e5e579cee78b46b9032b9fa791798bc5a0aa1e66cad`.
+Live operations false; full AE pipeline BLOCKED and product package NOT RUN.
+
+Bounded source/static review completed at exact source; scanner snapshot covers
+658 text files, no inventory omissions, 418 unsupported files and four workflows,
+all selected checks completed. Raw exit 1 retains the sole known heuristic
+`vibe.no_ratelimit_auth` at `tools/artifact_manifest.py:71`; reinspection confirms
+local argparse with no HTTP auth route. No suppression or security certification.
+Snapshot `entry-audit-50e9397.json`, SHA-256
+`ce669e1fc55e646bf23d03978a7c298a3325ba988bd8985191f526c9a1b2d0ab`.
+History, runtime/browser/authorization/performance/rollback/dependency-vulnerability
+checks are not assessed by that scanner. Native helper/profile/gates unchanged.
+
+Research CI [37117715670](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37117715670)
+and macOS CI [37117715623](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37117715623)
+both completed/success at exact 50e9397. Private final receipt
+`entry-ci-50e9397-final.json`, SHA-256
+`d1a1afdf8c5adc20ec7a2fff6aa499e9a8ad701acd72fb3e4b2168cb922c1e11`.
+CI build/sign/package/owned synthetic checks do not prove AE loading, late
+registration, application or rendering. No runtime gate is promoted.
+
+ENTRY-001/002 complete in bounded file scope; ENTRY-003 produces the reviewed
+failure/stop-and-preserve contract; ENTRY-004 offline verification and trial design
+complete. The trial itself remains BLOCKED/NOT RUN, with mandatory prerequisites
+explicit above. Backend NOT READY; main/release/installed artifacts unchanged.
+
+Next file-only locator prepared at
+`../private-live/entry-next-provider-locator-rricv5va`: PluginSupport complete
+constructor `0x4bb34–0x4bbd0`, vtable `0xab500`, VTT `0xab5f0`, next construction
+table `0xab648`. Existing exact PluginSupport pin unchanged before/after bounded
+symbol/serialized-word inspection. This is preliminary location data only, not
+new body/virtual target semantics or clean-source acceptance. Next stage reviews
+provider/interface construction and virtual-table correspondence, then remaining
+resource publication isolation and host-quiescence contracts before a live packet.

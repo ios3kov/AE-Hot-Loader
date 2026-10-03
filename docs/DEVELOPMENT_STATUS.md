@@ -12,17 +12,26 @@ Previous status is preserved at
 [immutable e96a1c8](https://github.com/ios3kov/AE-Hot-Loader/blob/e96a1c8f31b5aad70c11400b17c1f11e9bbe4154/docs/DEVELOPMENT_STATUS.md).
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
-## Latest C1 combined entry/lifetime batch — prepared, acceptance pending
+## Latest C1 combined entry/lifetime batch — offline PASS
 
-Stage C1 / Development, rules 6.2.0. This combined cycle covers library retention,
-FCSpec/PLUG saved-entry correspondence, failure/recovery constraints and a concrete
-future AE trial design. Twenty-three complete bodies/thunks / 1351 instructions /
-225 anchors plus three serialized tables / 29 rebases; new focused suite 32 PASS.
-ASLFoundation pin is offline only; native profile/helpers/ResourcePassGate unchanged.
-Clean-source collection, independent original-byte verification, full regression/
-static review and exact-source CI remain pending. No live packet or AE operation.
-See [combined evidence and trial design](C1_ENTRY_LIFETIME_BATCH_2026-10-03.md).
-Backend NOT READY; actual registration/apply/render/release remain open.
+Code/test source **50e93973309fbff0b65e37b7c6cbb26e4b9422ad**. One cycle covers
+library retention, descriptor/saved-entry/FCSpec dispatch correspondence, a failure
+and recovery matrix, and a concrete registration → apply → render trial design.
+Twenty-three complete bodies/thunks / 1351 instructions / 225 anchors; all nine
+archives independently PASS, including 264 raw direct/22 indirect branches and
+29 original fixup-chain rebases. Lookup can load code; private unload is not a
+proven rollback. File table correspondence does not identify a live receiver.
+
+Full local regression **372 Python/no skips, 62 Node, 22 stages PASS**.
+Research CI 37117715670 and macOS CI 37117715623 both completed/success at
+exact 50e9397. Bounded source/static review complete; sole known local argparse
+scanner false positive retained. See [combined evidence and trial design](C1_ENTRY_LIFETIME_BATCH_2026-10-03.md).
+ASLFoundation's new pin is offline only; native profile/helpers/ResourcePassGate
+unchanged. No AE operation or executable live packet. Future trial is BLOCKED on
+actual provider/receiver ownership, quiescence/publication isolation and a new
+identified adapter/operation scope. Next file work: provider/interface construction
+and virtual-table correspondence, then the remaining host-quiescence contract.
+Backend NOT READY; registration/apply/render/release remain open.
 
 ## Latest C1 provider and canonical factory retention — offline PASS
 
