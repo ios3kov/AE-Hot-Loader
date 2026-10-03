@@ -17,6 +17,21 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
+## Public PICA inventory — implementation checkpoint, live pending
+
+INV-01–04 implemented: exact SDK rev4 value FSRef contract, bounded exact-file
+correlation and separate one-shot helper/observer. Rev6 CFURL ownership is not
+assumed; property getters that may send messages are excluded. Known owned
+Control Shell/Rust Probe binaries/resources and declared match names are pinned;
+LISTED/NOT_LISTED/UNKNOWN do not prove ordinary-effect publication.
+[Contracts, implementation and acceptance](PICA_INVENTORY_REVIEW_2026-10-03.md).
+Focused owned/synthetic tests PASS (19 Python, including 27 native policy scenarios).
+INV-05/06 clean-source SDK build/full regression/CI pending. INV-07/08 actual
+AE observation/interpretation NOT RUN, conditional on exact packet and actual
+live authority; previous one-shot permission consumed. No install, AE inspection,
+launch, project mutation, merge or release in this preparation pass.
+Backend NOT READY; registration/apply/render NOT RUN, A/B/C1/C2/D/release open.
+
 ## PICA live diagnostic — all eight pass steps complete, registration open
 
 User replied “продолжай” to the concrete one-shot request. AE was verified closed

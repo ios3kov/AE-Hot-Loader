@@ -12,6 +12,38 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## Public PICA plug-in inventory — eight-step acceptance before implementation
+
+2026-10-03; user approved the proposed next eight steps with “выполняй”. Starting
+clean research HEAD `1f0acd30b130e7b75955d1ececd07273ef0a1f1c`; rules v8.0.0 / 132b7cd.
+Stage C1 Development preparation of a Validation inventory diagnostic. Original
+ordinary-effect product contract and A/B/C1/C2/D/release obligations retained.
+AI-STATE/API-SOURCE/SAFE/REPRO/TEST-CONTROL/TASK-CLOSE/CLEANUP plus native/thread/
+ownership and tools diagnostics/IPC overlays apply. Pixel/render/MFR acceptance
+is outside this inventory scope but retained. No subagent work requested.
+The accepted proposal authorizes six preparation steps; AE step is conditional
+on exact packet safety and its actual live authority. Previous PICA one-shot scope
+is consumed. Do not inspect/call current AE, install, launch, terminate/reset or
+extend the old request while preparing. Filesystem/SDK/owned tests/clean build/
+research commit/push/CI and concrete packet preparation are authorized.
+
+| ID | Observable acceptance | Check / dependency |
+|---|---|---|
+| INV-01 | Resolve exact public iterator/file/adapter API signatures and ownership | Actual SDK rev4/rev6 and primary OS headers. Do not transfer conversion-specific CFURL ownership comments to GetPluginXplatFileSpec; choose a confirmed value-based alternative if needed |
+| INV-02 | Define bounded exact-file/effect correlation with explicit uncertainty | Pinned known ordinary-effect binary + source-declared matchName present in the current baseline; module presence/name coincidence alone is not registry or publication proof |
+| INV-03 | Separate inert one-shot inventory helper and independent observer | Exact source/build/run/host/module/PID/start/token/self SHA, durable stages, consume-before-call, no shared mutable-state reset |
+| INV-04 | Validate success/refusal/failure/deadline/partial/iterator and file correlation | Owned native + private-file tests; SDK/host mocks labelled; no global list free or borrowed object release |
+| INV-05 | Exact clean-source SDK arm64 build/sign/exports/hash/inert prerequisite checks | New unique candidate/prospective path only; actual host NOT RUN |
+| INV-06 | Available full regression/review/exact-source CI, identified packet and docs | Preserve raw findings; source/artifact/evidence traceability; no runtime claim from CI |
+| INV-07 | One bounded public plug-in inventory diagnostic in AE | Conditional on confirmed contracts, exact packet and actual permission; owned blank clean idle project/before-after registry/images, no effect mutation |
+| INV-08 | Correlate real inventory and select next discriminating registration research | Conditional on INV-07; no ordinary-effect publication conclusion from a list entry |
+
+Excluded: AddPlugin/AddXPlatPlugin/AddAdapter/AcquirePlugin/FindPluginProperty,
+messages, global list free, plugin startup/shutdown, private providers, registry
+mutation, scan, unload, preferences/security changes. Cleanup preserves old
+installed inert helper/session, SDK, other plugins and historical evidence.
+Results will be recorded in [inventory review](PICA_INVENTORY_REVIEW_2026-10-03.md).
+
 ## PICA-07/08 runtime closeout — original product obligations retained
 
 All eight scoped pass tasks completed at identified code/helper source f21064a:
