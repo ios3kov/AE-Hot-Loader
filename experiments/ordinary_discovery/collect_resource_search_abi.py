@@ -29,6 +29,16 @@ WINDOWS = {
     "PLUG": (0x8A6C, 0x9028),
 }
 REVIEWS = {
+    "factory-objects": (
+        ('obj-module-ctor', 'MEE', 0x3df8, 0x3e9c),
+        ('obj-module-dtor', 'MEE', 0x3efc, 0x3fe8),
+        ('obj-module-delete', 'MEE', 0x4010, 0x4024),
+        ('obj-cache', 'MEE', 0x576c, 0x5974),
+        ('obj-last-owner', 'MEE', 0x9560, 0x959c),
+        ('obj-base-ctor', 'MEE', 0xbacc, 0xbb68),
+        ('obj-base-dtor', 'MEE', 0xbb68, 0xbbb4),
+        ('obj-plugin-complete-dtor', 'PluginSupport', 0x4bd14, 0x4bd58),
+    ),
     "factory-transitive": (
         ('trans-create', 'dvacore', 0xaba2c, 0xabb18),
         ('trans-instance', 'dvacore', 0xabb18, 0xabb70),
@@ -321,6 +331,10 @@ REVIEWS = {
     ),
 }
 DATA_WINDOWS = {
+    "factory-objects": (
+        ('obj-module-dtors', 'MEE', 0xee760, 2),
+        ('obj-control-dtors', 'MEE', 0xef900, 3),
+    ),
     'factory-receiver': (('recv-base-adjust', 'MEE', 0xef608, 1),
                          ('recv-shared-adjust', 'MEE', 0xef628, 1)),
     'factory-identity': (('factory-primary-table', 'MEE', 0xef640, 11),),
@@ -383,6 +397,7 @@ FILE_ONLY_INPUTS = {
 }
 INPUTS.update(FILE_ONLY_INPUTS)
 SYMBOL_WANTED = {
+    "factory-objects": re.compile(r"(AELibraryPluginVideoFilterModule|AELibraryVideoFilterModule|PluginImpl.*D[012]Ev)"),
     "factory-transitive": re.compile(r"(ClassFactory|CreateClassInstanceRef|UnknownBase|SharedAsVirtualBase|"
                                      r"__shared_weak_count|GuidC[12]|sub_I_MEE_Plugins|"
                                      r"sub_I_AELibraryVideoFilterFactory|ClassMapEntry|GetMutex)"),
@@ -4515,6 +4530,398 @@ TRANSITIVE_ANCHORS = {
 }
 
 
+# Every instruction in the selected complete bodies is fixed, including unwind
+# tails and transitive release sites. This is file correspondence only; no private
+# object address, owner count or callable capability is obtained.
+OBJECT_ANCHORS = {
+    'obj-module-ctor': {
+        0x3df8: ('stp', 'x20,x19,[sp,#-0x20]!'),
+        0x3dfc: ('stp', 'x29,x30,[sp,#0x10]'),
+        0x3e00: ('add', 'x29,sp,#0x10'),
+        0x3e04: ('mov', 'x19,x0'),
+        0x3e08: ('adrp', 'x8,235'),
+        0x3e0c: ('add', 'x8,x8,#0xb10'),
+        0x3e10: ('stp', 'xzr,xzr,[x0,#0x110]'),
+        0x3e14: ('str', 'x8,[x0]'),
+        0x3e18: ('add', 'x8,x8,#0x48'),
+        0x3e1c: ('str', 'x8,[x0,#0x108]'),
+        0x3e20: ('add', 'x0,x0,#0x8'),
+        0x3e24: ('adrp', 'x1,235'),
+        0x3e28: ('add', 'x1,x1,#0x9f8'),
+        0x3e2c: ('bl', '0xbacc'),
+        0x3e30: ('adrp', 'x8,235'),
+        0x3e34: ('add', 'x8,x8,#0x760'),
+        0x3e38: ('add', 'x9,x8,#0x250'),
+        0x3e3c: ('str', 'x9,[x19,#0x108]'),
+        0x3e40: ('add', 'x9,x8,#0xd8'),
+        0x3e44: ('stp', 'x8,x9,[x19]'),
+        0x3e48: ('add', 'x9,x8,#0x160'),
+        0x3e4c: ('add', 'x8,x8,#0x1f8'),
+        0x3e50: ('stp', 'x9,x8,[x19,#0xc8]'),
+        0x3e54: ('movi.2d', 'v0,#0000000000000000'),
+        0x3e58: ('stur', 'q0,[x19,#0xd8]'),
+        0x3e5c: ('stur', 'q0,[x19,#0xe8]'),
+        0x3e60: ('stur', 'q0,[x19,#0xf8]'),
+        0x3e64: ('mov', 'x0,x19'),
+        0x3e68: ('ldp', 'x29,x30,[sp,#0x10]'),
+        0x3e6c: ('ldp', 'x20,x19,[sp],#0x20'),
+        0x3e70: ('ret', ''),
+        0x3e74: ('mov', 'x20,x0'),
+        0x3e78: ('adrp', 'x1,235'),
+        0x3e7c: ('add', 'x1,x1,#0xac8'),
+        0x3e80: ('mov', 'x0,x19'),
+        0x3e84: ('bl', '0xa0484'),
+        0x3e88: ('ldr', 'x0,[x19,#0x118]'),
+        0x3e8c: ('cbz', 'x0,0x3e94'),
+        0x3e90: ('bl', '0xa0f70'),
+        0x3e94: ('mov', 'x0,x20'),
+        0x3e98: ('bl', '0x9e648'),
+    },
+    'obj-module-dtor': {
+        0x3efc: ('stp', 'x22,x21,[sp,#-0x30]!'),
+        0x3f00: ('stp', 'x20,x19,[sp,#0x10]'),
+        0x3f04: ('stp', 'x29,x30,[sp,#0x20]'),
+        0x3f08: ('add', 'x29,sp,#0x20'),
+        0x3f0c: ('mov', 'x19,x0'),
+        0x3f10: ('adrp', 'x8,235'),
+        0x3f14: ('add', 'x8,x8,#0x760'),
+        0x3f18: ('str', 'x8,[x0]'),
+        0x3f1c: ('add', 'x9,x8,#0x250'),
+        0x3f20: ('add', 'x10,x8,#0xd8'),
+        0x3f24: ('mov', 'x20,x0'),
+        0x3f28: ('str', 'x10,[x20,#0x8]!'),
+        0x3f2c: ('str', 'x9,[x0,#0x108]'),
+        0x3f30: ('add', 'x9,x8,#0x160'),
+        0x3f34: ('add', 'x8,x8,#0x1f8'),
+        0x3f38: ('stp', 'x9,x8,[x0,#0xc8]'),
+        0x3f3c: ('ldr', 'x21,[x0,#0x100]'),
+        0x3f40: ('cbz', 'x21,0x3f54'),
+        0x3f44: ('add', 'x8,x21,#0x8'),
+        0x3f48: ('mov', 'x9,#-0x1'),
+        0x3f4c: ('ldaddal', 'x9,x8,[x8]'),
+        0x3f50: ('cbz', 'x8,0x3f88'),
+        0x3f54: ('ldr', 'x21,[x19,#0xe8]'),
+        0x3f58: ('cbz', 'x21,0x3fa8'),
+        0x3f5c: ('add', 'x8,x21,#0x8'),
+        0x3f60: ('mov', 'x9,#-0x1'),
+        0x3f64: ('ldaddal', 'x9,x8,[x8]'),
+        0x3f68: ('cbnz', 'x8,0x3fa8'),
+        0x3f6c: ('ldr', 'x8,[x21]'),
+        0x3f70: ('ldr', 'x8,[x8,#0x10]'),
+        0x3f74: ('mov', 'x0,x21'),
+        0x3f78: ('blr', 'x8'),
+        0x3f7c: ('mov', 'x0,x21'),
+        0x3f80: ('bl', '0xa0f70'),
+        0x3f84: ('b', '0x3fa8'),
+        0x3f88: ('ldr', 'x8,[x21]'),
+        0x3f8c: ('ldr', 'x8,[x8,#0x10]'),
+        0x3f90: ('mov', 'x0,x21'),
+        0x3f94: ('blr', 'x8'),
+        0x3f98: ('mov', 'x0,x21'),
+        0x3f9c: ('bl', '0xa0f70'),
+        0x3fa0: ('ldr', 'x21,[x19,#0xe8]'),
+        0x3fa4: ('cbnz', 'x21,0x3f5c'),
+        0x3fa8: ('adrp', 'x21,235'),
+        0x3fac: ('add', 'x21,x21,#0x9f8'),
+        0x3fb0: ('mov', 'x0,x20'),
+        0x3fb4: ('mov', 'x1,x21'),
+        0x3fb8: ('bl', '0xbb68'),
+        0x3fbc: ('add', 'x1,x21,#0xd0'),
+        0x3fc0: ('mov', 'x0,x19'),
+        0x3fc4: ('bl', '0xa0484'),
+        0x3fc8: ('ldr', 'x0,[x19,#0x118]'),
+        0x3fcc: ('cbz', 'x0,0x3fd4'),
+        0x3fd0: ('bl', '0xa0f70'),
+        0x3fd4: ('mov', 'x0,x19'),
+        0x3fd8: ('ldp', 'x29,x30,[sp,#0x20]'),
+        0x3fdc: ('ldp', 'x20,x19,[sp,#0x10]'),
+        0x3fe0: ('ldp', 'x22,x21,[sp],#0x30'),
+        0x3fe4: ('ret', ''),
+    },
+    'obj-module-delete': {
+        0x4010: ('stp', 'x29,x30,[sp,#-0x10]!'),
+        0x4014: ('mov', 'x29,sp'),
+        0x4018: ('bl', '0x3efc'),
+        0x401c: ('ldp', 'x29,x30,[sp],#0x10'),
+        0x4020: ('b', '0xa1078'),
+    },
+    'obj-cache': {
+        0x576c: ('sub', 'sp,sp,#0x50'),
+        0x5770: ('stp', 'x24,x23,[sp,#0x10]'),
+        0x5774: ('stp', 'x22,x21,[sp,#0x20]'),
+        0x5778: ('stp', 'x20,x19,[sp,#0x30]'),
+        0x577c: ('stp', 'x29,x30,[sp,#0x40]'),
+        0x5780: ('add', 'x29,sp,#0x40'),
+        0x5784: ('mov', 'x21,x5'),
+        0x5788: ('mov', 'x22,x4'),
+        0x578c: ('mov', 'x23,x3'),
+        0x5790: ('mov', 'x19,x1'),
+        0x5794: ('mov', 'x20,x0'),
+        0x5798: ('ldr', 'x9,[x0,#0xf0]'),
+        0x579c: ('cbz', 'x9,0x57d0'),
+        0x57a0: ('ldr', 'x8,[x20,#0xf8]'),
+        0x57a4: ('cbz', 'x8,0x5814'),
+        0x57a8: ('ldr', 'x10,[x20,#0x100]'),
+        0x57ac: ('cbz', 'x10,0x57d8'),
+        0x57b0: ('add', 'x11,x10,#0x8'),
+        0x57b4: ('mov', 'w12,#0x1'),
+        0x57b8: ('ldadd', 'x12,x11,[x11]'),
+        0x57bc: ('ldr', 'x24,[x2,#0x10]'),
+        0x57c0: ('stp', 'x8,x10,[x2,#0x8]'),
+        0x57c4: ('str', 'x9,[x2]'),
+        0x57c8: ('cbnz', 'x24,0x57e8'),
+        0x57cc: ('b', '0x582c'),
+        0x57d0: ('mov', 'x8,#0x0'),
+        0x57d4: ('mov', 'x10,#0x0'),
+        0x57d8: ('ldr', 'x24,[x2,#0x10]'),
+        0x57dc: ('stp', 'x8,x10,[x2,#0x8]'),
+        0x57e0: ('str', 'x9,[x2]'),
+        0x57e4: ('cbz', 'x24,0x582c'),
+        0x57e8: ('add', 'x8,x24,#0x8'),
+        0x57ec: ('mov', 'x9,#-0x1'),
+        0x57f0: ('ldaddal', 'x9,x8,[x8]'),
+        0x57f4: ('cbnz', 'x8,0x582c'),
+        0x57f8: ('ldr', 'x8,[x24]'),
+        0x57fc: ('ldr', 'x8,[x8,#0x10]'),
+        0x5800: ('mov', 'x0,x24'),
+        0x5804: ('blr', 'x8'),
+        0x5808: ('mov', 'x0,x24'),
+        0x580c: ('bl', '0xa0f70'),
+        0x5810: ('b', '0x582c'),
+        0x5814: ('mov', 'x10,#0x0'),
+        0x5818: ('mov', 'x9,#0x0'),
+        0x581c: ('ldr', 'x24,[x2,#0x10]'),
+        0x5820: ('stp', 'x8,x10,[x2,#0x8]'),
+        0x5824: ('str', 'x9,[x2]'),
+        0x5828: ('cbnz', 'x24,0x57e8'),
+        0x582c: ('ldr', 'w8,[x20,#0xb8]'),
+        0x5830: ('str', 'w8,[x23]'),
+        0x5834: ('ldr', 'w8,[x20,#0xbc]'),
+        0x5838: ('str', 'w8,[x22]'),
+        0x583c: ('ldr', 'w8,[x20,#0xc0]'),
+        0x5840: ('str', 'w8,[x21]'),
+        0x5844: ('ldr', 'x8,[x20,#0xd8]'),
+        0x5848: ('cbz', 'x8,0x5894'),
+        0x584c: ('ldp', 'x21,x20,[x20,#0xe0]'),
+        0x5850: ('cbz', 'x20,0x5860'),
+        0x5854: ('add', 'x8,x20,#0x8'),
+        0x5858: ('mov', 'w9,#0x1'),
+        0x585c: ('ldadd', 'x9,x8,[x8]'),
+        0x5860: ('cbz', 'x21,0x58b4'),
+        0x5864: ('adrp', 'x8,175'),
+        0x5868: ('add', 'x8,x8,#0x5fa'),
+        0x586c: ('mov', 'w9,#0xb'),
+        0x5870: ('stp', 'x8,x9,[sp]'),
+        0x5874: ('ldr', 'x8,[x21]'),
+        0x5878: ('ldr', 'x8,[x8,#0x18]'),
+        0x587c: ('mov', 'x1,sp'),
+        0x5880: ('mov', 'x0,x21'),
+        0x5884: ('blr', 'x8'),
+        0x5888: ('cbz', 'x0,0x58d0'),
+        0x588c: ('mov', 'x8,x20'),
+        0x5890: ('b', '0x589c'),
+        0x5894: ('mov', 'x0,#0x0'),
+        0x5898: ('mov', 'x21,#0x0'),
+        0x589c: ('mov', 'x20,#0x0'),
+        0x58a0: ('ldr', 'x22,[x19,#0x10]'),
+        0x58a4: ('stp', 'x21,x8,[x19,#0x8]'),
+        0x58a8: ('str', 'x0,[x19]'),
+        0x58ac: ('cbnz', 'x22,0x58e8'),
+        0x58b0: ('b', '0x58f8'),
+        0x58b4: ('mov', 'x0,#0x0'),
+        0x58b8: ('mov', 'x8,#0x0'),
+        0x58bc: ('ldr', 'x22,[x19,#0x10]'),
+        0x58c0: ('stp', 'x21,x8,[x19,#0x8]'),
+        0x58c4: ('str', 'x0,[x19]'),
+        0x58c8: ('cbnz', 'x22,0x58e8'),
+        0x58cc: ('b', '0x58f8'),
+        0x58d0: ('mov', 'x21,#0x0'),
+        0x58d4: ('mov', 'x8,#0x0'),
+        0x58d8: ('ldr', 'x22,[x19,#0x10]'),
+        0x58dc: ('stp', 'x21,x8,[x19,#0x8]'),
+        0x58e0: ('str', 'x0,[x19]'),
+        0x58e4: ('cbz', 'x22,0x58f8'),
+        0x58e8: ('add', 'x8,x22,#0x8'),
+        0x58ec: ('mov', 'x9,#-0x1'),
+        0x58f0: ('ldaddal', 'x9,x8,[x8]'),
+        0x58f4: ('cbz', 'x8,0x5924'),
+        0x58f8: ('cbz', 'x20,0x590c'),
+        0x58fc: ('add', 'x8,x20,#0x8'),
+        0x5900: ('mov', 'x9,#-0x1'),
+        0x5904: ('ldaddal', 'x9,x8,[x8]'),
+        0x5908: ('cbz', 'x8,0x5944'),
+        0x590c: ('ldp', 'x29,x30,[sp,#0x40]'),
+        0x5910: ('ldp', 'x20,x19,[sp,#0x30]'),
+        0x5914: ('ldp', 'x22,x21,[sp,#0x20]'),
+        0x5918: ('ldp', 'x24,x23,[sp,#0x10]'),
+        0x591c: ('add', 'sp,sp,#0x50'),
+        0x5920: ('ret', ''),
+        0x5924: ('ldr', 'x8,[x22]'),
+        0x5928: ('ldr', 'x8,[x8,#0x10]'),
+        0x592c: ('mov', 'x0,x22'),
+        0x5930: ('blr', 'x8'),
+        0x5934: ('mov', 'x0,x22'),
+        0x5938: ('bl', '0xa0f70'),
+        0x593c: ('cbnz', 'x20,0x58fc'),
+        0x5940: ('b', '0x590c'),
+        0x5944: ('ldr', 'x8,[x20]'),
+        0x5948: ('ldr', 'x8,[x8,#0x10]'),
+        0x594c: ('mov', 'x0,x20'),
+        0x5950: ('blr', 'x8'),
+        0x5954: ('mov', 'x0,x20'),
+        0x5958: ('bl', '0xa0f70'),
+        0x595c: ('ldp', 'x29,x30,[sp,#0x40]'),
+        0x5960: ('ldp', 'x20,x19,[sp,#0x30]'),
+        0x5964: ('ldp', 'x22,x21,[sp,#0x20]'),
+        0x5968: ('ldp', 'x24,x23,[sp,#0x10]'),
+        0x596c: ('add', 'sp,sp,#0x50'),
+        0x5970: ('ret', ''),
+    },
+    'obj-last-owner': {
+        0x9560: ('stp', 'x20,x19,[sp,#-0x20]!'),
+        0x9564: ('stp', 'x29,x30,[sp,#0x10]'),
+        0x9568: ('add', 'x29,sp,#0x10'),
+        0x956c: ('ldr', 'x19,[x0,#0x18]'),
+        0x9570: ('ldr', 'x8,[x19]'),
+        0x9574: ('ldr', 'x8,[x8]'),
+        0x9578: ('mov', 'x0,x19'),
+        0x957c: ('blr', 'x8'),
+        0x9580: ('mov', 'x0,x19'),
+        0x9584: ('mov', 'w1,#0x120'),
+        0x9588: ('bl', '0xa04cc'),
+        0x958c: ('ldp', 'x29,x30,[sp,#0x10]'),
+        0x9590: ('ldp', 'x20,x19,[sp],#0x20'),
+        0x9594: ('ret', ''),
+        0x9598: ('bl', '0x6a00'),
+    },
+    'obj-base-ctor': {
+        0xbacc: ('stp', 'x20,x19,[sp,#-0x20]!'),
+        0xbad0: ('stp', 'x29,x30,[sp,#0x10]'),
+        0xbad4: ('add', 'x29,sp,#0x10'),
+        0xbad8: ('mov', 'x19,x0'),
+        0xbadc: ('ldr', 'x8,[x1,#0x10]'),
+        0xbae0: ('str', 'x8,[x0]'),
+        0xbae4: ('ldr', 'x9,[x1,#0x18]'),
+        0xbae8: ('ldur', 'x8,[x8,#-0x38]'),
+        0xbaec: ('str', 'x9,[x0,x8]'),
+        0xbaf0: ('ldr', 'x8,[x1,#0x20]'),
+        0xbaf4: ('ldr', 'x9,[x0]'),
+        0xbaf8: ('ldur', 'x9,[x9,#-0x18]'),
+        0xbafc: ('str', 'x8,[x0,x9]'),
+        0xbb00: ('ldr', 'x8,[x1,#0x8]'),
+        0xbb04: ('str', 'x8,[x0]'),
+        0xbb08: ('ldr', 'x9,[x1,#0x28]'),
+        0xbb0c: ('ldur', 'x8,[x8,#-0x38]'),
+        0xbb10: ('str', 'x9,[x0,x8]'),
+        0xbb14: ('ldr', 'x8,[x1,#0x30]'),
+        0xbb18: ('ldr', 'x9,[x0]'),
+        0xbb1c: ('ldur', 'x9,[x9,#-0x18]'),
+        0xbb20: ('str', 'x8,[x0,x9]'),
+        0xbb24: ('ldr', 'x8,[x1]'),
+        0xbb28: ('str', 'x8,[x0]'),
+        0xbb2c: ('ldr', 'x9,[x1,#0x38]'),
+        0xbb30: ('ldur', 'x8,[x8,#-0x38]'),
+        0xbb34: ('str', 'x9,[x0,x8]'),
+        0xbb38: ('ldr', 'x8,[x1,#0x40]'),
+        0xbb3c: ('ldr', 'x9,[x0]'),
+        0xbb40: ('ldur', 'x9,[x9,#-0x18]'),
+        0xbb44: ('str', 'x8,[x0,x9]'),
+        0xbb48: ('add', 'x0,x0,#0x8'),
+        0xbb4c: ('mov', 'x1,#0x0'),
+        0xbb50: ('bl', '0xa02f8'),
+        0xbb54: ('stp', 'xzr,xzr,[x19,#0xb0]'),
+        0xbb58: ('mov', 'x0,x19'),
+        0xbb5c: ('ldp', 'x29,x30,[sp,#0x10]'),
+        0xbb60: ('ldp', 'x20,x19,[sp],#0x20'),
+        0xbb64: ('ret', ''),
+    },
+    'obj-base-dtor': {
+        0xbb68: ('stp', 'x20,x19,[sp,#-0x20]!'),
+        0xbb6c: ('stp', 'x29,x30,[sp,#0x10]'),
+        0xbb70: ('add', 'x29,sp,#0x10'),
+        0xbb74: ('mov', 'x19,x0'),
+        0xbb78: ('ldr', 'x8,[x1]'),
+        0xbb7c: ('str', 'x8,[x0]'),
+        0xbb80: ('ldr', 'x9,[x1,#0x38]'),
+        0xbb84: ('ldur', 'x8,[x8,#-0x38]'),
+        0xbb88: ('str', 'x9,[x0,x8]'),
+        0xbb8c: ('ldr', 'x8,[x1,#0x40]'),
+        0xbb90: ('ldr', 'x9,[x0]'),
+        0xbb94: ('ldur', 'x9,[x9,#-0x18]'),
+        0xbb98: ('str', 'x8,[x0,x9]'),
+        0xbb9c: ('add', 'x0,x0,#0x8'),
+        0xbba0: ('bl', '0xa0304'),
+        0xbba4: ('mov', 'x0,x19'),
+        0xbba8: ('ldp', 'x29,x30,[sp,#0x10]'),
+        0xbbac: ('ldp', 'x20,x19,[sp],#0x20'),
+        0xbbb0: ('ret', ''),
+    },
+    'obj-plugin-complete-dtor': {
+        0x4bd14: ('stp', 'x20,x19,[sp,#-0x20]!'),
+        0x4bd18: ('stp', 'x29,x30,[sp,#0x10]'),
+        0x4bd1c: ('add', 'x29,sp,#0x10'),
+        0x4bd20: ('mov', 'x19,x0'),
+        0x4bd24: ('adrp', 'x20,96'),
+        0x4bd28: ('add', 'x20,x20,#0x5f0'),
+        0x4bd2c: ('mov', 'x1,x20'),
+        0x4bd30: ('bl', '0x4bbd0'),
+        0x4bd34: ('add', 'x1,x20,#0x48'),
+        0x4bd38: ('bl', '0x8cd24'),
+        0x4bd3c: ('ldr', 'x0,[x0,#0x1e0]'),
+        0x4bd40: ('cbz', 'x0,0x4bd48'),
+        0x4bd44: ('bl', '0x8d300'),
+        0x4bd48: ('mov', 'x0,x19'),
+        0x4bd4c: ('ldp', 'x29,x30,[sp,#0x10]'),
+        0x4bd50: ('ldp', 'x20,x19,[sp],#0x20'),
+        0x4bd54: ('ret', ''),
+    },
+}
+OBJECT_TABLE_TARGETS = {
+    'obj-module-dtors': (0x3efc, 0x4010),
+    'obj-control-dtors': (0x9548, 0x954c, 0x9560),
+}
+
+
+def verify_objects(text, label, start, end):
+    require(any((row[0], row[2], row[3]) == (label, start, end)
+                for row in REVIEWS['factory-objects']), 'unreviewed object owner window')
+    count = validate_disassembly(text, start, end)
+    rows = {int(a, 16): (op, re.sub(r'\s+', '', args.split(';')[0]))
+            for a, op, args in re.findall(
+                r'^.*\[0x([0-9a-fA-F]+)\]\s+<[^>]*>:[ \t]+(\S+)[ \t]*([^\n]*)', text, re.M)}
+    anchors = OBJECT_ANCHORS[label]
+    require(rows == anchors, 'object owner structural instructions differ')
+    return {'decoded_instructions': count, 'structural_anchors': len(anchors),
+            'claim': 'file-only-object-owners-not-live-reachability-thread-or-drain'}
+
+
+def verify_object_table(words, fixups, chains, label):
+    require(label in OBJECT_TABLE_TARGETS, 'unreviewed object owner table')
+    _, _, start, count = next(row for row in DATA_WINDOWS['factory-objects'] if row[0] == label)
+    formats = re.findall(r'pointer_format:\s+(\d+)\s+\(([^)]+)\)', chains)
+    require(formats and all(pair == ('6', 'DYLD_CHAINED_PTR_64_OFFSET') for pair in formats),
+            'object owner table fixup format differs')
+    expected = OBJECT_TABLE_TARGETS[label]
+    require(len(words) == count and all(type(w) is int and 0 <= w < 1 << 64 for w in words),
+            'object owner table coverage/type differs')
+    require(all(not w & ((1 << 63) | (0x7fff << 36)) for w in words),
+            'object owner table bound, high-address or reserved word')
+    targets = tuple(w & ((1 << 36)-1) for w in words)
+    require(targets == expected, 'object owner table targets differ')
+    rows = []
+    for a, kind, target in re.findall(
+            r'^\s*__DATA_CONST\s+__const\s+0x([0-9a-fA-F]+)\s+(\S+)\s+([^\n]+)', fixups, re.M):
+        a = int(a, 16)
+        if start <= a < start + count*8:
+            require(kind == 'rebase' and re.fullmatch(r'0x[0-9a-fA-F]+', target.strip()),
+                    'object owner table fixup is not plain rebase')
+            rows.append((a, int(target.strip(), 16)))
+    require(rows == [(start+i*8, target) for i, target in enumerate(expected)],
+            'object owner table fixups incomplete, duplicated or changed')
+    return {'rebases': count, 'file_targets': [hex(t) for t in expected],
+            'claim': 'file-table-correspondence-not-runtime-receiver'}
+
+
 def verify_transitive(text, label, start, end):
     require(any((row[0], row[2], row[3]) == (label, start, end)
                 for row in REVIEWS['factory-transitive']), 'unreviewed transitive window')
@@ -6635,6 +7042,7 @@ def main():
         factory_identity = {}
         receiver = {}
         transitive = {}
+        objects = {}
         for name in names:
             path, _ = INPUTS[name]
             nm, nm_err = run_tool(["/usr/bin/nm", "-arch", "arm64", "-n", "-m", str(path)],
@@ -6651,6 +7059,8 @@ def main():
                  "--source", str(folder / (label + "-inspect.lldb"))],
                 timeout=60)
             instruction_count = verify_lldb_disassembly(disassembly, diagnostics, start, end)
+            if args.review == 'factory-objects':
+                objects[label] = verify_objects(disassembly, label, start, end)
             if args.review == 'factory-transitive':
                 transitive[label] = verify_transitive(disassembly, label, start, end)
             if args.review == 'factory-receiver':
@@ -6695,7 +7105,7 @@ def main():
             }
         data_outputs = {}
         table_fixups = {}
-        if args.review in ('entry-lifetime', 'provider-isolation', 'factory-identity', 'factory-receiver'):
+        if args.review in ('entry-lifetime', 'provider-isolation', 'factory-identity', 'factory-receiver', 'factory-objects'):
             for name in dict.fromkeys(row[1] for row in DATA_WINDOWS[args.review]):
                 chains, diagnostics = run_tool(
                     ['/usr/bin/xcrun', 'dyld_info', '-arch', 'arm64', '-fixup_chains', str(INPUTS[name][0])])
@@ -6728,6 +7138,9 @@ def main():
                 write_exclusive(folder / (label + "-stderr.txt"), diagnostics)
             data_outputs[label] = {"image": name, "start": hex(start), "word_count": len(values),
                                    "interpretation": "file-backed serialized words, not runtime pointers"}
+            if args.review == 'factory-objects':
+                data_outputs[label]['table_evidence'] = verify_object_table(
+                    values, *table_fixups[name], label)
             if args.review == 'provider-isolation':
                 data_outputs[label]['slot_evidence'] = verify_isolation_slot(
                     values, *table_fixups[name], label)
@@ -6769,6 +7182,15 @@ def main():
             record['actual_factory_virtual_receiver'] = 'NOT OBSERVED'
             record['native_registration_ABI'] = 'UNKNOWN'
             record['supported_host_owner_contract'] = 'UNKNOWN'
+            record['host_wide_reader_render_exclusion'] = 'NOT PROVEN'
+            record['whole_effect_rollback'] = 'NOT PROVEN'
+            record['native_experiment'] = 'BLOCKED'
+            record['registration_apply_render'] = 'NOT RUN'
+        if args.review == 'factory-objects':
+            record['object_owner_evidence'] = objects
+            record['serialized_cache_as_read_only_probe'] = 'NO-OLD-OUTPUT-OWNER-RELEASE-AND-VIRTUAL-QUERY'
+            record['actual_retained_module_plugin_pipl'] = 'NOT OBSERVED'
+            record['supported_host_owner_thread_contract'] = 'UNKNOWN'
             record['host_wide_reader_render_exclusion'] = 'NOT PROVEN'
             record['whole_effect_rollback'] = 'NOT PROVEN'
             record['native_experiment'] = 'BLOCKED'

@@ -12,6 +12,55 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
+## Actual factory object owners and host prerequisites — twelve-task pass
+
+2026-10-03 continuation from clean **4a89b3ffeea929015156f65b32a8bcdc0ef3c637**.
+Stage C1 Development research; accepted rules8.0.0 /132b7cd32873ba7328e3128ffbb33e1929b74d45,
+AI_ENTRYPOINT first. Native ownership/ABI/reentrancy Critical; fixed file collector
+Standard. API-SOURCE, source identity, meaningful refusal checks, TASK-CLOSE and
+CLEANUP apply. SDK25.6_61 inventory reused; no new public Adobe API requested.
+Original ordinary-effect/no-restart scope and A/B/C1/C2/D/release stay retained.
+
+| ID | Task / observable acceptance | Check / dependency |
+|---|---|---|
+| OBJ-01 | Establish baseline, rules and bounded original-file scope | Current clean branch/pins; previous immutable receiver/admission/identity archives verified before reuse |
+| OBJ-02 | Identify factory-held module and plug-in references | Constructor/vector insertion/GetModules/final destruction original dataflow; distinguish roster from effect registration |
+| OBJ-03 | Trace module-held plug-in/PiPL owners | Complete selected module constructor/destructor/getter bodies and Init owner fields; returned ownership versus copied address |
+| OBJ-04 | Trace plug-in implementation and image ownership | Selected PluginImpl lifetime/module getter and ASL unload-policy delegates; identify unresolved indirect callbacks |
+| OBJ-05 | Reconcile acquisition/call/release/thread and initial reachability | Existing-only class reference, original teardown paths and actual thread evidence; unsupported private contract remains UNKNOWN |
+| OBJ-06 | Review partial failure, reentry and transitive destruction | Complete selected unwind/owner-release paths; no inferred universal callback graph |
+| OBJ-07 | Reconcile host-wide admission and render drain | Reuse original registry-consumer/render evidence; selected mutex/counter cannot certify every reader |
+| OBJ-08 | Reconcile whole-effect rollback | Reuse original publication/lazy-global/cleanup evidence; identify actual inverse or retain NO-GO |
+| OBJ-09 | Implement substantiated research component | Fixed owner-scope file collector with exact pins/bounds/source and refusal checks; actual callable AE adapter conditional on OBJ-03–08 |
+| OBJ-10 | Verify exact candidate and original evidence | Focused controls/full runner/raw scanner/manual original/native review and both exact-source CI; private retention hashes |
+| OBJ-11 | Decide concrete controlled AE diagnostic | Prepare/run only if actual receiver/thread/owners/admission/drain/rollback and safe current environment established; otherwise BLOCKED with precise dependencies |
+| OBJ-12 | Reconcile all tasks, status and owned cleanup | Plan/checkpoint/status/handoff/compatibility/evidence; explicitly retain blocked adapter/trial and original obligations |
+
+Initially reuse complete factory receiver/admission/identity and host transaction
+bodies. New file-only symbol selection is restricted to AELibraryPluginVideoFilterModule,
+AELibraryVideoFilterModule, PluginImpl and ASL Module lifetime/getter/unload-policy
+methods. Record exact missing complete-body windows here before disassembly.
+Selected missing complete bodies (next-defined-symbol ends, original arm64 nlist):
+MEE module constructor3df8–3e9c, complete destructor3efc–3fe8, deleting
+destructor4010–4024, retained cache handback576c–5974, module last-owner
+9560–959c, base constructorbacc–bb68 and base destructorbb68–bbb4;
+PluginSupport complete PluginImpl destructor4bd14–4bd58. Eight new windows,
+325 instructions (the preliminary planning count351 was incorrect). Reuse PluginImpl base constructor/destructor/Init/module getter
+from provider-factory, complete constructor from provider-isolation, and ASL
+destruction/unload flag/table from entry-lifetime; do not recapture these bodies.
+To resolve the selected last-owner virtual target, also select only five serialized
+MEE vtable slots: module D1/D0 at ee760–ee770 (two words), module control
+D1/D0/zero-shared at ef900–ef918 (three words). Decode original chained rebases
+with exact pointer-format/fixup/target checks, never interpret them as live pointers.
+Preliminary new disassembly is exploration at the dirty plan/collector state,
+not exact-source verification; final collection requires a clean identified commit.
+
+No process launch/attach/session read/install, foreign retain/release/destructor/
+unload or host gate bypass during this file research. Dependent adapter and live
+experiment require demonstrated contracts; an owned stand or static decoder does
+not satisfy them. Do independent work when these remain unknown; no unchanged scan,
+main mutation, merge or release.
+
 ## Factory cleanup and dependent code residency — eight-block pass
 
 2026-10-03 continuation, clean e4275d199442d3e57924f473c9d2c658bade1ab1.

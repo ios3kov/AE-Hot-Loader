@@ -18,6 +18,74 @@ spec.loader.exec_module(collector)
 
 
 class ResourceAbiCollectorTests(unittest.TestCase):
+    def test_factory_objects_fixed_complete_scope_is_file_only(self):
+        windows = collector.review_windows('factory-objects')
+        self.assertEqual(len(windows), 8)
+        self.assertEqual(sum((end-start)//4 for _, _, start, end in windows), 325)
+        self.assertEqual({image for _, image, *_ in windows}, {'MEE', 'PluginSupport'})
+        self.assertEqual({label for label, *_ in windows}, set(collector.OBJECT_ANCHORS))
+        for label, image, start, end in windows:
+            script = collector.lldb_script(collector.INPUTS[image][0], start, end)
+            self.assertIn('target create --no-dependents --arch arm64', script)
+            self.assertNotRegex(script, r'process|expression|call ')
+            self.assertEqual(set(collector.OBJECT_ANCHORS[label]), set(range(start,end,4)))
+
+    def test_factory_objects_refuse_changed_retain_release_query_and_unwind(self):
+        # Synthetic controls exercise parser refusal, not a live Adobe owner.
+        for label, _, start, end in collector.review_windows('factory-objects'):
+            anchors = collector.OBJECT_ANCHORS[label]
+            def transcript(overrides):
+                return ''.join('owned[0x%x] <+%d>: %s %s\n' %
+                    (a, a-start, *overrides.get(a, anchors[a])) for a in range(start,end,4))
+            text = transcript({})
+            result = collector.verify_objects(text,label,start,end)
+            self.assertEqual(result['claim'], 'file-only-object-owners-not-live-reachability-thread-or-drain')
+            for address, (op,args) in anchors.items():
+                for wrong in [('nop','') if op!='nop' else ('ret',''), (op,args+'x0')]:
+                    with self.subTest(label=label,address=hex(address),wrong=wrong):
+                        with self.assertRaisesRegex(ValueError,'structural'):
+                            collector.verify_objects(transcript({address:wrong}),label,start,end)
+            for bad in [text+text.splitlines()[0]+'\n','\n'.join(text.splitlines()[:-1]),text.replace(': ',': .long ',1)]:
+                with self.assertRaises(ValueError):
+                    collector.verify_objects(bad,label,start,end)
+            for wrong_label, wrong_end in [('unknown',end),(label,end+4)]:
+                with self.assertRaisesRegex(ValueError,'unreviewed'):
+                    collector.verify_objects(text,wrong_label,start,wrong_end)
+
+    def test_factory_object_slots_require_exact_chained_rebases(self):
+        chains = 'pointer_format: 6 (DYLD_CHAINED_PTR_64_OFFSET)\n'
+        for label, _, start, count in collector.DATA_WINDOWS['factory-objects']:
+            targets = collector.OBJECT_TABLE_TARGETS[label]
+            words = [target | (2<<51) for target in targets]
+            fixups = ''.join('__DATA_CONST __const 0x%x rebase 0x%x\n' % (start+i*8,t)
+                             for i,t in enumerate(targets))
+            self.assertEqual(collector.verify_object_table(words,fixups,chains,label)['rebases'],count)
+            for i in range(count):
+                for mask in [1,1<<36,1<<44,1<<63]:
+                    altered = words.copy(); altered[i] ^= mask
+                    with self.subTest(label=label,slot=i,mask=mask), self.assertRaises(ValueError):
+                        collector.verify_object_table(altered,fixups,chains,label)
+            for bad in [fixups+fixups.splitlines()[0]+'\n','\n'.join(fixups.splitlines()[:-1]),fixups.replace('rebase','bind',1),fixups.replace('0x3efc','0x3ef8') if '0x3efc' in fixups else fixups.replace('0x9560','0x9564')]:
+                with self.assertRaises(ValueError):
+                    collector.verify_object_table(words,bad,chains,label)
+            with self.assertRaises(ValueError):
+                collector.verify_object_table(words,fixups,chains.replace('6 (','2 ('),label)
+            with self.assertRaises(ValueError):
+                collector.verify_object_table(words[:-1],fixups,chains,label)
+            with self.assertRaises(ValueError):
+                collector.verify_object_table(words,fixups,chains,'unknown')
+
+    def test_factory_objects_symbol_catalog_excludes_effect_publication(self):
+        names = ['__ZN2ML32AELibraryPluginVideoFilterModuleD1Ev',
+                 '__ZN2ML26AELibraryVideoFilterModuleC2Ev',
+                 '__ZNK2ML32AELibraryPluginVideoFilterModule18GetSerializedCacheE',
+                 '__ZN2ML10PluginImplD1Ev']
+        selected = collector.select_symbols('\n'.join(names+['PLUG_Search','FLT_RegisterNewFilter']), 'factory-objects')
+        for name in names:
+            self.assertIn(name,selected)
+        self.assertNotIn('PLUG_Search',selected)
+        self.assertNotIn('FLT_RegisterNewFilter',selected)
+
     @unittest.skipUnless(sys.platform == "darwin", "requires macOS arm64 file disassembly")
     def test_real_lldb_disassembles_owned_bounded_window(self):
         with tempfile.TemporaryDirectory(prefix="aehl-owned-abi-") as tmp:
