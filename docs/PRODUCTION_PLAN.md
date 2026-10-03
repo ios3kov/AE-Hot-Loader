@@ -26,6 +26,32 @@ Primary Stage C goal:
 Loaded binaries, registry publication, application and rendering are separate
 claims.
 
+## Latest C1 provider/isolation/completion batch — offline PASS
+
+Code/test source **56be72b888652da450dc58c0d83c64187218af95**. One cycle closes
+the bounded file ownership chain, reviews per-effect dispatch counters/guards and
+post-setup, and binds three mandatory reviewed contracts into the unbound
+resource transaction and durable journal. Old broad native approval alone no
+longer permits the model operation. Sixteen complete bodies / 884 instructions /
+293 anchors; six original table slots resolve owner/destructor and inherited
+Load/GetEntryPoint correspondence. Actual AE receiver identity remains unknown.
+
+Full local regression **376 Python/no skips, 62 Node, 22 stages PASS**; all ten
+collector archives independently PASS, including new 105 direct / 24 indirect
+raw branches, four rebases and two raw import resolutions. Research CI
+37118807823 and macOS CI 37118807775 both completed/success at exact 56be72b.
+Bounded static review complete; sole known local argparse scanner false positive
+retained. See [combined findings, contract requirements and evidence](C1_PROVIDER_ISOLATION_BATCH_2026-10-03.md).
+
+File evidence now distinguishes object ownership and local guards from host-wide
+publication safety. Backend NOT READY; no executable live packet justified:
+actual provider ownership, exclusive reader/dispatch/MFR window and complete
+native publication/failure semantics remain unproven. No new AE operation;
+historical diagnostic scope remains consumed and unchanged scan FAIL preserved.
+Next offline block: resource-pass caller, effect-registry reader/writer
+synchronization and completion/partial-mutation paths; then reassess an isolated
+adapter. Registration/apply/render, A/B/D and release gates remain open.
+
 ## Latest C1 combined entry/lifetime batch — offline PASS
 
 Code/test source **50e93973309fbff0b65e37b7c6cbb26e4b9422ad**. One cycle covers

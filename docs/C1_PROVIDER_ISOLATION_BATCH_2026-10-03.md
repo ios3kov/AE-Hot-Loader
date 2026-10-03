@@ -86,7 +86,39 @@ case failed because the old policy still allowed the synthetic search. Final
 focused checks: collector 36 tests; transaction model 94 refusal/operation cases;
 real-files/process journal 35 cases, with all three receipt-retarget attempts
 preserving the original claim and stopping the marker/search. Full clean-source
-regression, independent raw-file/package checks and exact-source CI pending.
+regression: **376 Python/no skips, 62 Node, all 22 available stages PASS** at
+clean code/test source `56be72b888652da450dc58c0d83c64187218af95`.
+[Research CI 37118807823](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37118807823)
+and [macOS CI 37118807775](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37118807775)
+both **completed/success** at exact 56be72b. CI build/ABI smoke/package checks do
+not run AE or establish ordinary-effect registration.
+Full AE pipeline remains BLOCKED; product package and live operations NOT RUN.
+
+Independent original Mach-O verification: all **10** clean-source mode archives
+PASS (member inventory, CRC, every SHA-256, source and complete instruction
+coverage). New mode: **105 direct / 24 indirect** branch encodings, six original
+serialized words and fixup-chain membership, four rebase targets and two import
+ordinal/library/name resolutions PASS. This verifier reads original bytes and
+import/name tables, independent of collector validators and dyld_info labels.
+Earlier entry mode retains 264 direct / 22 indirect / 29 rebases PASS.
+
+| Exact-source evidence | Identity |
+| --- | --- |
+| New collector archive, 53 members | `build-ae-hot-loader/resource-provider-isolation-3f834b3e-lrpf34lp.zip`; SHA-256 `c65efb7d71c874d12f2ff2893f977abff6a3ef0efe5c1cd8a2aa0ec1407f337e` |
+| Full local regression archive, 25 members / 304 tracked file hashes | `/private/var/folders/bs/39klz7cd52z6xkm817vj0zjm0000gn/T/AEHL-checks-c14udi_m.zip`; SHA-256 `81e2455b9cfdb8b8c831a6238e60962936904efb0a3bafec9c01a3cf69402ec2` |
+| Independent collector receipt | `../private-live/isolation-independent-56be72b.json`; SHA-256 `2baff6e9b8e512cac210042c28b2b84ee4636ee45272c0ab653e15bee43fe035` |
+| Independent local regression receipt | `../private-live/isolation-local-independent-56be72b.json`; SHA-256 `bb698abba4932f968768dcca7248db4f60bc3f927400a27379f876e7e7a61016` |
+| Static review, raw exit 1 / review_required | `../private-live/isolation-audit-56be72b.json`; SHA-256 `f8e4618cfb7243c5b2663bde2a03880d880dac5b4656db291f4f154b99ea10d8` |
+
+Static scope: 793 bounded text files, no omissions, 520 unsupported files;
+all selected checks completed including four workflows. The sole heuristic
+`vibe.no_ratelimit_auth` at `tools/artifact_manifest.py:71` was reviewed again:
+local argparse mode selection, no HTTP authentication route. Retain raw finding;
+not a security certification. History, runtime, dependency vulnerabilities and
+other omitted assessments are not PASS. Private evidence is not committed as a
+redistributable Adobe binary dump. The independent helper initially selected the
+previous archive list and correctly rejected its old source; selection was fixed,
+then all ten current-source archives passed. Original receipts were preserved.
 
 **No executable live packet justified.** File ownership correspondence is narrower
 and stronger; host-wide isolation and native completion/failure semantics remain
@@ -99,3 +131,23 @@ and the effect-registry insertion versus parameter/canonical mutations. Only
 then reassess a distinct isolated adapter and exact operation packet. Never
 attempt a private call to substitute for missing safety proof.
 
+
+Private evidence identity: `../private-live/verify_provider_isolation_20261003.py`; SHA-256 `d6d740a04ec0445bb3e0c556f023e865068aa41c33be2f215428677833aefd86`.
+
+Private evidence identity: `../private-live/verify_isolation_local_20261003.py`; SHA-256 `d1e90ec8d0fd295068e3b6b7e9886adeb37ce148626acc502d3de48b741ed26b`.
+
+Private evidence identity: `../private-live/isolation-collection-56be72b.json`; SHA-256 `9b6bcb107b35a514368182ad33a8a5155fd5536d7fe5a000bed760aefcd27dd5`.
+
+Final exact-source CI receipt: `../private-live/isolation-ci-56be72b-final.json`; SHA-256 `105d5055d6eb26d2d2f17bd9dd0ec379f5c514477a3341f52b78f99f97d89bb1`.
+
+## Closeout
+
+ISO-001/002: PASS for the defined bounded file review; runtime identity and
+host-wide isolation/completion remain explicitly NOT PROVEN. ISO-003: PASS for
+unbound refusal/scope/journal behavior, with 15 added gate/journal scenarios.
+ISO-004: PASS for available exact-source local/CI/evidence verification and
+canonical documentation; packet assessment is BLOCKED on the stated missing
+native contracts. No criterion asserts a real registration or native safety PASS.
+Only documentation changed after this code/test source; the closeout commit
+uses `[skip ci]`. The exact green CI identity remains 56be72b, not that later
+source identity. Original baseline and private receipts are preserved.
