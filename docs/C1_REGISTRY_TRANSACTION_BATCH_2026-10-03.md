@@ -86,13 +86,68 @@ No weakened tests, native profile changes, installable candidate or host operati
 
 ## Verification / closeout (REG-006)
 
-Pending clean source collection, independent original-byte/archive checks,
-full local regression, static review and both exact-source CI workflows. No
-current runtime or release claim is made while these checks are pending.
+Clean final code/test source **880b55fe7c0fb32b3c978349cf618b45e2f40952**.
+Full local **379 Python / no skips, 62 Node and 22 available stages PASS**;
+full AE pipeline BLOCKED, product package NOT RUN, live operation not requested.
+Independent verifier checks 25 ZIP members/CRC/hash/inventory and 305 tracked
+source files; source remained unchanged throughout the run. Final log also
+retains 129 synthetic gate and 38 real-file/process/synthetic-host journal cases.
+
+All eleven clean-source collector archives independently PASS: exact source,
+CRC/member uniqueness/SHA inventory and complete instruction coverage. Original
+Mach-O bytes corroborate new 578 direct/71 indirect branches (947/117 across
+new/entry/isolation modes), nine load/store field encodings and three address
+paths to the same global counter. Previous entry/isolation table evidence is
+freshly recollected: 33 chain rebases and two original import/name resolutions.
+Symbol catalog independently includes scope/counter/wrapper/notifier families.
+Neither the pre-commit exploratory capture nor intermediate 5a6c0a8 replaces
+final-source evidence; their records are preserved separately.
+
+Bounded static audit: raw exit **1 / review_required**, all selected checks
+completed, 1145 inventoried files/788 unsupported files/no inventory
+omissions; four workflows scanned. Sole finding `vibe.no_ratelimit_auth` at
+`tools/artifact_manifest.py:71` reviewed as a heuristic false positive: local
+argparse entrypoint, no HTTP/auth route. Raw finding retained. Scope excludes
+full dependency/history/native-runtime/security/release certification.
+
+Research CI [37120018578](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37120018578) and macOS CI [37120018592](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37120018592) both completed/success at exact 880b55f.
+
+Private local evidence, owned under `../private-live/` unless noted:
+
+| Record | SHA-256 |
+|---|---|
+| `build-ae-hot-loader/resource-registry-transaction-454bc43a-m366kgo2.zip` (38 members, offline only) | `b652d1585088fc6019d8da27dab3d668cffc3bbe549fc527aaf7773f02abaa96` |
+| `/private/var/folders/bs/39klz7cd52z6xkm817vj0zjm0000gn/T/AEHL-checks-f86jewbp.zip` | `2b57990648525cabb8427a35742062327146cbfa8723875e31302baad244ed1e` |
+| `registry-independent-880b55f.json` | `6a0619c3224e98deda68b335c6c64edb2e7f9d6058efd8b29056cf4059153980` |
+| `registry-fields-880b55f.json` | `930434df4986f0db3a41e94ab09545cc204df85a36b8bd0b2594238fbcdb5955` |
+| `registry-local-independent-880b55f.json` | `919e1b36a9e926cdd8c3ed3928acc77232f02c42081106eaec4c84c006843004` |
+| `registry-audit-880b55f.json` | `3c53460dcab8133bae673ed1e6167582bc336e4b8a297778100687dd83563c78` |
+| `registry-ci-880b55f-final.json` | `6e453523d1a657d1be869f5bf0e96ef08b2b8b9d66faad66ed02e5b9817613bd` |
+| `registry-review-880b55f.json` | `7b43c613c636e597be35a8934e6ffd3520e6a9d7c683aff046055805f10794b0` |
+
+Reproduction: the collector's fixed `--review registry-transaction` mode plus
+`tools/run_research_checks.py --expected-commit 880b55fe7c0fb32b3c978349cf618b45e2f40952`
+require the clean identified source. Independent scripts are
+`verify_registry_transaction_final_20261003.py`,
+`verify_registry_fields_final_20261003.py` and
+`verify_registry_local_final_20261003.py` in private-live. Private archives are
+research evidence, never an installable handoff. Later documentation-only HEAD
+must not be presented as the code SHA tested here.
+
+## Acceptance closeout
+
+REG-001–006 PASS within the defined offline scope: bounded caller/reader/writer/
+render/completion findings; implemented and tested refusal policy; independently
+verified final-source archives; full local regression, reviewed static result and
+two exact-source successful CI workflows; current status/plan/handoff/compatibility
+reconciled. Selected-reader coverage and failure-risk findings remain bounded;
+no acceptance item certifies native exclusion, failure atomicity or hot loading.
+Documentation-only closeout is separate from tested code source 880b55f.
 
 ## Progress and next decision
 
-REG-001–005 have bounded offline findings and tested refusal behavior. We have
+The six offline objectives have bounded findings, tested refusal behavior and
+verified evidence. We have
 identified specific lock/ownership boundaries, a nonexclusive render counter,
 startup-only caller sequencing and completion paths that can mask module errors.
 These narrow the next experiment and prevent misleading success criteria; they

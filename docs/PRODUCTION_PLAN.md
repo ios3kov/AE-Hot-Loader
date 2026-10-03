@@ -26,6 +26,32 @@ Primary Stage C goal:
 Loaded binaries, registry publication, application and rendering are separate
 claims.
 
+## Latest C1 registry transaction batch — offline PASS
+
+Code/test source **880b55fe7c0fb32b3c978349cf618b45e2f40952**. Six-step batch
+reviews startup/resource caller sequencing, selected registry readers/writer,
+render scopes and completion/partial-mutation paths, then adds a mandatory
+continuously held publication lease to the unbound policy and durable journal.
+Seventeen fixed windows / 3063 instructions / 484 anchors; independent original
+bytes corroborate 578 direct/71 indirect branches, nine field accesses and three
+global-counter address paths. Catalog omission reproduced and fixed.
+
+Full local regression **379 Python/no skips, 62 Node, 22 stages PASS**; all eleven
+file-mode archives independently PASS. Policy: 129 synthetic gate cases; journal:
+38 real-file/process cases with synthetic host. Research CI [37120018578](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37120018578) and macOS CI [37120018592](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37120018592) both completed/success at exact 880b55f.
+Bounded static review complete; raw scanner exit 1 and sole known local argparse
+false positive retained. See [findings, protective change and exact evidence](C1_REGISTRY_TRANSACTION_BATCH_2026-10-03.md).
+
+We now know that selected registry operations lock individually, returned owners
+outlive those locks, zero render count does not prevent new work, and a completed
+loading flag/normal notifier return need not prove every module succeeded.
+These are bounded file findings and tested refusal behavior, not hot registration.
+Backend NOT READY. No native adapter, AE operation or renewed live scope.
+Next: remaining registry consumers/lifetime and transitive preference/canonical
+failure paths; establish an enforceable all-reader/dispatch/MFR exclusion route
+or record go/no-go before preparing an isolated adapter. Registration/apply/render
+NOT RUN; historical scan FAIL preserved; A/B/D/release gates remain open.
+
 ## Latest C1 provider/isolation/completion batch — offline PASS
 
 Code/test source **56be72b888652da450dc58c0d83c64187218af95**. One cycle closes
