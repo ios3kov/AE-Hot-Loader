@@ -30,7 +30,20 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 clean45a7aa4.27 complete original U bodies/3788 instructions: current-context TLS
 transfer and callback-local Gate, per-context weak activation owners, termination
 flag without worker join. Fixed collector/refusals,4 helper/79 collector focused
-PASS; full clean/source/original/scanner/manual/CI pending. Native safety contracts
+PASS;494 Python/no skips,62 Node/all22 steps PASS at exact tested/pushed
+b01ae48ea8ee56a1994940933f8e327dd6902e94,376 source-byte proof. Independent47
+scalar/5 pointer/2 owner-slot/4 import-ordinal and12 historical archive/pin checks
+PASS; SDK/Apple layouts unchanged. BEE stage scopers actually use U_RenderContext
+GetCurrent/GetState; initial direct suspend-context linkage corrected. Raw
+scanner1/review_required,253 text/123 unsupported/no omissions,9 checks completed;
+local CLI false positive reviewed without suppression. Owned scanner clone
+removed after proof; captures/corrections/history retained in
+suspend-closeout-b01ae48-xmz2dk8k and original folder. Both exact-source
+CI37153356616/37153356615 completed/success; synthetic checks are not AE proof or
+release approval. Five Markdown closure records with241 non-Markdown files
+unchanged; final source/remote/retention receipt. Packet **PARTIAL:
+4 DONE /5 PARTIAL /3 BLOCKED**,01/07/08/09 DONE,02–06 PARTIAL,10–12 BLOCKED.
+Native safety contracts
 remain UNKNOWN: continuous all-registry-consumer/MFR admission/drain, safe retained
 factory acquisition/private ABI/thread and whole-effect inverse. Adapter/trials
 BLOCKED, registration/apply/render NOT RUN; no speculative private invocation.

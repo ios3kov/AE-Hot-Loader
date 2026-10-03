@@ -22,10 +22,28 @@ bodies/3788 instructions identify current-context TLS transfer, one dispatched
 callback Gate and per-context activation owners; the process termination method
 sets a flag, not a global worker join. All-reader/MFR exclusion, safe factory
 acquisition/private ABI/thread and full registry/preferences recovery unproved.
-Fixed bounded collector/refusals added,4 helper/79 collector focused PASS;
-full clean source/original/scanner/manual/CI pending. Backend unbound, actual
+Fixed bounded collector/refusals added,4 helper/79 collector focused,494 full
+Python/no skips,62 Node/all22 steps PASS. Exact tested/pushed code
+b01ae48ea8ee56a1994940933f8e327dd6902e94;376 source-byte proof. Independent47
+scalar/5 pointer/2 owner-slot/4 import-ordinal and12 historical archive/pin checks
+PASS, exact SDK/Apple layouts unchanged. BEE stage scopers use U_RenderContext
+GetCurrent/GetState; corrected initial direct suspend-context linkage. Raw
+scanner1/review_required,253 text/123 unsupported/no omissions,9 checks completed;
+local CLI false positive reviewed without suppression. Only proven fresh owned
+scanner checkout removed, original evidence/corrections/history preserved in
+suspend-closeout-b01ae48-xmz2dk8k and original folder.
+[Research CI37153356616](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37153356616)
+and [macOS CI37153356615](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37153356615)
+completed/success at exact b01ae48; synthetic checks are not actual AE acceptance
+or release approval. Five Markdown closure records with241 non-Markdown files
+unchanged and final source/remote/retention evidence. Packet **PARTIAL:
+4 DONE /5 PARTIAL /3 BLOCKED**,01/07/08/09 DONE,02–06 PARTIAL,10–12 BLOCKED.
+Backend unbound, actual
 adapter/trials BLOCKED, registration/apply/render NOT RUN. Original product and
-A/B/C1/C2/D/release retained.
+A/B/C1/C2/D/release retained. Progress: selected suspend-context hypothesis narrowed
+to current TLS transfer and one callback's completion; no continuous host registry
+transaction established. Next needs supported all-consumer/MFR admission/drain,
+safe retained factory acquisition/private ABI/thread and full failure recovery.
 
 ## Previous packet — concrete executor and completion scope
 

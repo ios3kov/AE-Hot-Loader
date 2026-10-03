@@ -38,13 +38,35 @@ destructive lifecycle, thread suspension, unchanged scan or user-state mutation.
 | SUS-11 | Registration→apply→render without restart | Conditional on10 and current safe exact-candidate environment; otherwise BLOCKED/NOT RUN |
 | SUS-12 | Repeat/error recovery trial | Conditional on11 and complete demonstrated recovery; unknown outcome stops once |
 
-Initial research follows only U_SuspendContext targets exposed by EXE item stage
-scopers and lifecycle import; identify original defining image and complete
+Initial research follows U_SuspendContext imports exposed by the EXE lifecycle
+review, alongside related U_RenderContext use in item stage scopers; identify
+original defining image and complete
 symbol boundaries before capture. Reuse unchanged EXE/factory/registry evidence
 with original identities; no repeated whole-body capture. Each capture<=4096,
 existing output caps unchanged. Unknown native contracts block dependent work;
-independent authorized research continues. SUS-01–09 IN PROGRESS,10–12 pending
-prerequisites. [Current checkpoint](C1_SUSPEND_CONTEXTS_2026-10-03.md).
+independent authorized research continues. Final task states and exact evidence:
+[current checkpoint](C1_SUSPEND_CONTEXTS_2026-10-03.md).
+
+Exact tested/pushed code b01ae48ea8ee56a1994940933f8e327dd6902e94:27 complete
+original U bodies/3788 instructions, current-context TLS transfer/callback-local
+Gate/per-context weak activation ownership. Original import/body/pointer review
+corrects initial scoper linkage: BEE uses U_RenderContext::GetCurrent/GetState,
+not a direct suspend-context acquisition.4 helper/79 collector focused,494 full
+Python/no skips,62 Node/all22 steps PASS;376 source-byte proof. Independent47
+scalar/5 pointer/2 owner-slot/4 import-ordinal and12 historical archive/pin checks
+PASS; SDK/Apple layouts unchanged. Raw scanner1/review_required,253 text/123
+unsupported/no omissions,all9 checks; sole local CLI false positive reviewed
+without suppression. Private receipts suspend-closeout-b01ae48-xmz2dk8k;
+only proven fresh scanner checkout removed. Both exact-source CI37153356616 /
+37153356615 completed/success; synthetic builds/reload/rollback/archive checks
+are not AE proof or release approval. Five Markdown closure records with241
+non-Markdown files unchanged; final source/remote/retention proof preserved.
+Packet **PARTIAL:4 DONE /5 PARTIAL /3 BLOCKED**,01/07/08/09 DONE,
+02–06 PARTIAL,10–12 BLOCKED / NOT RUN. Actual adapter/trials BLOCKED,
+native backend unbound, registration/apply/render NOT RUN. Original product/all
+gates retained. Next requires a supported continuous all-consumer/MFR admission/
+drain boundary, safe retained factory acquisition/private ABI/thread and complete
+registry/canonical/preferences recovery; per-context transfer alone insufficient.
 
 ## Concrete executor, completion and conditional host adapter — previous twelve-block pass
 
