@@ -23,7 +23,7 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
 ## Scoped controls and corrected match-name dependency — current continuation
 
-Exact clean tested/pushed code ae5ca5cd30bf3e2aa1538dc3659e4ebe939a8f25;
+Exact clean tested/pushed code b693169b3b25bfc660ba0bb27f0859965144833c;
 [ADM checkpoint](C1_ADMISSION_CONTRACTS_2026-10-03.md). PluginImpl+e8 is a
 match-name ImmutableString, established by typed setter/getter and two complete
 string destructors. The earlier separate-provider interpretation below is
@@ -37,11 +37,16 @@ that proof. Actual acquisition/private thread contract and whole-effect recovery
 also remain required. AE adapter/trial BLOCKED, registration/apply/render NOT RUN.
 
 Six new complete bodies/247 instruction anchors with exact SDK excerpts/pin;
-76 focused /471 Python/no skips,62 Node/all22 stages PASS;367 source-byte proof.
+76 collector /25 runner focused /472 Python/no skips,62 Node/all22 stages PASS;367 source-byte proof.
 Independent original eight-window/677-instruction/20-field review, nine reused
 archive/pin checks PASS. Raw scanner1 preserved, local CLI false positive reviewed
 without suppression. Original evidence retained; only new owned scan clone removed.
-Both exact-source CI37147989601/37147989620 pending at this checkpoint.
+Both exact-source CI37148392586/37148392471 completed/success. Earlier ae5ca5c
+Research CI120s timeout FAIL/artifact retained; aggregate worker480s, individual
+command120s and owned timeout/failure guards unchanged. Packet PARTIAL:
+3 DONE /6 PARTIAL /1 BLOCKED; no executable host packet. Docs-only closure proves
+235 non-Markdown files unchanged; final private retention/source/remote record
+in admission-closeout-ae5ca5c-bda0_fy8/fixed-candidate. All original gates retained.
 Next bounded file research can follow the opaque work-queue cancellation target
 and its admission/completion scope; actual wrapper call is not an authorized or
 proved replacement for a host-owned token and recovery boundary.

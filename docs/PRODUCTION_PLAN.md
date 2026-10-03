@@ -86,6 +86,24 @@ controls still fail safely, then clean new-source runner/scanner/manual/both CI.
 No repeated AE operation or suppression of the original failure. Original file
 archive may be reused with unchanged collector bytes and historical source.
 
+Final ADM reconciliation: [checkpoint](C1_ADMISSION_CONTRACTS_2026-10-03.md).
+Exact repaired/tested/pushed b693169b3b25bfc660ba0bb27f0859965144833c:76 collector /
+25 runner focused /472 Python/no skips62 Node/22 stages PASS;367-source proof.
+Both CI37148392586/37148392471 completed/success at exact b693169. Original
+ae5ca5c timeout FAIL and artifact retained; aggregate480s/individual120s budgets
+and actual watchdog guards verified. Collector unchanged with historical ae5ca5c
+archive; final original eight-window/677-instruction/20-field and nine prior
+archive/pin review PASS. Raw scanner1 preserved, manual local CLI false positive
+review, no suppression. Private final retention/source/remote closure recorded;
+235 non-Markdown files unchanged through docs-only handoff. Only two fresh owned
+scanner clones removed, original app/SDK/user state/evidence preserved.
+ADM-07/08/10 DONE within recorded scope;01/02/03/04/05/06 PARTIAL;09 BLOCKED.
+Whole ten-task packet PARTIAL:3 DONE6 PARTIAL1 BLOCKED. +e8 type resolved as
+match-name string; actual inner callbacks/full graph/thread/acquisition/all-reader
+admission/MFR drain and whole-effect recovery still required. Actual AE adapter/
+trial BLOCKED, registration/apply/render NOT RUN. Original product/A/B/C1/C2/D/
+release/remaining compatibility and regression obligations preserved.
+
 ## Actual factory object owners and host prerequisites — twelve-task pass
 
 2026-10-03 continuation from clean **4a89b3ffeea929015156f65b32a8bcdc0ef3c637**.

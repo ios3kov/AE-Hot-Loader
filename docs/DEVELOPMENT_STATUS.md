@@ -16,7 +16,7 @@ Dated evidence is unchanged; previous instructions do not renew permissions.
 ## Current checkpoint — scoped controls and corrected match-name dependency
 
 2026-10-03 ADM packet continues at exact clean tested/pushed
-**ae5ca5cd30bf3e2aa1538dc3659e4ebe939a8f25**;
+**b693169b3b25bfc660ba0bb27f0859965144833c**;
 [checkpoint](C1_ADMISSION_CONTRACTS_2026-10-03.md). Typed methods and original
 fields identify PluginImpl+e8 as match-name ImmutableString. This corrects the
 earlier separate-provider interpretation; actual inner string callbacks and full
@@ -30,13 +30,17 @@ registry/preferences rollback are still required. No AE adapter was connected;
 registration/apply/render without restart NOT RUN.
 
 Fixed six-body/247-instruction collector and exact SDK excerpts/pin added.
-76 focused /471 full Python/no skips,62 Node/all22 stages PASS;367 tracked
+76 collector /25 runner focused /472 full Python/no skips,62 Node/all22 stages PASS;367 tracked
 source-byte proof. Independent original eight-window/677-instruction/20-field
 review plus nine historical archive/pin rechecks PASS. Raw scanner1 retained:
 244 text123 unsupported/no omissions, one local CLI false positive reviewed
 without suppression. Evidence retained; fresh owned scanner clone removed.
-Research CI37147989601 /macOS CI37147989620 pending at this checkpoint.
-Original product and all A/B/C1/C2/D/release obligations retained; packet PARTIAL.
+Research CI37148392586 /macOS CI37148392471 completed/success at exact b693169.
+Earlier ae5ca5c Research CI timeout120s FAIL retained. Aggregate worker now480s;
+individual command120s/native limits/failfast/output/owned cleanup retained.
+Original product and all A/B/C1/C2/D/release obligations retained; packet PARTIAL:
+3 DONE /6 PARTIAL /1 BLOCKED. Next bounded file research: opaque BEE cancellation
+target/completion scope; admission token/acquisition/thread/recovery still required.
 
 ## Previous checkpoint — actual factory module object owners
 

@@ -148,11 +148,11 @@ clone was removed; application/SDK/projects/plugins/preferences untouched.
 | ADM-05 | PARTIAL | Existing publication-before-failure/local cleanup evidence retained and verified. Complete registry/canonical/preferences inverse still unproved. |
 | ADM-06 | PARTIAL | Fixed collector/SDK evidence component implemented and tested. Actual adapter remains conditional on01–05 and backend unbound; no installable host candidate. |
 | ADM-07 | DONE within changed collector scope | Three new meaningful refusal tests, all247 instruction mutations, bounds/rows/symbols/SDK drift; old-scope regression caught/fixed;76 focused methods PASS. Actual AE reentry/lifetime remains NOT RUN. |
-| ADM-08 | PENDING CI | Exact local471 Python/no skips62 Node/22 stages/source/scanner/manual/original proof PASS or explicitly reviewed. Both exact-source CI completion pending. |
+| ADM-08 | DONE for exact repaired code b693169 |472 Python/no skips62 Node/22 stages/source/scanner/manual/original proof PASS or explicitly reviewed.25 runner controls PASS; Research CI37148392586 and macOS CI37148392471 completed/success at exact b693169. Earlier ae5ca5c timeout FAIL preserved. |
 | ADM-09 | BLOCKED | Prerequisites01–05 unresolved. No executable AE trial; no install/launch/attach/read/scan/private invoke. Registration/apply/render NOT RUN independently. |
-| ADM-10 | PENDING final CI reconciliation | Plan/checkpoint/status/handoff/compatibility updated; evidence/refusals retained, owned scanner clone removed. Final exact-CI/docs-source/remote/retention closeout pending. |
+| ADM-10 | DONE within this packet | Plan/checkpoint/status/handoff/compatibility reconciled with all ten tasks and original obligations; exact source/CI/raw/failure evidence retained, both owned scanner clones removed. Docs-only byte invariance and source/remote closure recorded privately. |
 
-Full ten-task packet PARTIAL. No task criterion removed or replaced with an
+Full ten-task packet PARTIAL:3 DONE /6 PARTIAL /1 BLOCKED. No task criterion removed or replaced with an
 owned/mock PASS. Original ordinary-third-party/no-restart product, A/B/C1/C2/D
 and release gates remain open. The newly identified field removes one specific
 mistaken hypothesis; this is a bounded research advance, not a working hot-load
@@ -186,3 +186,52 @@ before implementation, then25 focused runner methods PASS, including actual
 timeout/failure/owned-process cleanup controls. Final new-source full checks/CI
 are pending. Collector bytes are unchanged, so its ae5ca5c archive keeps its
 historical identity and can be reused with byte-invariance proof.
+
+## Repaired candidate — exact local result
+
+Clean tested/pushed code **b693169b3b25bfc660ba0bb27f0859965144833c**.
+76 collector and25 runner focused methods PASS;472 Python/no skips,62 Node,
+all22 stages PASS with367 source-byte proof. Original ae5ca5c failed CI remains
+FAIL; its separate macOS build CI37147989620 completed/success. Final b693169
+research CI37148392586 and macOS CI37148392471 are pending.
+
+Collector byte invariance between ae5ca5c/b693169 and current source checked;
+its retained original archive/source identity is not relabelled. Independent
+final-candidate original review SHA256
+992f514ff606d0e6bd8a8984aa224e07e3bfa7ae3f56f111ffd8528ef426a5ee;
+same eight-window/677-instruction/20-field and nine historical archive/pin scope.
+Final raw scanner1/review_required/not_assessed retained,244 text123 unsupported
+no omissions; unchanged local CLI false positive reviewed without suppression.
+Final manual review SHA256
+2199efcd186e667139833f9582f6bb9bfa60359de815ef2d284aadeb724b05cd;
+367-source proof SHA256
+36136832e866430809be3c78415a4a90d7ad32770a42493509d0922971928cb2.
+Final full runner AEHL-checks-c1khsiax.zip SHA256
+e88ca281ab261e68965bafac8ca0b67c07e73547263c11210d292ff90095a1c7;
+Python stage108.953s, reported budget480s; every other selected stage120s.
+Only the second fresh byte-matched owned scanner clone was removed. Both new
+and earlier raw/failure evidence retained; host application/SDK/state untouched.
+
+## Final handoff state
+
+Research CI [37148392586](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37148392586)
+and macOS CI [37148392471](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37148392471)
+both completed/success at exact b693169b3b25bfc660ba0bb27f0859965144833c.
+Research native-syntax/panel-contract and macOS build jobs completed/success.
+Previous failed CI is retained with its original candidate/artifact and not
+relabelled. Collector source/SDK/original pins unchanged after runner repair.
+
+Final private retention: build-ae-hot-loader/admission-closeout-ae5ca5c-bda0_fy8,
+new-source results under fixed-candidate. Final docs-only commit is bound by
+CLOSEOUT.json to tested source, current remote and retained hashes;235 non-Markdown
+files unchanged. All five current documents preserve the admitted partials,
+blocked adapter/trial and remaining compatibility/regression/release obligations.
+Only two newly created clean, byte-matched owned scanner clones were removed;
+original binaries/SDK/user host state and all historical evidence untouched.
+
+Packet reconciliation is final:03 completed bounded tasks,06 partial native
+contract/adapter tasks,01 blocked live trial. No executable AE packet exists.
+Actual provider/thread/acquisition/admission/all-reader callback/MFR drain and
+whole-effect recovery remain requirements. Product PARTIAL; ordinary third-party
+effect registration/apply/render without restart NOT RUN. Newly supported result
+is the match-name field correction and reliable bounded aggregate verification.
