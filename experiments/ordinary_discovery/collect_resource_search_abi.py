@@ -21,6 +21,7 @@ APP = Path("/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app"
 PROFILE = ROOT / "experiments/ordinary_discovery/AE256ResourceProfile.hpp"
 FILE_ONLY_PROFILE = ROOT / "experiments/ordinary_discovery/AE256ProviderFactoryFiles.json"
 MAX_OUTPUT = 2 * 1024 * 1024
+DVACORE_SYMBOL_OUTPUT = 4 * 1024 * 1024
 WINDOWS = {
     # SearchStatFunc + Egg_PlugSearch, and all of PLUG_Search through its
     # return/unwind paths. Ends are the next defined text symbols in these pins.
@@ -6506,13 +6507,19 @@ def validate_data(text, start, count):
     return [value for _, value in words]
 
 
-def run_tool(argv, *, input_text=None, timeout=45):
+def run_tool(argv, *, input_text=None, timeout=45, output_limit=MAX_OUTPUT):
+    # This pinned library's complete nm inventory is 3.54 MB. Keep all other
+    # inspections at their original budget; never accept an arbitrary larger cap.
+    dvacore_nm = ['/usr/bin/nm', '-arch', 'arm64', '-n', '-m', str(INPUTS['dvacore'][0])]
+    ceiling = DVACORE_SYMBOL_OUTPUT if argv == dvacore_nm else MAX_OUTPUT
+    require(type(output_limit) is int and 0 < output_limit <= ceiling,
+            'invalid offline inspection output budget')
     result = subprocess.run(
         argv, input=input_text, text=True, stdin=subprocess.PIPE if input_text is not None else subprocess.DEVNULL,
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=timeout,
         env=dict(os.environ, LC_ALL="C"), check=False)
     require(result.returncode == 0, "offline inspection tool failed")
-    require(len(result.stdout.encode()) <= MAX_OUTPUT and len(result.stderr.encode()) <= MAX_OUTPUT,
+    require(len(result.stdout.encode()) <= output_limit and len(result.stderr.encode()) <= output_limit,
             "offline inspection output exceeded limit")
     return result.stdout, result.stderr
 
@@ -6630,7 +6637,8 @@ def main():
         transitive = {}
         for name in names:
             path, _ = INPUTS[name]
-            nm, nm_err = run_tool(["/usr/bin/nm", "-arch", "arm64", "-n", "-m", str(path)])
+            nm, nm_err = run_tool(["/usr/bin/nm", "-arch", "arm64", "-n", "-m", str(path)],
+                                  output_limit=DVACORE_SYMBOL_OUTPUT if name == "dvacore" else MAX_OUTPUT)
             require(not nm_err.strip(), "nm produced unexpected diagnostics")
             symbols = select_symbols(nm, args.review)
             write_exclusive(folder / (name + "-symbols.txt"), symbols)

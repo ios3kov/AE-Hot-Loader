@@ -54,6 +54,8 @@ Adaptive selection before capture: direct map insertion/comparator, unique/share
 
 Boundary review: preliminary map-init range also contained two distinct next-symbol bodies. Final collection splits it into initializer0xb0f94–0xb1008, destructor0xb1008–0xb1030, recursive destroy0xb1030–0xb1078; retain discovery transcript separately. GUID initialization now has a concrete counterpart at MEE0x45870: x19=0x10fa08 plus0x30 gives0x10fa38, passed the same36-byte GUID literal to the char/length constructor. Include previously reviewed named initializer0xb5e8–0xb610 solely for the new cross-initializer comparison and constructor stub0xa0448–0xa0454. Static same initialization input is distinct from observed runtime equality.
 
+Clean collection at36b3c93 refused oversized3,543,605-byte dvacore nm output. Add a4 MiB budget only for this exact pinned nm command; all other tools remain2 MiB and budgets beyond each ceiling refuse. Additional TDD refusal control required. Preserve incomplete collection/scanner receipts. Final scanner uses an independently byte-matched clean local Git clone of corrected source, preserving generated evidence outside its scope.
+
 ## Factory receiver acquisition — seven-block pass
 
 2026-10-03 user “делай” accepts the preceding seven-step proposal. Baseline clean

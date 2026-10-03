@@ -160,3 +160,21 @@ native trial BLOCKED on actual retained receiver/supported late ABI/continuous h
 admission/drain/whole-effect rollback. Actual registration/apply/render NOT RUN.
 Original product/A/B/C1/C2/D/release retained. No AE launch/attach/install/session
 read/private invoke/retain/release/destructor/unload/scan or merge/release.
+
+## First clean collection refusal and scoped correction
+
+At36b3c9360c13ebab448f36e0558bb4e3a4b26aa8 collection stopped with exit2:
+complete dvacore nm inventory3,543,605 bytes exceeds existing2 MiB inspection
+budget. Partial exclusive collection directory retained. Full runner at that SHA
+PASS, but it does not run original Adobe collector and cannot clear this refusal.
+Correction allows4 MiB only for the exact pinned dvacore nm command; all other
+commands remain2 MiB, invalid/excessive/boolean budgets refuse. One additional
+TDD test first fails for absent output_limit, then scoped refusal/pass controls.
+Final new source must repeat collector/full runner/scanner and exact-source CI.
+
+First scanner raw exit2/incomplete retained: the3.54 MB generated private nm file
+exceeds scanner2 MiB per-file limit. No source omission or completed scan claimed.
+Final scanner uses a fresh owned local Git clone at exact corrected SHA with every
+tracked Git/source byte independently compared and no generated evidence outputs.
+This preserves original generated evidence and scopes scanner to actual tracked
+source. Raw findings and final scanner exit remain review inputs, no suppression.

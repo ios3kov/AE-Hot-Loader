@@ -173,6 +173,25 @@ class ResourceAbiCollectorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unreviewed'):
             collector.verify_publication(text, 'FLT-if-missing', start, end - 4)
 
+    def test_dvacore_symbol_budget_is_bounded_and_does_not_relax_other_outputs(self):
+        nm=['/usr/bin/nm','-arch','arm64','-n','-m',str(collector.INPUTS['dvacore'][0])]
+        large='x'*(collector.MAX_OUTPUT+1)
+        result=subprocess.CompletedProcess(nm,0,stdout=large,stderr='')
+        with mock.patch.object(collector.subprocess,'run',return_value=result):
+            with self.assertRaisesRegex(ValueError,'exceeded limit'):
+                collector.run_tool(nm)
+            output,_=collector.run_tool(nm,output_limit=4*1024*1024)
+            self.assertEqual(output,large)
+            for command,limit in ((nm,True),(nm,0),(nm,4*1024*1024+1),
+                                  (['/usr/bin/xcrun','lldb'],4*1024*1024),
+                                  (nm[:-1]+[str(collector.INPUTS['MEE'][0])],4*1024*1024)):
+                with self.assertRaisesRegex(ValueError,'output budget'):
+                    collector.run_tool(command,output_limit=limit)
+        oversized=subprocess.CompletedProcess(nm,0,stdout='x'*(4*1024*1024+1),stderr='')
+        with mock.patch.object(collector.subprocess,'run',return_value=oversized):
+            with self.assertRaisesRegex(ValueError,'exceeded limit'):
+                collector.run_tool(nm,output_limit=4*1024*1024)
+
     def test_transitive_factory_scope_covers_owner_and_guid_dependencies(self):
         windows = collector.review_windows('factory-transitive')
         self.assertEqual(len(windows), 24)
