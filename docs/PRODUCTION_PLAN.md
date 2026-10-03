@@ -61,6 +61,23 @@ experiment require demonstrated contracts; an owned stand or static decoder does
 not satisfy them. Do independent work when these remain unknown; no unchanged scan,
 main mutation, merge or release.
 
+Final reconciliation: [actual factory object owners](C1_FACTORY_OBJECT_OWNERS_2026-10-03.md).
+Exact clean code2b0dbdd04590dcae6cada595ba368b5726f2d288:73 collector /
+468 Python/no skips,62 Node/all22 stages PASS,366 source-byte proof PASS.
+New8-body/325-instruction/five-rebase archive SHA
+08590c21a7256e5e3a763956a75d6bf5767335bee145b94ea0a01fb29c3d681c.
+Separate original9-archive/38-window/4215-instruction/29-field/8-atomic/raw-chain/
+literal review PASS. Raw scanner1 retained,243 text/123 unsupported/no omissions;
+local CLI false positive manually reviewed, no suppression.
+CI37146890744/37146890712 completed/success at exact source.
+OBJ-01/02/07/08/10/12 DONE within stated research scope;03/04/05/06/09 PARTIAL;
+11 BLOCKED. Actual supported acquire/release/thread/initial reachability, concrete
+provider+e8/full callback graph, continuous all-reader/MFR admission/drain and
+whole-effect recovery are unresolved. Collector complete, AE adapter and executable
+trial BLOCKED; registration/apply/render NOT RUN. Entire12-task packet PARTIAL,
+original product/gates retained. Private evidence/retention/preliminary failures
+preserved; only fresh byte-matched owned scanner clone removed.
+
 ## Factory cleanup and dependent code residency — eight-block pass
 
 2026-10-03 continuation, clean e4275d199442d3e57924f473c9d2c658bade1ab1.

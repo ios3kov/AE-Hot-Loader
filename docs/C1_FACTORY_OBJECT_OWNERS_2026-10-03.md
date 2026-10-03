@@ -110,6 +110,68 @@ These synthetic transcripts test refusal only. Preliminary private exploration
 under build-ae-hot-loader/object-owner-inventory-3hfc2g5s is dirty-plan evidence;
 it will not substitute for the final clean collection/original-byte review.
 
-Exact-source full runner/scanner/manual/original archive/CI and final task
-reconciliation are pending at this code preparation checkpoint.
+## Final OBJ-01–12 reconciliation
+
+Clean tested/pushed code **2b0dbdd04590dcae6cada595ba368b5726f2d288**.
+New collector archive resource-factory-objects-29286720-qf964fci.zip SHA
+**08590c21a7256e5e3a763956a75d6bf5767335bee145b94ea0a01fb29c3d681c**.
+Independent original review covers9 retained archives /38 selected windows /
+4215 instructions:631 direct,469 conditional,96 indirect branches,42 returns;
+29 ownership field and8 atomic register decodes, five original chained rebases,
+exact11-byte query literal and constructor/destructor address-point correspondence.
+Original MEE/PluginSupport/ASLFoundation/FLT pins/UUIDs unchanged; historical source
+identities retained. Review SHA **e31adf5d9193eca4fde73a618e11ba954c931e16e802b7ffd8350fd20a76ee7f**.
+
+Fresh unified runner /private/tmp/AEHL-checks-rlkoawoy.zip SHA
+**bd8e277ae6415cc358839d8fed8379c6fb9ae14c59c06629fe24439412bf700d**:
+468 Python/no skips,62 Node/all22 stages PASS. All366 tracked Git/working/copied
+files match; source unchanged. Source proof SHA
+**05ca112bcac02f932bfe2f35394336d53aab1e35e3f04687ebf6cea21f80a615**.
+Raw scanner exit1/review_required/release_readiness=not_assessed preserved:
+243 supported text /123 unsupported types /omissions[]; all selected checks complete.
+Single tools/artifact_manifest.py:71 local CLI quoted-verify heuristic reviewed as
+false positive, no HTTP/auth handler and no suppression. Scanner SHA
+**5b15eb2d55a9d652f2adbfd09ac2195beb6d4acf8ac83b74730ad6b0a1702946**;
+manual SHA **71abe85906a4ae46946c7c6476e57c871b788a9b3dd3c850f7d52c30068d441e**.
+
+Research CI [37146890744](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37146890744)
+and macOS CI [37146890712](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37146890712)
+both completed/success at exact2b0dbdd. Native-syntax/panel-contract/macOS build
+jobs pass. Existing native/strict/sanitizer checks were run by the unified runner;
+no new native implementation or AE runtime claim. CI receipt SHA
+**db2f8380f9991ee1957eda5e38b378d7fc93663840753843e5c7e5cde4b13098**.
+
+| Task | Result | Still required |
+|---|---|---|
+| OBJ-01 | DONE: clean baseline/rules/original archive identities verified | No broader host claim |
+| OBJ-02 | DONE within file scope: two factory vectors and distinct module/effect rosters linked | Actual runtime correspondence |
+| OBJ-03 | PARTIAL: module PluginImpl/PiPL retains/releases and cache handback traced | Valid initial receiver and live owner identity |
+| OBJ-04 | PARTIAL: direct PluginImpl/ASL object/image cleanup linked | Concrete+e8 provider class/full indirect dependencies |
+| OBJ-05 | PARTIAL: existing-only acquire and complete release paths reconciled | Supported private ABI/thread/initial reachability |
+| OBJ-06 | PARTIAL: constructor unwind, child destruction, query/output replacement and terminate lanes reviewed | Complete callback/reentry/failure semantics |
+| OBJ-07 | DONE review: existing registry mutex/counter/scopes do not establish required admission/drain | Actual continuously held all-reader/MFR mechanism BLOCKED |
+| OBJ-08 | DONE review: publication-before-failure and local cleanup cannot certify whole-effect inverse | Atomic recovery contract BLOCKED |
+| OBJ-09 | PARTIAL: fixed file collector/refusal controls implemented | Actual callable AE adapter BLOCKED on03–08 |
+| OBJ-10 | DONE: focused/full checks, raw/manual/original review and both exact-source CI | AE checks separately NOT RUN |
+| OBJ-11 | BLOCKED: trial acceptance concrete; no executable adapter/host packet | Actual acquisition/owners/thread/admission/drain/rollback prerequisites |
+| OBJ-12 | DONE: tasks/docs/evidence/retention/ownership-aware cleanup reconciled | Product and A/B/C1/C2/D/release remain OPEN |
+
+Six tasks DONE, five PARTIAL, one BLOCKED: the twelve-task end-to-end packet is
+**PARTIAL**, not twelve completed product steps. Bounded file research and collector
+are complete. Progress is a substantiated selected owner chain and an excluded
+unsafe probe; ordinary effect registration/apply/render without restart is NOT RUN.
+
+Private evidence retained at build-ae-hot-loader/objects-closeout-2b0dbdd-8dpr93ct;
+RETENTION.json SHA **028771d74dda5038a3d24c2f23151072e6747b4820d53ed3863d31a5c7fe4dcd**.
+New archive, runner, original verifier/provenance, scanner/manual/source/CI receipts,
+preliminary bodies and TDD red/green preserved. Short-SHA runner refusal and
+independent decoder's initial x31-versus-xzr refusal preserved; corrected original
+decoder passes. Preliminary351 planning count corrected to325.
+Only the fresh owned scanner clone was removed after full source proof; original
+archives/shared/app/SDK/projects/plugins/preferences untouched.
+
+Next work must establish a real continuously held host admission/drain provider,
+actual retained acquisition/thread/initial reachability and the concrete provider
+callback/recovery contract before an executable native registration experiment.
+Existing private mutex/counter/cache routes remain excluded for that purpose.
 

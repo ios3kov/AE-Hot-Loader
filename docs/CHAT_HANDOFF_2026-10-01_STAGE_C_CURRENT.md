@@ -3,7 +3,9 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [factory dependency lifetime](C1_FACTORY_DEPENDENCY_LIFETIME_2026-10-03.md),\n[native reference call boundary](C1_CLASSREF_CALL_BOUNDARY_2026-10-03.md),
+Current continuation: [actual factory object owners](C1_FACTORY_OBJECT_OWNERS_2026-10-03.md),
+[factory dependency lifetime](C1_FACTORY_DEPENDENCY_LIFETIME_2026-10-03.md),
+[native reference call boundary](C1_CLASSREF_CALL_BOUNDARY_2026-10-03.md),
 [registry transaction batch](C1_REGISTRY_TRANSACTION_BATCH_2026-10-03.md),
 [provider/isolation batch](C1_PROVIDER_ISOLATION_BATCH_2026-10-03.md),
 [entry/lifetime batch](C1_ENTRY_LIFETIME_BATCH_2026-10-03.md),
@@ -17,6 +19,31 @@ Current continuation: [factory dependency lifetime](C1_FACTORY_DEPENDENCY_LIFETI
 The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
+
+## Actual factory object owners — selected chain traced, host trial blocked
+
+[OBJ checkpoint](C1_FACTORY_OBJECT_OWNERS_2026-10-03.md): twelve-task packet PARTIAL,
+6 DONE /5 PARTIAL /1 BLOCKED. Exact code2b0dbdd04590dcae6cada595ba368b5726f2d288.
+Module stores retained PluginImpl/PiPL owners, destroys PiPL before PluginImpl and
+then its mutex/base/weak state. PluginImpl releases image/other controls and a
+separate private+e8 virtual owner. Selected file class's last-owner route is bound
+through original destructor slots. Cache handback replaces/releases old outputs
+and invokes a virtual query; never use it as a read-only live probe.
+
+Fixed8-body/325-instruction/five-rebase collector and four refusal regressions
+complete; independent9-archive/38-window/4215-instruction/29-field/8-atomic review
+PASS.468 Python/no skips,62 Node/22 stages PASS,366-source proof; both exact-source
+CI37146890744/37146890712 completed/success. Scanner raw1/CLI false positive
+retained,243 text/123 unsupported/no omissions; no suppression. Private receipts
+at build-ae-hot-loader/objects-closeout-2b0dbdd-8dpr93ct, cleanup only fresh clone.
+
+Actual retained initial receiver/ABI/thread, concrete provider/full callbacks,
+continuous all-reader/render/MFR admission/drain and whole-effect recovery remain
+required. The observed registry mutex/counter/ready future do not supply that
+boundary. Native adapter/executable trial BLOCKED; registration/apply/render NOT RUN.
+Next identify and prove the actual admission/drain provider plus ownership/recovery
+contract. No unchanged scan/private cache call/foreign teardown/gate bypass.
+
 
 ## Factory callback dependencies — owned teardown order demonstrated
 

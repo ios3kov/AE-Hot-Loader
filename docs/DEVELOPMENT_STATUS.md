@@ -13,6 +13,32 @@ Previous status is preserved at
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
 
+## Current checkpoint — actual factory module object owners
+
+2026-10-03 twelve-task OBJ packet is **PARTIAL**:6 DONE /5 PARTIAL /1 BLOCKED;
+[checkpoint and reconciliation](C1_FACTORY_OBJECT_OWNERS_2026-10-03.md). Bounded file
+research/collector complete at exact clean pushed **2b0dbdd04590dcae6cada595ba368b5726f2d288**.
+Module strong owners for PluginImpl/PiPL and their destruction order are linked;
+PluginImpl's other private+e8 owner and image controls are distinguished.
+GetSerializedCache retains/replaces/releases caller owners and invokes a virtual
+query, so it is excluded as a read-only diagnostic.
+
+Eight new complete bodies /325 instructions /five rebases; independent original
+review of9 old/new archives /38 selected windows /4215 instructions /29 fields /
+8 atomics confirms selected file correspondence. Actual owners/initial reachability/
+thread/private ABI/full callback graph remain UNKNOWN. Registry admission/render
+drain and whole-effect rollback are still BLOCKED; actual adapter/host trial not ready.
+
+468 Python/no skips,62 Node/all22 stages PASS;366 tracked source bytes unchanged.
+Research CI37146890744 /macOS CI37146890712 succeeded at exact2b0dbdd.
+Raw scanner1/review_required preserved:243 text/123 unsupported/no omissions;
+one local CLI false positive reviewed without suppression. Evidence retained;
+only fresh owned scanner clone removed. Native helper/profile/bridge/SDK/backend
+unchanged. Product PARTIAL; ordinary-effect registration/apply/render without
+restart NOT RUN. Next establish an actual admission/drain and retained owner/thread/
+recovery boundary; no repeat scan or speculative private teardown.
+
+
 ## Current checkpoint — factory teardown retains provider code
 
 2026-10-03 DEP-01–08 complete at exact clean, pushed code **a75a5aa15044b4a4606e5fe39a4185f018fbfab4**; [checkpoint](C1_FACTORY_DEPENDENCY_LIFETIME_2026-10-03.md). Five complete reused MEE cleanup bodies were checked against pinned original bytes. Added a bounded lease for1–8 unique, already-resident owned provider images. It holds their code through factory-result destruction, then closes them in reverse order.
