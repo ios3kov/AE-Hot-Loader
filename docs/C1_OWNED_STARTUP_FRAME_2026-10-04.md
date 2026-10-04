@@ -1,5 +1,35 @@
 # Owned normal-startup/frame calibration —2026-10-04
 
+## Startup stages observed; callback confirmed, frame unresolved —2026-10-04
+
+Code563fe302c2bc0996db4fb5cdf39e9dfcfd7ca8f6/runbbb7009a147d47f0a3b16e358336b28b,
+own PID73811/birth1791113628742893. Rules8.0.0/132b7cd unchanged.
+ST01–04 DONE: eight fixed startup stages, realSDK exclusive/schema/refusal
+checks,13 backend/18 async/3 inert ASan/UBSan PASS, signed two-bundle admission.
+Full509Python/62Node/all22 stages PASS; ZIP SHA2562b40474ea20df2e5cdb1055dd5b198b9b5b106013a24d69f7dd58c02f88457f4,
+CRC/all member hashes verified. Raw scanner retained same reviewed local CLI
+heuristic e2999cfe8b5b3a6bd27f0a62; release readiness not assessed.
+ST05 startup PASS: ready about11.808seconds after attempt, all stages present,
+entry through ready-after2ms monotonic. Previous222s delay not reproduced;
+this does not establish root cause or prove the new diagnostic fixed startup.
+ST06 one request SENT, own fixture/effect/identity/async submission observed.
+First poll confirms READY/uncanceled/error0/same request ID/receipt present,
+callback_on_start_thread=YES. Native final result/world/pixel oracle absent.
+Original operation120s timeout FAIL_OR_UNKNOWN retained immutable, SHA256
+9c85fa618f445586daa8a83a07432610e2cf539babba470a295b1655cbc30ad7.
+ST07 observation PARTIAL: render-poll-allowed is written only for Pending branch;
+its absence with READY does not identify Allowed as blocker. Done path includes
+Allowed, Copy, MarkerCounter, OwnedSnapshot, Release and final publication;
+no further persisted boundary separates them. Receipt lifetime/root cause UNKNOWN.
+No pixel capture accepted; C1 PARTIAL; late-add/private calls NOT RUN.
+Own host preserved, no fresh native cleanup proof; exact PID73811 window/own
+project closure request pending. Other plugin entries unchanged. No replay,
+timeout increase, shared-cache/preferences/security or foreign project changes.
+ST08 source/status/Evidence reconciled; cleanup and exact research publication/CI
+tracked separately. Next useful diagnostic is bounded Done-path stage separation,
+without moving SDK calls into callback or replacing the agreed async route.
+
+
 ## Startup-stage diagnostic pass — accepted2026-10-04
 
 Baseline d1c47069b3c17f0986e330b99dc3418a7eea1524, clean research branch;
