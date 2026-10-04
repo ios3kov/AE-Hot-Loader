@@ -1,5 +1,25 @@
 # AE Hot Loader — current development and release plan
 
+## Confirmed closure and exact retirement —2026-10-04
+
+User confirmed closure of own PID64849. Fresh AE/aerender inventory empty before
+and after retirement. Exact run6cb7c8f7fc31442f8844b88fa96d06bd two-bundle directory
+retained in build-ae-hot-loader/startup-calibration-6cb7c8f7fc31442f8844b88fa96d06bd/live/retired-after-user-closure;
+manifest file hashes match before/after; other plugin entries unchanged.
+No project/window reading, process termination, deletion, cache/preferences or
+security changes. Original supervisor timeout result unchanged (SHA256
+6e41e93d6c279e6eb328bb1365d62ba304cace84cd89dab7410523059858c89a).
+Closure is not callback/resource-release/frame proof. C1 remains PARTIAL.
+EW11 closure/retirement DONE. EW12 previous b0ecd7e exact CI PASS2workflows/
+3jobs/44steps; closure record publication/CI tracked separately. Code untouched;
+509Python/62Node/22stages evidence remains bound to3d3108d, not rerun for prose.
+Private prior archive ce63f67072fbdd7e6e780e0d8e37655db4080ec29beef3619e79082c157a9018
+retained unchanged; new closure receipt is separate. Rules8.0.0/132b7cd,
+AI-STATE/TASK-CLOSE/CLEANUP for continuation and owned reversible retirement.
+Next technical block: supported async completion/receipt-lifetime investigation;
+fix/frame still NOT RUN without causal evidence; no old-nonce replay/late-add.
+
+
 ## Empty-world diagnostic packet — verified options, missing completion
 
 Code3d3108da3f42a2e85266d364d4fbca443e8d5509; own run6cb7c8f7fc31442f8844b88fa96d06bd,
