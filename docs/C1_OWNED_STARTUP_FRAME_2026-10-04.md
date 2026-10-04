@@ -281,3 +281,54 @@ artifacts/control journals/refusal and retirement evidence, regression reports,
 raw audit/disposition and final publication receipt. Excludes SDK/full Adobe
 binaries, screenshots and live host stdout/stderr; hashes/CRC verified. This is
 research evidence, not an installable release or successful hot-load result.
+
+
+## New12-step packet: preparation-only at explicit user direction
+
+Baselineb0140e6d528097e060f9fa7feba3b9fe950700a8, clean research checkout.
+Rules8.0.0/132b7cd; AI_ENTRYPOINT first, C1 Development/Validation;
+NATIVE render/ownership and TOOLS diagnostic/IPC/context, API-SOURCE/TASK-CLOSE/
+CLEANUP apply. User first accepted12-step owned startup/key/apply/frame packet,
+then explicitly answered: “Пока оставьте только подготовку без запуска AE”.
+This later instruction limits this continuation to offline preparation.
+Existing AE PID18624 was found by read-only process preflight and left untouched;
+no screenshot, project read/change, stop, installation or AE launch performed.
+
+| Step | Acceptance/check | Current result |
+|---|---|---|
+| 1 | Exact baseline/rules/retained evidence | DONE; cleanb0140e6,400 current hashes identical to final source snapshot |
+| 2 | Fresh identified diagnostic pair | DONE; new nonce e6cbac34a5bc440e97f17efe33196993 and signed pair |
+| 3 | Exact SDK/resource/signature/offline guards | DONE;74 SDK pins,16 async/7 SDK backend/3 inert cases, independent marker pixels, prepare guard PASS |
+| 4 | Separate owned AE startup | NOT RUN; user explicitly requested preparation only |
+| 5 | Exact enumeration subcause | NOT RUN; live subcause remains UNKNOWN |
+| 6 | Fix confirmed cause | NOT RUN; no confirmed cause or speculative code change |
+| 7 | Repair regression and fresh candidate | Repair NOT APPLICABLE; fresh per-build offline guards already PASS |
+| 8 | Owned blank depth/color preparation | NOT RUN; no test project created |
+| 9 | Installed key/Apply/loaded identity/reverse | NOT RUN |
+| 10 | Actual AE frame/full pixel oracle | NOT RUN; offline oracle is not a rendered AE frame |
+| 11 | Owned SDK/session cleanup | NOT APPLICABLE; no own AE process/install/receipt; source/artifacts/evidence retained |
+| 12 | Source/docs/audit/private evidence/research publication | Offline reconciliation; exact postcommit remote/CI receipt required |
+
+Build IDb0140e6d528097e060f9fa7feba3b9fe950700a8:e6cbac34a5bc440e97f17efe33196993.
+Manifest35cbef6fcb9226a7f88e7837dafa020c45dff49a2542a95cc595cce3eaa4c54d;
+marker7830473bb247f00180fc9f3253edcdf5fa81609a61aaf97fea9d019a4ebef3e6;
+observer481501e2b08e6275466107c4f860123acd4abdad9c68f785208b1016a13bbd8d.
+Bindings are prospective only, not authority. Fresh control is empty; no live
+request/attempt directory. run.py prepare PASS checks exact host executable SHA,
+source/config/nonce/exports/signed maps/guards without invoking AE. Existing
+505 Python/no skips,62 Node/22 stages at7134746 and exactb0140e6 two-workflow
+CI remain tied to their sources: current400 hashes match the final snapshot;
+all non-Markdown match the tested code. Fresh signed configuration/SDK cases
+are executed for this build, not borrowed from a previous artifact.
+
+Private evidence: `/private/var/folders/bs/39klz7cd52z6xkm817vj0zjm0000gn/T/aehl-enumeration-pass-obg5si1p`.
+Preparation package is private evidence, not an installable release/handoff.
+The previous565-member closeout and original failure/retirement records remain
+unchanged. No new implementation/API/runtime claims. All A/B/C1/C2/D/append/
+reload/recovery/release obligations retained; private host gates remain UNKNOWN.
+
+Next runtime gate stays pending until the user resumes owned AE validation:
+fresh process preflight (do not borrow/stop an existing session), exact candidate
+review/identity, one exclusive request, exact enumeration reason, then conditional
+key/Apply/BuildID/reverse/frame/cleanup acceptance. Do not retry consumed prior
+runs or reinterpret the new preparation-only instruction as launch permission.

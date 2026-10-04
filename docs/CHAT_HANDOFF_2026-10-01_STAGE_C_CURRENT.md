@@ -1,6 +1,15 @@
 # AE Hot Loader — current Stage C handoff, updated 2026-10-04
 
-Current continuation: [owned startup/frame calibration](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
+Current continuation: [12-step packet preparation](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
+User explicitly restricted this pass to preparation without AE launch. Fresh
+signed paire6cbac34a5bc at cleanb0140e6 passed SDK74/async16/backend7/inert3/
+independent pixels/supervisor prepare; no install/launch/request/project mutation.
+Existing AE18624 untouched. Steps1–3 DONE, dependent live stages NOT RUN;
+enumeration subcause/key/Apply/real frame remain UNKNOWN/NOT RUN. Exact private
+source/diagnostic/publication evidence is retained separately. Runtime resumes
+only on renewed user direction and a fresh no-existing-AE preflight.
+
+Previous continuation: [owned startup/frame calibration](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
 Executed21c315e passed exact owned startup/live suite/blank-project guards and
 refused at enumeration before mutation. Key/apply/frame NOT RUN; subcause
 UNKNOWN.505 Python/62 Node/22 stages and16 async/7 SDK-backend/3 inert cases

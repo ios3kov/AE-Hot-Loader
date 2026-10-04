@@ -13,7 +13,22 @@ Previous status is preserved at
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
 
-## Current packet — Owned normal-startup/frame calibration
+## Current packet — Enumeration diagnostic preparation only
+
+2026-10-04; clean baselineb0140e6d528097e060f9fa7feba3b9fe950700a8.
+[12-step packet/scope/acceptance/evidence](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
+User limited the accepted packet to preparation without AE launch. New exact
+signed diagnostic paire6cbac34a5bc:74 SDK pins,16 async/7 SDK backend/3 inert
+checks, independent marker oracle and supervisor prepare PASS.400 baseline
+source hashes unchanged; retained exactb0140e6 CI/7134746 offline checks are
+source-bound, not current live proof. Existing AE18624 left untouched.
+No installation/AE launch/project read or change/request/Apply/frame. Enumeration
+subcause remains UNKNOWN; productC1 PARTIAL, private/release gates BLOCKED.
+Steps1–3 DONE;4–10 NOT RUN/conditional;11 no own resources allocated;
+12 documentation/source/audit/evidence/research publication reconciliation.
+Runtime remains pending at the user's request; do not launch until resumed.
+
+## Previous packet — Owned normal-startup/frame calibration
 
 2026-10-04; baseline27bfb5e987d6eba644a5136f464aa960c9493c51.
 [Current LIVE-01–08 scope, results and evidence](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
