@@ -1,5 +1,46 @@
 # Owned normal-startup/frame calibration —2026-10-04
 
+## Resumed14-step color packet — observed None token, guarded normalization
+
+User accepted14-step continuation. Baseline fb011ca3d162b6f37e2b625326906e2d88e47f03;
+rules8.0.0/132b7cd, C1 Development/Validation. API-SOURCE, Debugging, NATIVE
+color/main-thread/resource ownership, TOOLS diagnostic/IPC, TASK-CLOSE/CLEANUP.
+Prior PID55115 independently absent; exact old pair retained with before/after
+hashes and unchanged other plugin entries. Original failure journals unchanged.
+Executed prepared be38af2:96f709a54f8a4ad09c6e2dc547c73330 once; new owned PID57799.
+Exact key796 again. Fixed facts: final working-space-mismatch/value=none-token.
+The getter is exactly None after setting empty string. No fixture/Apply/frame.
+UI Color tab could not be operated; no color-engine observation inferred from UI.
+Own empty8bpc project visually confirmed, normal Quit requested; save dialog
+awaits Don't Save after computer-use lost access. User asked to close exact test.
+
+Correction scope: recognize only empty or exact None under the already exact
+AE25.6x101 host gate; retain false linear flags, depth8 and all project guards.
+Add public SDK AEGP_ColorSettingsSuite6 / kAEGPColorSettingsSuiteVersion6=7
+(frozen AE25.1), AEGP_IsOCIOColorManagementUsed(plugin_id,A_Boolean*).
+Acquire/release through existing RAII on main thread; refuse before depth/color
+mutation on SDK error or OCIO=true; recheck for owned snapshot/cleanup. No profile
+names/paths, private AEGPD functions, engine switch or preference mutation.
+[Adobe color-management documentation](https://helpx.adobe.com/in/after-effects/desktop/adjust-colors/color-management/color-management.html)
+states Working Color Space=None disables project color management. SDK25.6_61
+AE_GeneralPlug.h lines3097–3100/3152–3154 is the exact new API authority.
+The read-only SDK engine guard plus strict token/flags will be checked in the next
+fresh candidate; ordinary startup/frame acceptance remains separate from hot-add.
+
+| Tasks | Acceptance/current state |
+|---|---|
+| RUN01–03 | Baseline/source/closure/own pair retirement/fresh signed admission DONE |
+| RUN04–05 | Own launch and fixed getter fact DONE; None observed, original result retained |
+| RUN06–09 | Minimal representation fix plus public nonOCIO guard, refusal regression, exact fresh build/full checks IN PROGRESS |
+| RUN10–12 | Corrected own launch/fixture/Apply/reverse/actual frame CONDITIONAL NOT RUN |
+| RUN13 | Empty session Quit requested; Don't Save pending user; own install retained |
+| RUN14 | All source/Evidence/status/publication/exact CI require final reconciliation |
+
+All A/B/C1/C2/D, writer/reader/lifetime/reentry/partial-failure/reload/release
+obligations retained; no private call/late-add/third-party changes/main merge/release.
+Private evidence: aehl-color-facts-9xahsxfo. No repeated consumed request.
+
+
 ## Color packet handoff — preparation complete, second host run pending
 
 Final diagnostic code source be38af2aad3fb32cab1b9d5f1aa3027712e0805c.

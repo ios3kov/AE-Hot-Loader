@@ -144,6 +144,7 @@ class Backend {
     Suite<AEGP_UtilitySuite6> utility_{kAEGPUtilitySuite, kAEGPUtilitySuiteVersion6};
     Suite<AEGP_MemorySuite1> memory_{kAEGPMemorySuite, kAEGPMemorySuiteVersion1};
     Suite<AEGP_ProjSuite6> project_suite_{kAEGPProjSuite, kAEGPProjSuiteVersion6};
+    Suite<AEGP_ColorSettingsSuite6> color_suite_{kAEGPColorSettingsSuite, kAEGPColorSettingsSuiteVersion6};
     AEGP_ProjectH project_ = nullptr;
     AEGP_ItemH root_ = nullptr;
     AEGP_CompH fixture_ = nullptr;
@@ -157,6 +158,11 @@ class Backend {
     }
     bool OperationAllowed() { return std::chrono::steady_clock::now() < monotonic_stop_ &&
         Now() < deadline_ && SameProject() && Now() < deadline_; }
+    bool NonOCIO() {
+        A_Boolean ocio=TRUE;
+        return OperationAllowed() && color_suite_.value->AEGP_IsOCIOColorManagementUsed(plugin_id,&ocio)==0 &&
+            ocio==FALSE && OperationAllowed();
+    }
     void GuardProject() {
         const auto* p = project_suite_.value;
         A_long count = 0; AEGP_ProjectH current = nullptr; A_Boolean dirty = TRUE;
@@ -186,6 +192,7 @@ public:
         const auto* p = project_suite_.value;
         Require(p->AEGP_GetNumProjects && p->AEGP_GetProjectByIndex && p->AEGP_ProjectIsDirty &&
             p->AEGP_GetProjectBitDepth && p->AEGP_SetProjectBitDepth && p->AEGP_GetProjectRootFolder);
+        Require(color_suite_.value->AEGP_IsOCIOColorManagementUsed);
         std::ostringstream out;
         out << "AEHL-CAL-SUITE-1\nname=" << kAEGPEffectSuite << "\nversion=" << kAEGPEffectSuiteVersion5
             << "\ntable=" << reinterpret_cast<std::uintptr_t>(e)
@@ -261,6 +268,9 @@ public:
         Save("begin", std::string(calibration_build) + "\n"); return true; }
     bool CreateFixture() {
         if (!OperationAllowed()) return false;
+        diagnostic_stage="color-engine";
+        if (!NonOCIO()) return false;
+        Save("color-engine","AEHL-CAL-COLOR-ENGINE-1\nocio=FALSE\n");
         // Once has already proved blank/unsaved/unchanged, recorded begin and
         // entered PartialUnknown. This changes only that owned diagnostic project.
         AEGP_ProjBitDepth depth{};
@@ -312,13 +322,14 @@ public:
     bool Allowed() { return OperationAllowed(); }
     AEGP_LayerH Layer() const { return layer_; }
     std::string OwnedSnapshot(bool complete) {
-        Require(SameProject());
+        Require(SameProject() && NonOCIO());
         const auto script = std::string(R"JS((function () {
             var p=app.project, c=null, f=null, folders=0;
             var n=')JS") + calibration_fixture + "', m='" + calibration_match + "', complete=" +
             (complete ? "true" : "false") + R"JS(;
             if (!p || p.file!==null || (complete ? p.bitsPerChannel!==8 :
-                (p.bitsPerChannel!==8 && p.bitsPerChannel!==16 && p.bitsPerChannel!==32)) || p.workingSpace!=='' ||
+                (p.bitsPerChannel!==8 && p.bitsPerChannel!==16 && p.bitsPerChannel!==32)) ||
+                (p.workingSpace!=='' && p.workingSpace!=='None') ||
                 p.linearBlending!==false || p.linearizeWorkingSpace!==false ||
                 p.renderQueue.numItems!==0 || p.renderQueue.rendering!==false ||
                 p.numItems>3) return 'REFUSED';

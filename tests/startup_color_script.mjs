@@ -62,8 +62,16 @@ for (let i = 0; i < properties.length; i++) {
 }
 for (const [value, category] of [[null,'null'],[undefined,'undefined'],['None','none-token'],['private-profile-name','other-string'],[false,'other']]) {
     s=scenario({returnedWorkingSpace: () => value});
-    assert.equal(s.response, `AEHL-CAL-COLOR-FACTS-1\nstage=final\nreason=working-space-mismatch\nvalue=${category}\n`);
+    assert.equal(s.response, value==='None' ? 'AEHL-CAL-COLOR-1\n' : `AEHL-CAL-COLOR-FACTS-1\nstage=final\nreason=working-space-mismatch\nvalue=${category}\n`);
     assert(!s.response.includes('private-profile-name'));
     assert.deepEqual(s.writes, properties);
+}
+for (const value of ['none','NONE','None ']) {
+    s=scenario({returnedWorkingSpace: () => value});
+    assert.equal(s.response,'AEHL-CAL-COLOR-FACTS-1\nstage=final\nreason=working-space-mismatch\nvalue=other-string\n');
+}
+for (const [key,reason] of [['linearBlending','linear-blending-mismatch'],['linearizeWorkingSpace','linearize-mismatch']]) {
+    s=scenario({returnedWorkingSpace:()=> 'None',ignores:key});
+    assert.equal(s.response,`AEHL-CAL-COLOR-DIAG-1\nstage=final\nreason=${reason}\n`);
 }
 console.log(`COLOR_SCRIPT_CASES=${cases} PASS; model-only; Adobe_calls=0`);

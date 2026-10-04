@@ -29,7 +29,9 @@ constexpr const char* script = R"JS((function () {
         stage='linear-blending'; p.linearBlending=false; reason=safe(); if (reason) return fail(reason);
         stage='linearize'; p.linearizeWorkingSpace=false; reason=safe(); if (reason) return fail(reason);
         stage='final';
-        if (p.workingSpace!=='') return workingSpaceFacts();
+        // AE25.6x101 returned the exact None token after the empty-string setter.
+        // The native caller separately requires the public non-OCIO engine guard.
+        if (p.workingSpace!=='' && p.workingSpace!=='None') return workingSpaceFacts();
         if (p.linearBlending!==false) return fail('linear-blending-mismatch');
         if (p.linearizeWorkingSpace!==false) return fail('linearize-mismatch');
         return 'AEHL-CAL-COLOR-1\n';

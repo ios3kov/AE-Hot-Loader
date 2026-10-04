@@ -12,12 +12,17 @@ std::string script_response = "AEHL-CAL-COLOR-1\n";
 template<class R, class... Args> R Stub(Args...) { return R{}; }
 AEGP_EffectSuite5 effects{}; AEGP_CompSuite12 comps{};
 AEGP_UtilitySuite6 utilities{}; AEGP_MemorySuite1 memory{}; AEGP_ProjSuite6 projects{};
-SPErr Acquire(const char* name, int32, const void** value) {
+AEGP_ColorSettingsSuite6 colors{};
+SPErr Acquire(const char* name, int32 version, const void** value) {
     if (std::strcmp(name, kAEGPEffectSuite) == 0) *value = &effects;
     else if (std::strcmp(name, kAEGPCompSuite) == 0) *value = &comps;
     else if (std::strcmp(name, kAEGPUtilitySuite) == 0) *value = &utilities;
     else if (std::strcmp(name, kAEGPMemorySuite) == 0) *value = &memory;
     else if (std::strcmp(name, kAEGPProjSuite) == 0) *value = &projects;
+    else if (std::strcmp(name, kAEGPColorSettingsSuite) == 0) {
+        if (version!=7 || version!=kAEGPColorSettingsSuiteVersion6) return 1;
+        *value=&colors;
+    }
     else return 1;
     return 0;
 }
@@ -44,6 +49,9 @@ int main(int argc, char** argv) {
             *result=reinterpret_cast<AEGP_MemHandle>(0x6000); return 0;
         };
         utilities.AEGP_IsScriptingAvailable = [](A_Boolean* value)->A_Err { *value=mode==10?FALSE:TRUE;return 0; };
+        colors.AEGP_IsOCIOColorManagementUsed = [](AEGP_PluginID, A_Boolean* value)->A_Err {
+            *value=mode==11?TRUE:FALSE;return mode==12?1:0;
+        };
         memory.AEGP_GetMemHandleSize = [](AEGP_MemHandle, AEGP_MemSize* size)->A_Err {
             *size=script_response.size()+1;return 0; };
         memory.AEGP_LockMemHandle = [](AEGP_MemHandle, void** data)->A_Err {
@@ -72,7 +80,7 @@ int main(int argc, char** argv) {
             AEGP_CompH, const A_Time*, AEGP_LayerH* out) -> A_Err {
             ++solid_calls; *out = reinterpret_cast<AEGP_LayerH>(0x5000); return 0; };
         const std::string base = std::filesystem::canonical(argv[1]).string();
-        for (mode = 0; mode < 11; ++mode) {
+        for (mode = 0; mode < 13; ++mode) {
             const auto path = base + "/case-" + std::to_string(mode);
             Check(std::filesystem::create_directory(path)); Check(chmod(path.c_str(), 0700) == 0);
             calibration_control = path.c_str(); // test-only generated config has a mutable path pointer
@@ -88,16 +96,17 @@ int main(int argc, char** argv) {
               catch (...) { Check(mode==6 || mode==10);failed=true; }
               Check(failed==(mode==6 || mode==10)); }
             Check(comp_calls == (mode == 3 || mode == 5 || mode >= 6 ? 0 : 1) && solid_calls == (mode == 0 || mode == 4 ? 1 : 0));
-            Check(depth_calls == (mode >= 4 ? 1 : 0));
-            Check(current_depth == (mode == 5 ? AEGP_ProjBitDepth_32 : AEGP_ProjBitDepth_8));
+            Check(depth_calls == (mode >= 4 && mode<11 ? 1 : 0));
+            Check(current_depth == (mode == 5 || mode>=11 ? AEGP_ProjBitDepth_32 : AEGP_ProjBitDepth_8));
             Check(cleanup_ok);
-            if (mode>=6) {
+            if (mode>=6 && mode<11) {
                 const auto data=Read("color-diagnostic");
                 const auto expected=(mode==6 || mode==10) ? startup_color::SDKFailure(mode==6?"script-execution":"scripting-available") : startup_color::Diagnostic(script_response);
                 Check(data==expected && data.find("must-not-persist-private-error")==std::string::npos);
             }
+            if (mode>=11) Check(!Exists("color-started") && !Exists("color-diagnostic") && !Exists("color-engine"));
         }
-        std::cout << "PASS:11 SDK-backend cases; project/deadline/color refusals stop later mutation; fixed diagnostics only; Adobe_calls=0\n";
+        std::cout << "PASS:13 SDK-backend cases; project/deadline/color refusals stop later mutation; fixed diagnostics only; Adobe_calls=0\n";
         return 0;
     } catch (const std::exception& error) { std::cerr << error.what() << '\n'; return 1; }
 }
