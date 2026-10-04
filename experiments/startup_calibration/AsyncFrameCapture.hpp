@@ -26,6 +26,26 @@ class Capture {
     A_Err last_error_ = 0;
     A_long observed_width_ = 0, observed_height_ = 0;
     AEGP_WorldType observed_type_ = AEGP_WorldType_NONE;
+    std::string option_facts_;
+    A_LRect region_{};
+    A_Err region_error_=1;
+    bool region_queried_=false;
+    void ReadOptions() {
+        A_Time time{},step{}; AEGP_WorldType type=AEGP_WorldType_NONE;
+        A_short x=0,y=0; AEGP_MatteMode matte{};
+        const auto time_error=options_.AEGP_GetTime(option_,&time);
+        const auto step_error=options_.AEGP_GetTimeStep(option_,&step);
+        const auto type_error=options_.AEGP_GetWorldType(option_,&type);
+        const auto downsample_error=options_.AEGP_GetDownsampleFactor(option_,&x,&y);
+        const auto matte_error=options_.AEGP_GetMatteMode(option_,&matte);
+        option_facts_="AEHL-CAL-OPTIONS-1\ntime_error="+std::to_string(time_error)+
+            "\ntime="+std::to_string(time.value)+"/"+std::to_string(time.scale)+
+            "\nstep_error="+std::to_string(step_error)+"\nstep="+std::to_string(step.value)+"/"+std::to_string(step.scale)+
+            "\ntype_error="+std::to_string(type_error)+"\nrequested_world_type="+std::to_string(type)+
+            "\ndownsample_error="+std::to_string(downsample_error)+"\ndownsample_x="+std::to_string(x)+
+            "\ndownsample_y="+std::to_string(y)+"\nmatte_error="+std::to_string(matte_error)+
+            "\nmatte="+std::to_string(matte)+"\n";
+    }
     static void Need(bool value) { if (!value) throw std::runtime_error("frame capture refused"); }
     void Check(const char* stage, bool okay) { stage_=stage; Need(okay); }
     void SDK(const char* stage, A_Err error) { stage_=stage; last_error_=error; Need(error==0); }
@@ -44,7 +64,9 @@ public:
             const AEGP_WorldSuite3& world) : options_(options), render_(render), world_(world) {
         Need(options_.AEGP_NewFromLayer && options_.AEGP_Dispose && options_.AEGP_SetTime &&
             options_.AEGP_SetTimeStep && options_.AEGP_SetWorldType && options_.AEGP_SetDownsampleFactor &&
-            options_.AEGP_SetMatteMode && render_.AEGP_RenderAndCheckoutLayerFrame_Async &&
+            options_.AEGP_SetMatteMode && options_.AEGP_GetTime && options_.AEGP_GetTimeStep &&
+            options_.AEGP_GetWorldType && options_.AEGP_GetDownsampleFactor && options_.AEGP_GetMatteMode &&
+            render_.AEGP_GetRenderedRegion && render_.AEGP_RenderAndCheckoutLayerFrame_Async &&
             render_.AEGP_CancelAsyncRequest && render_.AEGP_CheckinFrame && render_.AEGP_GetReceiptWorld &&
             world_.AEGP_GetType && world_.AEGP_GetSize && world_.AEGP_GetRowBytes && world_.AEGP_GetBaseAddr8);
         static_assert(sizeof(PF_Pixel8) == 4 && offsetof(PF_Pixel8, alpha) == 0 &&
@@ -55,6 +77,7 @@ public:
     // Do not destroy a sent object before Ready: its callback retains context.
     bool Pending() const { return sent_ && (!done_.load(std::memory_order_acquire) || starting_); }
     bool Done() const { return !starting_ && done_.load(std::memory_order_acquire); }
+    const std::string& OptionsDiagnostic() const { return option_facts_; }
     std::string Diagnostic() const {
         // Called only on the main thread. Never read callback data before acquire.
         std::string text=std::string("AEHL-CAL-FRAME-DIAG-1\nstage=")+stage_+
@@ -63,6 +86,13 @@ public:
             "\ncallback_error="+std::to_string(callback_error_)+"\nrequest_id_equal="+
             (callback_id_==request_?"YES":"NO")+"\nreceipt="+(receipt_?"YES":"NO")+"\n";
         else text+="callback=PENDING\n";
+        text+=std::string("region_queried=")+(region_queried_?"YES":"NO")+"\n";
+        if(region_queried_) {
+            text+="region_error="+std::to_string(region_error_)+"\n";
+            if(region_error_==0) text+="region_left="+std::to_string(region_.left)+
+                "\nregion_top="+std::to_string(region_.top)+"\nregion_right="+std::to_string(region_.right)+
+                "\nregion_bottom="+std::to_string(region_.bottom)+"\n";
+        }
         return text+"world_type="+std::to_string(observed_type_)+"\nwidth="+
             std::to_string(observed_width_)+"\nheight="+std::to_string(observed_height_)+
             "\nrowbytes="+std::to_string(rowbytes)+"\n";
@@ -76,6 +106,7 @@ public:
         SDK("set-world-type",options_.AEGP_SetWorldType(option_,AEGP_WorldType_8));
         SDK("set-downsample",options_.AEGP_SetDownsampleFactor(option_,1,1));
         SDK("set-matte",options_.AEGP_SetMatteMode(option_,AEGP_MatteMode_STRAIGHT));
+        ReadOptions(); // Read-only facts; no acceptance or render-option changes.
         starting_ = true; sent_ = true; // before an inline callback/reentrant idle
         const auto error = render_.AEGP_RenderAndCheckoutLayerFrame_Async(option_, Ready,
             reinterpret_cast<AEGP_AsyncFrameRequestRefcon>(this), &request_);
@@ -94,6 +125,7 @@ public:
         Check("copy-accepted",accepted_); Check("callback-ready",Done());
         Check("callback-id",callback_id_==request_); Check("callback-canceled",!canceled_);
         Check("callback-error",callback_error_==0); Check("callback-receipt",receipt_!=nullptr);
+        region_error_=render_.AEGP_GetRenderedRegion(receipt_,&region_); region_queried_=true;
         AEGP_WorldH world = nullptr; AEGP_WorldType type = AEGP_WorldType_NONE;
         A_long width = 0, height = 0; PF_Pixel8* pixels = nullptr;
         SDK("receipt-world",render_.AEGP_GetReceiptWorld(receipt_,&world)); Check("world-handle",world!=nullptr);

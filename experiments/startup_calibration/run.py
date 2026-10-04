@@ -169,7 +169,7 @@ def prepare(manifest, expected_hash):
     common.private_directory(base); common.private_directory(base / 'control', empty=True)
     need(not install.exists() and not install.is_symlink() and not (base / 'live').exists(), 'replay or occupied destination')
     need(record['offline_tests']['exact_marker_pixel_oracle']['pixel_status'] == 'PASS' and
-         record['offline_tests']['frame'].startswith('PASS:16 SDK async frame cases') and
+         record['offline_tests']['frame'].startswith('PASS:18 SDK async frame cases') and
          record['offline_tests']['backend'].startswith('PASS:13 SDK-backend cases') and
          record['offline_tests']['inert'].startswith('PASS: 3 inert cases'), 'mandatory offline checks missing')
     for item in record['bundles']:

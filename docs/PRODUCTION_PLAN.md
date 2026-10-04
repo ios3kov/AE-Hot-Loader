@@ -1,5 +1,32 @@
 # AE Hot Loader — current development and release plan
 
+## Accepted12-step empty-world diagnostic packet
+
+User authorized12-step causal pass. Baseline d8ffb3e8d389b4da0c6735b18b86f3b47d1543cd,
+clean research branch; rules8.0.0/132b7cd. Existing C1 Development/Validation,
+public SDK/main-thread/resource/color/IPC diagnostics and TASK-CLOSE/CLEANUP.
+EW01–03: restore state, exact SDK signatures, own layer/request facts.
+EW04–06: reproduce success-null-world in fake SDK regression; bounded public
+option readback and receipt rendered-region diagnostics; signed fresh build,
+full source-bound checks, no-AE admission, separate own startup diagnostic.
+EW07–10: causal decision; minimal fix and fresh validation only if evidence
+supports it. No speculative route switch, world fabrication or weakened pixels.
+EW11–12: safe own cleanup, retained evidence/status, research push/exact CI.
+Acceptance: own64x48 fixture/exact installed key/BuildID; new marker execution,
+nonnull SDK world and independent bit-exact ARGB8 oracle; actual target AE.
+New read-only SDK25.6_61 APIs: LayerRenderOptionsSuite2/version2 GetTime,
+GetTimeStep/GetWorldType/GetDownsampleFactor/GetMatteMode; RenderSuite5/version8
+GetRenderedRegion(receipt,A_LRect*). Only main-thread, valid owned option/receipt.
+Getter outcomes are diagnostics, never substituted for existing acceptance.
+ROI/effects getter absent from this suite: no API invented. Own layer nominal
+bounds/fixture and documented NewFromLayer(all effects) remain separate facts.
+A2024 author report describes async receipt memory issues, without target build
+or causal proof for our null world; no synchronous switch justified by it:
+https://community.adobe.com/questions-529/help-with-aegp-renderandcheckoutlayerframe-async-55775
+No private calls/attach/late-add/main merge/release/foreign project operations.
+Tests/live status NOT RUN until new exact source evidence. Prior evidence retained.
+
+
 ## Latest completed packet — precise empty-world boundary
 
 Source6e0f9a82fea16682edbaf4b2238370b3e4d73466; own run47acf998a1614934a26d5d622217b32b,

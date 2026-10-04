@@ -449,6 +449,7 @@ struct PendingFrame {
               << "\ncheckin=" << reinterpret_cast<std::uintptr_t>(render.value->AEGP_CheckinFrame) << '\n';
         Save("render-suite",slots.str());
         Require(backend->Allowed()); capture.Start(plugin_id,backend->Layer());
+        Save("render-options",capture.OptionsDiagnostic());
     }
 };
 // A submitted context is never destroyed on timeout; late callback needs it.
