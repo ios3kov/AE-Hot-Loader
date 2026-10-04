@@ -1,10 +1,16 @@
 # AE Hot Loader — current Stage C handoff, updated 2026-10-04
 
 Current continuation: [owned startup/frame calibration](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
-Public-SDK async path and one-shot supervisor implemented. Exact678a038 gates
-PASS; owned AE/observer/live suite verified, blank-project refusal before mutation.
-AE PID9838/own plugin directory retained; screenshot auto-review denied. User
-closure/clarification is needed before retirement and any fresh owned attempt. Existing private late-add/lifetime/compensation gates remain.
+Executed21c315e passed exact owned startup/live suite/blank-project guards and
+refused at enumeration before mutation. Key/apply/frame NOT RUN; subcause
+UNKNOWN.505 Python/62 Node/22 stages and16 async/7 SDK-backend/3 inert cases
+PASS for that code. Explicit PID15349 inspection/empty-session closure permission
+resolved the screenshot rejection; empty32-bpc project quit normally. No AE/
+aerender remains; exact own bundles retained outside discovery. Finer enumeration
+refusal diagnostics are prepared offline with every safety gate retained.
+Next gate: fresh reviewed public observer determines exact enumeration subcause,
+then one normal-startup key/Apply/marker/frame control. Private late-add/lifetime/
+reentry/compensation gates remain UNKNOWN/BLOCKED; no merge/release.
 
 
 Continue the existing work. Do not restart research or repeat the unchanged

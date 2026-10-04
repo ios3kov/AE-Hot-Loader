@@ -14,18 +14,21 @@ Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) record
 
 ## Current packet — Owned normal-startup/frame calibration task mapping
 
-2026-10-04; clean baseline27bfb5e987d6eba644a5136f464aa960c9493c51.
-[Current scope, LIVE-01–08 acceptance and evidence](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
-One separately authorized owned normal AE startup/public-SDK key/apply/async frame.
-16 SDK async cases,4 SDK backend cases and7 portable protocol cases PASS;
-executed678a038 exact full regression504 Python/no skips,62 Node/22 stages PASS.
-Owned AE startup/observer/live Effect Suite PASS; blank-project guard REFUSED
-before enumeration/mutation. Key/apply/frame NOT RUN. Own AE/installation retained;
-automatic approval review blocked screenshot of potentially unknown project.
-Final refusal-report repair ff5ac803:505 Python/no skips,62 Node/22 stages PASS;
-SDK/ASan/inert checks PASS. Exact postcommit publication evidence is retained
-separately; CI does not settle the live refusal. StageC1 remains PARTIAL;
-private late-add/trials/release BLOCKED. All retained obligations/evidence remain.
+2026-10-04; baseline27bfb5e987d6eba644a5136f464aa960c9493c51.
+[Current LIVE-01–08 scope, results and evidence](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
+Executed21c315e: exact owned AE startup/observer/live Effect Suite PASS, blank/
+unsaved/dirty/queue/host/color-type guards PASS; enumeration REFUSED before
+mutation. Installed marker key, Apply and real frame NOT RUN; exact enumeration
+subcause UNKNOWN. Full505 Python/no skips,62 Node/all22 stages and16 async/
+7 SDK-backend/3 inert checks PASS for that source. These are offline tests.
+User authorized inspection of exact PID15349 and closure if empty; UI confirmed
+empty32-bpc project, normal Quit and independent AE/aerender absence PASS.
+Exact own installations retained outside discovery; no active test session.
+Finer enumeration refusal stages preserve all rejection gates; prepared offline,
+not a live result. Fresh identified offline checks/publication are reconciled in
+private receipts. Next: identify enumeration subcause, then establish normal
+startup key/apply/marker/frame control. C1 PARTIAL; private late-add and release
+BLOCKED. All historical evidence/retained obligations remain.
 
 ## Previous packet — startup calibration implementation and remaining lifetime
 

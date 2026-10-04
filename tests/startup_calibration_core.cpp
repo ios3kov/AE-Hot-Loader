@@ -69,7 +69,21 @@ int main(int argc, char** argv) {
             case 18: backend.declared = 2; break;
             case 19: backend.declared = 4; break;
             }
-            Check(once.Run(request, good, backend).outcome == Outcome::Refused && backend.creates == 0 && backend.applies == 0);
+            const auto refused = once.Run(request, good, backend);
+            Check(refused.outcome == Outcome::Refused && backend.creates == 0 && backend.applies == 0);
+            // Preserve every rejection while making the live pre-mutation cause distinguishable.
+            const char* expected = nullptr;
+            switch (mode) {
+            case 10: case 11: expected = "enumeration-count-range"; break;
+            case 12: expected = "enumeration-repeated-key"; break;
+            case 13: expected = "enumeration-marker-duplicate"; break;
+            case 14: expected = "enumeration-marker-absent"; break;
+            case 15: expected = "enumeration-project-changed"; break;
+            case 16: expected = "enumeration-count-changed"; break;
+            case 18: expected = "enumeration-missing-end"; break;
+            case 19: expected = "enumeration-early-end"; break;
+            }
+            if (expected) Check(std::string(refused.stage) == expected);
             Check(once.Run(good, good, backend).outcome == Outcome::Refused && backend.applies == 0); ++cases;
         }
         for (int mode = 0; mode < 6; ++mode) {

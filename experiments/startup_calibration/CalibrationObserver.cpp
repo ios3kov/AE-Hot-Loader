@@ -225,11 +225,11 @@ public:
         GuardProject();
         return revision;
     }
-    std::int32_t Count() { A_long value = -1;
+    std::int32_t Count() { diagnostic_stage="enumeration-sdk-count"; A_long value = -1;
         Require(effect_.value->AEGP_GetNumInstalledEffects(&value) == 0); return value; }
-    std::int32_t Next(std::int32_t cursor) { AEGP_InstalledEffectKey value = 0;
+    std::int32_t Next(std::int32_t cursor) { diagnostic_stage="enumeration-sdk-next"; AEGP_InstalledEffectKey value = 0;
         Require(effect_.value->AEGP_GetNextInstalledEffect(cursor, &value) == 0); return value; }
-    std::string Match(std::int32_t key) { char text[AEGP_MAX_EFFECT_MATCH_NAME_SIZE];
+    std::string Match(std::int32_t key) { diagnostic_stage="enumeration-sdk-match"; char text[AEGP_MAX_EFFECT_MATCH_NAME_SIZE];
         std::memset(text, 0xff, sizeof(text));
         Require(effect_.value->AEGP_GetEffectMatchName(key, text) == 0);
         const auto length = strnlen(text, sizeof(text)); Require(length > 0 && length < sizeof(text));

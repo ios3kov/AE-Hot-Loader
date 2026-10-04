@@ -11,14 +11,15 @@ late registration, attachment, merge or release is in this continuation.
 
 | Task | Acceptance/check | State |
 |---|---|---|
-| LIVE-01 | Exact authority, source and owned-session prerequisites | DONE; clean baseline, two absent-process preflights, exact owned launch identity |
-| LIVE-02 | Actual SDK async callback/options/receipt/world lifetime | Implemented;16 SDK-backed synthetic cases PASS, ASan/UBSan |
-| LIVE-03 | Own resident signed module/Build ID/seed/counter and public suite binding | PARTIAL; signed observer/Build ID and acquired live Effect Suite PASS; marker/counter NOT RUN |
-| LIVE-04 | One-shot controller/protocol/project/deadline/cleanup refusals | Seven portable cases PASS; four SDK backend cases PASS; real pre-mutation refusal recorded |
-| LIVE-05 | Exact clean build, full available regression and manual/raw audit | DONE for executed678a038;504 Python/no skips,62 Node/22 stages;16 frame/4 backend/3 inert; final repair ff5ac803:505 Python/no skips,62 Node/all22 stages PASS |
-| LIVE-06 | One owned normal startup, installed key and Apply | PARTIAL; startup/observer PASS; project guard REFUSED, enumeration/key/apply NOT RUN |
-| LIVE-07 | Actual new marker execution, independent full frame pixels and scoped cleanup | Frame NOT RUN; no owned-project cleanup proof, AE and own installation preserved |
-| LIVE-08 | Evidence/source/docs/commit/remote/CI reconciliation | Local source/docs/evidence DONE; exact postcommit remote/CI receipt required; live completion remains blocked |
+| LIVE-01 | Exact authority, source and owned-session prerequisites | DONE; separate exact owned launches, explicit inspection/empty-session closure authority |
+| LIVE-02 | Actual SDK async callback/options/receipt/world lifetime | Implemented;16 SDK-backed synthetic cases PASS, ASan/UBSan; AE receipt NOT RUN |
+| LIVE-03 | Own signed module/Build ID and public suite binding | PARTIAL; actual observer/live Effect Suite PASS; own marker loaded identity NOT RUN |
+| LIVE-04 | One-shot/project/deadline/refusal protocol | Seven portable cases, seven SDK backend cases and36 core cases PASS; finer enumeration diagnostics prepared offline |
+| LIVE-05 | Exact build/full regression and manual/raw audit | Executed21c315e:505 Python/no skips,62 Node/all22 stages,16 async/7 backend/3 inert PASS; final diagnostic repair requires fresh identified offline checks |
+| LIVE-06 | Normal-startup installed key and Apply | PARTIAL;21c315e passed blank/host/color-type guards, REFUSED at enumeration; key/apply NOT RUN |
+| LIVE-07 | Actual marker execution/full frame/scoped cleanup | Frame NOT RUN; own empty sessions quit normally under explicit authority; exact own bundles retained outside discovery |
+| LIVE-08 | Source/docs/evidence/remote/CI reconciliation | Historical daebc531 remote/CI PASS; final current-source publication receipt required; no merge/release |
+
 
 ## Implementation and safety prerequisites
 
@@ -49,8 +50,8 @@ unchanged owned process; otherwise AE is preserved. Only exact owned installatio
 is moved out of discovery after AE is absent, retaining all bytes.
 
 Private evidence: `/private/var/folders/bs/39klz7cd52z6xkm817vj0zjm0000gn/T/aehl-startup-live-lfnh305b`.
-Current mandatory host result NOT RUN until the exact identified candidate gates
-and the owned controller finish. Prior calibration remains offline/historical:
+Current mandatory host result REFUSED at enumeration on executed21c315e.
+Normal-startup key/apply/frame remain NOT RUN. Prior calibration remains offline/historical:
 [C1_STARTUP_CALIBRATION_2026-10-04.md](C1_STARTUP_CALIBRATION_2026-10-04.md).
 Private writer→reader live object trace, legal late host context, complete reader/
 render lifetime/reentry and incomplete-insertion compensation remain UNKNOWN.
@@ -203,3 +204,51 @@ and owned cleanup snapshot still require the exact declared color route.
 [Scripting property contract](https://ae-scripting.docsforadobe.dev/general/project/)
 and exact SDK AE_GeneralPlug.h declarations are recorded; no private color calls.
 A fresh source/build/gates/nonce is required; no old request is replayed.
+
+
+## Current outcome: owned blank gates passed, enumeration refused
+
+Executed21c315e15ee602a14cdc6c3cf4b990feeec6cc9e;
+Build ID21c315e15ee602a14cdc6c3cf4b990feeec6cc9e:b84b1b17c156492584d243093f53f5f9.
+Manifestbb2b0b7cf56c1434e6cd8db99c0e8ff63ce38350360afe6c4afb163c00958e57;
+markerfbc0963df7ac95c7a42c47ace45c3c83d5d58417d331b93d2900232b52680231;
+observer884cbe5b6579fc3bfc4fe0354f8b31bfd1100d7b1d6907a83835e5ceb0b4cfd3.
+74 SDK pins/signed bytes/full regression AEHL-checks-cd9bvpf6.zip PASS:
+505 Python/no failures/errors/skips,51 panel+11 snapshot Node,all22 stages,
+16 async/7 SDK-backend/3 inert cases. Synthetic checks are not AE frame proof.
+
+Exact owned startup/ready/observer PASS,PID15349,birth1791095577875160.
+Acquired live Effect Suite5 table6084055112,count6083566156,next6083568140,
+match6083568980,apply6083563788,reverse6083566288. One request SENT ONCE.
+Native result REFUSED/stage=enumeration/key=0/cleanup=PASS/cleanup_safe=NO.
+No begin/depth/color/fixture/apply/frame journals exist: blank/unsaved/dirty/queue/
+host/color-property-type guards passed before enumeration, but depth/color
+preparation and every later mutation remained NOT RUN. key=0 is not enough to
+infer marker absence: the original aggregate enumeration gate had multiple
+causes. The exact subcause remains UNKNOWN; no claim that startup discovery or
+late publication is impossible follows from this failure.
+
+Automatic review rejected viewing PID15349 because earlier authorization named
+PID9838. User explicitly authorized viewing PID15349 and quitting if empty.
+CUA inspection confirmed empty Untitled Project32 bpc/no items/comp/queue; normal
+CmdQ closed it. AE/aerender absence and exact two signed bundle maps were checked;
+only own b84b1b17c156 installation moved into live/retired-after-authorized-empty-inspection.
+color-retirement.json is separate from immutable original supervisor failure.
+Prior two owned sessions are also closed/retired; no live session remains.
+Screenshots/host stdout/stderr stay private and are excluded from the archive.
+
+Minimal diagnostic repair retains all original count/cursor/uniqueness/target/
+terminator/revision/deadline rejection predicates. Fixed stages distinguish count
+range, early end, repeated key, absent/duplicate marker, missing end, changed
+count, deadline, changed project; native SDK count/next/match exceptions have
+separate stages.36 core cases assert relevant distinctions and no mutation on
+refusal. No installed-effect name list is logged and no gate is weakened.
+The consumed candidate is not retried. This repair is offline preparation; a
+fresh reviewed candidate is required for another owned diagnostic startup.
+
+Next acceptance: determine the exact enumeration subcause with the fresh public
+observer, then establish one unique installed key -> public Apply -> same loaded
+marker Build ID/reverse key -> independently checked actual frame. Only after
+that control works can a separately authorized writer/reader investigation use
+it. Private legal late context, object/lifetime/read-set/reentry and partial
+failure remain UNKNOWN; late registration/release remain BLOCKED.

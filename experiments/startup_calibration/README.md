@@ -131,3 +131,11 @@ It never changes an existing populated/saved project or writes app preferences.
 Initial supported color settings are permitted; actual frame/complete ownership
 proof still requires None and both linear flags false. Color setup failure stops
 before composition creation; it cannot be labeled successful frame or rollback.
+
+
+Current21c315e owned run passed blank-project guards and refused before mutation
+at enumeration. Key/apply/frame were NOT RUN. Explicit PID15349 inspection
+confirmed an empty project; normal Quit and exact owned-bundle retirement are
+recorded separately. Current stages distinguish every enumeration rejection
+without weakening acceptance or logging other effect names. The diagnostic
+repair is offline until a fresh identified run is reviewed.

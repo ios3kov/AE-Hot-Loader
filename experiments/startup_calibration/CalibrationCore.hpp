@@ -42,20 +42,29 @@ public:
         if (revision <= 0 || !time_ok()) return result;
         result.stage = "enumeration";
         const auto count = backend.Count();
-        if (count < 1 || count > 8192) return result;
+        if (count < 1 || count > 8192) { result.stage = "enumeration-count-range"; return result; }
         std::vector<std::int32_t> seen;
         seen.reserve(static_cast<std::size_t>(count));
         std::int32_t cursor = 0;
         int matches = 0;
         for (int i = 0; i < count; ++i) {
-            if (!time_ok()) return result;
+            if (!time_ok()) { result.stage = "enumeration-deadline"; return result; }
             cursor = backend.Next(cursor);
-            if (!cursor || std::find(seen.begin(), seen.end(), cursor) != seen.end()) return result;
+            if (!cursor) { result.stage = "enumeration-early-end"; return result; }
+            if (std::find(seen.begin(), seen.end(), cursor) != seen.end()) {
+                result.stage = "enumeration-repeated-key"; return result;
+            }
             seen.push_back(cursor);
             if (backend.Match(cursor) == backend.Target()) { result.key = cursor; ++matches; }
         }
-        if (matches != 1 || backend.Next(cursor) != 0 || backend.Count() != count ||
-            !time_ok() || backend.BlankProjectRevision() != revision) return result;
+        if (matches != 1) { result.stage = matches == 0 ? "enumeration-marker-absent" :
+            "enumeration-marker-duplicate"; return result; }
+        if (backend.Next(cursor) != 0) { result.stage = "enumeration-missing-end"; return result; }
+        if (backend.Count() != count) { result.stage = "enumeration-count-changed"; return result; }
+        if (!time_ok()) { result.stage = "enumeration-deadline"; return result; }
+        if (backend.BlankProjectRevision() != revision) {
+            result.stage = "enumeration-project-changed"; return result;
+        }
         result.stage = "before-mutation";
         if (!backend.BeforeMutation() || !time_ok()) return result;
         // Any failure after entering a mutating SDK call may leave owned host state.
