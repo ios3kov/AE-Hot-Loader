@@ -21,6 +21,50 @@ late registration, attachment, merge or release is in this continuation.
 | LIVE-08 | Source/docs/evidence/remote/CI reconciliation | Historical daebc531 remote/CI PASS; final current-source publication receipt required; no merge/release |
 
 
+## Resumed enumeration diagnostic and SDK startup conformance
+
+User reply: resume a separate test launch, superseding the preparation-only hold
+for owned ordinary startup/public-SDK diagnostics only. Baseline bb05448.
+Prepared source b0140e6d528097e060f9fa7feba3b9fe950700a8, nonce
+e6cbac34a5bc440e97f17efe33196993, manifest
+35cbef6fcb9226a7f88e7837dafa020c45dff49a2542a95cc595cce3eaa4c54d.
+Owned PID23266/birth1791097632944306: exact install/startup/observer/suite PASS;
+one request, native REFUSED at enumeration-marker-absent, key0, cleanup PASS,
+cleanup_safe NO. Ready/result/consumed/request/suite journals exist; no begin,
+fixture/apply/render/frame journals. Count-range and cursor traversal reached
+zero exact target matches; later terminator/count2/revision2 guards were not run.
+No project mutation. This establishes marker absence, not its cause or hot-load.
+
+Owned host preserved. Current exact PID23266 inspection/empty-session closure
+permission is pending. Previous PID-specific permissions cannot authorize it.
+Original result and installed two-bundle bytes remain unchanged; no repeated
+request or consumed-candidate retry. No stdout/project content enters publication.
+Private evidence: /var/folders/bs/39klz7cd52z6xkm817vj0zjm0000gn/T/aehl-enumeration-live-7widh4us.
+resume-plan.json and startup-entry-review.json bind authority, baseline, primary
+SDK hashes and conformance findings. New receipts supplement original failures.
+
+SDK25.6_61 Headers/AE_PluginData.h requires the named typed startup callback;
+Template/Skeleton/Skeleton.cpp supplies it. Marker lacked this export. Added
+PluginDataEntryFunction2 using PF_PluginDataCB2 and SDK major/minor constants;
+host-provided opaque data passes unchanged; null callback refuses; callback error
+propagates. Builder injects identical unique name/match as PiPL and verifies three
+exact exports. Observer never invokes this entry. Standard startup only.
+SDK sample eFKT/FXTC packaging and API13/29 already agree; unchanged.
+Focused real-header test: exact function-pointer type, opaque pointer/metadata,
+null callback and error propagation, existing pixel/identity/refusal cases PASS
+with ASan/UBSan. Synthetic callback/world tests are not live discovery/render.
+SDK source hashes retained privately; no Adobe source redistribution.
+
+| Task | Observable acceptance/check | State |
+|---|---|---|
+| REG-01 | Resumed authority and one exact owned attempt, no foreign session | DONE; consumed e6 candidate, PID23266 |
+| REG-02 | Identify exact enumeration refusal without project mutation | DONE; marker absent, no begin journal |
+| REG-03 | SDK-conformant startup callback and error/metadata test | IMPLEMENTED; focused SDK/sanitizer PASS, causality UNKNOWN |
+| REG-04 | Fresh clean-source signed build, SDK pins, full regression, reviewed audit | PENDING; historical gates do not cover new callback |
+| REG-05 | Safely close owned host and retain exact own installation | BLOCKED; pending exact PID permission/current empty-project proof |
+| REG-06 | New ordinary startup key, Apply, loaded identity, real frame oracle | NOT RUN; depends on REG-04/05, no private/late invocation |
+| REG-07 | Source/docs/evidence/remote/CI and retained obligations reconciliation | IN PROGRESS; no merge/release |
+
 ## Implementation and safety prerequisites
 
 Identity protocol2 adds successful PF_Cmd_RENDER counter. Async Render Suite5

@@ -106,7 +106,7 @@ def main():
     common = ["clang++", "-std=c++17", "-arch", "arm64", "-mmacosx-version-min=12.0", "-Wall", "-Wextra", "-Werror",
               "-I" + str(headers), "-I" + str(headers / "SP"), "-I" + str(output)]
     for stem, source_name, exports in [
-        (marker, "MarkerEffect.cpp", ["_EffectMain", "_AEHL_MarkerBuildIdentity"]),
+        (marker, "MarkerEffect.cpp", ["_EffectMain", "_AEHL_MarkerBuildIdentity", "_PluginDataEntryFunction2"]),
         (observer, "CalibrationObserver.cpp", ["_EntryPointFunc", "_AEHL_CalibrationBuildIdentity"])]:
         bundle = output / (stem + ".plugin"); contents = bundle / "Contents"
         (contents / "MacOS").mkdir(parents=True); (contents / "Resources").mkdir()
@@ -128,6 +128,9 @@ def main():
         command = common + ["-bundle", "-fvisibility=hidden", "-Wl," + ",".join("-exported_symbol," + name for name in exports),
                   "-DAEHL_BUILD_ID=" + cpp(build), "-DAEHL_MARKER_SEED=" + str(seed) + "u",
                   str(Path(__file__).with_name(source_name)), "-o", str(binary)]
+        if stem == marker:
+            command += ["-DAEHL_MARKER_NAME=" + cpp("AEHL Marker " + run_id[:12]),
+                        "-DAEHL_MARKER_MATCH=" + cpp(match)]
         compile_log = run(*command)
         run("codesign", "--force", "--sign", "-", str(bundle)); run("codesign", "--verify", "--strict", str(bundle))
         actual_exports = run("nm", "-arch", "arm64", "-gU", str(binary))
@@ -168,7 +171,7 @@ def main():
         elif label == "frame":
             test_args = []
         else:
-            test_args = [str(observer_module), token] if label == "inert" else [str(marker_binary), build]
+            test_args = [str(observer_module), token] if label == "inert" else [str(marker_binary), build, "AEHL Marker " + run_id[:12], match]
         results[label] = run(str(binary), *test_args)
         if label == "adapter":
             frame = bytes.fromhex(results[label].split("FRAME_ARGB8_HEX=", 1)[1].splitlines()[0])

@@ -13,7 +13,30 @@ Previous status is preserved at
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
 
-## Current packet — Enumeration diagnostic preparation only
+## Current packet — Resumed startup registration diagnostic
+
+2026-10-04; baseline `bb05448f0e54edfaca7aeb39e088699f81a1e353`.
+User explicitly resumed the separate owned AE test after the preparation-only hold.
+The prepared e6cbac34a5bc candidate was consumed once: owned startup/live suite
+PASS; native REFUSED at `enumeration-marker-absent`, before any project mutation.
+No installed marker key, Apply or frame; late registration/private calls NOT RUN.
+Owned PID23266 remains open: native cleanup-safe proof was unavailable. Exact
+permission to inspect that window and close only an empty project is pending;
+previous permissions for other PIDs do not apply. Installed own bundles retained.
+
+Primary SDK25.6_61 review found a missing standard host-invoked
+`PluginDataEntryFunction2` export. Minimal marker/build/adapter correction uses
+the exact SDK callback type, forwards opaque data unchanged, supplies the same
+name/match/category/entry/API/reserved metadata as PiPL, and propagates errors.
+Three registration checks plus existing synthetic pixel/identity/refusal tests
+PASS with ASan/UBSan. Bundle eFKT/FXTC and PiPL13/29 already match SDK/sample.
+This is a verified conformance correction; causality for host absence UNKNOWN.
+Fresh identified build/full regression/audit and original-symptom live verification
+remain required. New startup depends on safe closure of PID23266/no-existing-AE
+preflight. C1 PARTIAL; private implementation and release remain BLOCKED.
+[Task/acceptance/evidence mapping](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
+
+## Previous packet — Enumeration diagnostic preparation only
 
 2026-10-04; clean baselineb0140e6d528097e060f9fa7feba3b9fe950700a8.
 [12-step packet/scope/acceptance/evidence](C1_OWNED_STARTUP_FRAME_2026-10-04.md).

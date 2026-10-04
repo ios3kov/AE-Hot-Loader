@@ -1,6 +1,7 @@
-// Ordinary PiPL-discovered control effect. No dynamic registration or host calls.
+// Ordinary PiPL-discovered control effect. No late registration or private calls.
 #include "AEConfig.h"
 #include "AE_Effect.h"
+#include "AE_PluginData.h"
 #include "MarkerCore.hpp"
 #include "MarkerIdentity.hpp"
 #include <cstring>
@@ -12,6 +13,25 @@
 #ifndef AEHL_BUILD_ID
 #define AEHL_BUILD_ID "offline-test-only"
 #endif
+#ifndef AEHL_MARKER_NAME
+#define AEHL_MARKER_NAME "AEHL Offline Marker"
+#endif
+#ifndef AEHL_MARKER_MATCH
+#define AEHL_MARKER_MATCH "AEHL.Offline.Marker"
+#endif
+// Standard SDK host-invoked startup callback only. Never called by the observer.
+extern "C" __attribute__((visibility("default")))
+PF_Err PluginDataEntryFunction2(PF_PluginDataPtr data, PF_PluginDataCB2 callback,
+                              struct SPBasicSuite*, const char*, const char*) noexcept {
+    if (!callback) return PF_Err_INVALID_CALLBACK;
+    return callback(data, reinterpret_cast<const A_u_char*>(AEHL_MARKER_NAME),
+        reinterpret_cast<const A_u_char*>(AEHL_MARKER_MATCH),
+        reinterpret_cast<const A_u_char*>("AE Hot Loader Diagnostic"),
+        reinterpret_cast<const A_u_char*>("EffectMain"), 0x65464b54,
+        PF_AE_PLUG_IN_VERSION, PF_AE_PLUG_IN_SUBVERS, 0,
+        reinterpret_cast<const A_u_char*>("https://github.com/ios3kov/AE-Hot-Loader"));
+}
+
 static_assert(AEHL_MARKER_SEED <= 0xffffffu, "24-bit marker seed required");
 static_assert(sizeof(PF_Pixel8) == 4 && offsetof(PF_Pixel8, alpha) == 0 &&
               offsetof(PF_Pixel8, red) == 1 && offsetof(PF_Pixel8, green) == 2 &&

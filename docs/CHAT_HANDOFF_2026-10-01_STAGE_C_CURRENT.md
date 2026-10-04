@@ -1,6 +1,17 @@
 # AE Hot Loader — current Stage C handoff, updated 2026-10-04
 
-Current continuation: [12-step packet preparation](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
+Current continuation: [resumed startup registration diagnostic](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
+Baseline bb05448; user explicitly resumed owned AE validation. Prepared e6cbac34a5bc
+was consumed once, with native REFUSED at enumeration-marker-absent before mutation.
+No key/Apply/frame; own PID23266 remains open because safe closure proof failed.
+Await exact window-inspection/empty-session closure permission; do not borrow prior
+PID permissions. Marker now supplies the SDK-typed PluginDataEntryFunction2 startup
+callback, exact PiPL metadata and error propagation. Focused sanitizer/registration
+tests PASS; host-absence causality UNKNOWN. Fresh identified build/full checks/audit
+required before a new owned startup, after PID23266 safely closes. No private calls,
+late-add, attach, merge or release. Prior evidence/obligations remain unchanged.
+
+Previous continuation: [12-step packet preparation](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
 User explicitly restricted this pass to preparation without AE launch. Fresh
 signed paire6cbac34a5bc at cleanb0140e6 passed SDK74/async16/backend7/inert3/
 independent pixels/supervisor prepare; no install/launch/request/project mutation.
