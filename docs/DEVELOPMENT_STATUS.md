@@ -20,9 +20,10 @@ User explicitly resumed the separate owned AE test after the preparation-only ho
 The prepared e6cbac34a5bc candidate was consumed once: owned startup/live suite
 PASS; native REFUSED at `enumeration-marker-absent`, before any project mutation.
 No installed marker key, Apply or frame; late registration/private calls NOT RUN.
-Owned PID23266 remains open: native cleanup-safe proof was unavailable. Exact
-permission to inspect that window and close only an empty project is pending;
-previous permissions for other PIDs do not apply. Installed own bundles retained.
+Owned PID23266 was preserved because native cleanup-safe proof was unavailable;
+subsequent read-only process inventory found it absent and another AE PID27219
+running. No window inspection or closure performed. PID27219 remains untouched;
+no new startup or retirement while AE runs. Installed own bundles retained.
 
 Primary SDK25.6_61 review found a missing standard host-invoked
 `PluginDataEntryFunction2` export. Minimal marker/build/adapter correction uses
@@ -34,7 +35,7 @@ This is a verified conformance correction; causality for host absence UNKNOWN.
 Fresh code4218dbe: signed diagnostic793efe4b67ae, SDK74, three registration checks,
 16 async/7 backend/3 inert/independent pixels and supervisor prepare PASS. Full
 505 Python/no failures/errors/skips,62 Node/all22 stages PASS; raw audit reviewed.
-Original-symptom live verification remains NOT RUN. New startup depends on safe closure of PID23266/no-existing-AE
+Original-symptom live verification remains NOT RUN. New startup depends on user-confirmed AE closure/no-existing-AE
 preflight. C1 PARTIAL; private implementation and release remain BLOCKED.
 [Task/acceptance/evidence mapping](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
 

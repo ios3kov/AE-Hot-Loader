@@ -61,9 +61,16 @@ SDK source hashes retained privately; no Adobe source redistribution.
 | REG-02 | Identify exact enumeration refusal without project mutation | DONE; marker absent, no begin journal |
 | REG-03 | SDK-conformant startup callback and error/metadata test | IMPLEMENTED; focused SDK/sanitizer PASS, causality UNKNOWN |
 | REG-04 | Fresh clean-source signed build, SDK pins, full regression, reviewed audit | DONE offline at4218dbe; exact793efe4b67ae/SDK74/registration3/async16/backend7/inert3/oracle/505 Python/62 Node/22 stages PASS; audit reviewed |
-| REG-05 | Safely close owned host and retain exact own installation | BLOCKED; pending exact PID permission/current empty-project proof |
+| REG-05 | Safely close owned host and retain exact own installation | PARTIAL; subsequent inventory found23266 absent, another AE27219 preserved; own bundles retained; retirement/new launch BLOCKED while AE runs |
 | REG-06 | New ordinary startup key, Apply, loaded identity, real frame oracle | NOT RUN; depends on REG-04/05, no private/late invocation |
 | REG-07 | Source/docs/evidence/remote/CI and retained obligations reconciliation | IN PROGRESS; no merge/release |
+
+After the first preserved-host snapshot above, narrow read-only process inventory
+found no PID23266 and another running AE PID27219; no aerender. No UI inspection,
+project read/change or quit was performed. The previous PID23266 window question
+is no longer applicable. User was asked to save/close the current AE or continue
+preparation-only. Do not transfer PID-specific permissions, borrow27219 or retire
+installed bundles during a running host. Fresh candidate remains unconsumed.
 
 Fresh clean source4218dbe9725ffb474538f7ca9d922e7211ddeaea, nonce
 793efe4b67aea34ddef34cced049b9b9; manifest
