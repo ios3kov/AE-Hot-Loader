@@ -1,5 +1,28 @@
 # AE Hot Loader — current development and release plan
 
+## Authorized window check and closure —2026-10-04
+
+User authorized viewing exact PID67497. Fresh executable/birth identity matched
+our sole owned session. Narrow UI observation showed Untitled Project without
+modification marker, empty Project panel/no composition and no visible error dialog.
+The native ready journal matched codecb0ab99/runab77d3b7d3aa4198a16647387b017eb0
+but appeared222.332seconds after attempt, beyond the unchanged180second deadline.
+Cause UNKNOWN; late readiness is not a successful startup within the budget.
+Original supervisor FAIL_OR_UNKNOWN/startup timeout remains immutable, SHA256
+ af02539f5df1b12b5105c2d56b46f9fbea133fe33f283376543d86c1e056e41c.
+Operation NOT SENT; no fixture/apply/frame request, no nonce replay or new launch.
+After verifying own empty unmodified project, normal Quit completed. AE/aerender
+inventory empty before/after exact two-bundle retirement; file hashes match,
+other plugin entries unchanged. Own directory retained outside discovery at
+build-ae-hot-loader/startup-calibration-ab77d3b7d3aa4198a16647387b017eb0/live/retired-after-authorized-window-check.
+No raw screenshot/host log archived; fixed own facts only. No cache/preferences,
+security, private calls or foreign project/plugin changes. AC06 cleanup DONE;
+source/evidence reconciliation and research-only publication tracked separately.
+AC01–04 prepared/offline PASS; AC05 completion/poll/receipt live NOT RUN. C1 PARTIAL,
+late-add NOT RUN. Next: establish a bounded startup cause/control before a fresh
+identified lifecycle run; no arbitrary timeout extension or unchanged retry.
+
+
 ## Completion diagnostic prepared; new startup gate not reached
 
 Codecb0ab99d4bc5454aaab77764a6a1e9d7f7435e6d; own runab77d3b7d3aa4198a16647387b017eb0.
