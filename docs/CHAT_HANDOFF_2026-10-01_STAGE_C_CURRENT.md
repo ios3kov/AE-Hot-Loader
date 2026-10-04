@@ -1,5 +1,51 @@
 # AE Hot Loader — current Stage C handoff, updated 2026-10-04
 
+## Current result — own startup key confirmed; color fixture gate open
+
+Baseline d5967fe; correction code831c6cea7e2fef08252a709dd74bbdcbad09ac9a.
+Two different owned startup attempts completed within the accepted packet:
+
+| Gate | Exact result |
+|---|---|
+| Prior44-byte own match | Three full787-entry snapshots returned its31-byte prefix/key796; strict guard refused before mutation |
+| Fresh31-byte compact match | PASS: three complete snapshots0/1001/3080ms; exact1/key796; matches builder/callback/PiPL/config |
+| Candidate |831c6ce:a8d8013686e84eef8e247ce48c579a5b; signed own marker+observer; SDK74 unchanged |
+| Manifest SHA256 |6fe4f9200e0879a92eb819d7866d2a917d1089926ebbefa5762d91d2a1fe34c8 |
+| Fresh offline regression |508 Python/no failures/errors/skips;51 panel+11 snapshot Node;22 stages PASS, AEHL-checks-byuuy9mf.zip |
+| Native guards |17 name-observation+36 core ASan/UBSan;16 async/7 backend/3 inert; own registration adapter/independent pixels PASS |
+| Actual blank-project preparation | begin and SDK depth8 confirmed; color-started exists, color-adjusted absent |
+| Native result |PARTIAL_UNKNOWN/create-fixture/key796; exact color subcause not yet journaled |
+| Apply/reverse/actual AE frame |NOT RUN; no successful color preparation/fixture, no frame acceptance |
+| Private entry/late-add/ownership |NOT RUN/UNKNOWN; ordinary startup key is not these proofs |
+| Cleanup |Previous PID46466 empty inspection/normal Quit/exact retirement PASS; current PID50612 preserved; user chose to close AE themselves |
+
+The correction passes the old enumeration gate without weakening byte equality.
+Full nonce/source BuildID remains; compact match carries96 identity bits. A
+prefix/display observation still never authorizes Apply. The31-byte constraint
+is observed in this target AE25.6x101/macOS arm64, not asserted for every SDK/host.
+
+Current session changed only the authorized empty diagnostic project's depth/
+color preparation; no comp/solid/Apply/frame success. Automatic review denied
+normal Quit because the title is dirty and empty-panel evidence was insufficient.
+User chose “Закрою AE самостоятельно”; no indirect stop or cleanup.
+Installed exact own pair remains while this process runs; other plugin entries
+unchanged. Original supervisor failure is retained, never rewritten as PASS.
+
+Private evidence root: aehl-name-projection-live-zz_eap2e; cause/closure of first
+attempt, new source checks/raw audit/manual review, signed manifest, regression
+archive and compact-live-reconciliation.json. Raw audit267 text/136 unsupported/
+no omissions: unchanged local argparse CLI heuristic fingerprint
+ e2999cfe8b5b3a6bd27f0a62 retained with manual disposition.403 tracked paths remain;
+392 baseline paths and253 non-Markdown paths outside intentional changes intact.
+Final docs-only reconciliation does not alter tested/built non-Markdown bytes.
+Exact final research remote/CI and private archive receipts follow publication.
+
+Next: after safe own-session closure, isolate the color-script failure with bounded
+own diagnostic subcauses/property checks; do not guess a color-route fix or replay
+a consumed run. Then fresh guarded fixture/Apply/reverse/real AE frame. Only after
+that startup baseline can the writer/reader/ownership/partial-failure gates advance.
+All previous A/B/C1/C2/D, append/reload/recovery and release obligations retained.
+
 ## Current correction — observed own match-name projection
 
 One owned startup attempt of e0451d1/9e09478c2faf completed. Three full main-thread
