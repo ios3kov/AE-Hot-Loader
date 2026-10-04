@@ -1,5 +1,28 @@
 # Owned normal-startup/frame calibration —2026-10-04
 
+## Completion diagnostic prepared; new startup gate not reached
+
+Codecb0ab99d4bc5454aaab77764a6a1e9d7f7435e6d; own runab77d3b7d3aa4198a16647387b017eb0.
+509Python/62Node/all22 stages and18 SDK async ASan/UBSan,13 backend/3 inert PASS.
+Checks ZIP SHA2566c8ec63d577d0e228cf39ae7e6d6ca9042e0231dacd9ae3c0ffa33f4ac2d3cec,
+CRC/member hashes PASS. Original prior2a6bc53 exact CI now PASS2workflows/3jobs/44steps.
+New signed two-bundle admission/hash/no-AE prerequisites PASS. Controller started
+PID67497, but ready journal never appeared within180seconds. Operation NOT SENT:
+no apply/frame request or fixture mutation by this controller. Project/window
+state unknown; no assumption about startup UI or auto-restored contents.
+Supervisor result FAIL_OR_UNKNOWN/startup timeout retained unchanged; process
+preserved because no fresh native owned-project/resource-release proof exists.
+Specific PID67497 window-view authorization/manual closure requested; earlier
+PID-specific approvals do not cover this session. No foreign data read or stop.
+AC01–04 diagnostic implementation/offline checks DONE. AC05 callback/poll/receipt
+live diagnostic NOT RUN, blocked by startup readiness; AC06 cleanup pending,
+evidence/status/research publication proceeds independently. C1 PARTIAL;
+late-add NOT RUN. This startup failure is not evidence about callback lifetime.
+No startup retry with same nonce, timeout extension, cache/preferences/security
+change, or speculative synchronous switch. Investigate owned startup gate first
+with authorized narrow UI evidence; only then resume identified lifecycle test.
+
+
 ## Async completion observation — accepted continuation
 
 Baseline2a6bc53e73836f6cfa387439604cfb5d18386107, clean research branch.
