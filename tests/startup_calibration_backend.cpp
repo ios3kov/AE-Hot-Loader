@@ -30,6 +30,7 @@ int main(int argc, char** argv) {
         effects.AEGP_GetEffectMatchName = Stub; effects.AEGP_ApplyEffect = Stub;
         effects.AEGP_GetInstalledKeyFromLayerEffect = Stub; effects.AEGP_DisposeEffect = Stub;
         effects.AEGP_EffectCallGeneric = Stub;
+        effects.AEGP_GetLayerNumEffects = Stub; effects.AEGP_GetLayerEffectByIndex = Stub;
         utilities.AEGP_ExecuteScript = Stub; utilities.AEGP_IsScriptingAvailable = Stub;
         memory.AEGP_GetMemHandleSize = Stub; memory.AEGP_LockMemHandle = Stub;
         memory.AEGP_UnlockMemHandle = Stub; memory.AEGP_FreeMemHandle = Stub;

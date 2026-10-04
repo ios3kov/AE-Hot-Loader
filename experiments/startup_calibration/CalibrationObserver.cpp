@@ -3,6 +3,8 @@
 #include "AE_GeneralPlug.h"
 #include "CalibrationCore.hpp"
 #include "MarkerIdentity.hpp"
+#include "AsyncFrameCapture.hpp"
+#include <memory>
 #include "CalibrationConfig.hpp" // Generated only by the offline builder.
 #include "../ordinary_discovery/ResourcePassJournal.hpp"
 #include "../ordinary_discovery/ResidentImageBinding.hpp"
@@ -107,13 +109,19 @@ constexpr const char* blank_script = R"JS((function () {
     if (app.version !== '25.6x101' || app.buildNumber !== 101 || !p ||
         p.file !== null || p.dirty !== false || p.numItems !== 0 ||
         p.renderQueue.numItems !== 0 ||
-        p.renderQueue.rendering !== false || typeof p.revision !== 'number' ||
+        p.renderQueue.rendering !== false || p.workingSpace !== '' ||
+        p.linearBlending !== false || p.linearizeWorkingSpace !== false || typeof p.revision !== 'number' ||
         p.revision < 1 || Math.floor(p.revision) !== p.revision) return 'REFUSED';
     return 'AEHL-CAL-BLANK-1\n' + p.revision + '\n';
 })())JS";
 
 class Backend {
+    static std::chrono::seconds Budget(std::uint64_t deadline) {
+        const auto now=::Now(); return std::chrono::seconds(deadline>now ?
+            std::min<std::uint64_t>(deadline-now,120) : 0);
+    }
     const std::uint64_t deadline_;
+    const std::chrono::steady_clock::time_point monotonic_stop_;
     Suite<AEGP_EffectSuite5> effect_{kAEGPEffectSuite, kAEGPEffectSuiteVersion5};
     Suite<AEGP_CompSuite12> comp_{kAEGPCompSuite, kAEGPCompSuiteVersion12};
     Suite<AEGP_UtilitySuite6> utility_{kAEGPUtilitySuite, kAEGPUtilitySuiteVersion6};
@@ -124,13 +132,14 @@ class Backend {
     AEGP_CompH fixture_ = nullptr;
     AEGP_LayerH layer_ = nullptr;
     AEGP_EffectRefH reference_ = nullptr;
-    bool OperationAllowed() {
-        if (pthread_main_np() != 1 || Now() >= deadline_) return false;
+    bool SameProject() {
+        if (pthread_main_np() != 1) return false;
         A_long count = 0; AEGP_ProjectH current = nullptr;
         return project_suite_.value->AEGP_GetNumProjects(&count) == 0 && count == 1 &&
-            project_suite_.value->AEGP_GetProjectByIndex(0, &current) == 0 && current == project_ &&
-            Now() < deadline_;
+            project_suite_.value->AEGP_GetProjectByIndex(0, &current) == 0 && current == project_;
     }
+    bool OperationAllowed() { return std::chrono::steady_clock::now() < monotonic_stop_ &&
+        Now() < deadline_ && SameProject() && Now() < deadline_; }
     void GuardProject() {
         const auto* p = project_suite_.value;
         A_long count = 0; AEGP_ProjectH current = nullptr; A_Boolean dirty = TRUE;
@@ -142,11 +151,13 @@ class Backend {
         project_ = current;
     }
 public:
-    explicit Backend(std::uint64_t deadline) : deadline_(deadline) {
+    explicit Backend(std::uint64_t deadline) : deadline_(deadline), monotonic_stop_(
+        std::chrono::steady_clock::now()+Budget(deadline)) {
         const auto* e = effect_.value; const auto* m = memory_.value;
         Require(e->AEGP_GetNumInstalledEffects && e->AEGP_GetNextInstalledEffect &&
             e->AEGP_GetEffectMatchName && e->AEGP_ApplyEffect &&
             e->AEGP_GetInstalledKeyFromLayerEffect && e->AEGP_DisposeEffect && e->AEGP_EffectCallGeneric &&
+            e->AEGP_GetLayerEffectByIndex && e->AEGP_GetLayerNumEffects &&
             comp_.value->AEGP_CreateComp && comp_.value->AEGP_CreateSolidInComp &&
             utility_.value->AEGP_ExecuteScript && utility_.value->AEGP_IsScriptingAvailable &&
             m->AEGP_GetMemHandleSize && m->AEGP_LockMemHandle && m->AEGP_UnlockMemHandle && m->AEGP_FreeMemHandle);
@@ -169,8 +180,7 @@ public:
     std::uint64_t Now() { return ::Now(); }
     bool Consume() { Save("consumed", std::string(calibration_build) + "\n"); return true; }
     std::string Target() { return calibration_match; }
-    std::int64_t BlankProjectRevision() {
-        GuardProject();
+    std::string Script(const std::string& program) {
         A_Boolean available = FALSE;
         Require(utility_.value->AEGP_IsScriptingAvailable(&available) == 0 && available);
         struct Handles {
@@ -178,16 +188,21 @@ public:
             ~Handles() { if (result && memory->AEGP_FreeMemHandle(result)) cleanup_ok = false;
                 if (error && memory->AEGP_FreeMemHandle(error)) cleanup_ok = false; }
         } handles{memory_.value};
-        Require(utility_.value->AEGP_ExecuteScript(plugin_id, blank_script, FALSE,
+        Require(utility_.value->AEGP_ExecuteScript(plugin_id, program.c_str(), FALSE,
             &handles.result, &handles.error) == 0 && handles.result);
         AEGP_MemSize size = 0;
-        Require(memory_.value->AEGP_GetMemHandleSize(handles.result, &size) == 0 && size > 0 && size <= 128);
+        Require(memory_.value->AEGP_GetMemHandleSize(handles.result, &size) == 0 && size > 0 && size <= 4096);
         void* ptr = nullptr; Require(memory_.value->AEGP_LockMemHandle(handles.result, &ptr) == 0 && ptr);
         std::string text;
         try { const auto length = strnlen(static_cast<const char*>(ptr), size);
             Require(length < size); text.assign(static_cast<const char*>(ptr), length);
         } catch (...) { if (memory_.value->AEGP_UnlockMemHandle(handles.result)) cleanup_ok = false; throw; }
         Require(memory_.value->AEGP_UnlockMemHandle(handles.result) == 0);
+        return text;
+    }
+    std::int64_t BlankProjectRevision() {
+        GuardProject();
+        const auto text = Script(blank_script);
         const std::string prefix = "AEHL-CAL-BLANK-1\n";
         Require(text.rfind(prefix, 0) == 0 && text.back() == '\n');
         const auto number = text.substr(prefix.size(), text.size() - prefix.size() - 1);
@@ -231,54 +246,199 @@ public:
             strnlen(identity.build, sizeof(identity.build)) == sizeof(identity.build) ||
             std::strcmp(identity.build, calibration_build) != 0 || identity.seed != calibration_seed) return false;
         Save("marker-identity", std::string("AEHL-MARKER-IDENTITY-1\nbuild=") + identity.build +
-             "\nseed=" + std::to_string(identity.seed) + "\n"); return true;
+             "\nseed=" + std::to_string(identity.seed) + "\nrender_calls=" +
+             std::to_string(identity.render_calls) + "\n"); return true;
     }
     std::int32_t Reverse() { AEGP_InstalledEffectKey value = 0;
         Require(OperationAllowed());
         Require(effect_.value->AEGP_GetInstalledKeyFromLayerEffect(reference_, &value) == 0); return value; }
+    bool Allowed() { return OperationAllowed(); }
+    AEGP_LayerH Layer() const { return layer_; }
+    std::string OwnedSnapshot(bool complete) {
+        Require(SameProject());
+        const auto script = std::string(R"JS((function () {
+            var p=app.project, c=null, f=null, folders=0;
+            var n=')JS") + calibration_fixture + "', m='" + calibration_match + "', complete=" +
+            (complete ? "true" : "false") + R"JS(;
+            if (!p || p.file!==null || p.bitsPerChannel!==8 || p.workingSpace!=='' ||
+                p.linearBlending!==false || p.linearizeWorkingSpace!==false ||
+                p.renderQueue.numItems!==0 || p.renderQueue.rendering!==false ||
+                p.numItems>3) return 'REFUSED';
+            for (var i=1;i<=p.numItems;i++) {
+                var x=p.item(i);
+                if (x instanceof CompItem && x.name===n && !c && x.width===64 && x.height===48 &&
+                    x.frameRate===24 && x.duration===1 && x.pixelAspect===1 && x.numLayers<=1) c=x;
+                else if (x instanceof FootageItem && x.name===n && !f && x.width===64 && x.height===48) f=x;
+                else if (x instanceof FolderItem && x.parentFolder===p.rootFolder && x.numItems===1 &&
+                    x.item(1) instanceof FootageItem && x.item(1).name===n) folders++;
+                else return 'REFUSED';
+            }
+            if (folders>1 || (complete && (!c || !f || c.numLayers!==1))) return 'REFUSED';
+            if (c && c.numLayers===1) {
+                var l=c.layer(1), effects=l.property('ADBE Effect Parade');
+                if (!f || l.source!==f || l.name!==n || effects.numProperties>1 ||
+                    (complete && effects.numProperties!==1) ||
+                    (effects.numProperties===1 && effects.property(1).matchName!==m)) return 'REFUSED';
+            } else if (f) return 'REFUSED';
+            return 'AEHL-CAL-OWNED-1\n'+p.revision+'\n';
+        })())JS";
+        const auto text=Script(script);
+        Require(text.rfind("AEHL-CAL-OWNED-1\n",0)==0 && SameProject());
+        return text;
+    }
+    bool CleanupSafe() noexcept {
+        try { const auto text=OwnedSnapshot(false);
+            Save("cleanup-safe", std::string("AEHL-CAL-CLEANUP-1\nbuild=")+calibration_build+
+                "\npid="+std::to_string(getpid())+"\nbirth="+std::to_string(Birth())+"\n"+text);
+            return true;
+        } catch (...) { return false; }
+    }
+    std::uint64_t MarkerCounter(std::int32_t key) {
+        Require(OperationAllowed() && !reference_);
+        A_long count=0; Require(effect_.value->AEGP_GetLayerNumEffects(layer_, &count)==0 && count==1);
+        Require(effect_.value->AEGP_GetLayerEffectByIndex(plugin_id, layer_, 0, &reference_)==0 && reference_);
+        startup_marker::Identity identity; const A_Time time{1,24};
+        Require(Reverse()==key && effect_.value->AEGP_EffectCallGeneric(plugin_id,reference_,&time,
+            PF_Cmd_COMPLETELY_GENERAL,&identity)==0 &&
+            strnlen(identity.build,sizeof(identity.build))<sizeof(identity.build) &&
+            std::strcmp(identity.build,calibration_build)==0 && identity.seed==calibration_seed);
+        Require(Dispose()); return identity.render_calls;
+    }
     bool Dispose() { auto ref = reference_; reference_ = nullptr;
         const bool okay = ref && effect_.value->AEGP_DisposeEffect(ref) == 0;
         if (!okay) cleanup_ok = false;
         return okay; }
 };
 
-A_Err Idle(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long*) noexcept {
-    if (pthread_main_np() != 1 || consumed) return 0;
+resident_binding::Digest Digest(const std::string& binary) {
+    resident_binding::Digest digest{}; Require(binary.size()==64);
+    const std::string digits="0123456789abcdef";
+    for (std::size_t i=0;i<32;++i) { const auto a=digits.find(binary[i*2]), b=digits.find(binary[i*2+1]);
+        Require(a<16 && b<16); digest[i]=static_cast<unsigned char>(a*16+b); }
+    return digest;
+}
+struct PendingFrame {
+    std::unique_ptr<Backend> backend;
+    Suite<AEGP_LayerRenderOptionsSuite2> options{kAEGPLayerRenderOptionsSuite,kAEGPLayerRenderOptionsSuiteVersion2};
+    Suite<AEGP_RenderSuite5> render{kAEGPRenderSuite,kAEGPRenderSuiteVersion5};
+    Suite<AEGP_WorldSuite3> world{kAEGPWorldSuite,kAEGPWorldSuiteVersion3};
+    startup_frame::Capture capture{*options.value,*render.value,*world.value};
+    startup_calibration::Result result;
+    std::uint64_t deadline=0, before=0;
+    std::string project;
+    bool canceled=false;
+    PendingFrame(std::unique_ptr<Backend> b, startup_calibration::Result r, std::uint64_t d)
+        : backend(std::move(b)), result(r), deadline(d) {}
+    void Start() {
+        Require(backend->Allowed());
+        const auto marker=resident_binding::Resolve({calibration_marker_module,Digest(calibration_marker_sha256)},
+            {"_EffectMain","_AEHL_MarkerBuildIdentity"});
+        using Build=const char* (*)();
+        Require(std::strcmp(reinterpret_cast<Build>(const_cast<void*>(
+            marker.functions.at("_AEHL_MarkerBuildIdentity")))(),calibration_build)==0);
+        before=backend->MarkerCounter(result.key); project=backend->OwnedSnapshot(true);
+        Save("render-started", std::string("AEHL-CAL-RENDER-1\nroute=AEGP_RenderAndCheckoutLayerFrame_Async\n")+
+            "build="+calibration_build+"\nbefore="+std::to_string(before)+"\ntime=1/24\n");
+        std::ostringstream slots;
+        slots << "AEHL-CAL-RENDER-SUITE-1\nlayer_options_version=" << kAEGPLayerRenderOptionsSuiteVersion2
+              << "\nrender_version=" << kAEGPRenderSuiteVersion5 << "\nworld_version=" << kAEGPWorldSuiteVersion3
+              << "\nrender_table=" << reinterpret_cast<std::uintptr_t>(render.value)
+              << "\nasync=" << reinterpret_cast<std::uintptr_t>(render.value->AEGP_RenderAndCheckoutLayerFrame_Async)
+              << "\nreceipt_world=" << reinterpret_cast<std::uintptr_t>(render.value->AEGP_GetReceiptWorld)
+              << "\ncheckin=" << reinterpret_cast<std::uintptr_t>(render.value->AEGP_CheckinFrame) << '\n';
+        Save("render-suite",slots.str());
+        Require(backend->Allowed()); capture.Start(plugin_id,backend->Layer());
+    }
+};
+// A submitted context is never destroyed on timeout; late callback needs it.
+// Unresolved contexts/suites remain pinned until the owned host exits.
+PendingFrame* pending=nullptr;
+void Publish(startup_calibration::Result result, bool frame, bool safe) {
+    const auto status=result.outcome==startup_calibration::Outcome::ListedApplied && frame && cleanup_ok
+        ? "LISTED_APPLIED_FRAME_CAPTURED" : result.outcome==startup_calibration::Outcome::Refused
+            ? "REFUSED" : "PARTIAL_UNKNOWN";
+    Save("result",std::string("AEHL-CAL-RESULT-2\nbuild=")+calibration_build+"\nstatus="+status+
+        "\nstage="+result.stage+"\nkey="+std::to_string(result.key)+"\ncleanup="+(cleanup_ok?"PASS":"FAIL")+
+        "\ncleanup_safe="+(safe?"YES":"NO")+"\nrender="+(frame?"CAPTURED_PIXEL_CHECK_PENDING":"NOT_RUN_OR_UNKNOWN")+"\n");
+}
+bool PollFrame() {
+    if (!pending) return false;
+    auto* p=pending;
+    if (!p->capture.Done()) {
+        if (!p->backend->Allowed() && !p->canceled) { p->canceled=true;
+            const bool okay=p->capture.Cancel();
+            Save("render-cancel",std::string("AEHL-CAL-CANCEL-1\nack=")+(okay?"YES":"NO")+"\n"); }
+        return true;
+    }
+    bool frame=false;
+    std::string bytes;
+    std::uint64_t after=0;
     try {
+        Require(p->backend->Allowed()); bytes=p->capture.Copy();
+        after=p->backend->MarkerCounter(p->result.key);
+        Require(after>p->before && p->backend->OwnedSnapshot(true)==p->project && p->backend->Allowed());
+        frame=true;
+    } catch (...) { p->result.outcome=startup_calibration::Outcome::PartialUnknown; }
+    bool released=false;
+    try { released=p->capture.Release(); } catch (...) { cleanup_ok=false; }
+    if (!released) cleanup_ok=false;
+    pending=nullptr; // completion consumed before any fallible journal write
+    try {
+    if (frame) {
+        Save("frame.argb",bytes);
+        Save("frame-metadata",std::string("AEHL-CAL-FRAME-1\nbuild=")+calibration_build+
+            "\nwidth=64\nheight=48\norder=ARGB8\nstride=256\nsource_rowbytes="+
+            std::to_string(p->capture.rowbytes)+"\nworld_type=8\ntime=1/24\nworking_space=NONE\n"+
+            "counter_before="+std::to_string(p->before)+"\ncounter_after="+std::to_string(after)+"\n");
+    }
+    } catch (...) { frame=false; p->result.outcome=startup_calibration::Outcome::PartialUnknown; }
+    auto result=p->result;
+    if (frame) result.stage="public-async-frame-captured";
+    const bool safe=released && p->backend->CleanupSafe();
+    if (released) delete p; // only after callback completion and checked handle cleanup
+    Publish(result,frame,safe);
+    return true;
+}
+
+A_Err Idle(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long*) noexcept {
+    if (pthread_main_np() != 1) return 0;
+    try {
+        if (PollFrame() || consumed) return 0;
         if (!Exists("request")) return 0;
         consumed = true; // before parsing, acquisition, reentry or any host operation
         startup_calibration::Authorization request;
         std::string schema, ownership, binary, trailing;
         std::istringstream input(Read("request"));
         Require(static_cast<bool>(input >> schema >> request.token >> request.pid >> request.birth >> request.deadline >> ownership >> binary));
-        Require(!(input >> trailing) && schema == "AEHL-CAL-REQUEST-1" && ownership == "OWNED-BLANK-PROJECT");
+        Require(!(input >> trailing) && schema == "AEHL-CAL-REQUEST-2" && ownership == "OWNED-STARTUP-APPLY-RENDER");
         request.owned_blank_project = true;
         const startup_calibration::Authorization bound{calibration_token, getpid(), Birth(), 0, true};
         Require(request.token == bound.token && request.pid == bound.pid && request.birth == bound.birth &&
                 request.deadline > Now() && request.deadline - Now() <= 120 &&
                 Module() == calibration_module && Executable() == calibration_executable);
-        resident_binding::Digest digest{};
-        Require(binary.size() == 64); const std::string digits = "0123456789abcdef";
-        for (std::size_t i = 0; i < 32; ++i) {
-            const auto a = digits.find(binary[i * 2]), b = digits.find(binary[i * 2 + 1]);
-            Require(a < 16 && b < 16); digest[i] = static_cast<unsigned char>(a * 16 + b);
-        }
-        const auto self = resident_binding::Resolve({calibration_module, digest}, {"_AEHL_CalibrationBuildIdentity"});
+        const auto self = resident_binding::Resolve({calibration_module, Digest(binary)}, {"_AEHL_CalibrationBuildIdentity"});
         Require(self.functions.at("_AEHL_CalibrationBuildIdentity") == reinterpret_cast<void*>(&AEHL_CalibrationBuildIdentity));
-        startup_calibration::Result result;
-        { Backend backend(request.deadline); result = once.Run(request, bound, backend); }
-        const char* status = result.outcome == startup_calibration::Outcome::ListedApplied && cleanup_ok
-            ? "LISTED_APPLIED_FRAME_NOT_RUN" : result.outcome == startup_calibration::Outcome::PartialUnknown ||
-              (result.outcome == startup_calibration::Outcome::ListedApplied && !cleanup_ok)
-                ? "PARTIAL_UNKNOWN" : "REFUSED";
-        Save("result", std::string("AEHL-CAL-RESULT-1\nbuild=") + calibration_build + "\nstatus=" + status +
-            "\nstage=" + result.stage + "\nkey=" + std::to_string(result.key) +
-            "\ncleanup=" + (cleanup_ok ? "PASS" : "FAIL") + "\nrender=NOT_RUN\n");
+        auto backend=std::make_unique<Backend>(request.deadline);
+        const auto result=once.Run(request,bound,*backend);
+        if (result.outcome==startup_calibration::Outcome::ListedApplied && cleanup_ok) {
+            pending=new PendingFrame(std::move(backend),result,request.deadline);
+            try { pending->Start(); } catch (...) {
+                Save("render-submit-failed","AEHL-CAL-SUBMIT-UNKNOWN\n");
+                if (pending->capture.Pending()) return 0;
+                const bool safe=pending->backend->CleanupSafe();
+                if (!pending->capture.Release()) cleanup_ok=false;
+                delete pending; pending=nullptr;
+                auto failed=result; failed.outcome=startup_calibration::Outcome::PartialUnknown;
+                Publish(failed,false,safe);
+            }
+        } else {
+            const bool safe=backend->CleanupSafe(); backend.reset(); Publish(result,false,safe);
+        }
     } catch (...) {
         consumed = true;
-        try { Save("result", std::string("AEHL-CAL-RESULT-1\nbuild=") + calibration_build +
+        try { Save("result", std::string("AEHL-CAL-RESULT-2\nbuild=") + calibration_build +
             "\nstatus=" + (Exists("begin") ? "PARTIAL_UNKNOWN" : "REFUSED") +
-            "\ncleanup=" + (cleanup_ok ? "PASS" : "FAIL") + "\nrender=NOT_RUN\n"); } catch (...) {}
+            "\ncleanup=" + (cleanup_ok ? "PASS" : "FAIL") + "\nrender=UNKNOWN\n"); } catch (...) {}
     }
     return 0;
 }

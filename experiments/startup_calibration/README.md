@@ -2,8 +2,9 @@
 
 This is a separate ordinary control effect and public-SDK observer, not a
 hot-loader implementation or substitute for the ordinary installed-effect goal.
-The current packet builds/tests them offline. Installation, AE launch, attachment,
-process observation, private calls and late registration are outside this packet.
+The current continuation adds one separately authorized owned normal startup,
+public-SDK apply and asynchronous frame. Private calls, attachment and late
+registration remain outside this packet.
 See [current evidence and remaining gates](../../docs/C1_STARTUP_CALIBRATION_2026-10-04.md).
 
 The marker has a real `PF_Cmd_RENDER` implementation: bounded positive-stride
@@ -19,7 +20,11 @@ opaque cursors. In the future authorized owned blank AE25.6x101 project, it can
 create one named64x48/24fps composition and solid, apply the unique startup marker,
 verify its Build ID/seed through the documented generic selector, check the
 reverse installed key, and dispose the temporary effect reference. Disposal
-does not delete the applied layer effect. It does not render or export a frame.
+does not delete the applied layer effect. It requests one asynchronous frame through Render Suite5 revision8 at1/24s,
+8-bit/straight matte/full size, with no color working space or linear blending.
+Only the callback copies completion fields; all SDK receipt/world/checkin/option
+cleanup runs on main-thread idle. Unresolved callbacks remain pinned until owned
+host exit. Marker identity version2 includes a render counter.
 
 Default artifacts have an unconfigured host path, and the observer is inert.
 No token, wrong token/host/module, worker thread, stale/replayed request,
@@ -63,7 +68,7 @@ After ready, a future supervisor can exclusively create a0600 `request` in the
 candidate's0700 control directory, with seven whitespace-separated fields:
 
 ```text
-AEHL-CAL-REQUEST-1 TOKEN PID BIRTH_MICROSECONDS UNIX_DEADLINE OWNED-BLANK-PROJECT OBSERVER_SHA256
+AEHL-CAL-REQUEST-2 TOKEN PID BIRTH_MICROSECONDS UNIX_DEADLINE OWNED-STARTUP-APPLY-RENDER OBSERVER_SHA256
 ```
 
 PID/birth come from the owned process handshake, deadline is at most120s ahead,
@@ -86,3 +91,15 @@ raw ARGB8 or RGBA8; it performs no PNG, color-management, premultiplication or
 depth conversion. Export/capture provenance and any conversion are separate
 future checks. Preview/MFR of another effect and main-thread reentry are later
 H5 scenarios, conditional on proved late-operation/lifetime/failure contracts.
+
+The owned supervisor is `run.py --manifest /absolute/manifest.json --sha256 DIGEST
+--execute-owned-startup`. It requires an exact prospective candidate, no existing
+AE/aerender, exact signed files and current source bytes. It exclusively installs
+two unique bundles, starts its own executable, verifies PID/birth/ready, publishes
+once and independently compares all12288 ARGB8 channels. It stops only its unchanged
+child after a fresh native owned-project proof and successful SDK resource release;
+otherwise it preserves the host and reports cleanup BLOCKED. It retires only its
+exact unique plugin directory outside discovery once all AE processes are absent.
+Original plugins, preferences and projects are never deleted. Journal records and
+pixels remain private evidence. Startup success does not establish hot-add or
+trace private startup writer ownership.

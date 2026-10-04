@@ -13,7 +13,16 @@ Previous status is preserved at
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
 
-## Current packet — implemented offline startup calibration
+## Current packet — Owned normal-startup/frame calibration
+
+2026-10-04; clean baseline27bfb5e987d6eba644a5136f464aa960c9493c51.
+[Current scope, LIVE-01–08 acceptance and evidence](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
+One separately authorized owned normal AE startup/public-SDK key/apply/async frame.
+16 SDK async cases,4 SDK backend cases and6 portable protocol cases PASS;
+exact candidate/full regression/live validation pending. StageC1 remains PARTIAL;
+private late-add/trials/release BLOCKED. All retained obligations/evidence remain.
+
+## Previous packet — implemented offline startup calibration
 
 2026-10-04, clean baseline `6dd5efb6997108957815f2a5321d0e3b17663a12`;
 [startup calibration/override findings and task mapping](C1_STARTUP_CALIBRATION_2026-10-04.md).

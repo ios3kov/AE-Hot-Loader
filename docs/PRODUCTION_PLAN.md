@@ -12,7 +12,16 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
-## Current packet — startup calibration implementation and remaining lifetime
+## Current packet — Owned normal-startup/frame calibration task mapping
+
+2026-10-04; clean baseline27bfb5e987d6eba644a5136f464aa960c9493c51.
+[Current scope, LIVE-01–08 acceptance and evidence](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
+One separately authorized owned normal AE startup/public-SDK key/apply/async frame.
+16 SDK async cases,4 SDK backend cases and6 portable protocol cases PASS;
+exact candidate/full regression/live validation pending. StageC1 remains PARTIAL;
+private late-add/trials/release BLOCKED. All retained obligations/evidence remain.
+
+## Previous packet — startup calibration implementation and remaining lifetime
 
 2026-10-04; clean baseline `6dd5efb6997108957815f2a5321d0e3b17663a12`.
 User accepted the proposed16-task package. C1 Development; rules8.0.0,

@@ -60,6 +60,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sdk", type=Path, required=True, help="SDK 25.6_61 Examples directory")
     parser.add_argument("--expected-commit", required=True)
+    parser.add_argument("--run-id", help="fresh 32-character lowercase hex identity for a concrete prospective installation")
     parser.add_argument("--prospective-host", type=Path, help="future authorized host executable; this argument performs no host operation")
     parser.add_argument("--prospective-module", type=Path, help="future exact observer executable location; no installation")
     args = parser.parse_args()
@@ -73,7 +74,9 @@ def main():
     if pins.get("Headers/AE_GeneralPlug.h") != "30d12ec3eb5af1a902c7414053b1be1da0204b226e0b1cdc71272be1e137000c" or \
        pins.get("Headers/AE_Effect.h") != "5432df9bb447cefce2f96c1477d6beccd4686b7236d460c803beab76dae1d537":
         parser.error("selected SDK header identity does not match")
-    run_id = uuid.uuid4().hex
+    run_id = args.run_id or uuid.uuid4().hex
+    if len(run_id) != 32 or any(c not in "0123456789abcdef" for c in run_id):
+        parser.error("run ID must be32 lowercase hex characters")
     output = ROOT / "build-ae-hot-loader" / ("startup-calibration-" + run_id)
     output.mkdir(parents=True, exist_ok=False, mode=0o700); output.chmod(0o700)
     control = output / "control"; control.mkdir(mode=0o700); control.chmod(0o700)
@@ -93,6 +96,9 @@ def main():
             parser.error("prospective paths must be absolute")
         config["calibration_executable"] = str(args.prospective_host.resolve(strict=True))
         config["calibration_module"] = str(args.prospective_module.resolve())
+    config["calibration_marker_module"] = str(Path(config["calibration_module"]).parents[2].parent /
+        (marker + ".plugin") / "Contents/MacOS" / marker)
+    config["calibration_marker_sha256"] = "0" * 64
     (output / "CalibrationConfig.hpp").write_text("#pragma once\n" + "".join(
         "static constexpr const char* " + key + " = " + cpp(value) + ";\n" for key, value in config.items()) +
         "static constexpr unsigned calibration_seed = " + str(seed) + "u;\n")
@@ -132,9 +138,14 @@ def main():
                         "exports": actual_exports, "dependencies": run("otool", "-L", str(binary)),
                         "load_commands": run("otool", "-l", str(binary)),
                         "files": {p.relative_to(bundle).as_posix(): sha(p) for p in sorted(bundle.rglob("*")) if p.is_file()}})
+        if stem == marker:
+            config["calibration_marker_sha256"] = sha(binary)
+            (output / "CalibrationConfig.hpp").write_text("#pragma once\n" + "".join(
+                "static constexpr const char* " + key + " = " + cpp(value) + ";\n" for key, value in config.items()) +
+                "static constexpr unsigned calibration_seed = " + str(seed) + "u;\n")
     results = {}
     tests = [("adapter", ROOT / "tests/startup_marker_adapter.cpp"), ("inert", ROOT / "tests/startup_calibration_inert.cpp"),
-             ("backend", ROOT / "tests/startup_calibration_backend.cpp")]
+             ("backend", ROOT / "tests/startup_calibration_backend.cpp"), ("frame", ROOT / "tests/startup_frame_capture.cpp")]
     for label, test in tests:
         binary = output / (label + "-test")
         test_common = common
@@ -154,6 +165,8 @@ def main():
         if label == "backend":
             test_control = output / "backend-test-control"; test_control.mkdir(mode=0o700)
             test_args = [str(test_control)]
+        elif label == "frame":
+            test_args = []
         else:
             test_args = [str(observer_module), token] if label == "inert" else [str(marker_binary), build]
         results[label] = run(str(binary), *test_args)
