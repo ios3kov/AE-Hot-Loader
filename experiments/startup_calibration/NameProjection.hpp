@@ -36,7 +36,7 @@ Snapshot Observe(Backend& b, const std::string& own_name, const std::string& tar
         const auto match = b.Match(cursor);
         const auto name = b.Name(cursor);
         if (match == target) ++s.exact;
-        if (name == own_name || match.rfind("AEHL.Marker.", 0) == 0) {
+        if (name == own_name || match.rfind("AEHL.Marker.", 0) == 0 || match.rfind("AEHL.M.", 0) == 0) {
             s.stage = "name-observation-own-bound";
             if (s.own.size() >= 16) return s;
             s.own.push_back({cursor, name, match});

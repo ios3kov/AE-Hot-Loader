@@ -30,6 +30,7 @@ def load(name, path):
 
 common = load('startup_live_io', ROOT / 'experiments/ordinary_discovery/run_no_scan_directory_probe.py')
 oracle = load('startup_live_oracle', Path(__file__).with_name('oracle.py'))
+identity = load('startup_live_identity', Path(__file__).with_name('identity.py'))
 
 
 def need(value, reason):
@@ -153,7 +154,7 @@ def prepare(manifest, expected_hash):
     run = record['run_id']; need(len(run) == 32 and set(run) <= set('0123456789abcdef'), 'invalid run identity')
     need(len(record['token']) == 32 and set(record['token']) <= set('0123456789abcdef'), 'invalid activation token')
     need(record['build_id'] == record['source']['commit'] + ':' + run and
-         record['match_name'] == 'AEHL.Marker.' + run and record['seed'] == int(run[:6], 16), 'candidate identity differs')
+         record['match_name'] == identity.marker_match(run) and record['seed'] == int(run[:6], 16), 'candidate identity differs')
     common.no_links(HOST); common.no_links(PLUGIN_ROOT)
     need(common.sha_trusted_binary(HOST) == HOST_SHA, 'AE binary changed')
     install = PLUGIN_ROOT / ('AEHLStartupCalibration-' + run[:12])

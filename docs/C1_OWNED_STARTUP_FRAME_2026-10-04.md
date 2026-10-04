@@ -523,3 +523,31 @@ fresh process preflight (do not borrow/stop an existing session), exact candidat
 review/identity, one exclusive request, exact enumeration reason, then conditional
 key/Apply/BuildID/reverse/frame/cleanup acceptance. Do not retry consumed prior
 runs or reinterpret the new preparation-only instruction as launch permission.
+
+## Current correction — observed own match-name projection
+
+One owned startup attempt of e0451d1/9e09478c2faf completed. Three full main-thread
+Effect Suite snapshots (787 entries;1/1034/3079ms) found our display-identifiable
+marker at opaque key796, but returned31 bytes of the44-byte registration match.
+Registration callback completed once/result0; exact own resident-image binding
+and registration arguments matched config. Strict exact-match guard refused
+before begin/fixture/Apply/frame. This establishes an own startup projection
+mismatch, not late-add, descriptor ownership, or a general SDK length contract.
+The location of truncation inside the host remains UNKNOWN.
+
+Owned PID46466 was inspected as empty Untitled Project, normally Quit, and
+independently absent together with aerender. Exact two own bundles retained
+outside discovery; other plugin entries and original failed result unchanged.
+Private receipts: aehl-name-projection-live-zz_eap2e, name-projection-cause.json
+and closure-retirement.json. Earlier prepared archives remain immutable.
+
+Next authorized correction: fresh marker match `AEHL.M.` plus24 hex nonce digits
+(31 ASCII bytes/96-bit identity), while retaining the full nonce/BuildID and exact
+byte equality/unique-key guard. Apply never accepts display/prefix/truncated names.
+Builder and supervisor must share encoding; diagnostic retention covers both own
+prefixes. Required before one new owned run: name-bound/refusal regressions,
+full identified checks, source/manual audit, fresh signed pair/SDK74/sanitizers,
+independent pixels and prepare. Conditional real key/Apply/reverse/AE-frame and
+cleanup follow only their existing guards. No consumed candidate replay.
+All private publication/render lifetime/reentry/partial-failure gates, A/B/C1/C2/D,
+append/reload/recovery and release obligations remain open. Research only.

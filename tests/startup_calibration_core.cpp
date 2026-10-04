@@ -36,11 +36,12 @@ struct Fake {
 };
 struct NameFake : Fake {
     bool allowed = true, display_only = false, all_own = false, expire_during = false;
+    std::string own_match = "AEHL.Marker.target", own_display = "own-display";
     std::string Match(std::int32_t key) { return key == -13 && !display_only && !absent ?
-        "AEHL.Marker.target" : "unrelated"; }
+        own_match : "unrelated"; }
     std::string Name(std::int32_t key) {
         if (expire_during) allowed=false;
-        return key==-13 || all_own ? "own-display" : "third-party-name-must-not-be-retained";
+        return key==-13 || all_own ? own_display : "third-party-name-must-not-be-retained";
     }
     bool ObservationAllowed() { return main && allowed; }
 };
@@ -51,6 +52,12 @@ void NameCases() {
         s.own[0].key==-13 && s.own[0].name=="own-display" && s.traversed==3 && b.creates==0 && b.applies==0); ++cases; }
     { NameFake b; b.display_only=true; const auto s=observe(b); Check(s.complete && s.exact==0 && s.own.size()==1 &&
         b.applies==0); ++cases; }
+    { NameFake b;b.own_match="AEHL.M.9e09478c2faf48819b4d61f4";b.own_display="changed-own-display";
+        const auto s=startup_names::Observe(b,"own-display",b.own_match);
+        Check(s.complete && s.exact==1 && s.own.size()==1 && s.own[0].key==-13 && b.applies==0);++cases; }
+    { NameFake b;b.own_match="AEHL.M.9e09478c2faf48819b4d61f";b.own_display="changed-own-display";
+        const auto s=startup_names::Observe(b,"own-display","AEHL.M.9e09478c2faf48819b4d61f4");
+        Check(s.complete && s.exact==0 && s.own.size()==1 && b.applies==0);++cases; }
     for (int mode=0;mode<9;++mode) {
         NameFake b;
         switch(mode) {

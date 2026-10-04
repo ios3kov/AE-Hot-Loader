@@ -27,6 +27,7 @@ def load(name, path):
 
 checks = load("calibration_source_checks", ROOT / "tools/run_research_checks.py")
 pipl = load("calibration_pipl", ROOT / "experiments/ordinary_discovery/build_registration_pair.py")
+identity = load("calibration_identity", Path(__file__).with_name("identity.py"))
 
 
 def run(*command):
@@ -81,7 +82,7 @@ def main():
     output.mkdir(parents=True, exist_ok=False, mode=0o700); output.chmod(0o700)
     control = output / "control"; control.mkdir(mode=0o700); control.chmod(0o700)
     marker = "AEHLMarker" + run_id[:12]; observer = "AEHLCalibration" + run_id[:12]
-    match = "AEHL.Marker." + run_id
+    match = identity.marker_match(run_id)
     build = source["commit"] + ":" + run_id
     token = uuid.uuid4().hex
     seed = int(run_id[:6], 16)

@@ -11,6 +11,32 @@ spec.loader.exec_module(live)
 
 
 class StartupLiveTests(unittest.TestCase):
+    def test_compact_identity_preserves_96_bits_and_refuses_invalid_nonce(self):
+        run = '9e09478c2faf48819b4d61f4e34a3103'
+        match = live.identity.marker_match(run)
+        self.assertEqual(len(match.encode('ascii')), 31)
+        self.assertEqual(match, 'AEHL.M.' + run[:24])
+        for offset in (0, 11, 23):
+            other = run[:offset] + ('0' if run[offset] != '0' else '1') + run[offset+1:]
+            self.assertNotEqual(match, live.identity.marker_match(other))
+        for bad in (None, 32, '', 'a'*31, 'a'*33, 'A'*32, 'g'*32, 'é'*32):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                live.identity.marker_match(bad)
+
+    def test_old_overlong_candidate_refuses_before_host_or_filesystem_checks(self):
+        import hashlib, json
+        run = 'a'*32
+        record = {'schema': 'AEHL-STARTUP-CALIBRATION-1', 'source': {'clean': True, 'commit': 'b'*40},
+                  'observer_host_binding': 'PROSPECTIVE_ONLY_NOT_AUTHORIZATION',
+                  'install': 'NOT RUN', 'AE_load': 'NOT RUN', 'AE_render': 'NOT RUN',
+                  'late_registration': 'NOT RUN', 'run_id': run, 'token': 'c'*32,
+                  'build_id': 'b'*40+':'+run, 'match_name': 'AEHL.Marker.'+run,
+                  'seed': int(run[:6], 16)}
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder).resolve()/'manifest.json'; raw = json.dumps(record).encode(); path.write_bytes(raw); path.chmod(0o600)
+            with self.assertRaisesRegex(ValueError, 'candidate identity differs'):
+                live.prepare(path, hashlib.sha256(raw).hexdigest())
+
     def setUp(self):
         self.record = {'token': 'a' * 32, 'build_id': 'b' * 40 + ':' + 'c' * 32,
                        'seed': 0x345678, 'bundles': [{}, {'binary_sha256': 'd' * 64}]}
