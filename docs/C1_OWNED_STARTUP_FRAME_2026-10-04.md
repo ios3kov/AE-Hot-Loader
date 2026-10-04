@@ -55,3 +55,17 @@ and the owned controller finish. Prior calibration remains offline/historical:
 Private writer→reader live object trace, legal late host context, complete reader/
 render lifetime/reentry and incomplete-insertion compensation remain UNKNOWN.
 Normal startup success does not close those gates or prove hot-load.
+
+## Installation-route correction before any host operation
+
+First exact2dc994a candidate ae2344240fec45d2bec4991f4d1086ab passed504
+Python/no skips,62 Node/all22 stages and exact SDK/signed/ASan/oracle checks.
+Its supervisor could not mkdir in the root-owned application plugin directory
+(Errno13). Installation/launch/publication/apply/frame were NOT RUN; original
+plugin entries unchanged. Preserve its manifest, failed attempt and live receipt;
+do not replay it. No auto-review rejection occurred: macOS filesystem permissions
+caused the refusal. A new candidate uses the existing user-owned developer folder
+`~/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/`, explicitly
+recommended by the [SDK sample guide](https://ae-plugins.docsforadobe.dev/intro/sample-projects/).
+This does not change privileges, system folder permissions, preferences or other
+plugin files. A fresh source/build/nonce and the same safety gates are required.

@@ -103,3 +103,8 @@ exact unique plugin directory outside discovery once all AE processes are absent
 Original plugins, preferences and projects are never deleted. Journal records and
 pixels remain private evidence. Startup success does not establish hot-add or
 trace private startup writer ownership.
+
+The live supervisor uses the existing user-owned developer MediaCore folder,
+`~/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/`, as recommended
+by the SDK sample guide. It never changes permissions on the system plugin folder.
+A changed installation binding requires a new build/nonce and exact checks.

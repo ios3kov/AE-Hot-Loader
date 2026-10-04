@@ -19,7 +19,7 @@ import uuid
 ROOT = Path(__file__).resolve().parents[2]
 HOST = Path('/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app/Contents/MacOS/After Effects')
 HOST_SHA = '464ad678ca19ba78478e2989c42f42bea3fd95e51c9180c1556c53c973457df6'
-PLUGIN_ROOT = Path('/Applications/Adobe After Effects 2025/Plug-ins')
+PLUGIN_ROOT = Path.home() / 'Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore'
 
 
 def load(name, path):
