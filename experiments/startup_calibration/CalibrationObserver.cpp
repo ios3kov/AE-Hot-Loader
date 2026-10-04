@@ -4,6 +4,7 @@
 #include "CalibrationCore.hpp"
 #include "MarkerIdentity.hpp"
 #include "MarkerStartupState.hpp"
+#include "NameProjection.hpp"
 #include "AsyncFrameCapture.hpp"
 #include <memory>
 #include "CalibrationConfig.hpp" // Generated only by the offline builder.
@@ -29,12 +30,23 @@ SPBasicSuite* basic = nullptr;
 AEGP_PluginID plugin_id = 0;
 startup_calibration::Once once;
 bool consumed = false;
+bool idle_active = false;
 bool cleanup_ok = true;
 const char* diagnostic_stage = "authorization";
 void Require(bool okay) { if (!okay) throw std::runtime_error("calibration refused"); }
 std::uint64_t Now() {
     return static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::seconds>(
         std::chrono::system_clock::now().time_since_epoch()).count());
+}
+std::uint64_t MonotonicMillis() {
+    return static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::steady_clock::now().time_since_epoch()).count());
+}
+std::string Hex(const std::string& text) {
+    constexpr char digits[] = "0123456789abcdef";
+    std::string result; result.reserve(text.size() * 2);
+    for (unsigned char c : text) { result.push_back(digits[c >> 4]); result.push_back(digits[c & 15]); }
+    return result;
 }
 std::uint64_t Birth() {
     proc_bsdinfo info{};
@@ -164,7 +176,7 @@ public:
         std::chrono::steady_clock::now()+Budget(deadline)) {
         const auto* e = effect_.value; const auto* m = memory_.value;
         Require(e->AEGP_GetNumInstalledEffects && e->AEGP_GetNextInstalledEffect &&
-            e->AEGP_GetEffectMatchName && e->AEGP_ApplyEffect &&
+            e->AEGP_GetEffectMatchName && e->AEGP_GetEffectName && e->AEGP_ApplyEffect &&
             e->AEGP_GetInstalledKeyFromLayerEffect && e->AEGP_DisposeEffect && e->AEGP_EffectCallGeneric &&
             e->AEGP_GetLayerEffectByIndex && e->AEGP_GetLayerNumEffects &&
             comp_.value->AEGP_CreateComp && comp_.value->AEGP_CreateSolidInComp &&
@@ -179,6 +191,7 @@ public:
             << "\ncount=" << reinterpret_cast<std::uintptr_t>(e->AEGP_GetNumInstalledEffects)
             << "\nnext=" << reinterpret_cast<std::uintptr_t>(e->AEGP_GetNextInstalledEffect)
             << "\nmatch=" << reinterpret_cast<std::uintptr_t>(e->AEGP_GetEffectMatchName)
+            << "\nname_slot=" << reinterpret_cast<std::uintptr_t>(e->AEGP_GetEffectName)
             << "\napply=" << reinterpret_cast<std::uintptr_t>(e->AEGP_ApplyEffect)
             << "\nreverse=" << reinterpret_cast<std::uintptr_t>(e->AEGP_GetInstalledKeyFromLayerEffect) << '\n';
         Save("suite", out.str());
@@ -235,6 +248,12 @@ public:
         Require(effect_.value->AEGP_GetEffectMatchName(key, text) == 0);
         const auto length = strnlen(text, sizeof(text)); Require(length > 0 && length < sizeof(text));
         return std::string(text, length); }
+    std::string Name(std::int32_t key) { diagnostic_stage="enumeration-sdk-name";
+        char text[AEGP_MAX_EFFECT_NAME_SIZE]; std::memset(text, 0xff, sizeof(text));
+        Require(effect_.value->AEGP_GetEffectName(key, text) == 0);
+        const auto length = strnlen(text, sizeof(text)); Require(length > 0 && length < sizeof(text));
+        return std::string(text, length); }
+    bool ObservationAllowed() { return MainThread() && OperationAllowed(); }
     bool BeforeMutation() { if (!cleanup_ok) return false;
         GuardProject();
         Require(project_suite_.value->AEGP_GetProjectRootFolder(project_, &root_) == 0 && root_);
@@ -377,11 +396,17 @@ void ObserveMarkerStartup() noexcept {
         startup_marker::StartupState state;
         Require(reinterpret_cast<startup_marker::ReadStartupState>(const_cast<void*>(
             marker.functions.at("_AEHL_MarkerStartupState")))(&state));
+        Require(strnlen(state.registration_name, sizeof(state.registration_name)) < sizeof(state.registration_name) &&
+                strnlen(state.registration_match, sizeof(state.registration_match)) < sizeof(state.registration_match));
         text += "binding=EXACT_OWN_RESIDENT_IMAGE\nregistration_started=" + std::to_string(state.registration_started) +
             "\nregistration_completed=" + std::to_string(state.registration_completed) +
             "\nlast_callback_result=" + std::to_string(state.last_callback_result) +
             "\nglobal_setup_calls=" + std::to_string(state.global_setup_calls) +
-            "\nparameter_setup_calls=" + std::to_string(state.parameter_setup_calls) + "\n";
+            "\nparameter_setup_calls=" + std::to_string(state.parameter_setup_calls) +
+            "\nregistration_name_hex=" + Hex(state.registration_name) +
+            "\nregistration_match_hex=" + Hex(state.registration_match) +
+            "\narguments_equal_config=" + (std::string(state.registration_name)==calibration_name &&
+                std::string(state.registration_match)==calibration_match ? "YES" : "NO") + "\n";
     } catch (...) { text += "binding=UNKNOWN\n"; }
     Save("marker-startup", text);
     } catch (...) {}
@@ -469,10 +494,74 @@ bool PollFrame() {
     return true;
 }
 
+struct PendingNames {
+    std::unique_ptr<Backend> backend;
+    startup_calibration::Authorization request, bound;
+    startup_names::Schedule schedule{MonotonicMillis()};
+    std::uint64_t start = MonotonicMillis();
+    std::int64_t revision = 0;
+};
+std::unique_ptr<PendingNames> names;
+void FinishCalibration(std::unique_ptr<Backend> backend,
+                       const startup_calibration::Authorization& request,
+                       const startup_calibration::Authorization& bound) {
+        const auto result=once.Run(request,bound,*backend);
+        ObserveMarkerStartup();
+        if (result.outcome==startup_calibration::Outcome::ListedApplied && cleanup_ok) {
+            pending=new PendingFrame(std::move(backend),result,request.deadline);
+            try { pending->Start(); } catch (...) {
+                Save("render-submit-failed","AEHL-CAL-SUBMIT-UNKNOWN\n");
+                if (pending->capture.Pending()) return;
+                const bool safe=pending->backend->CleanupSafe();
+                if (!pending->capture.Release()) cleanup_ok=false;
+                delete pending; pending=nullptr;
+                auto failed=result; failed.outcome=startup_calibration::Outcome::PartialUnknown;
+                Publish(failed,false,safe);
+            }
+        } else {
+            const bool safe=backend->CleanupSafe(); backend.reset(); Publish(result,false,safe);
+        }
+}
+bool PollNames() {
+    if (!names) return false;
+    diagnostic_stage="name-observation-deadline";
+    Require(names->request.deadline > Now());
+    const auto now=MonotonicMillis();
+    if (!names->schedule.Due(now)) return true;
+    const auto index=names->schedule.Index();
+    const auto snapshot=startup_names::Observe(*names->backend,calibration_name,calibration_match);
+    std::ostringstream text;
+    text << "AEHL-CAL-NAMES-1\nbuild=" << calibration_build << "\nsample=" << index
+        << "\nelapsed_ms=" << now-names->start << "\ncount=" << snapshot.count
+        << "\ntraversed=" << snapshot.traversed << "\nexact=" << snapshot.exact
+        << "\nrevision=" << snapshot.revision << "\ncomplete=" << (snapshot.complete?"YES":"NO")
+        << "\nstage=" << snapshot.stage << "\nown_observations=" << snapshot.own.size() << '\n';
+    for (std::size_t i=0;i<snapshot.own.size();++i) {
+        const auto& entry=snapshot.own[i];
+        text << "own_" << i << "_key=" << entry.key
+             << "\nown_" << i << "_name_hex=" << Hex(entry.name)
+             << "\nown_" << i << "_match_hex=" << Hex(entry.match) << '\n';
+    }
+    const auto file="names-"+std::to_string(index); Save(file.c_str(),text.str());
+    diagnostic_stage=snapshot.stage;
+    Require(snapshot.complete);
+    if (index==0) names->revision=snapshot.revision;
+    diagnostic_stage="name-observation-between-samples-project-changed";
+    Require(names->revision==snapshot.revision);
+    names->schedule.Advance();
+    if (names->schedule.Done()) {
+        auto ready=std::move(names); // consumed before any fallible host operation
+        FinishCalibration(std::move(ready->backend),ready->request,ready->bound);
+    }
+    return true;
+}
+
 A_Err Idle(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long*) noexcept {
-    if (pthread_main_np() != 1) return 0;
+    if (pthread_main_np() != 1 || idle_active) return 0;
+    idle_active=true;
+    struct IdleReset { ~IdleReset() { idle_active=false; } } reset;
     try {
-        if (PollFrame() || consumed) return 0;
+        if (PollFrame() || PollNames() || consumed) return 0;
         if (!Exists("request")) return 0;
         consumed = true; // before parsing, acquisition, reentry or any host operation
         startup_calibration::Authorization request;
@@ -487,25 +576,14 @@ A_Err Idle(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long*) noexcept {
                 Module() == calibration_module && Executable() == calibration_executable);
         const auto self = resident_binding::Resolve({calibration_module, Digest(binary)}, {"_AEHL_CalibrationBuildIdentity"});
         Require(self.functions.at("_AEHL_CalibrationBuildIdentity") == reinterpret_cast<void*>(&AEHL_CalibrationBuildIdentity));
-        auto backend=std::make_unique<Backend>(request.deadline);
-        const auto result=once.Run(request,bound,*backend);
-        ObserveMarkerStartup();
-        if (result.outcome==startup_calibration::Outcome::ListedApplied && cleanup_ok) {
-            pending=new PendingFrame(std::move(backend),result,request.deadline);
-            try { pending->Start(); } catch (...) {
-                Save("render-submit-failed","AEHL-CAL-SUBMIT-UNKNOWN\n");
-                if (pending->capture.Pending()) return 0;
-                const bool safe=pending->backend->CleanupSafe();
-                if (!pending->capture.Release()) cleanup_ok=false;
-                delete pending; pending=nullptr;
-                auto failed=result; failed.outcome=startup_calibration::Outcome::PartialUnknown;
-                Publish(failed,false,safe);
-            }
-        } else {
-            const bool safe=backend->CleanupSafe(); backend.reset(); Publish(result,false,safe);
-        }
+        names=std::make_unique<PendingNames>();
+        names->request=request; names->bound=bound;
+        names->backend=std::make_unique<Backend>(request.deadline);
+        PollNames();
     } catch (...) {
         consumed = true;
+        names.reset();
+        ObserveMarkerStartup();
         try { Save("result", std::string("AEHL-CAL-RESULT-2\nbuild=") + calibration_build +
             "\nstatus=" + (Exists("begin") ? "PARTIAL_UNKNOWN" : "REFUSED") +
             "\nstage=" + diagnostic_stage + "\ncleanup=" + (cleanup_ok ? "PASS" : "FAIL") + "\nrender=UNKNOWN\n"); } catch (...) {}

@@ -90,7 +90,8 @@ def main():
     config = {"calibration_build": build, "calibration_token": token,
               "calibration_executable": str(output / "unconfigured-owned-host"),
               "calibration_module": str(observer_module), "calibration_control": str(control),
-              "calibration_match": match, "calibration_fixture": "AEHL Calibration " + run_id[:12]}
+              "calibration_match": match, "calibration_name": "AEHL Marker " + run_id[:12],
+              "calibration_fixture": "AEHL Calibration " + run_id[:12]}
     if args.prospective_host:
         if not args.prospective_host.is_absolute() or not args.prospective_module.is_absolute():
             parser.error("prospective paths must be absolute")

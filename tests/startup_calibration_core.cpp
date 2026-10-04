@@ -1,5 +1,6 @@
 #include "../experiments/startup_calibration/CalibrationCore.hpp"
 #include "../experiments/startup_calibration/MarkerCore.hpp"
+#include "../experiments/startup_calibration/NameProjection.hpp"
 #include <functional>
 #include <iostream>
 #include <stdexcept>
@@ -33,8 +34,53 @@ struct Fake {
     std::int32_t Reverse() { return reverse; }
     bool Dispose() { ++disposes; return dispose; }
 };
+struct NameFake : Fake {
+    bool allowed = true, display_only = false, all_own = false, expire_during = false;
+    std::string Match(std::int32_t key) { return key == -13 && !display_only && !absent ?
+        "AEHL.Marker.target" : "unrelated"; }
+    std::string Name(std::int32_t key) {
+        if (expire_during) allowed=false;
+        return key==-13 || all_own ? "own-display" : "third-party-name-must-not-be-retained";
+    }
+    bool ObservationAllowed() { return main && allowed; }
+};
+void NameCases() {
+    int cases=0;
+    const auto observe=[](auto& b) { return startup_names::Observe(b,"own-display","AEHL.Marker.target"); };
+    { NameFake b; const auto s=observe(b); Check(s.complete && s.exact==1 && s.own.size()==1 &&
+        s.own[0].key==-13 && s.own[0].name=="own-display" && s.traversed==3 && b.creates==0 && b.applies==0); ++cases; }
+    { NameFake b; b.display_only=true; const auto s=observe(b); Check(s.complete && s.exact==0 && s.own.size()==1 &&
+        b.applies==0); ++cases; }
+    for (int mode=0;mode<9;++mode) {
+        NameFake b;
+        switch(mode) {
+        case 0:b.main=false;break;
+        case 1:b.declared=0;break;
+        case 2:b.declared=8193;break;
+        case 3:b.cycle=true;break;
+        case 4:b.declared=4;break;
+        case 5:b.declared=2;break;
+        case 6:b.changed_count=1;break;
+        case 7:b.changed_revision=1;break;
+        case 8:b.expire_during=true;break;
+        }
+        Check(!observe(b).complete && b.creates==0 && b.applies==0);++cases;
+    }
+    { startup_names::Schedule s(100); Check(!s.Due(99) && s.Due(100)); s.Advance();
+        Check(!s.Due(1099) && s.Due(1100));s.Advance();Check(!s.Due(3099) && s.Due(9000));
+        s.Advance();s.Advance();Check(s.Done() && !s.Due(9001));++cases; }
+    { NameFake b; b.absent=true; const auto first=observe(b);b.absent=false;const auto second=observe(b);
+        Check(first.complete && first.exact==0 && second.complete && second.exact==1 && b.applies==0);++cases; }
+    { NameFake b;b.keys.clear();for(int i=1;i<=17;++i)b.keys.push_back(i);b.declared=17;b.all_own=true;
+        const auto s=observe(b);Check(!s.complete && s.own.size()==16 &&
+            std::string(s.stage)=="name-observation-own-bound" && b.applies==0);++cases; }
+    { NameFake b;b.thrown=true;bool caught=false;try { observe(b); } catch (...) { caught=true; }
+        Check(caught && b.applies==0 && b.creates==0);++cases; }
+    std::cout << "NAME_PROJECTION_CASES=" << cases << " PASS; Adobe_calls=0; apply=NOT_RUN\n";
+}
 int main(int argc, char** argv) {
     try {
+        if (argc==2 && std::string(argv[1])=="names") { NameCases();return 0; }
         if (argc == 2 && std::string(argv[1]) == "pixels") {
             std::vector<unsigned char> bytes(19 * 4 * 11 + 11 * 7, 0xA5);
             Check(startup_marker::Render(bytes.data(), 19, 11, 83, 0x345678));

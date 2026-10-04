@@ -21,6 +21,39 @@ late registration, attachment, merge or release is in this continuation.
 | LIVE-08 | Source/docs/evidence/remote/CI reconciliation | Historical daebc531 remote/CI PASS; final current-source publication receipt required; no merge/release |
 
 
+## Current name/key projection packet
+
+2026-10-04 baseline79f07b2e5d57d7773986757fdbd7f5ab14ab1124, clean research branch.
+User said «делай» after the12-step packet: bounded own-name/startup publication
+observations, one fresh owned normal-startup/public-SDK key/apply/frame attempt,
+owned cleanup and research publication. Accepted rules8.0.0; C1 Development/
+Validation, API-SOURCE, NATIVE, TOOLS diagnostics/IPC, TASK-CLOSE and CLEANUP.
+Existing product/A/B/C1/C2/D/lifetime/reentry/partial-failure/release obligations
+and all historical evidence remain. No private registration/attach/late-add,
+preferences/security changes, third-party modifications, merge or release.
+
+| Task | Acceptance/check | State |
+|---|---|---|
+| NAME-01 | Restore baseline, authority, SDK metadata/cursor contracts | DONE; cursorNONE→previous key confirmed; own44-byte match fits48-byte SDK output buffer |
+| NAME-02 | Observe exact own callback name/match arguments, bounded ABI | IMPLEMENTED; version2 same immutable callback byte arrays; no callback/selector invoked by read-only getter |
+| NAME-03 | Three bounded main-thread snapshots, no workers/sleep/replay | IMPLEMENTED;0/1/3seconds; complete cursors/count/revision/deadline guards; no third-party name journal |
+| NAME-04 | Own display/match projection only; preserve strict Apply criterion | IMPLEMENTED; display-only/prefix observations never authorize Apply |
+| NAME-05 | Meaningful refusal/transition tests and fresh signed SDK build |15 portable projection cases PASS; SDK build/sanitizer/state checks NOT RUN |
+| NAME-06 | Full regression/manual/raw audit | NOT RUN; changed source invalidates earlier PASS |
+| NAME-07 | One no-existing-AE owned launch, three observations | NOT RUN; fresh runtime exclusivity/identity required |
+| NAME-08 | Exact unique key/Apply/reverse/build identity | CONDITIONAL NOT RUN; original Once guards retained |
+| NAME-09 | Actual SDK async frame and independent pixel oracle | CONDITIONAL NOT RUN; key/Apply prerequisites |
+| NAME-10 | Owned resource/session cleanup and retained exact installation | NOT RUN; never delete partial/foreign state or close unknown project |
+| NAME-11 | Requirement/source/evidence/remaining-gate reconciliation | IN PROGRESS; retain every original failure |
+| NAME-12 | Research commit/push/exact CI and private evidence archive | NOT RUN; no merge/release |
+
+Known-good acceptance is exact own installed key→Apply→matching BuildID/reverse
+key→actual recognizable AE frame. Startup callback0 alone is insufficient.
+If the name remains absent, retain0/1/3 observations and classify what they
+actually distinguish; no blind retry, fuzzy Apply or fabricated key. Exact marker
+counter metadata and own projected strings are private bounded evidence. Normal
+startup success would not prove post-startup addition.
+
 ## Resumed enumeration diagnostic and SDK startup conformance
 
 ### Corrected candidate execution and next diagnostic

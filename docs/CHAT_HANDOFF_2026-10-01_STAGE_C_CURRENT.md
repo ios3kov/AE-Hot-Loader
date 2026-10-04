@@ -1,5 +1,21 @@
 # AE Hot Loader — current Stage C handoff, updated 2026-10-04
 
+## Current packet — Own name/key projection and timing
+
+Baseline79f07b2; user accepted12-step packet. C1 Development/Validation under
+rules8.0.0, normal-startup/public-SDK diagnostics only. New bounded own ABI v2
+exposes exact immutable name/match arrays used by the host registration callback.
+Three complete read-only snapshots at monotonic0/1/3second offsets are scheduled
+through main-thread idle, never sleeping or invoking AEGP on workers. Only own
+identifiable name/match/key observations are journaled; display-only/prefix
+matches cannot authorize Apply. Count/cursor/end/revision/deadline guards apply;
+original Once exact unique key/build/reverse/frame checks remain.
+Implementation and15 portable cases PASS; fresh SDK/sanitizer/signed/full checks,
+one owned launch, key/apply/frame and cleanup NOT RUN. Source/Evidence mapping:
+[NAME-01–12](C1_OWNED_STARTUP_FRAME_2026-10-04.md). Other project/private/late-add/
+lifetime/reentry/partial-failure/release obligations preserved. No merge/release.
+
+
 Current continuation: [marker startup/load observation](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
 Baseline166c727; corrected793efe4b67ae was consumed once after confirmed no AE.
 Marker still absent before mutation; callback correction not sufficient. Exact

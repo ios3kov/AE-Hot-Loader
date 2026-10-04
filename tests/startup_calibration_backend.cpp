@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
         SPBasicSuite provider{}; provider.AcquireSuite = Acquire; provider.ReleaseSuite = Stub;
         basic = &provider;
         effects.AEGP_GetNumInstalledEffects = Stub; effects.AEGP_GetNextInstalledEffect = Stub;
-        effects.AEGP_GetEffectMatchName = Stub; effects.AEGP_ApplyEffect = Stub;
+        effects.AEGP_GetEffectMatchName = Stub; effects.AEGP_GetEffectName = Stub; effects.AEGP_ApplyEffect = Stub;
         effects.AEGP_GetInstalledKeyFromLayerEffect = Stub; effects.AEGP_DisposeEffect = Stub;
         effects.AEGP_EffectCallGeneric = Stub;
         effects.AEGP_GetLayerNumEffects = Stub; effects.AEGP_GetLayerEffectByIndex = Stub;

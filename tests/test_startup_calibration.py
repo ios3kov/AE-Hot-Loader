@@ -37,6 +37,10 @@ class StartupCalibrationTests(unittest.TestCase):
         result = subprocess.run([str(self.binary)], check=True, capture_output=True, timeout=15)
         self.assertEqual(result.stdout, b"CALIBRATION_CORE_CASES=36 PASS; Adobe_calls=0; render=NOT_RUN\n")
 
+    def test_bounded_own_name_projection_cursor_refusals_and_monotonic_schedule(self):
+        result = subprocess.run([str(self.binary), "names"], check=True, capture_output=True, timeout=15)
+        self.assertEqual(result.stdout, b"NAME_PROJECTION_CASES=15 PASS; Adobe_calls=0; apply=NOT_RUN\n")
+
     def test_native_kernel_agrees_with_independent_oracle_and_preserves_padding(self):
         data = subprocess.run([str(self.binary), "pixels"], check=True, capture_output=True, timeout=15).stdout
         result = oracle.compare(data, 19, 11, 0x345678, stride=83)
