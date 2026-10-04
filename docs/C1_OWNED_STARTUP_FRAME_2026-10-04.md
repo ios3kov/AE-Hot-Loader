@@ -15,10 +15,10 @@ late registration, attachment, merge or release is in this continuation.
 | LIVE-02 | Actual SDK async callback/options/receipt/world lifetime | Implemented;16 SDK-backed synthetic cases PASS, ASan/UBSan |
 | LIVE-03 | Own resident signed module/Build ID/seed/counter and public suite binding | PARTIAL; signed observer/Build ID and acquired live Effect Suite PASS; marker/counter NOT RUN |
 | LIVE-04 | One-shot controller/protocol/project/deadline/cleanup refusals | Seven portable cases PASS; four SDK backend cases PASS; real pre-mutation refusal recorded |
-| LIVE-05 | Exact clean build, full available regression and manual/raw audit | DONE for executed678a038;504 Python/no skips,62 Node/22 stages;16 frame/4 backend/3 inert; final diagnostic repair checks pending |
+| LIVE-05 | Exact clean build, full available regression and manual/raw audit | DONE for executed678a038;504 Python/no skips,62 Node/22 stages;16 frame/4 backend/3 inert; final repair ff5ac803:505 Python/no skips,62 Node/all22 stages PASS |
 | LIVE-06 | One owned normal startup, installed key and Apply | PARTIAL; startup/observer PASS; project guard REFUSED, enumeration/key/apply NOT RUN |
 | LIVE-07 | Actual new marker execution, independent full frame pixels and scoped cleanup | Frame NOT RUN; no owned-project cleanup proof, AE and own installation preserved |
-| LIVE-08 | Evidence/source/docs/commit/remote/CI reconciliation | Pending final receipt |
+| LIVE-08 | Evidence/source/docs/commit/remote/CI reconciliation | Local source/docs/evidence DONE; exact postcommit remote/CI receipt required; live completion remains blocked |
 
 ## Implementation and safety prerequisites
 
@@ -119,3 +119,39 @@ unchanged owned two-bundle directory outside discovery; do not alter other
 plugins or replay the consumed request. A fresh identified candidate/nonce after
 all affected gates is required for another owned attempt. Keep both prior
 candidates and journals; no deletion or preference/security changes.
+
+## Final offline repair validation and closure
+
+Repair codeff5ac803656e328b968817fd57ad9f2fc9a49785 is clean and independently
+checked:505 Python(no failures/errors/skips),51 panel+11 snapshot Node, all22
+runner stages PASS; AEHL-checks-aiolnqne.zip CRC/member integrity PASS.
+16 actual-SDK synthetic frame cases,4 backend cases,3 inert cases,36 generic
+core cases, signed marker/independent oracle and ASan/UBSan PASS. These are
+offline results, not another AE attempt. The rebuilt repair artifact is explicitly
+UNCONFIGURED_INERT with empty control directory; Build ID
+ff5ac803656e328b968817fd57ad9f2fc9a49785:a4389efecd6248ae8751afec3824ec21,
+manifestb49ac443ec9cdf2eed97ecd42f54dc3f39772545ae7f123f8d162e6c0f8122a7.
+Signed bundle/resource/source identity and74 SDK pins are retained in its private
+manifest. Do not hand off the inert build as an installable hot-loader.
+
+400 tracked source files inventoried,385 unchanged baseline files and247 unchanged
+baseline non-Markdown files outside the explicitly edited scope;387 local links/
+202 tables/whitespace PASS before final documentation reconciliation. The final
+source receipt records final counts and preserves every baseline path. Exact
+tracked scanner scope266 text/134 unsupported/no omissions, raw1 same baseline
+CLI false positive explicitly reviewed, not suppressed or certified as runtime.
+Manual review checks unchanged guards, fixed enum-only diagnostics, native refusal
+before nonexistent frame reads and no SDK operation on async worker callbacks.
+Existing historical checkpoints/candidates/original SDK/Adobe files are retained.
+No deletion, foreign-plugin change, private invocation, merge or release.
+
+Evidence root retains baseline, each exact source/build/review, three runner
+archives, owned attempt/control/identity/suite/native refusal, auto-review reason,
+source reconciliation and private closeout. Raw host stdout/stderr stay in the
+original private live directory; they are excluded from the closeout rather than
+collecting unknown-project plugin output. Own signed artifact hashes and control
+journals are retained; no original SDK source/full Adobe binaries are archived.
+Research push must be ordinary fast-forward and bind both workflow successes to
+the exact final source SHA in publication-final.json. Main and other branches
+must stay at their observed identities. CI is offline and cannot change the
+owned AE refusal/key/apply/frame status. Full product remains PARTIAL/BLOCKED.

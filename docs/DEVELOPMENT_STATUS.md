@@ -23,7 +23,9 @@ executed678a038 exact full regression504 Python/no skips,62 Node/22 stages PASS.
 Owned AE startup/observer/live Effect Suite PASS; blank-project guard REFUSED
 before enumeration/mutation. Key/apply/frame NOT RUN. Own AE/installation retained;
 automatic approval review blocked screenshot of potentially unknown project.
-Final refusal-report repair and postcommit evidence are recorded in the checkpoint. StageC1 remains PARTIAL;
+Final refusal-report repair ff5ac803:505 Python/no skips,62 Node/22 stages PASS;
+SDK/ASan/inert checks PASS. Exact postcommit publication evidence is retained
+separately; CI does not settle the live refusal. StageC1 remains PARTIAL;
 private late-add/trials/release BLOCKED. All retained obligations/evidence remain.
 
 ## Previous packet — implemented offline startup calibration
