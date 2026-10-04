@@ -3,6 +3,7 @@
 #include "AE_GeneralPlug.h"
 #include "CalibrationCore.hpp"
 #include "MarkerIdentity.hpp"
+#include "MarkerStartupState.hpp"
 #include "AsyncFrameCapture.hpp"
 #include <memory>
 #include "CalibrationConfig.hpp" // Generated only by the offline builder.
@@ -359,6 +360,32 @@ resident_binding::Digest Digest(const std::string& binary) {
         Require(a<16 && b<16); digest[i]=static_cast<unsigned char>(a*16+b); }
     return digest;
 }
+
+// Optional diagnostic of our exact already-resident marker only. Never loads
+// a module or calls its registration/EffectMain. Failure does not change the
+// original refusal or resource cleanup outcome.
+void ObserveMarkerStartup() noexcept {
+    try {
+    std::string text = std::string("AEHL-CAL-MARKER-STARTUP-1\nbuild=") + calibration_build +
+        "\nsampling=INDEPENDENT_COUNTERS_NOT_LIFETIME_PROOF\n";
+    try {
+        const auto marker = resident_binding::Resolve({calibration_marker_module, Digest(calibration_marker_sha256)},
+            {"_AEHL_MarkerBuildIdentity", "_AEHL_MarkerStartupState"});
+        using Build = const char* (*)();
+        Require(std::strcmp(reinterpret_cast<Build>(const_cast<void*>(
+            marker.functions.at("_AEHL_MarkerBuildIdentity")))(), calibration_build) == 0);
+        startup_marker::StartupState state;
+        Require(reinterpret_cast<startup_marker::ReadStartupState>(const_cast<void*>(
+            marker.functions.at("_AEHL_MarkerStartupState")))(&state));
+        text += "binding=EXACT_OWN_RESIDENT_IMAGE\nregistration_started=" + std::to_string(state.registration_started) +
+            "\nregistration_completed=" + std::to_string(state.registration_completed) +
+            "\nlast_callback_result=" + std::to_string(state.last_callback_result) +
+            "\nglobal_setup_calls=" + std::to_string(state.global_setup_calls) +
+            "\nparameter_setup_calls=" + std::to_string(state.parameter_setup_calls) + "\n";
+    } catch (...) { text += "binding=UNKNOWN\n"; }
+    Save("marker-startup", text);
+    } catch (...) {}
+}
 struct PendingFrame {
     std::unique_ptr<Backend> backend;
     Suite<AEGP_LayerRenderOptionsSuite2> options{kAEGPLayerRenderOptionsSuite,kAEGPLayerRenderOptionsSuiteVersion2};
@@ -462,6 +489,7 @@ A_Err Idle(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long*) noexcept {
         Require(self.functions.at("_AEHL_CalibrationBuildIdentity") == reinterpret_cast<void*>(&AEHL_CalibrationBuildIdentity));
         auto backend=std::make_unique<Backend>(request.deadline);
         const auto result=once.Run(request,bound,*backend);
+        ObserveMarkerStartup();
         if (result.outcome==startup_calibration::Outcome::ListedApplied && cleanup_ok) {
             pending=new PendingFrame(std::move(backend),result,request.deadline);
             try { pending->Start(); } catch (...) {

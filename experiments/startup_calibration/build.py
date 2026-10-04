@@ -106,7 +106,7 @@ def main():
     common = ["clang++", "-std=c++17", "-arch", "arm64", "-mmacosx-version-min=12.0", "-Wall", "-Wextra", "-Werror",
               "-I" + str(headers), "-I" + str(headers / "SP"), "-I" + str(output)]
     for stem, source_name, exports in [
-        (marker, "MarkerEffect.cpp", ["_EffectMain", "_AEHL_MarkerBuildIdentity", "_PluginDataEntryFunction2"]),
+        (marker, "MarkerEffect.cpp", ["_EffectMain", "_AEHL_MarkerBuildIdentity", "_PluginDataEntryFunction2", "_AEHL_MarkerStartupState"]),
         (observer, "CalibrationObserver.cpp", ["_EntryPointFunc", "_AEHL_CalibrationBuildIdentity"])]:
         bundle = output / (stem + ".plugin"); contents = bundle / "Contents"
         (contents / "MacOS").mkdir(parents=True); (contents / "Resources").mkdir()

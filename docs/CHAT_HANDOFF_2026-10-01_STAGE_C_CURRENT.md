@@ -1,6 +1,18 @@
 # AE Hot Loader — current Stage C handoff, updated 2026-10-04
 
-Current continuation: [resumed startup registration diagnostic](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
+Current continuation: [marker startup/load observation](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
+Baseline166c727; corrected793efe4b67ae was consumed once after confirmed no AE.
+Marker still absent before mutation; callback correction not sufficient. Exact
+PiPL348 bytes match SDK/Rez. PID30555 inspected under exact user permission,
+empty32bpc Untitled Project confirmed, normal Quit/no-AE/aerender PASS. Exact own
+installations retained outside discovery; original failures/other plugins unchanged.
+New versioned atomic own-marker counters and exact own resident-image/SHA observer
+read implemented; no load/manual registration/extra SDK selector. Optional binding
+failure UNKNOWN; refusal/cleanup unchanged. Focused SDK/sanitizer/state tests PASS;
+fresh identified/full/audit gates and actual new observation still pending.
+No unchanged retry; private/late-add/lifetime/reentry/rollback/release remain open.
+
+Previous continuation: [resumed startup registration diagnostic](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
 Baseline bb05448; user explicitly resumed owned AE validation. Prepared e6cbac34a5bc
 was consumed once, with native REFUSED at enumeration-marker-absent before mutation.
 No key/Apply/frame; own PID23266 was preserved because safe closure proof failed.

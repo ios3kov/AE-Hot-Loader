@@ -23,6 +23,46 @@ late registration, attachment, merge or release is in this continuation.
 
 ## Resumed enumeration diagnostic and SDK startup conformance
 
+### Corrected candidate execution and next diagnostic
+
+User confirmed AE fully closed. Independent no-AE/aerender check PASS; exact old
+own e6 installation retained outside discovery, all bundle maps before/after
+PASS and other plugin entries unchanged. Consumed corrected793efe4b67ae once:
+owned PID30555/birth1791099283293841, startup/observer/live suite PASS, native
+REFUSED enumeration-marker-absent/key0, before begin/project mutation. Apply,
+marker identity and frame NOT RUN. Own host preserved: cleanup_safe NO.
+User separately authorized exact PID30555 inspection and closure only if empty.
+UI confirmed Untitled Project, empty Project/Composition/Timeline/Render Queue,
+32bpc. Normal Quit and independent no-AE/aerender PASS. Exact own two-bundle
+installation retained outside discovery with before/after hashes and other-plugin
+entries unchanged. Original failure result preserved; no repeated request/retry.
+
+Exact signed PiPL348-byte payload equals independently SDK/Rez-compiled property
+template, SHA3ceea29f2b4796753615d42c59d62dfb503c79bc86a91d2d54be1f945bd8a12a;
+AE_General.r SHAa21776f5087f4afb6a63d1c815696b44e3b68bc166546c3a9cf0a7d791eb60c5.
+This excludes the tested byte-serialization difference; not host acceptance.
+Missing startup export was a conformance issue but not a sufficient explanation.
+Do not randomly change packaging, reserved flags, preferences or security.
+Private receipts: /var/folders/bs/39klz7cd52z6xkm817vj0zjm0000gn/T/aehl-corrected-startup-yrszcfde.
+
+Next offline diagnostic scope: atomic own-marker registration started/completed,
+callback result and setup counters; a bounded versioned read-only own export.
+After an authorized consumed request, observer binds only the exact own resident
+image/SHA before reading those counters. No dlopen/new load/manual registration,
+Adobe internals, additional SDK selectors or project mutations. Binding failure
+is UNKNOWN (absence, mismatch or unavailable binding), not proof of no load.
+This observation must not change the original refusal or cleanup result.
+
+| Task | Acceptance/check | State |
+|---|---|---|
+| LOAD-01 | Exact corrected-candidate runtime result and no mutation | DONE; marker still absent, original journals retained |
+| LOAD-02 | Exact candidate PiPL compared with SDK/Rez | DONE;348 identical bytes, no host acceptance inference |
+| LOAD-03 | Versioned sampled counters, null/bad-version refusal, callback/error tests | IMPLEMENTED; focused SDK/sanitizer/state tests PASS; no SDK invocation from state reader |
+| LOAD-04 | Observer exact own-image binding, bounded journal, no change to refusal/cleanup | IMPLEMENTED; guarded exact own state/build exports only, all exceptions isolated; binding failures UNKNOWN |
+| LOAD-05 | Fresh signed candidate/full checks/source/manual audit | NOT RUN for new diagnostic |
+| LOAD-06 | New host observation only after safe closure and exact fresh gates | NOT RUN; PID30555 safely closed, remaining fresh candidate gates pending; no unchanged retry |
+| LOAD-07 | Source/Evidence/publication/remaining-gate reconciliation | IN PROGRESS; private/late-add/release BLOCKED |
+
 User reply: resume a separate test launch, superseding the preparation-only hold
 for owned ordinary startup/public-SDK diagnostics only. Baseline bb05448.
 Prepared source b0140e6d528097e060f9fa7feba3b9fe950700a8, nonce

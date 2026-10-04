@@ -12,7 +12,29 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
-## Current packet — Resumed startup registration diagnostic
+## Current packet — Marker startup/load observation
+
+Baseline `166c727027ab482a3d7991a99f877d9d67276107`, rules8.0.0.
+After user-confirmed closure/no-AE preflight, corrected793efe4b67ae was consumed
+once. Own startup/observer/live suite PASS; marker still absent before mutation.
+Adding the standard callback was not sufficient. Actual PiPL348 bytes match the
+independent SDK/Rez template exactly. No installed marker key, Apply or frame.
+
+User authorized exact PID30555 window inspection and normal closure if empty.
+UI confirmed empty Untitled Project/32bpc, normal Quit and independent no-AE/
+aerender PASS. Both old own installations retained outside discovery with exact
+before/after maps; other plugin entries unchanged. Original failure unchanged.
+
+New diagnostic reads only sampled own-marker registration start/completion/error
+and setup counters through a bounded versioned export, after exact own resident
+image/SHA binding. No new load, manual registration or SDK selector. Binding
+failure remains UNKNOWN. Optional observation cannot alter refusal/cleanup.
+Focused SDK/sanitizer/state/refusal tests PASS; fresh build/full checks/audit/live
+observation pending. [LOAD-01–07 mapping](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
+ProductC1 PARTIAL; private late-add/reader/reentry/lifetime/recovery/release gates
+remain open. No merge/release or unchanged candidate retry.
+
+## Previous packet — Resumed startup registration diagnostic
 
 2026-10-04; baseline `bb05448f0e54edfaca7aeb39e088699f81a1e353`.
 User explicitly resumed the separate owned AE test after the preparation-only hold.

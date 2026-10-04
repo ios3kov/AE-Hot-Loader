@@ -3,6 +3,7 @@
 #include "AE_Effect.h"
 #include "AE_PluginData.h"
 #include "../experiments/startup_calibration/MarkerIdentity.hpp"
+#include "../experiments/startup_calibration/MarkerStartupState.hpp"
 #include <cstring>
 #include <dlfcn.h>
 #include <iomanip>
@@ -13,6 +14,7 @@ extern "C" PF_Err EffectMain(PF_Cmd, PF_InData*, PF_OutData*, PF_ParamDef*[], PF
 void Check(bool value) { if (!value) throw std::runtime_error("adapter assertion"); }
 extern "C" PF_Err PluginDataEntryFunction2(PF_PluginDataPtr, PF_PluginDataCB2,
     struct SPBasicSuite*, const char*, const char*) noexcept;
+extern "C" bool AEHL_MarkerStartupState(startup_marker::StartupState*) noexcept;
 static const char* expected_name = "AEHL Offline Marker";
 static const char* expected_match = "AEHL.Offline.Marker";
 static int registrations = 0;
@@ -34,21 +36,32 @@ int main(int argc, char** argv) {
     try {
         auto effect = &EffectMain;
         PluginDataEntryFunction2Ptr registration = &PluginDataEntryFunction2;
+        startup_marker::ReadStartupState startup = &AEHL_MarkerStartupState;
         void* library = nullptr;
         if (argc == 5) {
             library = dlopen(argv[1], RTLD_NOW | RTLD_LOCAL); Check(library);
             effect = reinterpret_cast<decltype(effect)>(dlsym(library, "EffectMain")); Check(effect);
             registration = reinterpret_cast<decltype(registration)>(dlsym(library, "PluginDataEntryFunction2")); Check(registration);
+            startup = reinterpret_cast<decltype(startup)>(dlsym(library, "AEHL_MarkerStartupState")); Check(startup);
             expected_name = argv[3]; expected_match = argv[4];
             using Identity = const char* (*)();
             auto identity = reinterpret_cast<Identity>(dlsym(library, "AEHL_MarkerBuildIdentity"));
             Check(identity && std::strcmp(identity(), argv[2]) == 0);
         } else Check(argc == 1);
+        startup_marker::StartupState state;
+        Check(!startup(nullptr));
+        state.magic = 0; Check(!startup(&state)); state.magic = 0x41454853;
+        state.version = 2; Check(!startup(&state)); state.version = 1;
+        state.reserved = 1; Check(!startup(&state)); state.reserved = 0;
+        Check(startup(&state) && state.registration_started == 0 && state.registration_completed == 0 &&
+              state.global_setup_calls == 0 && state.parameter_setup_calls == 0);
         Check(registration(nullptr, nullptr, nullptr, nullptr, nullptr) == PF_Err_INVALID_CALLBACK && registrations == 0);
         int sentinel = 1; expected_data = reinterpret_cast<PF_PluginDataPtr>(&sentinel);
         Check(registration(expected_data, Registration, nullptr, "test-host", "test-version") == 0 && registrations == 1);
         callback_result = 37;
         Check(registration(expected_data, Registration, nullptr, nullptr, nullptr) == 37 && registrations == 2);
+        Check(startup(&state) && state.registration_started == 3 && state.registration_completed == 3 &&
+              state.last_callback_result == 37 && registrations == 2);
         PF_OutData out{};
         Check(effect(PF_Cmd_GLOBAL_SETUP, nullptr, &out, nullptr, nullptr, nullptr) == 0);
         Check(out.my_version == 0x8001 && !out.out_flags && !out.out_flags2);
@@ -77,13 +90,14 @@ int main(int argc, char** argv) {
         Check(effect(PF_Cmd_RENDER, nullptr, nullptr, nullptr, &world, nullptr) != 0 && pixels == before);
         Check(effect(PF_Cmd_SMART_RENDER, nullptr, nullptr, nullptr, &world, nullptr) != 0);
         Check(effect(PF_Cmd_RENDER, nullptr, nullptr, nullptr, nullptr, nullptr) != 0);
+        Check(startup(&state) && state.global_setup_calls == 2 && state.parameter_setup_calls == 1 && registrations == 2);
         if (library) {
             std::cout << "FRAME_ARGB8_HEX=";
             for (std::size_t i = 8; i < pixels.size() - 8; ++i)
                 std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(pixels[i]);
             std::cout << '\n'; Check(dlclose(library) == 0);
         }
-        std::cout << "PASS: real SDK adapter, three startup registration checks, synthetic worlds; AE_render=NOT_RUN\n";
+        std::cout << "PASS: real SDK adapter, three startup registration checks, read-only state/refusal checks, synthetic worlds; AE_render=NOT_RUN\n";
         return 0;
     } catch (const std::exception& error) { std::cerr << error.what() << '\n'; return 1; }
 }
