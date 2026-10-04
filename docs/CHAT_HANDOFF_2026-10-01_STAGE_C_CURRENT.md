@@ -1,8 +1,10 @@
 # AE Hot Loader — current Stage C handoff, updated 2026-10-04
 
 Current continuation: [owned startup/frame calibration](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
-Public-SDK async path and exact one-shot owned supervisor implemented; gates/live
-execution pending. Existing private late-add/lifetime/compensation gates remain.
+Public-SDK async path and one-shot supervisor implemented. Exact678a038 gates
+PASS; owned AE/observer/live suite verified, blank-project refusal before mutation.
+AE PID9838/own plugin directory retained; screenshot auto-review denied. User
+closure/clarification is needed before retirement and any fresh owned attempt. Existing private late-add/lifetime/compensation gates remain.
 
 
 Continue the existing work. Do not restart research or repeat the unchanged

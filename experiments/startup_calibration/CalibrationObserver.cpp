@@ -29,6 +29,7 @@ AEGP_PluginID plugin_id = 0;
 startup_calibration::Once once;
 bool consumed = false;
 bool cleanup_ok = true;
+const char* diagnostic_stage = "authorization";
 void Require(bool okay) { if (!okay) throw std::runtime_error("calibration refused"); }
 std::uint64_t Now() {
     return static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::seconds>(
@@ -106,12 +107,14 @@ public:
 // Read-only scripting is only a safety check. It is not registry evidence.
 constexpr const char* blank_script = R"JS((function () {
     var p = app.project;
-    if (app.version !== '25.6x101' || app.buildNumber !== 101 || !p ||
-        p.file !== null || p.dirty !== false || p.numItems !== 0 ||
-        p.renderQueue.numItems !== 0 ||
-        p.renderQueue.rendering !== false || p.workingSpace !== '' ||
-        p.linearBlending !== false || p.linearizeWorkingSpace !== false || typeof p.revision !== 'number' ||
-        p.revision < 1 || Math.floor(p.revision) !== p.revision) return 'REFUSED';
+    if (app.version !== '25.6x101' || app.buildNumber !== 101) return 'REFUSED:host-version';
+    if (!p || p.file !== null) return 'REFUSED:unsaved-project';
+    if (p.dirty !== false || p.numItems !== 0) return 'REFUSED:blank-project';
+    if (p.renderQueue.numItems !== 0 || p.renderQueue.rendering !== false) return 'REFUSED:render-queue';
+    if (p.workingSpace !== '' || p.linearBlending !== false || p.linearizeWorkingSpace !== false)
+        return 'REFUSED:color-route';
+    if (typeof p.revision !== 'number' || p.revision < 1 || Math.floor(p.revision) !== p.revision)
+        return 'REFUSED:revision';
     return 'AEHL-CAL-BLANK-1\n' + p.revision + '\n';
 })())JS";
 
@@ -144,10 +147,14 @@ class Backend {
         const auto* p = project_suite_.value;
         A_long count = 0; AEGP_ProjectH current = nullptr; A_Boolean dirty = TRUE;
         AEGP_ProjBitDepth depth{};
-        Require(p->AEGP_GetNumProjects(&count) == 0 && count == 1 &&
-            p->AEGP_GetProjectByIndex(0, &current) == 0 && current && (!project_ || current == project_) &&
-            p->AEGP_ProjectIsDirty(current, &dirty) == 0 && !dirty &&
-            p->AEGP_GetProjectBitDepth(current, &depth) == 0 && depth == AEGP_ProjBitDepth_8);
+        diagnostic_stage="native-project-count";
+        Require(p->AEGP_GetNumProjects(&count) == 0 && count == 1);
+        diagnostic_stage="native-project-handle";
+        Require(p->AEGP_GetProjectByIndex(0, &current) == 0 && current && (!project_ || current == project_));
+        diagnostic_stage="native-project-clean";
+        Require(p->AEGP_ProjectIsDirty(current, &dirty) == 0 && !dirty);
+        diagnostic_stage="native-project-depth8";
+        Require(p->AEGP_GetProjectBitDepth(current, &depth) == 0 && depth == AEGP_ProjBitDepth_8);
         project_ = current;
     }
 public:
@@ -181,6 +188,7 @@ public:
     bool Consume() { Save("consumed", std::string(calibration_build) + "\n"); return true; }
     std::string Target() { return calibration_match; }
     std::string Script(const std::string& program) {
+        diagnostic_stage="scripting-available";
         A_Boolean available = FALSE;
         Require(utility_.value->AEGP_IsScriptingAvailable(&available) == 0 && available);
         struct Handles {
@@ -188,8 +196,10 @@ public:
             ~Handles() { if (result && memory->AEGP_FreeMemHandle(result)) cleanup_ok = false;
                 if (error && memory->AEGP_FreeMemHandle(error)) cleanup_ok = false; }
         } handles{memory_.value};
+        diagnostic_stage="script-execution";
         Require(utility_.value->AEGP_ExecuteScript(plugin_id, program.c_str(), FALSE,
             &handles.result, &handles.error) == 0 && handles.result);
+        diagnostic_stage="script-result";
         AEGP_MemSize size = 0;
         Require(memory_.value->AEGP_GetMemHandleSize(handles.result, &size) == 0 && size > 0 && size <= 4096);
         void* ptr = nullptr; Require(memory_.value->AEGP_LockMemHandle(handles.result, &ptr) == 0 && ptr);
@@ -203,6 +213,9 @@ public:
     std::int64_t BlankProjectRevision() {
         GuardProject();
         const auto text = Script(blank_script);
+        diagnostic_stage="blank-script";
+        for (const auto* reason : {"host-version", "unsaved-project", "blank-project", "render-queue", "color-route", "revision"})
+            if (text == std::string("REFUSED:")+reason) diagnostic_stage=reason;
         const std::string prefix = "AEHL-CAL-BLANK-1\n";
         Require(text.rfind(prefix, 0) == 0 && text.back() == '\n');
         const auto number = text.substr(prefix.size(), text.size() - prefix.size() - 1);
@@ -438,7 +451,7 @@ A_Err Idle(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long*) noexcept {
         consumed = true;
         try { Save("result", std::string("AEHL-CAL-RESULT-2\nbuild=") + calibration_build +
             "\nstatus=" + (Exists("begin") ? "PARTIAL_UNKNOWN" : "REFUSED") +
-            "\ncleanup=" + (cleanup_ok ? "PASS" : "FAIL") + "\nrender=UNKNOWN\n"); } catch (...) {}
+            "\nstage=" + diagnostic_stage + "\ncleanup=" + (cleanup_ok ? "PASS" : "FAIL") + "\nrender=UNKNOWN\n"); } catch (...) {}
     }
     return 0;
 }
@@ -452,7 +465,7 @@ A_Err EntryPointFunc(SPBasicSuite* suites, A_long, A_long, AEGP_PluginID id, AEG
             Executable() != calibration_executable || Module() != calibration_module)
             return 0;
         if (Exists("ready") || Exists("consumed") || Exists("result") || Exists("begin")) return 0;
-        basic = suites; plugin_id = id;
+        diagnostic_stage="idle-registration"; basic = suites; plugin_id = id;
         { Suite<AEGP_RegisterSuite5> registration(kAEGPRegisterSuite, kAEGPRegisterSuiteVersion5);
           Require(registration.value->AEGP_RegisterIdleHook &&
             registration.value->AEGP_RegisterIdleHook(plugin_id, Idle, nullptr) == 0); }

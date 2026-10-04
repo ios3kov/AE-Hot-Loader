@@ -65,6 +65,12 @@ class StartupLiveTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             live.cleanup_proof(self.proof, self.record, self.process, 0, self.result.replace(b'cleanup=PASS', b'cleanup=FAIL'))
 
+    def test_native_refusal_precedes_nonexistent_frame_read(self):
+        refused = ('AEHL-CAL-RESULT-2\nbuild=' + self.record['build_id'] +
+                   '\nstatus=REFUSED\nstage=project-guard\ncleanup=PASS\nrender=UNKNOWN\n').encode()
+        with self.assertRaisesRegex(ValueError, 'status=REFUSED; stage=project-guard'):
+            live.native_complete(self.record, refused)
+
     def test_exclusive_journals_duplicates_and_missing_execution_authority(self):
         for data in (b'wrong\na=b\n', b'schema\na=b\na=c\n', b'schema\nbad\n'):
             with self.assertRaises(ValueError): live.fields(data, 'schema')

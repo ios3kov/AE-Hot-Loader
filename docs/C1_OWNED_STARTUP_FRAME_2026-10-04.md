@@ -11,13 +11,13 @@ late registration, attachment, merge or release is in this continuation.
 
 | Task | Acceptance/check | State |
 |---|---|---|
-| LIVE-01 | Exact authority, source and owned-session prerequisites | Baseline clean; AE/aerender absent at initial read-only preflight |
+| LIVE-01 | Exact authority, source and owned-session prerequisites | DONE; clean baseline, two absent-process preflights, exact owned launch identity |
 | LIVE-02 | Actual SDK async callback/options/receipt/world lifetime | Implemented;16 SDK-backed synthetic cases PASS, ASan/UBSan |
-| LIVE-03 | Own resident signed module/Build ID/seed/counter and public suite binding | Implemented; real host NOT RUN |
-| LIVE-04 | One-shot controller/protocol/project/deadline/cleanup refusals | Six portable cases PASS; four actual-SDK backend refusal cases PASS |
-| LIVE-05 | Exact clean build, full available regression and manual/raw audit | Pending exact candidate |
-| LIVE-06 | One owned normal startup, installed key and Apply | NOT RUN |
-| LIVE-07 | Actual new marker execution, independent full frame pixels and scoped cleanup | NOT RUN |
+| LIVE-03 | Own resident signed module/Build ID/seed/counter and public suite binding | PARTIAL; signed observer/Build ID and acquired live Effect Suite PASS; marker/counter NOT RUN |
+| LIVE-04 | One-shot controller/protocol/project/deadline/cleanup refusals | Seven portable cases PASS; four SDK backend cases PASS; real pre-mutation refusal recorded |
+| LIVE-05 | Exact clean build, full available regression and manual/raw audit | DONE for executed678a038;504 Python/no skips,62 Node/22 stages;16 frame/4 backend/3 inert; final diagnostic repair checks pending |
+| LIVE-06 | One owned normal startup, installed key and Apply | PARTIAL; startup/observer PASS; project guard REFUSED, enumeration/key/apply NOT RUN |
+| LIVE-07 | Actual new marker execution, independent full frame pixels and scoped cleanup | Frame NOT RUN; no owned-project cleanup proof, AE and own installation preserved |
 | LIVE-08 | Evidence/source/docs/commit/remote/CI reconciliation | Pending final receipt |
 
 ## Implementation and safety prerequisites
@@ -69,3 +69,53 @@ caused the refusal. A new candidate uses the existing user-owned developer folde
 recommended by the [SDK sample guide](https://ae-plugins.docsforadobe.dev/intro/sample-projects/).
 This does not change privileges, system folder permissions, preferences or other
 plugin files. A fresh source/build/nonce and the same safety gates are required.
+
+## Actual owned AE attempt and bounded failure
+
+Executed code678a038e8e880130a9f446b05a785ab1856161fa;
+Build ID678a038e8e880130a9f446b05a785ab1856161fa:2e22c5d044054eed8b27ac3c7c2315f2.
+Manifest8d6e50b6529be376f561671f51199e81a6b1f596dc1df91450bd7fd5fb9ddbd4;
+markerb2480c456a8d21985ce05a6e9644a3dde949307822fa2e35832c9ab6b40b2791,
+observer77826a7523e48db6fef4693c658b2b2cf279a733ef7ebb5e26cb10779e5e5b21.
+74 SDK Headers/Resources pins match before/after. Exact full runner is
+AEHL-checks-afvwx5vl.zip; all22 stages,504 Python(no failures/errors/skips),
+51 panel+11 snapshot Node, signed marker/offline oracle/ASan cases PASS.
+Exact tracked snapshot has266 text/134 unsupported files, no omissions;
+raw1 unchanged CLI false positive reviewed and retained. Not runtime certification.
+
+Two unique bundles installed under the user-owned MediaCore directory
+AEHLStartupCalibration-2e22c5d04405; original top-level plugin entries unchanged.
+AE25.6.0.101 executable SHA464ad678ca19ba78478e2989c42f42bea3fd95e51c9180c1556c53c973457df6
+launched as own PID9838/birth1791094442755216; exact executable/ready/Build ID
+verified. One request SENT ONCE. Real acquired Effect Suite5: table13125980232,
+Count13125491276,Next13125493260,Match13125494100,Apply13125488908,
+Reverse13125491408. Addresses are session-specific live slots, not a private
+reader/writer ownership trace.
+
+Native result REFUSED/cleanup PASS/render UNKNOWN; no begin journal exists.
+Refusal occurred while checking the blank project, before enumeration or any
+fixture creation. Its exact failing subcondition was not logged; UNKNOWN.
+Do not claim an existing project, bad version, bad depth or bad color was proved.
+The driver mistakenly reported missing frame-metadata after native refusal;
+fixed source now parses native outcome before opening any frame files. Native
+future diagnostics classify only fixed guard codes (no names/paths/content).
+Guards remain unchanged; no unsupported retry or guessed workaround.
+
+No safe-owned-project journal exists. AE PID9838 and the exact own installation
+are preserved, not killed/removed. A read-only CUA screenshot was rejected by
+automatic approval review because the blank-project guard had failed and the
+window could expose an unknown/foreign project. The rejection was not bypassed
+through a different capture, script or debugger. No screenshot was obtained.
+Read-only app binding showed only menus, with no project content. Application
+inspection and safe closure require user clarification/action. Unaffected offline
+repair/checkpoint/source/CI work continues. Actual host frame/key/apply remains
+NOT RUN; C1 product PARTIAL/private trials BLOCKED.
+
+## Next action and cleanup obligations
+
+Ask the user to close AE themselves, preserving any project they need, or approve
+reading this specific test-session window. After AE is absent, retire only the
+unchanged owned two-bundle directory outside discovery; do not alter other
+plugins or replay the consumed request. A fresh identified candidate/nonce after
+all affected gates is required for another owned attempt. Keep both prior
+candidates and journals; no deletion or preference/security changes.

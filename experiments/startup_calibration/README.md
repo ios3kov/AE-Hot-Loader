@@ -108,3 +108,9 @@ The live supervisor uses the existing user-owned developer MediaCore folder,
 `~/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/`, as recommended
 by the SDK sample guide. It never changes permissions on the system plugin folder.
 A changed installation binding requires a new build/nonce and exact checks.
+
+The actual owned startup loaded the observer and acquired Effect Suite5, then
+refused the blank-project guard before mutation. Key/apply/frame are NOT RUN;
+see the current checkpoint. The consumed session/installation is preserved until
+safe user closure. Current code logs fixed refusal stages and checks native
+completion before reading frame files. It does not relax project guards.

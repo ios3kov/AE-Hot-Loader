@@ -115,8 +115,17 @@ def request(record, observed, deadline):
             ' OWNED-STARTUP-APPLY-RENDER ' + observer + '\n').encode('ascii')
 
 
-def verify_capture(record, raw_result, raw_metadata, pixels):
+def native_complete(record, raw_result):
     result = fields(raw_result, 'AEHL-CAL-RESULT-2')
+    need(result.get('build') == record['build_id'], 'native result build differs')
+    need(result.get('status') == 'LISTED_APPLIED_FRAME_CAPTURED',
+         'native refused or incomplete: status=' + result.get('status', 'UNKNOWN') +
+         '; stage=' + result.get('stage', 'UNKNOWN') + '; no frame requested/accepted')
+    return result
+
+
+def verify_capture(record, raw_result, raw_metadata, pixels):
+    result = native_complete(record, raw_result)
     need(result.get('build') == record['build_id'] and result.get('status') == 'LISTED_APPLIED_FRAME_CAPTURED' and
          result.get('cleanup') == 'PASS' and result.get('cleanup_safe') == 'YES' and
          int(result.get('key', '0')) != 0 and result.get('render') == 'CAPTURED_PIXEL_CHECK_PENDING',
@@ -231,7 +240,10 @@ def run(manifest, digest, execute):
             need(time.monotonic() < stop, 'operation timed out; no retry or assumed rollback')
             log_budget(live); time.sleep(0.1)
         need(time.monotonic() < stop and common.process_identity(child.pid) == observed, 'late result or changed process')
-        comparison = verify_capture(record, common.read(control / 'result', 4096),
+        raw_result = common.read(control / 'result', 4096)
+        report['native_result'] = fields(raw_result, 'AEHL-CAL-RESULT-2')
+        native_complete(record, raw_result)  # refuse before opening nonexistent frame files
+        comparison = verify_capture(record, raw_result,
             common.read(control / 'frame-metadata', 4096), common.read(control / 'frame.argb', 64 * 48 * 4))
         need(time.monotonic() < stop, 'verification exceeded original operation budget')
         report.update(comparison); report['result'] = 'PASS'; report['host_provenance'] = 'OWNED AE SDK STARTUP/APPLY/ASYNC FRAME'

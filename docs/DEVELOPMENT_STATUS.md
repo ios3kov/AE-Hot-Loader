@@ -18,8 +18,12 @@ Dated evidence is unchanged; previous instructions do not renew permissions.
 2026-10-04; clean baseline27bfb5e987d6eba644a5136f464aa960c9493c51.
 [Current scope, LIVE-01–08 acceptance and evidence](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
 One separately authorized owned normal AE startup/public-SDK key/apply/async frame.
-16 SDK async cases,4 SDK backend cases and6 portable protocol cases PASS;
-exact candidate/full regression/live validation pending. StageC1 remains PARTIAL;
+16 SDK async cases,4 SDK backend cases and7 portable protocol cases PASS;
+executed678a038 exact full regression504 Python/no skips,62 Node/22 stages PASS.
+Owned AE startup/observer/live Effect Suite PASS; blank-project guard REFUSED
+before enumeration/mutation. Key/apply/frame NOT RUN. Own AE/installation retained;
+automatic approval review blocked screenshot of potentially unknown project.
+Final refusal-report repair and postcommit evidence are recorded in the checkpoint. StageC1 remains PARTIAL;
 private late-add/trials/release BLOCKED. All retained obligations/evidence remain.
 
 ## Previous packet — implemented offline startup calibration
