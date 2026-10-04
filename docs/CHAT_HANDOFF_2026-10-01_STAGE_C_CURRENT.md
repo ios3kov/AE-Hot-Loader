@@ -1,5 +1,40 @@
 # AE Hot Loader — current Stage C handoff, updated 2026-10-04
 
+## Color packet handoff — preparation complete, second host run pending
+
+Final diagnostic code source be38af2aad3fb32cab1b9d5f1aa3027712e0805c.
+Fresh nonce96f709a54f8a4ad09c6e2dc547c73330; manifest SHA256
+20b15caa089705d3268cef5b83a4e2c4ddd193e2b980b2f5f497bbe26d58719b.
+Signed arm64 marker/observer, exact exports, SDK74 unchanged, prospective
+supervisor admission PASS; own control empty, not installed or consumed.
+Full exact-source509 Python/no failures/errors/skips,62 Node and all22 stages
+PASS. AEHL-checks-p7bt1y19.zip SHA256
+21edd90ea60e6543dfd194bdad3cd3d763d068e8705c69114b57e2572f0667f7;
+CRC PASS. Actual script36 model cases and actual SDK fake backend11/async16/
+inert3 PASS; none establishes an AE frame. Raw static audit retained: one
+unchanged argparse CLI heuristic fingerprint e2999cfe8b5b3a6bd27f0a62 manually
+reviewed; unsupported C++ manually reviewed; runtime/release not certified.
+395 baseline files and256 non-Markdown files outside scoped edits unchanged;
+no deletions, foreign plugin modifications, private calls or release actions.
+
+| Tasks | Current outcome |
+|---|---|
+| COLOR01–05 | DONE: source/rules/contracts, staged fixed diagnosis, negative tests and exact signed build/full checks |
+| COLOR06 | DONE: one own normal startup/key796; final working-space postcondition failed; original partial result retained |
+| COLOR07 | OPEN: actual getter/category unknown; no causal fix justified |
+| COLOR08–09 | PARTIAL: next bounded diagnostic built/tested; causal-fix build conditional |
+| COLOR10–12 | NOT RUN: fixture/Apply/reverse/real frame depend on color acceptance |
+| COLOR13 | PENDING: PID55115 closure requested after unreliable modal notification UI; exact retained installation unchanged |
+| COLOR14 | Source/docs/selected private evidence reconciled; research push and exact final-SHA CI require separate receipt |
+
+Next action after user closure: independently verify no AE/aerender; retain the
+exact old two-bundle installation with hash/other-entry checks; verify exact new
+manifest/source/own-project authority; run the prepared nonce once. Inspect only
+fixed color facts and existing own journals. No unchanged retry or relaxed
+profile acceptance. Original failed result is immutable; a later cleanup receipt
+must remain separate. C1 stays PARTIAL; hot-add, render and release unproven.
+
+
 ## Color diagnostic observation and next bounded probe
 
 Executed source38672db3c0228e796c7d75c30394926420646adb, nonce
