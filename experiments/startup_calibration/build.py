@@ -36,7 +36,7 @@ def run(*command):
         result = checks.run_command(list(command), ROOT, log, timeout=120)
         data = log.read_bytes()
         if result["status"] != "PASS":
-            raise subprocess.CalledProcessError(result.get("exit_code") or 1, command, output=data)
+            raise subprocess.CalledProcessError(result.get("returncode") or 1, command, output=data)
         return data.decode("utf-8", errors="strict")
 
 
