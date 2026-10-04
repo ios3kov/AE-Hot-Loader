@@ -113,6 +113,7 @@ constexpr const char* blank_script = R"JS((function () {
 })())JS";
 
 class Backend {
+    const std::uint64_t deadline_;
     Suite<AEGP_EffectSuite5> effect_{kAEGPEffectSuite, kAEGPEffectSuiteVersion5};
     Suite<AEGP_CompSuite12> comp_{kAEGPCompSuite, kAEGPCompSuiteVersion12};
     Suite<AEGP_UtilitySuite6> utility_{kAEGPUtilitySuite, kAEGPUtilitySuiteVersion6};
@@ -123,6 +124,13 @@ class Backend {
     AEGP_CompH fixture_ = nullptr;
     AEGP_LayerH layer_ = nullptr;
     AEGP_EffectRefH reference_ = nullptr;
+    bool OperationAllowed() {
+        if (pthread_main_np() != 1 || Now() >= deadline_) return false;
+        A_long count = 0; AEGP_ProjectH current = nullptr;
+        return project_suite_.value->AEGP_GetNumProjects(&count) == 0 && count == 1 &&
+            project_suite_.value->AEGP_GetProjectByIndex(0, &current) == 0 && current == project_ &&
+            Now() < deadline_;
+    }
     void GuardProject() {
         const auto* p = project_suite_.value;
         A_long count = 0; AEGP_ProjectH current = nullptr; A_Boolean dirty = TRUE;
@@ -134,7 +142,7 @@ class Backend {
         project_ = current;
     }
 public:
-    Backend() {
+    explicit Backend(std::uint64_t deadline) : deadline_(deadline) {
         const auto* e = effect_.value; const auto* m = memory_.value;
         Require(e->AEGP_GetNumInstalledEffects && e->AEGP_GetNextInstalledEffect &&
             e->AEGP_GetEffectMatchName && e->AEGP_ApplyEffect &&
@@ -202,17 +210,21 @@ public:
         Require(project_suite_.value->AEGP_GetProjectRootFolder(project_, &root_) == 0 && root_);
         Save("begin", std::string(calibration_build) + "\n"); return true; }
     bool CreateFixture() {
+        if (!OperationAllowed()) return false;
         const A_Ratio aspect{1, 1}, fps{24, 1}; const A_Time duration{1, 1};
         std::vector<A_UTF16Char> name;
         for (const char* p = calibration_fixture; *p; ++p) name.push_back(static_cast<A_UTF16Char>(*p));
         name.push_back(0);
         if (comp_.value->AEGP_CreateComp(root_, name.data(), 64, 48, &aspect, &duration, &fps, &fixture_) || !fixture_) return false;
+        if (!OperationAllowed()) return false;
         const AEGP_ColorVal color{1, 0, 0, 0};
         return comp_.value->AEGP_CreateSolidInComp(name.data(), 64, 48, &color,
                                                  fixture_, &duration, &layer_) == 0 && layer_;
     }
-    bool Apply(std::int32_t key) { return effect_.value->AEGP_ApplyEffect(plugin_id, layer_, key, &reference_) == 0 && reference_; }
+    bool Apply(std::int32_t key) { return OperationAllowed() &&
+        effect_.value->AEGP_ApplyEffect(plugin_id, layer_, key, &reference_) == 0 && reference_; }
     bool VerifyBuild() {
+        if (!OperationAllowed()) return false;
         startup_marker::Identity identity; const A_Time time{0, 1};
         if (effect_.value->AEGP_EffectCallGeneric(plugin_id, reference_, &time,
                 PF_Cmd_COMPLETELY_GENERAL, &identity) != 0 ||
@@ -222,6 +234,7 @@ public:
              "\nseed=" + std::to_string(identity.seed) + "\n"); return true;
     }
     std::int32_t Reverse() { AEGP_InstalledEffectKey value = 0;
+        Require(OperationAllowed());
         Require(effect_.value->AEGP_GetInstalledKeyFromLayerEffect(reference_, &value) == 0); return value; }
     bool Dispose() { auto ref = reference_; reference_ = nullptr;
         const bool okay = ref && effect_.value->AEGP_DisposeEffect(ref) == 0;
@@ -253,7 +266,7 @@ A_Err Idle(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long*) noexcept {
         const auto self = resident_binding::Resolve({calibration_module, digest}, {"_AEHL_CalibrationBuildIdentity"});
         Require(self.functions.at("_AEHL_CalibrationBuildIdentity") == reinterpret_cast<void*>(&AEHL_CalibrationBuildIdentity));
         startup_calibration::Result result;
-        { Backend backend; result = once.Run(request, bound, backend); }
+        { Backend backend(request.deadline); result = once.Run(request, bound, backend); }
         const char* status = result.outcome == startup_calibration::Outcome::ListedApplied && cleanup_ok
             ? "LISTED_APPLIED_FRAME_NOT_RUN" : result.outcome == startup_calibration::Outcome::PartialUnknown ||
               (result.outcome == startup_calibration::Outcome::ListedApplied && !cleanup_ok)

@@ -36,7 +36,7 @@ launch, attachment, private invocation, fault injection, merge or release occurs
 | CAL-09 | Independent pixel oracle with corruption/identity/depth/stride refusals | IMPLEMENTED; native pattern agreement and negative comparisons; host provenance NOT RUN |
 | CAL-10 | Acquired live Effect Suite observer and slot identities | IMPLEMENTED; compile/inert checks; actual AE suite acquisition NOT RUN |
 | CAL-11 | Opaque-key traversal, unique match, Apply, own Build ID/seed, reverse key, disposal | IMPLEMENTED; nonsequential/negative-key synthetic contract checks; live chain NOT RUN |
-| CAL-12 | One-shot/deadline/main-thread/owned-blank-project refusals | IMPLEMENTED;36 core native cases; actual host ownership/snapshot/refusal validation NOT RUN |
+| CAL-12 | One-shot/deadline/main-thread/owned-blank-project refusals | IMPLEMENTED;36 core native cases and4 real-SDK fake-backend refusal cases; actual host ownership/snapshot/refusal validation NOT RUN |
 | CAL-13 | Clean source/SDK/Build ID/signed hash identified offline candidates | Pending exact clean-source artifact closeout; no installable handoff |
 | CAL-14 | Focused/affected/full available regression and refusal review | Draft focused/ASan/UBSan PASS; clean full regression and audit pending |
 | CAL-15 | Checkpoint/source/SDK/evidence/cleanup reconciliation | Original static archive verified; final source/docs/cleanup closeout pending |
@@ -119,7 +119,7 @@ Builder records every used Headers/Resources file hash before/after.
 | Marker PF selectors/worlds | GLOBAL_SETUP, PARAMS_SETUP, RENDER, COMPLETELY_GENERAL; ARGB8 layout static assertions; zero PiPL/GLOBAL_SETUP flags, version0x8001 | Positive stride,4096x4096 maximum; deep/SmartFX refused; no MFR/GPU support |
 | Acquisition/lifecycle | SPBasicSuite AcquireSuite/ReleaseSuite; RegisterSuite5, revision6, RegisterIdleHook | Main thread; explicit activation; release errors retained |
 | EffectSuite5, revision5 | Count, Next(previous opaque key), MatchName, Apply(pluginID,layer,key,outref), generic(selector,time,own extra), reverse key, DisposeEffect(ref) | Acquired table/slots recorded; finite count/cycle/duplicate refusal; effect references released once |
-| CompSuite12, revision26 | CreateComp(parent0,name,width,height,aspect,time,fps,outcomp); CreateSolidInComp(name,width,height,color,comp,time,outlayer) | Only after current blank-project/ownership/request/revision guards; no NewProject/delete/Undo |
+| CompSuite12, revision26 | CreateComp(parentFolder,name,width,height,aspect,time,fps,outcomp); CreateSolidInComp(name,width,height,color,comp,time,outlayer) | Explicit owned project root; project/deadline checks between operations; no NewProject/delete/Undo |
 | UtilitySuite6, revision13 | IsScriptingAvailable; ExecuteScript(pluginID,read-only script,FALSE,outresult,outerror) | Snapshot only; scripting projection is not installed-key proof |
 | MemorySuite1, revision1 | GetMemHandleSize/Lock/Unlock/Free | Bounded script result, balanced handle cleanup, errors prevent success |
 | ProjectSuite6, revision9 | GetNumProjects/GetProjectByIndex/ProjectIsDirty/GetProjectBitDepth/GetProjectRootFolder | Require one stable project handle, SDK dirty=false and8-bit depth; create under that project's explicit root |
@@ -138,6 +138,15 @@ marks scripting `Project.dirty` as officially undocumented. The new observer
 therefore additionally checks the documented native `AEGP_ProjectIsDirty` and
 native project depth/handle; it does not promote the scripting field to an
 official host contract. Missing/changed supplemental scripting fields refuse.
+
+Refusal review found two concrete defects before final closeout: the builder used
+a nonexistent child-result field and collapsed exit7 to exit1; it now preserves
+the actual return code. The observer checked the deadline around CreateFixture
+but not between CreateComp and CreateSolidInComp. The actual adapter now rechecks
+the main thread, deadline and same project before subsequent mutating/generic
+calls. Four ASan/UBSan real-SDK fake-callback cases cover success, project change
+between creations, expiry during the first creation and change before creation.
+They call no Adobe code and establish no AE internal reentry or lifetime contract.
 
 ## Next dependency and retained obligations
 

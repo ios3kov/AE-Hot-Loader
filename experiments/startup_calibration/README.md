@@ -28,7 +28,9 @@ project, non-8-bit project, queue activity, duplicate/cyclic/missing keys or
 incorrect marker identity stop the affected operation. A failure after entering
 a mutating SDK call is `PARTIAL_UNKNOWN`; there is no automatic project deletion,
 Undo, unregister or asserted rollback. A deadline prevents admission of later
-calls; it cannot interrupt a blocking host call. SDK cleanup attempts still run.
+calls; the adapter also rechecks the same project before each mutating/generic
+operation and between composition and layer creation. It cannot interrupt a
+blocking host call. SDK cleanup attempts still run.
 Own one-shot guards do not prove that all internal AE callbacks are nonreentrant.
 
 From a clean identified research checkout on macOS arm64:
@@ -43,7 +45,9 @@ The ignored private output contains signed bundles, Build IDs, exact source/SDK
 hashes, commands, load commands/dependencies, byte hashes and actual offline
 tests. These include calls into our own signed marker with real SDK declarations,
 independent pixel comparison, ASan/UBSan and default/token/host inert observer
-cases. They are synthetic/offline checks; `AE_load`/`AE_render` stay NOT RUN.
+cases. Four real-SDK adapter cases call only our fake callbacks and check refusal
+when the project changes or the deadline expires between operations. They are
+synthetic/offline checks; `AE_load`/`AE_render` stay NOT RUN.
 No full SDK/Adobe binaries are copied into the repository or evidence archive.
 
 Future preparation may supply both `--prospective-host` and

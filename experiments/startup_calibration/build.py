@@ -133,15 +133,30 @@ def main():
                         "load_commands": run("otool", "-l", str(binary)),
                         "files": {p.relative_to(bundle).as_posix(): sha(p) for p in sorted(bundle.rglob("*")) if p.is_file()}})
     results = {}
-    tests = [("adapter", ROOT / "tests/startup_marker_adapter.cpp"), ("inert", ROOT / "tests/startup_calibration_inert.cpp")]
+    tests = [("adapter", ROOT / "tests/startup_marker_adapter.cpp"), ("inert", ROOT / "tests/startup_calibration_inert.cpp"),
+             ("backend", ROOT / "tests/startup_calibration_backend.cpp")]
     for label, test in tests:
         binary = output / (label + "-test")
-        command = common + ["-fsanitize=address,undefined", "-fno-omit-frame-pointer", str(test)]
+        test_common = common
+        if label == "backend":
+            # The actual SDK adapter calls only our fake callbacks here. Its separate
+            # test configuration cannot activate the signed observer or its journal.
+            test_config = output / "backend-test-config"; test_config.mkdir(mode=0o700)
+            (test_config / "CalibrationConfig.hpp").write_text((output / "CalibrationConfig.hpp").read_text().replace(
+                "static constexpr const char* calibration_control", "static const char* calibration_control"))
+            (test_config / "CalibrationConfig.hpp").chmod(0o600)
+            test_common = common[:-1] + ["-I" + str(test_config)]
+        command = test_common + ["-fsanitize=address,undefined", "-fno-omit-frame-pointer", str(test)]
         if label == "adapter":
             command += [str(Path(__file__).with_name("MarkerEffect.cpp"))]
         run(*(command + ["-o", str(binary)]))
         marker_binary = output / (marker + ".plugin") / "Contents/MacOS" / marker
-        results[label] = run(str(binary), *([str(observer_module), token] if label == "inert" else [str(marker_binary), build]))
+        if label == "backend":
+            test_control = output / "backend-test-control"; test_control.mkdir(mode=0o700)
+            test_args = [str(test_control)]
+        else:
+            test_args = [str(observer_module), token] if label == "inert" else [str(marker_binary), build]
+        results[label] = run(str(binary), *test_args)
         if label == "adapter":
             frame = bytes.fromhex(results[label].split("FRAME_ARGB8_HEX=", 1)[1].splitlines()[0])
             oracle = load("calibration_artifact_oracle", Path(__file__).with_name("oracle.py"))
