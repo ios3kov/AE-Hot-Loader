@@ -13,6 +13,13 @@ namespace startup_frame {
 // SDK callbacks may arrive on a worker or inline. They only publish plain data.
 // The caller owns this object and all suites until completion on the main thread.
 class Capture {
+    void (*trace_)(unsigned) noexcept = nullptr;
+    template<class F> A_Err Traced(unsigned stage, F call) {
+        if (trace_) trace_(stage);
+        const auto error = call();
+        if (trace_) trace_(stage + 1);
+        return error;
+    }
     const AEGP_LayerRenderOptionsSuite2& options_;
     const AEGP_RenderSuite5& render_;
     const AEGP_WorldSuite3& world_;
@@ -65,7 +72,8 @@ public:
     bool cleanup_ok = true;
     A_u_long rowbytes = 0;
     Capture(const AEGP_LayerRenderOptionsSuite2& options, const AEGP_RenderSuite5& render,
-            const AEGP_WorldSuite3& world) : options_(options), render_(render), world_(world) {
+            const AEGP_WorldSuite3& world, void (*trace)(unsigned) noexcept = nullptr)
+        : trace_(trace), options_(options), render_(render), world_(world) {
         Need(options_.AEGP_NewFromLayer && options_.AEGP_Dispose && options_.AEGP_SetTime &&
             options_.AEGP_SetTimeStep && options_.AEGP_SetWorldType && options_.AEGP_SetDownsampleFactor &&
             options_.AEGP_SetMatteMode && options_.AEGP_GetTime && options_.AEGP_GetTimeStep &&
@@ -131,18 +139,20 @@ public:
         Check("copy-accepted",accepted_); Check("callback-ready",Done());
         Check("callback-id",callback_id_==request_); Check("callback-canceled",!canceled_);
         Check("callback-error",callback_error_==0); Check("callback-receipt",receipt_!=nullptr);
-        region_error_=render_.AEGP_GetRenderedRegion(receipt_,&region_); region_queried_=true;
+        region_error_=Traced(0,[&] { return render_.AEGP_GetRenderedRegion(receipt_,&region_); }); region_queried_=true;
         AEGP_WorldH world = nullptr; AEGP_WorldType type = AEGP_WorldType_NONE;
         A_long width = 0, height = 0; PF_Pixel8* pixels = nullptr;
-        SDK("receipt-world",render_.AEGP_GetReceiptWorld(receipt_,&world)); Check("world-handle",world!=nullptr);
-        SDK("world-type-api",world_.AEGP_GetType(world,&type)); observed_type_=type; Check("world-type",type==AEGP_WorldType_8);
-        SDK("world-size-api",world_.AEGP_GetSize(world,&width,&height)); observed_width_=width; observed_height_=height;
+        SDK("receipt-world",Traced(2,[&] { return render_.AEGP_GetReceiptWorld(receipt_,&world); })); Check("world-handle",world!=nullptr);
+        SDK("world-type-api",Traced(4,[&] { return world_.AEGP_GetType(world,&type); })); observed_type_=type; Check("world-type",type==AEGP_WorldType_8);
+        SDK("world-size-api",Traced(6,[&] { return world_.AEGP_GetSize(world,&width,&height); })); observed_width_=width; observed_height_=height;
         Check("world-size",width==64 && height==48);
-        SDK("world-rowbytes-api",world_.AEGP_GetRowBytes(world,&rowbytes)); Check("world-rowbytes",rowbytes>=256 && rowbytes<=65536);
-        SDK("world-base-api",world_.AEGP_GetBaseAddr8(world,&pixels)); Check("world-base",pixels!=nullptr);
+        SDK("world-rowbytes-api",Traced(8,[&] { return world_.AEGP_GetRowBytes(world,&rowbytes); })); Check("world-rowbytes",rowbytes>=256 && rowbytes<=65536);
+        SDK("world-base-api",Traced(10,[&] { return world_.AEGP_GetBaseAddr8(world,&pixels); })); Check("world-base",pixels!=nullptr);
+        if (trace_) trace_(12);
         std::string packed(64 * 48 * 4, '\0');
         for (std::size_t y = 0; y < 48; ++y) std::memcpy(packed.data() + y * 256,
             reinterpret_cast<const unsigned char*>(pixels) + y * rowbytes, 256);
+        if (trace_) trace_(13);
         stage_="copied";
         return packed; // remove row padding only; no channel/depth/color conversion
     }
@@ -152,11 +162,11 @@ public:
             // A failure callback with nonnull data has no established checkout ownership.
             if (callback_error_ != 0 || canceled_) { cleanup_ok = false; return false; }
             auto receipt = receipt_; receipt_ = nullptr;
-            if (render_.AEGP_CheckinFrame(receipt)) cleanup_ok = false;
+            if (Traced(14,[&] { return render_.AEGP_CheckinFrame(receipt); })) cleanup_ok = false;
         }
         if (option_ && !option_owned_) { cleanup_ok=false;return false; }
         if (option_) { auto option = option_; option_ = nullptr;
-            if (options_.AEGP_Dispose(option)) cleanup_ok = false; }
+            if (Traced(16,[&] { return options_.AEGP_Dispose(option); })) cleanup_ok = false; }
         return cleanup_ok;
     }
 };

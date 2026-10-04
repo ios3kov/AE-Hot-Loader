@@ -434,12 +434,27 @@ void ObserveMarkerStartup() noexcept {
     Save("marker-startup", text);
     } catch (...) {}
 }
+// Existing main-thread operations only; missing facts do not alter acceptance.
+void FrameBoundary(unsigned stage) noexcept {
+    if (stage > 31) return;
+    try { Save(("frame-boundary-" + std::to_string(stage)).c_str(),
+        std::string("AEHL-CAL-FRAME-BOUNDARY-1\nbuild=") + calibration_build +
+        "\nstage=" + std::to_string(stage) + "\nmonotonic_ms=" +
+        std::to_string(MonotonicMillis()) + "\n"); } catch (...) {}
+}
+void FrameSDKBoundary(unsigned stage) noexcept {
+    if (stage > 17) return;
+    try { Save(("frame-sdk-" + std::to_string(stage)).c_str(),
+        std::string("AEHL-CAL-FRAME-SDK-1\nbuild=") + calibration_build +
+        "\nstage=" + std::to_string(stage) + "\nmonotonic_ms=" +
+        std::to_string(MonotonicMillis()) + "\n"); } catch (...) {}
+}
 struct PendingFrame {
     std::unique_ptr<Backend> backend;
     Suite<AEGP_LayerRenderOptionsSuite2> options{kAEGPLayerRenderOptionsSuite,kAEGPLayerRenderOptionsSuiteVersion2};
     Suite<AEGP_RenderSuite5> render{kAEGPRenderSuite,kAEGPRenderSuiteVersion5};
     Suite<AEGP_WorldSuite3> world{kAEGPWorldSuite,kAEGPWorldSuiteVersion3};
-    startup_frame::Capture capture{*options.value,*render.value,*world.value};
+    startup_frame::Capture capture{*options.value,*render.value,*world.value,FrameSDKBoundary};
     startup_calibration::Result result;
     std::uint64_t deadline=0, before=0;
     std::string project;
@@ -508,15 +523,17 @@ bool PollFrame() {
     std::uint64_t after=0;
     const char* phase="before-copy";
     try {
-        Require(p->backend->Allowed()); phase="copy"; bytes=p->capture.Copy();
+        FrameBoundary(0); Require(p->backend->Allowed()); FrameBoundary(1);
+        phase="copy"; FrameBoundary(2); bytes=p->capture.Copy(); FrameBoundary(3);
         phase="marker-after";
-        after=p->backend->MarkerCounter(p->result.key);
+        FrameBoundary(4); after=p->backend->MarkerCounter(p->result.key); FrameBoundary(5);
         Require(after>p->before); phase="owned-snapshot";
-        Require(p->backend->OwnedSnapshot(true)==p->project && p->backend->Allowed());
+        FrameBoundary(6); const bool owned=p->backend->OwnedSnapshot(true)==p->project; FrameBoundary(7);
+        Require(owned); FrameBoundary(8); Require(p->backend->Allowed()); FrameBoundary(9);
         frame=true;
     } catch (...) { p->result.outcome=startup_calibration::Outcome::PartialUnknown; FrameDiagnostic(*p,phase); }
     bool released=false;
-    try { released=p->capture.Release(); } catch (...) { cleanup_ok=false; }
+    try { FrameBoundary(10); released=p->capture.Release(); FrameBoundary(11); } catch (...) { cleanup_ok=false; }
     if (!released) cleanup_ok=false;
     pending=nullptr; // completion consumed before any fallible journal write
     try {
@@ -530,9 +547,9 @@ bool PollFrame() {
     } catch (...) { frame=false; p->result.outcome=startup_calibration::Outcome::PartialUnknown; }
     auto result=p->result;
     if (frame) result.stage="public-async-frame-captured";
-    const bool safe=released && p->backend->CleanupSafe();
-    if (released) delete p; // only after callback completion and checked handle cleanup
-    Publish(result,frame,safe);
+    FrameBoundary(12); const bool safe=released && p->backend->CleanupSafe(); FrameBoundary(13);
+    if (released) { FrameBoundary(14); delete p; FrameBoundary(15); } // after checked cleanup
+    FrameBoundary(16); Publish(result,frame,safe); FrameBoundary(17);
     return true;
 }
 

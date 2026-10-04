@@ -6,6 +6,14 @@
 #include <vector>
 namespace {
 int mode=0,checkins=0,disposals=0,cancels=0;
+std::vector<unsigned> trace_events;
+std::thread::id caller_thread;
+bool trace_wrong_thread=false;
+void Trace(unsigned stage) noexcept {
+    if (std::this_thread::get_id()!=caller_thread) trace_wrong_thread=true;
+    // Capacity reserved before any callback/test, avoiding throwing allocation.
+    if (trace_events.size()<trace_events.capacity()) trace_events.push_back(stage);
+}
 AEGP_AsyncFrameReadyCallback callback=nullptr;
 AEGP_AsyncFrameRequestRefcon context=nullptr;
 std::vector<unsigned char> pixels(288*48,0xA5);
@@ -21,7 +29,7 @@ int main() {
         AEGP_LayerRenderOptionsSuite2 options{}; AEGP_RenderSuite5 renders{}; AEGP_WorldSuite3 worlds{};
         options.AEGP_NewFromLayer=[](AEGP_PluginID,AEGP_LayerH,AEGP_LayerRenderOptionsH* out)->A_Err {
             *out=mode==15?nullptr:option; return (mode==14||mode==15)?1:0; };
-        options.AEGP_Dispose=[](AEGP_LayerRenderOptionsH h)->A_Err { Check(h==option);++disposals;return mode==12?1:0; };
+        options.AEGP_Dispose=[](AEGP_LayerRenderOptionsH h)->A_Err { Check(h==option && trace_events.back()==16);++disposals;return mode==12?1:0; };
         options.AEGP_SetTime=[](AEGP_LayerRenderOptionsH,A_Time t)->A_Err { Check(t.value==1&&t.scale==24);return 0; };
         options.AEGP_SetTimeStep=options.AEGP_SetTime; options.AEGP_SetWorldType=Stub;
         options.AEGP_SetDownsampleFactor=Stub; options.AEGP_SetMatteMode=Stub;
@@ -31,7 +39,7 @@ int main() {
         options.AEGP_GetDownsampleFactor=[](AEGP_LayerRenderOptionsH,A_short* x,A_short* y)->A_Err { *x=1;*y=1;return 0; };
         options.AEGP_GetMatteMode=[](AEGP_LayerRenderOptionsH,AEGP_MatteMode* out)->A_Err { *out=AEGP_MatteMode_STRAIGHT;return 0; };
         renders.AEGP_GetRenderedRegion=[](AEGP_FrameReceiptH h,A_LRect* out)->A_Err {
-            Check(h==receipt);*out={0,0,64,48};return mode==17?1:0; };
+            Check(h==receipt && !trace_events.empty() && trace_events.back()==0);*out={0,0,64,48};return mode==17?1:0; };
         renders.AEGP_RenderAndCheckoutLayerFrame_Async=[](AEGP_LayerRenderOptionsH,
             AEGP_AsyncFrameReadyCallback fn,AEGP_AsyncFrameRequestRefcon arg,AEGP_AsyncRequestId* out)->A_Err {
             callback=fn;context=arg;*out=5;
@@ -39,17 +47,18 @@ int main() {
             else if(mode!=2 && mode!=13) Deliver();
             return mode==13?1:0; };
         renders.AEGP_CancelAsyncRequest=[](AEGP_AsyncRequestId id)->A_Err { Check(id==5);++cancels;return 0; };
-        renders.AEGP_CheckinFrame=[](AEGP_FrameReceiptH h)->A_Err { Check(h==receipt);++checkins;return mode==11?1:0; };
+        renders.AEGP_CheckinFrame=[](AEGP_FrameReceiptH h)->A_Err { Check(h==receipt && trace_events.back()==14);++checkins;return mode==11?1:0; };
         renders.AEGP_GetReceiptWorld=[](AEGP_FrameReceiptH,AEGP_WorldH* out)->A_Err {
-            *out=mode==16?nullptr:reinterpret_cast<AEGP_WorldH>(0x3000);return mode==7?1:0; };
+            Check(trace_events.back()==2);*out=mode==16?nullptr:reinterpret_cast<AEGP_WorldH>(0x3000);return mode==7?1:0; };
         worlds.AEGP_GetType=[](AEGP_WorldH,AEGP_WorldType* out)->A_Err { *out=mode==3?AEGP_WorldType_16:AEGP_WorldType_8;return 0; };
         worlds.AEGP_GetSize=[](AEGP_WorldH,A_long* w,A_long* h)->A_Err { *w=mode==4?65:64;*h=48;return 0; };
         worlds.AEGP_GetRowBytes=[](AEGP_WorldH,A_u_long* out)->A_Err { *out=mode==5?255:288;return 0; };
         worlds.AEGP_GetBaseAddr8=[](AEGP_WorldH,PF_Pixel8** out)->A_Err { *out=mode==6?nullptr:reinterpret_cast<PF_Pixel8*>(pixels.data());return 0; };
         Check(startup_marker::Render(pixels.data(),64,48,288,123));
         for (mode=0;mode<18;++mode) {
-            checkins=disposals=cancels=0;
-            startup_frame::Capture capture(options,renders,worlds);
+            checkins=disposals=cancels=0; trace_events.clear(); trace_events.reserve(64);
+            caller_thread=std::this_thread::get_id(); trace_wrong_thread=false;
+            startup_frame::Capture capture(options,renders,worlds,Trace);
             bool start_failed=false;
             try { capture.Start(1,reinterpret_cast<AEGP_LayerH>(0x4000)); } catch (...) { start_failed=true; }
             Check(start_failed==(mode>=13 && mode<=15));
@@ -62,6 +71,7 @@ int main() {
                 bool refused=false;try { capture.Release(); } catch (...) { refused=true; }Check(refused);
                 std::thread worker(Deliver);worker.join();
             }
+            Check(trace_events.empty() && !trace_wrong_thread); // no callback trace/SDK/IO
             bool copied=false;
             std::string frame;
             try { frame=capture.Copy();copied=true; }
@@ -89,6 +99,13 @@ int main() {
             Check(disposals==((mode==9||(mode==14||mode==15))?0:1)&&checkins==((mode==8||mode==9||(mode==14||mode==15))?0:1));
             const auto old_checkins=checkins,old_disposals=disposals;capture.Release();
             Check(checkins==old_checkins&&disposals==old_disposals);
+            Check(!trace_wrong_thread);
+            if (copied) {
+                Check(trace_events.size()>=14);
+                for(unsigned i=0;i<14;++i) Check(trace_events[i]==i);
+            }
+            for (std::size_t i=0;i<trace_events.size();i+=2)
+                Check(i+1<trace_events.size() && trace_events[i+1]==trace_events[i]+1);
         }
         std::cout<<"PASS:18 SDK async frame cases; inline/worker/delayed callbacks, cancellation, world and cleanup refusals; Adobe_calls=0\n";
     } catch(const std::exception& error) { std::cerr<<error.what()<<'\n';return 1; }
