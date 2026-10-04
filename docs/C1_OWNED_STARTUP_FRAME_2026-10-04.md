@@ -38,14 +38,30 @@ preferences/security changes, third-party modifications, merge or release.
 | NAME-02 | Observe exact own callback name/match arguments, bounded ABI | IMPLEMENTED; version2 same immutable callback byte arrays; no callback/selector invoked by read-only getter |
 | NAME-03 | Three bounded main-thread snapshots, no workers/sleep/replay | IMPLEMENTED;0/1/3seconds; complete cursors/count/revision/deadline guards; no third-party name journal |
 | NAME-04 | Own display/match projection only; preserve strict Apply criterion | IMPLEMENTED; display-only/prefix observations never authorize Apply |
-| NAME-05 | Meaningful refusal/transition tests and fresh signed SDK build |15 portable projection cases PASS; SDK build/sanitizer/state checks NOT RUN |
-| NAME-06 | Full regression/manual/raw audit | NOT RUN; changed source invalidates earlier PASS |
-| NAME-07 | One no-existing-AE owned launch, three observations | NOT RUN; fresh runtime exclusivity/identity required |
+| NAME-05 | Meaningful refusal/transition tests and fresh signed SDK build | DONE e0451d1; SDK74/signed/ABI2/state/metadata/oracle/async16/backend7/inert3;15 projection+36 prior sanitizer cases PASS |
+| NAME-06 | Full regression/manual/raw audit | DONE;506 Python/no skips,62 Node/all22 stages PASS at e0451d1; raw266 text/136 unsupported/no omissions, unchanged CLI finding reviewed |
+| NAME-07 | One no-existing-AE owned launch, three observations | BLOCKED; non-owned PID40212 preserved; await user closure and fresh no-AE preflight |
 | NAME-08 | Exact unique key/Apply/reverse/build identity | CONDITIONAL NOT RUN; original Once guards retained |
 | NAME-09 | Actual SDK async frame and independent pixel oracle | CONDITIONAL NOT RUN; key/Apply prerequisites |
-| NAME-10 | Owned resource/session cleanup and retained exact installation | NOT RUN; never delete partial/foreign state or close unknown project |
+| NAME-10 | Owned resource/session cleanup and retained exact installation | No owned installation/session allocated; candidate/evidence retained; never close unknown project |
 | NAME-11 | Requirement/source/evidence/remaining-gate reconciliation | IN PROGRESS; retain every original failure |
 | NAME-12 | Research commit/push/exact CI and private evidence archive | NOT RUN; no merge/release |
+
+Fresh signed e0451d175ecf73c75a67c6bc37e2d9b68c769c5a, nonce
+9e09478c2faf48819b4d61f4e34a3103, manifest
+41f93e1045889764637935aca0acddcfffbd5eea8eb77998c6f76be8312c03f5.
+Full source-bound AEHL-checks-8ygu84ym.zip CRC PASS; actual SDK ABI2/null/version/
+reserved/metadata/callback/error and bounded pixels tests PASS with ASan/UBSan.
+New15 portable projection cases cover opaque negative keys, own-only retention,
+display-only without Apply, cursor/count/end/project/deadline failures,16-entry
+cap, thrown reader and absent→present transition; fixed monotonic schedule PASS.
+Other-session process inventory PID40212; no window/project inspection or stop.
+User asked to close and confirm; no new owned install/startup/request/mutation.
+Exact prospective supervisor prepare PASS, control empty, no consumed retry.
+Private Evidence: /var/folders/bs/39klz7cd52z6xkm817vj0zjm0000gn/T/aehl-name-projection-9cw5jujq.
+Operation prerequisites bind exact manifest/source/full regression; next launch
+requires fresh no-existing-AE/exact-source/bytes/identity checks. No authority
+transfer from previous PID-specific inspection permissions.
 
 Known-good acceptance is exact own installed key→Apply→matching BuildID/reverse
 key→actual recognizable AE frame. Startup callback0 alone is insufficient.

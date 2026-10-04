@@ -15,17 +15,23 @@ Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) record
 ## Current packet — Own name/key projection and timing
 
 Baseline79f07b2; user accepted12-step packet. C1 Development/Validation under
-rules8.0.0, normal-startup/public-SDK diagnostics only. New bounded own ABI v2
-exposes exact immutable name/match arrays used by the host registration callback.
-Three complete read-only snapshots at monotonic0/1/3second offsets are scheduled
-through main-thread idle, never sleeping or invoking AEGP on workers. Only own
-identifiable name/match/key observations are journaled; display-only/prefix
-matches cannot authorize Apply. Count/cursor/end/revision/deadline guards apply;
-original Once exact unique key/build/reverse/frame checks remain.
-Implementation and15 portable cases PASS; fresh SDK/sanitizer/signed/full checks,
-one owned launch, key/apply/frame and cleanup NOT RUN. Source/Evidence mapping:
-[NAME-01–12](C1_OWNED_STARTUP_FRAME_2026-10-04.md). Other project/private/late-add/
-lifetime/reentry/partial-failure/release obligations preserved. No merge/release.
+rules8.0.0, normal-startup/public-SDK diagnostics only. Own ABI v2 exposes the
+same immutable name/match arrays passed to the host registration callback.
+Three complete read-only snapshots at monotonic0/1/3second offsets run through
+main-thread idle; no sleep/worker AEGP/registration retry. Only own identifiable
+name/match/key observations are journaled; display-only/prefix observations never
+authorize Apply. Original exact unique key/build/reverse/frame guards retained.
+Fresh codee0451d1/nonce9e09478c2faf: SDK74 stable, signed exact exports, ABI/state/
+callback metadata/refusals/independent pixels/async16/backend7/inert3 PASS.
+506 Python/no failures/errors/skips,62 Node/all22 offline stages PASS;15 new
+projection and36 prior core sanitizer cases PASS; raw/manual audit reviewed.
+Live stages BLOCKED: unrelated AE PID40212 exists; user asked to save/close and
+confirm. That session is untouched. No install/AE launch/request/project read or
+mutation; candidate control empty and unconsumed, exact supervisor prepare PASS.
+[NAME-01–12 mapping](C1_OWNED_STARTUP_FRAME_2026-10-04.md). Next: after explicit
+closure and fresh no-AE preflight, consume this identified candidate once.
+ProductC1 PARTIAL; key/apply/frame and private/late-add/lifetime/reentry/partial-
+failure/release gates remain open. No merge/release or unchanged consumed retry.
 
 ## Previous packet — Marker startup/load observation
 
