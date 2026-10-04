@@ -6,6 +6,13 @@ namespace startup_color {
 constexpr const char* script = R"JS((function () {
     var p=app.project, stage='before';
     function fail(reason) { return 'AEHL-CAL-COLOR-DIAG-1\nstage='+stage+'\nreason='+reason+'\n'; }
+    function workingSpaceFacts() {
+        var value=p.workingSpace, kind=typeof value, category='other';
+        if (value===null) category='null';
+        else if (kind==='undefined') category='undefined';
+        else if (kind==='string') category=value===''?'empty':value==='None'?'none-token':'other-string';
+        return 'AEHL-CAL-COLOR-FACTS-1\nstage=final\nreason=working-space-mismatch\nvalue='+category+'\n';
+    }
     function safe() {
         if (!p) return 'no-project';
         if (app.project!==p) return 'project-changed';
@@ -22,7 +29,7 @@ constexpr const char* script = R"JS((function () {
         stage='linear-blending'; p.linearBlending=false; reason=safe(); if (reason) return fail(reason);
         stage='linearize'; p.linearizeWorkingSpace=false; reason=safe(); if (reason) return fail(reason);
         stage='final';
-        if (p.workingSpace!=='') return fail('working-space-mismatch');
+        if (p.workingSpace!=='') return workingSpaceFacts();
         if (p.linearBlending!==false) return fail('linear-blending-mismatch');
         if (p.linearizeWorkingSpace!==false) return fail('linearize-mismatch');
         return 'AEHL-CAL-COLOR-1\n';
@@ -30,6 +37,10 @@ constexpr const char* script = R"JS((function () {
 })())JS";
 
 inline std::string Diagnostic(const std::string& response) {
+    for (const auto* category : {"null", "undefined", "empty", "none-token", "other-string", "other"}) {
+        const auto fixed=std::string("AEHL-CAL-COLOR-FACTS-1\nstage=final\nreason=working-space-mismatch\nvalue=")+category+"\n";
+        if (response==fixed) return fixed;
+    }
     for (const auto* stage : {"before", "working-space", "linear-blending", "linearize", "final"})
         for (const auto* reason : {"no-project", "project-changed", "saved-project", "nonempty-project",
                 "depth", "queue", "rendering", "working-space-mismatch", "linear-blending-mismatch",

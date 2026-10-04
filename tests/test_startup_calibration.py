@@ -44,7 +44,7 @@ class StartupCalibrationTests(unittest.TestCase):
     def test_actual_color_script_refusals_stop_later_setters_and_hide_raw_errors(self):
         result = subprocess.run(["node", str(ROOT / "tests/startup_color_script.mjs")],
             check=True, stdin=subprocess.DEVNULL, capture_output=True, timeout=15)
-        self.assertEqual(result.stdout, b"COLOR_SCRIPT_CASES=31 PASS; model-only; Adobe_calls=0\n")
+        self.assertEqual(result.stdout, b"COLOR_SCRIPT_CASES=36 PASS; model-only; Adobe_calls=0\n")
 
     def test_native_kernel_agrees_with_independent_oracle_and_preserves_padding(self):
         data = subprocess.run([str(self.binary), "pixels"], check=True, capture_output=True, timeout=15).stdout

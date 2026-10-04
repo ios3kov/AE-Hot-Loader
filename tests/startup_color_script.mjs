@@ -6,12 +6,12 @@ const header = fs.readFileSync(new URL('../experiments/startup_calibration/Color
 const program = header.match(/R"JS\(([\s\S]*?)\)JS"/)[1];
 const properties = ['workingSpace', 'linearBlending', 'linearizeWorkingSpace'];
 let cases = 0;
-function scenario({initial, after, throws, ignores} = {}) {
+function scenario({initial, after, throws, ignores, returnedWorkingSpace} = {}) {
     const writes = [], p = {file: null, numItems: 0, bitsPerChannel: 8, renderQueue: {numItems: 0, rendering: false}};
     const app = {project: p};
     const values = {workingSpace: 'own-initial-profile', linearBlending: true, linearizeWorkingSpace: true};
     for (const key of properties) Object.defineProperty(p, key, {
-        get() { return values[key]; },
+        get() { return key === 'workingSpace' && returnedWorkingSpace ? returnedWorkingSpace() : values[key]; },
         set(value) {
             writes.push(key);
             if (throws === key) throw Error('must never be disclosed');
@@ -58,6 +58,12 @@ for (let i = 0; i < properties.length; i++) {
     assert.equal(s.response, `AEHL-CAL-COLOR-DIAG-1\nstage=${stages[i]}\nreason=script-exception\n`);
     assert.deepEqual(s.writes, properties.slice(0, i + 1));
     s = scenario({ignores: properties[i]});
-    assert.equal(s.response, `AEHL-CAL-COLOR-DIAG-1\nstage=final\nreason=${stages[i]}-mismatch\n`);
+    assert.equal(s.response, i===0 ? 'AEHL-CAL-COLOR-FACTS-1\nstage=final\nreason=working-space-mismatch\nvalue=other-string\n' : `AEHL-CAL-COLOR-DIAG-1\nstage=final\nreason=${stages[i]}-mismatch\n`);
+}
+for (const [value, category] of [[null,'null'],[undefined,'undefined'],['None','none-token'],['private-profile-name','other-string'],[false,'other']]) {
+    s=scenario({returnedWorkingSpace: () => value});
+    assert.equal(s.response, `AEHL-CAL-COLOR-FACTS-1\nstage=final\nreason=working-space-mismatch\nvalue=${category}\n`);
+    assert(!s.response.includes('private-profile-name'));
+    assert.deepEqual(s.writes, properties);
 }
 console.log(`COLOR_SCRIPT_CASES=${cases} PASS; model-only; Adobe_calls=0`);

@@ -1,5 +1,41 @@
 # Owned normal-startup/frame calibration —2026-10-04
 
+## Color diagnostic observation and next bounded probe
+
+Executed source38672db3c0228e796c7d75c30394926420646adb, nonce
+0db57ae5c24c4c1fbd8bc8e2b540d35c, manifest SHA256
+142fe5fe1beed4def8742a0b66999659656cf81df5cdb223d7bbe1605d465a94.
+Own normal startup returned key796. Native result PARTIAL_UNKNOWN/create-fixture;
+color diagnostic final/working-space-mismatch. All three setters returned and
+post-setter blank/unsaved/depth8/queue guards passed. The actual workingSpace
+value and cause remain UNKNOWN; this does not justify accepting another profile.
+Apply/reverse/frame NOT RUN. Full exact-source regression509 Python/no failures/
+errors/skips,62 Node/22 stages PASS;11 SDK backend/16 async/3 inert PASS.
+AEHL-checks-wuf2vmq0.zip SHA256
+9184409f3fa3b10e3685582e23a03a1d45b7d0503ce70abb4a28f553db73bb73.
+The first offline prototype d537f30 was never installed: prepare refused an
+outdated7-case admission prefix;38672db corrected it to the actual11-case gate.
+Both candidates and all original results retained.
+
+Test PID55115 is preserved pending safe closure. A settings-dialog inspection
+produced the AE modal-script notification and did not establish the color engine
+or workingSpace value. UI input was unreliable; user asked to close this exact
+empty diagnostic project without saving. No forced stop, foreign session access,
+or automatic cleanup success is claimed. Original supervisor failure remains.
+
+Next diagnostic only classifies the failed getter into fixed categories: null,
+undefined, empty, exact None token, other-string, other. No arbitrary profile name,
+raw error, host paths or settings are retained. Empty-string acceptance and all
+mutation guards remain unchanged; facts are not a fix or frame acceptance.
+36 actual-script model cases and native normalization rejection tests cover this
+bounded observation; model checks are not host behavior. Fresh source-bound
+build/checks required; a second owned startup requires confirmed closure and
+fresh no-AE preflight. COLOR07 causal fix, COLOR10–12 Apply/frame and COLOR13
+cleanup remain open. COLOR14 final publication/CI is not yet complete.
+Private evidence retained under aehl-color-cause-1le8564d; no merge/release or
+late-add claim. Earlier A/B/C1/C2/D/reentry/lifetime/recovery gates unchanged.
+
+
 Baseline27bfb5e987d6eba644a5136f464aa960c9493c51, research branch; rules8.0.0
 pinned132b7cd32873ba7328e3128ffbb33e1929b74d45, AI_ENTRYPOINT first.
 User accepted the proposed separate controlled AE startup/key/apply/frame run.

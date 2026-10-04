@@ -26,6 +26,11 @@ void Check(bool okay) { if (!okay) throw std::runtime_error("backend refusal ass
 int main(int argc, char** argv) {
     try {
         Check(argc == 2);
+        for (const auto* category : {"null", "undefined", "empty", "none-token", "other-string", "other"}) {
+            const auto fixed=std::string("AEHL-CAL-COLOR-FACTS-1\nstage=final\nreason=working-space-mismatch\nvalue=")+category+"\n";
+            Check(startup_color::Diagnostic(fixed)==fixed);
+            Check(startup_color::Diagnostic(fixed+"private-profile-name") == startup_color::Diagnostic("invalid"));
+        }
         SPBasicSuite provider{}; provider.AcquireSuite = Acquire; provider.ReleaseSuite = Stub;
         basic = &provider;
         effects.AEGP_GetNumInstalledEffects = Stub; effects.AEGP_GetNextInstalledEffect = Stub;
