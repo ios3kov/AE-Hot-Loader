@@ -1,5 +1,38 @@
 # AE Hot Loader — current development and release plan
 
+## Crash boundary preparation verified; cause remains unknown —2026-10-04
+
+Code0512f84b43b3e6b1e96cbfc163b0ee0d77a4b771; fresh offline candidate
+runb5d43fa0a03e4019b9429df0795e5f7c; manifest SHA25644efda14f582555f3250ae88771d3f96e02fa1be42c08791fac11bbb86cb9c8b.
+CR01 matching native crash stack NOT FOUND in scoped macOS/Adobe directories.
+User screenshot names own AEHLCalibrationbbb7009a147d; no faulting instruction
+established. Original runbbb7009a147d47f0a3b16e358336b28b evidence preserved.
+CR02 code/header review DONE; no proved crash repair. CR03 bounded diagnostic
+coverage DONE. Inner frame-sdk pairs0/1 region,2/3 receipt world,4/5 type,6/7 size,
+8/9 rowbytes,10/11 base address,12/13 pixel copy,14/15 checkin,16/17 options dispose.
+Outer frame-boundary pairs0/1 first Allowed,2/3 Copy,4/5 marker counter,6/7 owned
+snapshot,8/9 second Allowed,10/11 Release,12/13 CleanupSafe,14/15 destruction,
+16/17 final publication. Optional noexcept trace only on calling path, never
+Ready callback. Same SDK call count/order and original guard short-circuit;
+no receipt lifetime assumption, acceptance change or timeout/route replacement.
+A before-only mark would bound last observed operation, not prove its root cause.
+CR04 PASS: actualSDK18 async ASan/UBSan tests assert caller-thread trace and
+real SDK call boundaries/order/refusals,13 backend/3 inert; exact74SDK hashes,
+fresh signed bundles. Full509Python/62Node/all22stages PASS; ZIP SHA256
+3d9c06eb71ea895a73a25f60720ec09dd4e84f37d83b0c1937d414c0a4561ad7; CRC/all member hashes verified.
+Scanner preserves same manually reviewed CLI heuristic e2999cfe8b5b3a6bd27f0a62;
+release readiness not assessed. No candidate installed or new AE launch.
+Prior own PID73811 now absent, AE/aerender inventories empty before/after exact
+old pair retirement. Agent did not view/quit project. Own two bundles retained
+at build-ae-hot-loader/startup-calibration-bbb7009a147d47f0a3b16e358336b28b/live/retired-after-crash-and-observed-closure;
+hashes match before/after; other plugin entries unchanged; original supervisor
+result9c85fa618f445586daa8a83a07432610e2cf539babba470a295b1655cbc30ad7 unchanged.
+CR05 cause/fix/live validation remains BLOCKED on fault localization. This
+candidate improves diagnosis, not a verified repair. C1 PARTIAL/frame UNKNOWN/
+late-add NOT RUN. CR06 status/source/evidence reconciled; research push and exact
+SHA CI tracked separately. No private attach, cache/preferences/security changes.
+
+
 ## Crash investigation and boundary preparation —2026-10-04
 
 Baseline f78b94b39136785b04c361034188640ddc246c44, clean research branch,
