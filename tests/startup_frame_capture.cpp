@@ -57,7 +57,8 @@ int main() {
                 Check(capture.Pending()&&!capture.Done());Check(capture.Cancel()&&!capture.Cancel()&&cancels==1);
                 const auto diagnostic=capture.Diagnostic();
                 Check(diagnostic.find("callback=PENDING\n")!=std::string::npos &&
-                    diagnostic.find("callback_error=")==std::string::npos);
+                    diagnostic.find("callback_error=")==std::string::npos &&
+                    diagnostic.find("callback_on_start_thread=")==std::string::npos);
                 bool refused=false;try { capture.Release(); } catch (...) { refused=true; }Check(refused);
                 std::thread worker(Deliver);worker.join();
             }
@@ -69,6 +70,8 @@ int main() {
                 "world-rowbytes","world-base","receipt-world","callback-error","callback-canceled",
                 "callback-id","copied","copied","copy-accepted","copy-accepted","copy-accepted","world-handle","copied"};
             const auto diagnostic=capture.Diagnostic();
+            if(capture.Done()) Check(diagnostic.find(std::string("callback_on_start_thread=")+
+                ((mode==1||mode==2||mode==13)?"NO":"YES")+"\n")!=std::string::npos);
             Check(diagnostic.find(std::string("stage=")+expected_stage[mode]+"\n")!=std::string::npos);
             if(mode==8) Check(diagnostic.find("callback_error=1\n")!=std::string::npos);
             if(mode==3) Check(diagnostic.find("world_type="+std::to_string(AEGP_WorldType_16)+"\n")!=std::string::npos);

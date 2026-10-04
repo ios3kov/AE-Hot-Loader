@@ -1,5 +1,31 @@
 # AE Hot Loader — current development and release plan
 
+## Async completion observation — accepted continuation
+
+Baseline2a6bc53e73836f6cfa387439604cfb5d18386107, clean research branch.
+Rules8.0.0/132b7cd; existing public SDK C1 Development/Validation and Debugging,
+API sources/main-thread/lifetime/diagnostics/TASK-CLOSE/CLEANUP. Own prior pair
+retired, original timeout evidence retained. Actual frame/late-add still unproved.
+AC01: distinguish callback absence from missing idle poll/blocked project guard.
+AC02: plain callback fact whether completion ran on Start thread; no SDK/IO
+on worker, read only after Done acquire; context/options/receipt pin unchanged.
+AC03: first poll journal before original Allowed check, and original Allowed
+outcome after return. Journals written once on main thread, diagnostic failure
+never substitutes for acceptance. No extra guard calls, idle wakeup, route swap,
+timeout extension, project change or new Adobe API. Header IdleHook2734–2737,
+RenderSuite5 async callback5339–5380 remain exact SDK25.6_61 authority.
+AC04: existing18 async ASan/UBSan cases verify inline/worker/delayed thread facts
+and pending omission. Full source-bound checks, signed fresh artifact admission.
+AC05: fresh no-AE then one own startup/apply/frame diagnostic. Success requires
+same exact identity/new marker execution/nonnull world/independent ARGB8 oracle.
+If first poll missing: no claim that callback was absent; polling not observed.
+If poll Pending and Allowed returns: callback/host completion still unresolved.
+If callback Ready on main thread: this establishes thread identity only, not
+receipt validity beyond callback. No SDK access moved into callback on this basis.
+AC06: exact owned cleanup, evidence/status and research push/final SHA CI.
+All new tests/live checks NOT RUN until recorded. No main/release/private calls.
+
+
 ## Confirmed closure and exact retirement —2026-10-04
 
 User confirmed closure of own PID64849. Fresh AE/aerender inventory empty before

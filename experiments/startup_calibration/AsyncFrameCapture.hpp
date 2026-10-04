@@ -7,6 +7,7 @@
 #include <cstring>
 #include <stdexcept>
 #include <string>
+#include <thread>
 
 namespace startup_frame {
 // SDK callbacks may arrive on a worker or inline. They only publish plain data.
@@ -20,6 +21,8 @@ class Capture {
     AEGP_AsyncRequestId request_ = 0, callback_id_ = 0;
     A_Err callback_error_ = 1;
     A_Boolean canceled_ = TRUE;
+    std::thread::id start_thread_;
+    bool callback_on_start_thread_=false;
     std::atomic<bool> done_{false};
     bool starting_ = false, sent_ = false, accepted_ = false, option_owned_ = false, cancel_sent_ = false;
     const char* stage_ = "constructed";
@@ -54,6 +57,7 @@ class Capture {
         auto* self = reinterpret_cast<Capture*>(context);
         self->callback_id_ = id; self->canceled_ = canceled;
         self->callback_error_ = error; self->receipt_ = receipt;
+        self->callback_on_start_thread_=std::this_thread::get_id()==self->start_thread_;
         self->done_.store(true, std::memory_order_release);
         return 0; // No SDK/filesystem/project operation on the callback thread.
     }
@@ -84,7 +88,8 @@ public:
             "\nsdk_error="+std::to_string(last_error_)+"\n";
         if (Done()) text+=std::string("callback=READY\ncanceled=")+(canceled_?"YES":"NO")+
             "\ncallback_error="+std::to_string(callback_error_)+"\nrequest_id_equal="+
-            (callback_id_==request_?"YES":"NO")+"\nreceipt="+(receipt_?"YES":"NO")+"\n";
+            (callback_id_==request_?"YES":"NO")+"\nreceipt="+(receipt_?"YES":"NO")+
+            "\ncallback_on_start_thread="+(callback_on_start_thread_?"YES":"NO")+"\n";
         else text+="callback=PENDING\n";
         text+=std::string("region_queried=")+(region_queried_?"YES":"NO")+"\n";
         if(region_queried_) {
@@ -107,6 +112,7 @@ public:
         SDK("set-downsample",options_.AEGP_SetDownsampleFactor(option_,1,1));
         SDK("set-matte",options_.AEGP_SetMatteMode(option_,AEGP_MatteMode_STRAIGHT));
         ReadOptions(); // Read-only facts; no acceptance or render-option changes.
+        start_thread_=std::this_thread::get_id();
         starting_ = true; sent_ = true; // before an inline callback/reentrant idle
         const auto error = render_.AEGP_RenderAndCheckoutLayerFrame_Async(option_, Ready,
             reinterpret_cast<AEGP_AsyncFrameRequestRefcon>(this), &request_);

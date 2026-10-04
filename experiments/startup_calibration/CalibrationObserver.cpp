@@ -427,7 +427,7 @@ struct PendingFrame {
     startup_calibration::Result result;
     std::uint64_t deadline=0, before=0;
     std::string project;
-    bool canceled=false;
+    bool canceled=false, poll_logged=false;
     PendingFrame(std::unique_ptr<Backend> b, startup_calibration::Result r, std::uint64_t d)
         : backend(std::move(b)), result(r), deadline(d) {}
     void Start() {
@@ -470,8 +470,19 @@ void Publish(startup_calibration::Result result, bool frame, bool safe) {
 bool PollFrame() {
     if (!pending) return false;
     auto* p=pending;
+    const bool first_poll=!p->poll_logged;
+    if(first_poll) {
+        p->poll_logged=true;
+        try { Save("render-poll",p->capture.Diagnostic()+"phase=before-allowed\n"); }
+        catch (...) {} // Diagnostic failure does not change frame acceptance.
+    }
     if (!p->capture.Done()) {
-        if (!p->backend->Allowed() && !p->canceled) { p->canceled=true;
+        const bool allowed=p->backend->Allowed();
+        if(first_poll) {
+            try { Save("render-poll-allowed",std::string("AEHL-CAL-POLL-1\nallowed=")+(allowed?"YES":"NO")+"\n"); }
+            catch (...) {}
+        }
+        if (!allowed && !p->canceled) { p->canceled=true;
             const bool okay=p->capture.Cancel();
             Save("render-cancel",std::string("AEHL-CAL-CANCEL-1\nack=")+(okay?"YES":"NO")+"\n"); }
         return true;
