@@ -14,8 +14,9 @@ and historical evidence remain. No proxy/pseudo/PICA replacement was introduced.
 The packet adds actual diagnostic code, not only a procedure: an ordinary
 deterministic render marker, independent pixel oracle, inert public Effect Suite
 observer, opaque-key→Apply→generic Build ID→reverse-key→Dispose harness and
-one-shot/project/deadline controls. Synthetic pixel/guard checks pass on the draft;
-clean exact artifact/full regression/publication closeout follows below.
+one-shot/project/deadline controls. Exact clean-source signed bundles and
+synthetic pixel/guard checks PASS; full available offline regression PASS.
+Postcommit research publication/CI acceptance is recorded separately below.
 **AE startup/key/apply/render and late registration remain NOT RUN.** Private
 implementation/trials remain BLOCKED by the legal late-entry/load-context,
 complete affected-reader/lifetime and partial-failure contracts. No installation,
@@ -37,10 +38,10 @@ launch, attachment, private invocation, fault injection, merge or release occurs
 | CAL-10 | Acquired live Effect Suite observer and slot identities | IMPLEMENTED; compile/inert checks; actual AE suite acquisition NOT RUN |
 | CAL-11 | Opaque-key traversal, unique match, Apply, own Build ID/seed, reverse key, disposal | IMPLEMENTED; nonsequential/negative-key synthetic contract checks; live chain NOT RUN |
 | CAL-12 | One-shot/deadline/main-thread/owned-blank-project refusals | IMPLEMENTED;36 core native cases and4 real-SDK fake-backend refusal cases; actual host ownership/snapshot/refusal validation NOT RUN |
-| CAL-13 | Clean source/SDK/Build ID/signed hash identified offline candidates | Pending exact clean-source artifact closeout; no installable handoff |
-| CAL-14 | Focused/affected/full available regression and refusal review | Draft focused/ASan/UBSan PASS; clean full regression and audit pending |
-| CAL-15 | Checkpoint/source/SDK/evidence/cleanup reconciliation | Original static archive verified; final source/docs/cleanup closeout pending |
-| CAL-16 | Research-branch commit/push and exact new CI | Pending; baseline CI is historical and not reused as acceptance |
+| CAL-13 | Clean source/SDK/Build ID/signed hash identified offline candidates | DONE offline at ea6d92a; exact artifact/resource/identity/sanitizer checks PASS; no installable handoff |
+| CAL-14 | Focused/affected/full available regression and refusal review | DONE offline;498 Python/no skips,62 Node,22 stages PASS; raw scanner1 reviewed, AE gates NOT RUN |
+| CAL-15 | Checkpoint/source/SDK/evidence/cleanup reconciliation | Source/SDK/original archive preservation PASS; final documentation-only source/audit receipt retained; no deletion |
+| CAL-16 | Research-branch commit/push and exact new CI | Postcommit acceptance requires remote exact SHA and both new workflows success; authoritative receipt is publication-final.json below; baseline CI remains historical |
 
 ## Original-file evidence and novelty
 
@@ -148,10 +149,74 @@ calls. Four ASan/UBSan real-SDK fake-callback cases cover success, project chang
 between creations, expiry during the first creation and change before creation.
 They call no Adobe code and establish no AE internal reentry or lifetime contract.
 
+## Exact offline closeout
+
+Clean executable source: `ea6d92a610462bbdcc1850988753fd5ba35da8de`,395 tracked
+files. A later documentation-only closure commit must preserve every non-Markdown
+byte from that source; it does not change the Build ID of the candidate.
+Private candidate directory, retained in the ignored build tree:
+`build-ae-hot-loader/startup-calibration-5e083de49e4946e7874f5cd457152d25`.
+Build ID `ea6d92a610462bbdcc1850988753fd5ba35da8de:5e083de49e4946e7874f5cd457152d25`,
+marker match name `AEHL.Marker.5e083de49e4946e7874f5cd457152d25`, seed6162493.
+Default observer binding remains UNCONFIGURED_INERT; no installable handoff.
+
+| Identified item | SHA256 |
+|---|---|
+| Manifest, exact source/SDK/commands/config/artifact maps |185fc2b2eb387871f0fc18e25a1f30c2372d5a1dd0fc3b1ddabca8b818547081 |
+| Signed ordinary marker executable |aa0df0a1356fdfa8f32f87e16db9563acd6bade7ef7d50765b568970a583c721 |
+| Signed inert observer executable |e5bfabf1a7feeeab47f9fef4a862ea4e49c5c27ac8505d0d11ae68ec41f5f525 |
+| Generated observer configuration |941d0e1344017a8d5969d648085fd37c99645690526c53eb7096d12098f1b63e |
+| Full offline regression ZIP |21e52f9b029da5dcc3318079a144db3ace4b8a8cf1261a0dd580c3d61a75bfe0 |
+
+Builder verifies strict local signing, exact two-symbol export allowlists,
+resource/package byte maps, declared dependencies and all74 SDK Headers/Resources
+hashes before/after. Independent resource reading does not load code; ordinary
+PiPL equals the reviewed ordinary-effect serializer payload. Our own loaded marker Build ID,
+seed and5x3/stride32 pixels match the independent oracle with zero differing
+channels. Three inert observer cases acquire zero suites/call zero Adobe code.
+Four SDK-backed refusal cases and separate static marker adapter use ASan/UBSan;
+the generic36-case core and four portable Python methods PASS. These nested native
+cases are not added to the498 Python count. Own-child exit7 is preserved as7.
+
+The clean exact-source general runner reports498 Python tests, zero failures,
+errors or skips;51 panel and11 snapshot Node tests; all22 stages PASS. Regression
+archive `AEHL-checks-j9z8naw_.zip` has25 unique members/CRC PASS. Source remains
+unchanged after execution. Full AE pipeline stays BLOCKED; AE startup/load/key/
+apply/frame/late registration/repeat/release acceptance remain NOT RUN.
+
+Static audit of the exact source snapshot reports263 scanned text files and132
+unsupported files, zero scope omissions, raw1/review_required. Its sole finding
+is the unchanged `tools/artifact_manifest.py:71` CLI argparse entry, incorrectly
+classified as an HTTP auth route. Manual contextual review retains raw finding,
+reason and fingerprint without suppression. Native signatures/ownership/refusal/
+cleanup review and tests are separate; this text scanner does not certify C++
+or AE behavior. The initial raw2/incomplete audit included ignored historical
+build artifacts; its report is preserved, and scope correction uses an exact
+tracked-source snapshot. It is not relabeled PASS.
+
+All395 source files are inventoried.377 baseline files outside four current
+document updates and all241 baseline non-Markdown files are byte-identical.
+New isolated code does not alter Agent, Control Shell, panel, private profiles or
+refusal gates. Existing383 local Markdown links/200 tables and diff whitespace
+PASS before final documentation reconciliation; final counts are in its receipt.
+Earlier evidence, candidates, original SDK/Adobe files and user plugins/projects
+are retained; no cleanup deletion. Postcommit acceptance checks an ordinary
+fast-forward research push and exact-SHA research/macOS workflows, with no merge
+or release. Their authoritative remote/jobs/branch preservation results are
+recorded after this documentation commit, not inferred from old CI.
+
+Private evidence root:
+`/private/var/folders/bs/39klz7cd52z6xkm817vj0zjm0000gn/T/aehl-startup-calibration-a30ggf4a`.
+It retains `guardfinal-source-checks.json`, `artifact-guardfinal-independent.json`,
+`guardfinal-regression-summary.json`, raw audits and reviewed dispositions,
+`closure-source-checks.json`, `publication-final.json` and the independently
+verified final closeout archive. SDK source/full Adobe binaries are excluded.
+Publication remains unaccepted unless its postcommit receipt proves exact remote
+identity and both workflow successes; pipeline success alone is no AE validation.
+
 ## Next dependency and retained obligations
 
-Finish exact offline artifact/regression/audit/source closeout, then a separate
-authorized owned normal-startup calibration: bind exact loaded artifacts and
+Next is a separate authorized owned normal-startup calibration: bind exact loaded artifacts and
 acquired suite slots to the startup writer, opaque key, Apply and an uncached
 recognizable frame. Only after legal host-entry/load-context, full affected-reader
 lifetime/reentry and partial-failure rules are established can H5 late-add begin.

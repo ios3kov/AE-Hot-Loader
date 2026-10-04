@@ -25,10 +25,15 @@ instructions nonoverlapping in the stated corpus. Prior archives/originals retai
 
 CAL-08–12 diagnostic implementation is present: ordinary pixel marker,
 independent oracle, inert acquired public-suite observer, opaque-key/apply/Build ID/
-reverse-key chain and one-shot/project/deadline controls. Four portable Python
-checks/36 native core cases plus draft real-SDK adapter/ASan/UBSan checks PASS.
-Clean identified artifact/full regression/audit and publication closeout pending.
-CAL-13–16 remain IN PROGRESS. AE load/key/apply/render/late registration NOT RUN;
+reverse-key chain and one-shot/project/deadline controls. Clean codeea6d92a;
+identified signed diagnostic bundles, independent exact marker pixels,36 native
+core/4 SDK-backend/3 inert cases and ASan/UBSan PASS. Final local regression:
+498 Python/no skips,62 Node/all22 stages PASS. Source/SDK/original bytes retained;
+raw scanner1 is a reviewed unchanged CLI false positive, not an unreviewed PASS.
+CAL-13/14 offline DONE;15 documentation/source reconciliation recorded. CAL-16
+publication acceptance requires the exact remote SHA and both new CI workflows;
+postcommit receipts are retained at the checkpoint's private evidence root.
+AE load/key/apply/render/late registration NOT RUN;
 private implementation/trials/release BLOCKED. This is actual offline test code,
 not evidence that the tool can hot-load an ordinary effect. No install/AE launch/
 attach/private invocation/merge/release. Existing production/private-refusal code

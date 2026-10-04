@@ -39,10 +39,10 @@ block only dependent private-host work; public-SDK preparation continues.
 | CAL-10 | Implement acquired public Effect Suite observer; exact bounded evidence or unresolved edge recorded | IMPLEMENTED; focused offline checks PASS, host validation NOT RUN |
 | CAL-11 | Implement opaque-key enumeration/apply/reverse-key harness; exact bounded evidence or unresolved edge recorded | IMPLEMENTED; focused offline checks PASS, host validation NOT RUN |
 | CAL-12 | Implement one-shot/deadline/owned-project refusal protections; exact bounded evidence or unresolved edge recorded | IMPLEMENTED; focused offline checks PASS, host validation NOT RUN |
-| CAL-13 | Build exact identified artifacts offline; exact bounded evidence or unresolved edge recorded | IN PROGRESS |
-| CAL-14 | Run focused/affected/full available regression and review refusals; exact bounded evidence or unresolved edge recorded | IN PROGRESS |
-| CAL-15 | Reconcile checkpoint/source/SDK/evidence and cleanup ownership; exact bounded evidence or unresolved edge recorded | IN PROGRESS |
-| CAL-16 | Commit/push research branch and inspect exact CI; exact bounded evidence or unresolved edge recorded | IN PROGRESS |
+| CAL-13 | Build exact identified artifacts offline; exact bounded evidence or unresolved edge recorded | DONE offline at ea6d92a; signed bytes/Build ID/SDK/resource/oracle/inert/refusal checks PASS |
+| CAL-14 | Run focused/affected/full available regression and review refusals; exact bounded evidence or unresolved edge recorded | DONE offline;498 Python/no skips,62 Node/22 stages PASS; raw audit reviewed; AE NOT RUN |
+| CAL-15 | Reconcile checkpoint/source/SDK/evidence and cleanup ownership; exact bounded evidence or unresolved edge recorded | Source/SDK/evidence preservation PASS; final documentation-only reconciliation receipt; no deletion |
+| CAL-16 | Commit/push research branch and inspect exact CI; exact bounded evidence or unresolved edge recorded | Postcommit acceptance: exact remote SHA + both workflows success; independent publication-final.json receipt, no merge/release |
 
 ## Previous packet — publication contract and concrete dependencies
 

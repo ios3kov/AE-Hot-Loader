@@ -34,10 +34,13 @@ The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
 Baseline6dd5efb; [CAL-01–16 mapping](C1_STARTUP_CALIBRATION_2026-10-04.md).
 New code lives only in experiments/startup_calibration and isolated tests.
-Marker/core/oracle/public observer implemented; portable guards/pixels and draft
-real-SDK/sanitizer checks PASS. Complete private lifecycle/reader/reentry/recovery
-and legal late entry remain PARTIAL/UNKNOWN. Finish exact clean artifact,
-full available regression/audit/source/docs and research-branch publication.
+Marker/core/oracle/public observer implemented; clean codeea6d92a and exact
+signed artifact/SDK/independent pixels/inert/refusal/sanitizer checks PASS.
+Full local498 Python/no skips,62 Node/all22 stages PASS; original source/SDK and
+history retained; raw audit reviewed. Complete private lifecycle/reader/reentry/
+recovery and legal late entry remain PARTIAL/UNKNOWN. Documentation-only closure
+preserves code; publication state is authoritative only in the exact-SHA
+postcommit publication-final.json receipt at the checkpoint's evidence root.
 The current packet excludes install/AE launch/attach/process observation/private
 calls/fault injection/merge/release. Future owned normal-startup calibration must
 prove acquired-suite/startup/key/Apply/uncached frame identity; it is not hot-load.
