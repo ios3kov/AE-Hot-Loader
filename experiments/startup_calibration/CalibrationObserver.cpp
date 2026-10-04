@@ -5,6 +5,7 @@
 #include "MarkerIdentity.hpp"
 #include "MarkerStartupState.hpp"
 #include "NameProjection.hpp"
+#include "ColorPreparation.hpp"
 #include "AsyncFrameCapture.hpp"
 #include <memory>
 #include "CalibrationConfig.hpp" // Generated only by the offline builder.
@@ -274,18 +275,13 @@ public:
         }
         if (!OperationAllowed()) return false;
         Save("color-started","AEHL-CAL-COLOR-PREPARE-1\nworking_space=NONE\nlinear_blending=FALSE\nlinearized=FALSE\n");
-        const auto color_route=Script(R"JS((function () {
-            var p=app.project;
-            function safe() { return app.project===p && p.file===null && p.numItems===0 &&
-                p.bitsPerChannel===8 && p.renderQueue.numItems===0 && !p.renderQueue.rendering; }
-            if (!safe()) return 'REFUSED';
-            p.workingSpace=''; if (!safe()) return 'REFUSED';
-            p.linearBlending=false; if (!safe()) return 'REFUSED';
-            p.linearizeWorkingSpace=false; if (!safe()) return 'REFUSED';
-            if (p.workingSpace!=='' || p.linearBlending!==false || p.linearizeWorkingSpace!==false) return 'REFUSED';
-            return 'AEHL-CAL-COLOR-1\n';
-        })())JS");
-        if (!OperationAllowed() || color_route!="AEHL-CAL-COLOR-1\n") return false;
+        std::string color_route;
+        try { color_route=Script(startup_color::script); }
+        catch (...) { Save("color-diagnostic",startup_color::SDKFailure(diagnostic_stage)); throw; }
+        if (color_route!="AEHL-CAL-COLOR-1\n") {
+            Save("color-diagnostic",startup_color::Diagnostic(color_route)); return false;
+        }
+        if (!OperationAllowed()) return false;
         Save("color-adjusted",color_route);
         const A_Ratio aspect{1, 1}, fps{24, 1}; const A_Time duration{1, 1};
         std::vector<A_UTF16Char> name;

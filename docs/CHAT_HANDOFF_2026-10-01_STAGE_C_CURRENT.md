@@ -1,5 +1,34 @@
 # AE Hot Loader — current Stage C handoff, updated 2026-10-04
 
+## Active14-step packet — isolate color preparation before fixture/render
+
+Baseline ee4b51bb2795733563a09af08f9783dfc8f80d1c; clean research branch.
+Rules8.0.0/132b7cd, AI_ENTRYPOINT first; C1 Development/Validation. Debugging,
+API-SOURCE, NATIVE main-thread/render ownership, TOOLS bounded diagnostic/IPC,
+TASK-CLOSE and CLEANUP apply. Existing contract unchanged; no Stage0 restart.
+User accepted14-step packet with “Делай”. Prior exact startup key PASS remains
+historical, Apply/frame NOT RUN. Prior sessions closed and bundles retained.
+
+| Tasks | Acceptance/check | Planned dependency |
+|---|---|---|
+| COLOR01–02 | Restore exact rules/source/evidence; selected SDK UtilitySuite6 and scripting property contracts | Required before code |
+| COLOR03–05 | Fixed diagnostic subcauses per color stage; no raw errors/foreign project data; negative/no-later-mutation tests; fresh signed identified pair and full checks | No relaxed color/ownership/Apply guards |
+| COLOR06 | One fresh owned startup, exact key, own color diagnostic | Only no foreign AE/aerender; consume once |
+| COLOR07–09 | Minimal fix only after observed cause; regression/source audit and second fresh signed pair | Conditional on causal evidence |
+| COLOR10–12 | Color/fixture → key/Apply/BuildID/reverse → actual64x48 ARGB8/new render/full pixel oracle | Each existing safety guard must pass |
+| COLOR13 | Exact own session/resource cleanup, retain pair outside discovery; foreign data untouched | Fresh proof/authority; no forced unknown stop |
+| COLOR14 | Reconcile all tasks/source/docs/private evidence, publish research only and exact CI | No merge/release/hot-add claim |
+
+API inventory: local SDK25.6_61 AE_GeneralPlug.h UtilitySuite6/ExecuteScript uses
+UTF-8 when platform_encodingB=FALSE; optional result/error handles retain existing
+bounded locked/copied/freed ownership. [Scripting Project documentation](https://ae-scripting.docsforadobe.dev/general/project/)
+reports workingSpace string/None as empty and two linear properties Boolean read/
+write. This is maintained community documentation, not a live AE25.6 contract;
+the isolated authorized test distinguishes exact host behavior. No new host APIs.
+No cache/preferences/quarantine/third-party changes, worker AEGP, private writer,
+unverified unload/reentry, or unchanged consumed retry. All A/B/C1/C2/D, append/
+reload/recovery/compatibility/release obligations and previous evidence retained.
+
 ## Current result — own startup key confirmed; color fixture gate open
 
 Baseline d5967fe; correction code831c6cea7e2fef08252a709dd74bbdcbad09ac9a.
