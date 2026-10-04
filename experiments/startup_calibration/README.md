@@ -50,7 +50,7 @@ The ignored private output contains signed bundles, Build IDs, exact source/SDK
 hashes, commands, load commands/dependencies, byte hashes and actual offline
 tests. These include calls into our own signed marker with real SDK declarations,
 independent pixel comparison, ASan/UBSan and default/token/host inert observer
-cases. Six real-SDK adapter cases call only our fake callbacks and check refusal
+cases. Seven real-SDK adapter cases call only our fake callbacks and check refusal
 when the project changes or the deadline expires between operations. They are
 synthetic/offline checks; `AE_load`/`AE_render` stay NOT RUN.
 No full SDK/Adobe binaries are copied into the repository or evidence archive.
@@ -124,3 +124,10 @@ through public AEGP_SetProjectBitDepth before fixture creation. Failure stays
 PartialUnknown, no rollback/retry; actual frame still must be8-bit. No app setting
 or preference is written directly. Host version accepts the two SDK string
 spellings25.6x101 and25.6.0x101; exact host SHA/build101 is still required.
+
+The owned empty fixture now also prepares and reads back the declared color
+route after begin/PartialUnknown, through public ExecuteScript project properties.
+It never changes an existing populated/saved project or writes app preferences.
+Initial supported color settings are permitted; actual frame/complete ownership
+proof still requires None and both linear flags false. Color setup failure stops
+before composition creation; it cannot be labeled successful frame or rollback.

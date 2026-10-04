@@ -111,8 +111,8 @@ constexpr const char* blank_script = R"JS((function () {
     if (!p || p.file !== null) return 'REFUSED:unsaved-project';
     if (p.dirty !== false || p.numItems !== 0) return 'REFUSED:blank-project';
     if (p.renderQueue.numItems !== 0 || p.renderQueue.rendering !== false) return 'REFUSED:render-queue';
-    if (p.workingSpace !== '' || p.linearBlending !== false || p.linearizeWorkingSpace !== false)
-        return 'REFUSED:color-route';
+    if (typeof p.workingSpace !== 'string' || typeof p.linearBlending !== 'boolean' ||
+        typeof p.linearizeWorkingSpace !== 'boolean') return 'REFUSED:color-route';
     if (typeof p.revision !== 'number' || p.revision < 1 || Math.floor(p.revision) !== p.revision)
         return 'REFUSED:revision';
     return 'AEHL-CAL-BLANK-1\n' + p.revision + '\n';
@@ -253,6 +253,20 @@ public:
             Save("depth-adjusted","AEHL-CAL-DEPTH-8\n");
         }
         if (!OperationAllowed()) return false;
+        Save("color-started","AEHL-CAL-COLOR-PREPARE-1\nworking_space=NONE\nlinear_blending=FALSE\nlinearized=FALSE\n");
+        const auto color_route=Script(R"JS((function () {
+            var p=app.project;
+            function safe() { return app.project===p && p.file===null && p.numItems===0 &&
+                p.bitsPerChannel===8 && p.renderQueue.numItems===0 && !p.renderQueue.rendering; }
+            if (!safe()) return 'REFUSED';
+            p.workingSpace=''; if (!safe()) return 'REFUSED';
+            p.linearBlending=false; if (!safe()) return 'REFUSED';
+            p.linearizeWorkingSpace=false; if (!safe()) return 'REFUSED';
+            if (p.workingSpace!=='' || p.linearBlending!==false || p.linearizeWorkingSpace!==false) return 'REFUSED';
+            return 'AEHL-CAL-COLOR-1\n';
+        })())JS");
+        if (!OperationAllowed() || color_route!="AEHL-CAL-COLOR-1\n") return false;
+        Save("color-adjusted",color_route);
         const A_Ratio aspect{1, 1}, fps{24, 1}; const A_Time duration{1, 1};
         std::vector<A_UTF16Char> name;
         for (const char* p = calibration_fixture; *p; ++p) name.push_back(static_cast<A_UTF16Char>(*p));

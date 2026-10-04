@@ -179,3 +179,27 @@ no float conversion/deep/MFR claim. Native host check accepts two representation
 A fresh identified candidate and all affected checks precede another owned run;
 consumed sessions/requests are not replayed. Earlier branch/CI receipts bind
 their exact historical source, not the new continuation.
+
+## Declared color route preparation in the owned blank fixture
+
+The9080f14 candidate6b51e213418846d296df74d62cd73f05 passed505 Python/62 Node/
+22 stages, six SDK backend/16 async/3 inert cases. It then loaded its observer and
+refused with stage=color-route before begin or mutation. Thus blank/unsaved/dirty/
+queue/host-version gates passed, while desired color flags did not. Each consumed
+candidate/journal remains separate. Read-only inspection of the same owned test
+workflow again confirmed empty Untitled Project32 bpc; it was quit normally.
+Only exact own signed directory is to be retired after AE/aerender are absent.
+
+Minimal related fix: initial color properties must have supported string/Boolean
+types; after complete blank ownership proof/begin/PartialUnknown and native8-bit
+setup, prepare only that empty project's workingSpace='', linearBlending=false,
+linearizeWorkingSpace=false through public AEGP_ExecuteScript. The setter script
+checks same project/unsaved/zero items/queue/8-bit before and between setters;
+no file/network/preferences access. Native same-project/deadline guards bracket
+it. Read-back must confirm the declared profile before comp creation. Seven SDK
+backend cases include scripted-setting failure, with no later comp/solid creation.
+Partial failure is not rollback or global registry mutation. Complete capture
+and owned cleanup snapshot still require the exact declared color route.
+[Scripting property contract](https://ae-scripting.docsforadobe.dev/general/project/)
+and exact SDK AE_GeneralPlug.h declarations are recorded; no private color calls.
+A fresh source/build/gates/nonce is required; no old request is replayed.

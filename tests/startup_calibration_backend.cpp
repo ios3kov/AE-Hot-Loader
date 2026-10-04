@@ -32,8 +32,16 @@ int main(int argc, char** argv) {
         effects.AEGP_GetInstalledKeyFromLayerEffect = Stub; effects.AEGP_DisposeEffect = Stub;
         effects.AEGP_EffectCallGeneric = Stub;
         effects.AEGP_GetLayerNumEffects = Stub; effects.AEGP_GetLayerEffectByIndex = Stub;
-        utilities.AEGP_ExecuteScript = Stub; utilities.AEGP_IsScriptingAvailable = Stub;
-        memory.AEGP_GetMemHandleSize = Stub; memory.AEGP_LockMemHandle = Stub;
+        utilities.AEGP_ExecuteScript = [](AEGP_PluginID, const A_char* script, A_Boolean, AEGP_MemHandle* result, AEGP_MemHandle*) -> A_Err {
+            Check(std::strstr(script,"p.workingSpace=''") != nullptr);
+            if (mode == 6) return 1;
+            *result=reinterpret_cast<AEGP_MemHandle>(0x6000); return 0;
+        };
+        utilities.AEGP_IsScriptingAvailable = [](A_Boolean* value)->A_Err { *value=TRUE;return 0; };
+        memory.AEGP_GetMemHandleSize = [](AEGP_MemHandle, AEGP_MemSize* size)->A_Err {
+            *size=sizeof("AEHL-CAL-COLOR-1\n");return 0; };
+        memory.AEGP_LockMemHandle = [](AEGP_MemHandle, void** data)->A_Err {
+            static char text[]="AEHL-CAL-COLOR-1\n";*data=text;return 0; };
         memory.AEGP_UnlockMemHandle = Stub; memory.AEGP_FreeMemHandle = Stub;
         projects.AEGP_GetNumProjects = [](A_long* out) -> A_Err { *out = 1; return 0; };
         projects.AEGP_GetProjectByIndex = [](A_long, AEGP_ProjectH* out) -> A_Err { *out = current_project; return 0; };
@@ -58,7 +66,7 @@ int main(int argc, char** argv) {
             AEGP_CompH, const A_Time*, AEGP_LayerH* out) -> A_Err {
             ++solid_calls; *out = reinterpret_cast<AEGP_LayerH>(0x5000); return 0; };
         const std::string base = std::filesystem::canonical(argv[1]).string();
-        for (mode = 0; mode < 6; ++mode) {
+        for (mode = 0; mode < 7; ++mode) {
             const auto path = base + "/case-" + std::to_string(mode);
             Check(std::filesystem::create_directory(path)); Check(chmod(path.c_str(), 0700) == 0);
             calibration_control = path.c_str(); // test-only generated config has a mutable path pointer
@@ -66,13 +74,16 @@ int main(int argc, char** argv) {
             current_depth = mode >= 4 ? AEGP_ProjBitDepth_32 : AEGP_ProjBitDepth_8;
             { Backend backend(::Now() + (mode == 2 ? 3 : 120)); Check(backend.BeforeMutation());
               if (mode == 3) current_project = reinterpret_cast<AEGP_ProjectH>(0x4000);
-              Check(backend.CreateFixture() == (mode == 0 || mode == 4)); }
-            Check(comp_calls == (mode == 3 || mode == 5 ? 0 : 1) && solid_calls == (mode == 0 || mode == 4 ? 1 : 0));
+              bool failed=false;
+              try { Check(backend.CreateFixture() == (mode == 0 || mode == 4)); }
+              catch (...) { Check(mode==6);failed=true; }
+              Check(failed==(mode==6)); }
+            Check(comp_calls == (mode == 3 || mode == 5 || mode == 6 ? 0 : 1) && solid_calls == (mode == 0 || mode == 4 ? 1 : 0));
             Check(depth_calls == (mode >= 4 ? 1 : 0));
             Check(current_depth == (mode == 5 ? AEGP_ProjBitDepth_32 : AEGP_ProjBitDepth_8));
             Check(cleanup_ok);
         }
-        std::cout << "PASS: 6 SDK-backend cases; changed-project/deadline refuse later mutation; Adobe_calls=0\n";
+        std::cout << "PASS: 7 SDK-backend cases; changed-project/deadline refuse later mutation; Adobe_calls=0\n";
         return 0;
     } catch (const std::exception& error) { std::cerr << error.what() << '\n'; return 1; }
 }
