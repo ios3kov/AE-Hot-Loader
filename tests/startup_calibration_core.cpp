@@ -1,0 +1,104 @@
+#include "../experiments/startup_calibration/CalibrationCore.hpp"
+#include "../experiments/startup_calibration/MarkerCore.hpp"
+#include <functional>
+#include <iostream>
+#include <stdexcept>
+using namespace startup_calibration;
+void Check(bool value) { if (!value) throw std::runtime_error("calibration assertion"); }
+struct Fake {
+    std::uint64_t now = 1000; bool main = true, consume = true, begin = true, create = true, apply = true, dispose = true, identity = true;
+    std::int64_t revision = 17; int creates = 0, applies = 0, disposes = 0, revisions = 0, counts = 0;
+    int expiry_on_create = 0, changed_revision = 0, changed_count = 0;
+    std::int32_t reverse = -13; std::vector<std::int32_t> keys{31, -13, 991};
+    int declared = 3; bool cycle = false, duplicate = false, absent = false, thrown = false;
+    std::function<void()> nested;
+    std::uint64_t Now() { return now; } bool MainThread() { return main; }
+    bool Consume() { return consume; }
+    bool VerifyBuild() { return identity; }
+    std::int64_t BlankProjectRevision() { return ++revisions > 1 && changed_revision ? revision + 1 : revision; }
+    int Count() { if (nested) { auto callback = nested; nested = {}; callback(); }
+        return ++counts > 1 && changed_count ? declared + 1 : declared; }
+    std::int32_t Next(std::int32_t cursor) {
+        if (thrown) throw std::runtime_error("mock SDK error");
+        if (cycle && cursor) return cursor;
+        if (!cursor) return keys.front();
+        auto it = std::find(keys.begin(), keys.end(), cursor);
+        return it == keys.end() || ++it == keys.end() ? 0 : *it;
+    }
+    std::string Match(std::int32_t key) { return !absent && (key == -13 || duplicate) ? "marker" : "other"; }
+    std::string Target() { return "marker"; }
+    bool BeforeMutation() { return begin; }
+    bool CreateFixture() { ++creates; if (expiry_on_create) now = 1201; return create; }
+    bool Apply(std::int32_t key) { ++applies; Check(key == -13); return apply; }
+    std::int32_t Reverse() { return reverse; }
+    bool Dispose() { ++disposes; return dispose; }
+};
+int main(int argc, char** argv) {
+    try {
+        if (argc == 2 && std::string(argv[1]) == "pixels") {
+            std::vector<unsigned char> bytes(19 * 4 * 11 + 11 * 7, 0xA5);
+            Check(startup_marker::Render(bytes.data(), 19, 11, 83, 0x345678));
+            std::cout.write(reinterpret_cast<char*>(bytes.data()), bytes.size()); return 0;
+        }
+        int cases = 0;
+        const Authorization good{"test-token", 123, 777, 1100, true};
+        { Once once; Fake backend; auto result = once.Run(good, good, backend);
+          Check(result.outcome == Outcome::ListedApplied && result.key == -13 && backend.disposes == 1);
+          Check(once.Run(good, good, backend).outcome == Outcome::Refused && backend.applies == 1); ++cases; }
+        for (int mode = 0; mode < 20; ++mode) {
+            Once once; Fake backend; auto request = good;
+            switch (mode) {
+            case 0: backend.main = false; break;
+            case 1: request.token.clear(); break;
+            case 2: request.token = "wrong"; break;
+            case 3: request.pid = 124; break;
+            case 4: request.birth = 778; break;
+            case 5: request.owned_blank_project = false; break;
+            case 6: request.deadline = 1000; break;
+            case 7: request.deadline = 1121; break;
+            case 8: backend.consume = false; break;
+            case 9: backend.revision = 0; break;
+            case 10: backend.declared = 0; break;
+            case 11: backend.declared = 8193; break;
+            case 12: backend.cycle = true; break;
+            case 13: backend.duplicate = true; break;
+            case 14: backend.absent = true; break;
+            case 15: backend.changed_revision = 1; break;
+            case 16: backend.changed_count = 1; break;
+            case 17: backend.begin = false; break;
+            case 18: backend.declared = 2; break;
+            case 19: backend.declared = 4; break;
+            }
+            Check(once.Run(request, good, backend).outcome == Outcome::Refused && backend.creates == 0 && backend.applies == 0);
+            Check(once.Run(good, good, backend).outcome == Outcome::Refused && backend.applies == 0); ++cases;
+        }
+        for (int mode = 0; mode < 6; ++mode) {
+            Once once; Fake backend;
+            switch (mode) {
+            case 0: backend.create = false; break;
+            case 1: backend.apply = false; break;
+            case 2: backend.reverse = 31; break;
+            case 3: backend.dispose = false; break;
+            case 4: backend.expiry_on_create = 1; break;
+            case 5: backend.identity = false; break;
+            }
+            Check(once.Run(good, good, backend).outcome == Outcome::PartialUnknown && backend.creates == 1);
+            once.Run(good, good, backend); Check(backend.creates == 1); ++cases;
+        }
+        { Once once; Fake backend;
+          backend.nested = [&]() { Check(once.Run(good, good, backend).outcome == Outcome::Refused); };
+          Check(once.Run(good, good, backend).outcome == Outcome::ListedApplied && backend.applies == 1); ++cases; }
+        { Once once; Fake backend; backend.thrown = true; bool caught = false;
+          try { once.Run(good, good, backend); } catch (...) { caught = true; }
+          Check(caught && once.Run(good, good, backend).outcome == Outcome::Refused && backend.creates == 0); ++cases; }
+        for (int mode = 0; mode < 7; ++mode) {
+            std::vector<unsigned char> bytes(128, 0xA5), before = bytes;
+            const auto okay = startup_marker::Render(mode == 0 ? nullptr : bytes.data(),
+                mode == 1 ? 0 : mode == 2 ? 4097 : 4, mode == 3 ? -1 : 2,
+                mode == 4 ? 15 : mode == 5 ? -16 : mode == 6 ? 65537 : 16, 0x345678);
+            Check(!okay && bytes == before); ++cases;
+        }
+        std::cout << "CALIBRATION_CORE_CASES=" << cases << " PASS; Adobe_calls=0; render=NOT_RUN\n";
+        return 0;
+    } catch (const std::exception& error) { std::cerr << error.what() << '\n'; return 1; }
+}

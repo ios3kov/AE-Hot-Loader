@@ -12,7 +12,39 @@ be treated as current approval.
 Migration scope/evidence: [rules adoption](RULES_ADOPTION_8_0_0_2026-10-03.md).
 Current bounded [compatibility inventory](C1_COMPATIBILITY_2026-10-02.md) records exact AE/candidate scope.
 
-## Current packet — publication contract and concrete dependencies
+## Current packet — startup calibration implementation and remaining lifetime
+
+2026-10-04; clean baseline `6dd5efb6997108957815f2a5321d0e3b17663a12`.
+User accepted the proposed16-task package. C1 Development; rules8.0.0,
+API-SOURCE/TASK-CLOSE/CLEANUP, NATIVE render/ownership and TOOLS diagnostics,
+Engineering testing/build identity apply. Existing product, all A/B/C1/C2/D,
+append/reload/recovery/release and executable refusal obligations remain.
+Added scope: isolated public-SDK marker/observer and owned offline harness,
+independent pixel oracle and identified offline builds. No AE install/launch/
+attach/private call, late registration, native fault injection, merge or release.
+Private evidence root recorded in the resulting checkpoint. Research unknowns
+block only dependent private-host work; public-SDK preparation continues.
+
+| ID | Observable acceptance / check | State |
+|---|---|---|
+| CAL-01 | Trace render override/cache ownership; exact bounded evidence or unresolved edge recorded | PARTIAL; bounded evidence checked, full contract remains open |
+| CAL-02 | Trace sequence-data copy/destruction ordering; exact bounded evidence or unresolved edge recorded | PARTIAL; bounded evidence checked, full contract remains open |
+| CAL-03 | Trace callback/deleter/module lifetime; exact bounded evidence or unresolved edge recorded | PARTIAL; bounded evidence checked, full contract remains open |
+| CAL-04 | Trace remaining selected UI/render catalog readers; exact bounded evidence or unresolved edge recorded | PARTIAL; bounded evidence checked, full contract remains open |
+| CAL-05 | Trace selected reentry boundaries; exact bounded evidence or unresolved edge recorded | PARTIAL; bounded evidence checked, full contract remains open |
+| CAL-06 | Trace enclosing compensation after partial publication; exact bounded evidence or unresolved edge recorded | PARTIAL; bounded evidence checked, full contract remains open |
+| CAL-07 | Define completed-registration boundary with explicit unknowns; exact bounded evidence or unresolved edge recorded | PARTIAL; bounded evidence checked, full contract remains open |
+| CAL-08 | Implement ordinary deterministic marker effect; exact bounded evidence or unresolved edge recorded | IMPLEMENTED; focused offline checks PASS, host validation NOT RUN |
+| CAL-09 | Implement independent pixel oracle and comparisons; exact bounded evidence or unresolved edge recorded | IMPLEMENTED; focused offline checks PASS, host validation NOT RUN |
+| CAL-10 | Implement acquired public Effect Suite observer; exact bounded evidence or unresolved edge recorded | IMPLEMENTED; focused offline checks PASS, host validation NOT RUN |
+| CAL-11 | Implement opaque-key enumeration/apply/reverse-key harness; exact bounded evidence or unresolved edge recorded | IMPLEMENTED; focused offline checks PASS, host validation NOT RUN |
+| CAL-12 | Implement one-shot/deadline/owned-project refusal protections; exact bounded evidence or unresolved edge recorded | IMPLEMENTED; focused offline checks PASS, host validation NOT RUN |
+| CAL-13 | Build exact identified artifacts offline; exact bounded evidence or unresolved edge recorded | IN PROGRESS |
+| CAL-14 | Run focused/affected/full available regression and review refusals; exact bounded evidence or unresolved edge recorded | IN PROGRESS |
+| CAL-15 | Reconcile checkpoint/source/SDK/evidence and cleanup ownership; exact bounded evidence or unresolved edge recorded | IN PROGRESS |
+| CAL-16 | Commit/push research branch and inspect exact CI; exact bounded evidence or unresolved edge recorded | IN PROGRESS |
+
+## Previous packet — publication contract and concrete dependencies
 
 2026-10-04, clean baseline `0ee3317555f4e2f37837724699b9f8f0c70ccd1c`. User: execute the proposed ten-stage packet.
 Rules8.0.0; C1 Development, Standard file-only research; dependent private live

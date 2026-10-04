@@ -13,7 +13,28 @@ Previous status is preserved at
 Dated evidence is unchanged; previous instructions do not renew permissions.
 
 
-## Current packet — publication contract and concrete dependencies
+## Current packet — implemented offline startup calibration
+
+2026-10-04, clean baseline `6dd5efb6997108957815f2a5321d0e3b17663a12`;
+[startup calibration/override findings and task mapping](C1_STARTUP_CALIBRATION_2026-10-04.md).
+CAL-01–07 bounded research remains PARTIAL: selected nested cache release is
+connected, but full transitive lifetime, readers/reentry, legal late context and
+partial-failure compensation remain UNKNOWN.10 complete bodies/11 windows/2277
+instructions,625 raw branch targets/ten fields/seven SDK pins PASS;8 bodies/352
+instructions nonoverlapping in the stated corpus. Prior archives/originals retained.
+
+CAL-08–12 diagnostic implementation is present: ordinary pixel marker,
+independent oracle, inert acquired public-suite observer, opaque-key/apply/Build ID/
+reverse-key chain and one-shot/project/deadline controls. Four portable Python
+checks/36 native core cases plus draft real-SDK adapter/ASan/UBSan checks PASS.
+Clean identified artifact/full regression/audit and publication closeout pending.
+CAL-13–16 remain IN PROGRESS. AE load/key/apply/render/late registration NOT RUN;
+private implementation/trials/release BLOCKED. This is actual offline test code,
+not evidence that the tool can hot-load an ordinary effect. No install/AE launch/
+attach/private invocation/merge/release. Existing production/private-refusal code
+and all A/B/C1/C2/D/append/reload/recovery/release obligations remain.
+
+## Previous packet — publication contract and concrete dependencies
 
 2026-10-04, clean baseline `0ee3317555f4e2f37837724699b9f8f0c70ccd1c`;
 [publication/factory findings and prepared calibration](C1_PUBLICATION_CONTRACT_2026-10-04.md).

@@ -3,7 +3,8 @@
 Continue the existing work. Do not restart research or repeat the unchanged
 ordinary plug-in scan.
 
-Current continuation: [publication/factory contract](C1_PUBLICATION_CONTRACT_2026-10-04.md),
+Current continuation: [implemented startup calibration/override checkpoint](C1_STARTUP_CALIBRATION_2026-10-04.md),
+[publication/factory contract](C1_PUBLICATION_CONTRACT_2026-10-04.md),
 [sequence/render dependencies](C1_SEQUENCE_RENDER_DEPENDENCIES_2026-10-04.md),
 [host-operation boundaries](C1_COMPLETE_HOST_OPERATION_2026-10-04.md),
 [static Effect Suite reader bridge](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md),
@@ -29,7 +30,21 @@ The current C1 section and next-gate order below supersede historical no-scan
 preparation/permission statements in this handoff. C0 is closed; do not repeat it.
 The earlier `CHAT_HANDOFF_2026-10-01.md` is a historical checkpoint.
 
-## Publication contract — current offline continuation
+## Startup calibration — current offline continuation
+
+Baseline6dd5efb; [CAL-01–16 mapping](C1_STARTUP_CALIBRATION_2026-10-04.md).
+New code lives only in experiments/startup_calibration and isolated tests.
+Marker/core/oracle/public observer implemented; portable guards/pixels and draft
+real-SDK/sanitizer checks PASS. Complete private lifecycle/reader/reentry/recovery
+and legal late entry remain PARTIAL/UNKNOWN. Finish exact clean artifact,
+full available regression/audit/source/docs and research-branch publication.
+The current packet excludes install/AE launch/attach/process observation/private
+calls/fault injection/merge/release. Future owned normal-startup calibration must
+prove acquired-suite/startup/key/Apply/uncached frame identity; it is not hot-load.
+Do not activate the default inert artifact or borrow an existing user session.
+All original stage/product/release obligations and prior evidence stay retained.
+
+## Publication contract — previous offline continuation
 
 2026-10-04, clean baseline `0ee3317555f4e2f37837724699b9f8f0c70ccd1c`;
 [publication/factory findings and prepared calibration](C1_PUBLICATION_CONTRACT_2026-10-04.md).
