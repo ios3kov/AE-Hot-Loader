@@ -8,8 +8,16 @@ empty32bpc Untitled Project confirmed, normal Quit/no-AE/aerender PASS. Exact ow
 installations retained outside discovery; original failures/other plugins unchanged.
 New versioned atomic own-marker counters and exact own resident-image/SHA observer
 read implemented; no load/manual registration/extra SDK selector. Optional binding
-failure UNKNOWN; refusal/cleanup unchanged. Focused SDK/sanitizer/state tests PASS;
-fresh identified/full/audit gates and actual new observation still pending.
+failure UNKNOWN; refusal/cleanup unchanged. Fresh13945c4/c8bda7ee9b77 signed/
+SDK74/state/oracle/async16/backend7/inert3/505 Python/no skips/62 Node/22 stages
+PASS; raw/manual audit reviewed. One actual owned PID33086 startup bound exact
+resident marker; registration started/completed1, callback0, setup counters0.
+Effect Suite still has no exact target match; key/Apply/frame NOT RUN. Callback0
+is not installed-key proof. User-authorized exact PID33086 inspection confirmed
+empty Untitled Project/32bpc; normal Quit and independent no-AE/aerender PASS.
+Exact own installation retained with unchanged bundle maps and other-plugin entries.
+Next: own match-name/key projection and startup publication timing; no blind
+packaging/flag change or repeated consumed request.
 No unchanged retry; private/late-add/lifetime/reentry/rollback/release remain open.
 
 Previous continuation: [resumed startup registration diagnostic](C1_OWNED_STARTUP_FRAME_2026-10-04.md).

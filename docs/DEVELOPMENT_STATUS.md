@@ -30,8 +30,17 @@ New diagnostic reads only sampled own-marker registration start/completion/error
 and setup counters through a bounded versioned export, after exact own resident
 image/SHA binding. No new load, manual registration or SDK selector. Binding
 failure remains UNKNOWN. Optional observation cannot alter refusal/cleanup.
-Focused SDK/sanitizer/state/refusal tests PASS; fresh build/full checks/audit/live
-observation pending. [LOAD-01–07 mapping](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
+Fresh13945c4/c8bda7ee9b77: SDK74, exact signed exports, state/refusal/oracle,
+16 async/7 backend/3 inert,505 Python/no skips,62 Node/all22 stages PASS;
+raw/manual audit reviewed. One owned startup PID33086 bound the exact own resident
+image, registration started/completed1, host callback result0, GLOBAL/PARAM_SETUP
+counts0. Effect Suite still finds no exact marker match; key/Apply/frame NOT RUN.
+Callback success is not installed-key publication proof. Exact user-authorized
+PID33086 inspection confirmed empty Untitled Project/32bpc; normal Quit and
+independent no-AE/aerender PASS. Exact own bundles retained outside discovery;
+before/after maps PASS, other plugins and original failure unchanged.
+Next: trace own match-name/key projection and publication timing before another
+trial. [LOAD-01–07 mapping](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
 ProductC1 PARTIAL; private late-add/reader/reentry/lifetime/recovery/release gates
 remain open. No merge/release or unchanged candidate retry.
 

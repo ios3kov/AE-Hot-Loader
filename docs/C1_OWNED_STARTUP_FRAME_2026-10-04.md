@@ -59,9 +59,44 @@ This observation must not change the original refusal or cleanup result.
 | LOAD-02 | Exact candidate PiPL compared with SDK/Rez | DONE;348 identical bytes, no host acceptance inference |
 | LOAD-03 | Versioned sampled counters, null/bad-version refusal, callback/error tests | IMPLEMENTED; focused SDK/sanitizer/state tests PASS; no SDK invocation from state reader |
 | LOAD-04 | Observer exact own-image binding, bounded journal, no change to refusal/cleanup | IMPLEMENTED; guarded exact own state/build exports only, all exceptions isolated; binding failures UNKNOWN |
-| LOAD-05 | Fresh signed candidate/full checks/source/manual audit | NOT RUN for new diagnostic |
-| LOAD-06 | New host observation only after safe closure and exact fresh gates | NOT RUN; PID30555 safely closed, remaining fresh candidate gates pending; no unchanged retry |
-| LOAD-07 | Source/Evidence/publication/remaining-gate reconciliation | IN PROGRESS; private/late-add/release BLOCKED |
+| LOAD-05 | Fresh signed candidate/full checks/source/manual audit | DONE at13945c4; SDK74/signed/state/oracle/async16/backend7/inert3/505 Python/no skips/62 Node/22 stages PASS; audit reviewed |
+| LOAD-06 | New host observation only after safe closure and exact fresh gates | PARTIAL; exact own image resident, registration started/completed1 and callback0; no installed key/Apply/frame; PID33086 inspected under exact authority, empty project confirmed, normal Quit/no-AE and exact own retirement PASS |
+| LOAD-07 | Source/Evidence/publication/remaining-gate reconciliation | Source/docs/retained runtime journals reconciled; exact final publication/CI receipt required; private/late-add/release BLOCKED |
+
+Executed source13945c4e8f54529d18fc5e6b5012067146f95404, nonce
+c8bda7ee9b7792f5cd346bd09e0c26a6; manifest
+67e365b97831b79635598cb6a37235229bb30eaac530a1baa362c58711e42456.
+SDK74 stable, four exact marker exports/two observer exports and signed files
+PASS. State getter refuses null/magic/version/reserved errors and never invokes
+registration; callback/error/opaque data/setup counters and pixel guards PASS
+with ASan/UBSan. Full AEHL-checks-8je12rnk.zip:505 Python/no failures/errors/skips,
+51 panel+11 snapshot Node/all22 stages PASS; raw266 text/135 unsupported/no
+omissions, retained unchanged CLI false positive reviewed. All400 baseline paths
+retained plus one own ABI header;392 unchanged outside intentional changes.
+
+Actual own PID33086/birth1791099894128754: launch/observer/public suite PASS,
+one consumed request, enumeration-marker-absent before begin. Optional journal
+binds EXACT_OWN_RESIDENT_IMAGE through own path/SHA/UUID/resident header/text/
+direct exports/Build ID; no new load or manual registration. Sampled values:
+registration_started1, registration_completed1, last_callback_result0,
+global_setup_calls0, parameter_setup_calls0. This proves a completed host-invoked
+callback on the exact marker but does not establish registry insertion/key or
+that catalog publication is complete at observation. No Apply/frame requested.
+Original result preserved; its historical cleanup_safe NO is unchanged. User
+separately authorized exact PID33086 inspection and normal close only if empty.
+UI confirmed empty Untitled Project/Project/Composition/Timeline/Render Queue,
+32bpc. Normal Quit and independent no-AE/aerender PASS. Exact own two-bundle
+installation retained outside discovery with before/after maps PASS and other
+plugin entries unchanged; no deletion. Separate startup-observation-install-retirement.json
+receipt supplements the original failure without rewriting it.
+
+Next discriminating check: compare only own registered match-name metadata with
+the actual name/key returned by the live Effect Suite and correlate publication
+timing. Preserve exact-match Apply guard; never invent a key or apply by a fuzzy
+match. No evidence yet selects truncation, projection, delay, hidden entry or
+another host catalog as the cause. Do not retry unchanged registration or swap
+packaging/flags/preferences/security blindly. Current static/source/lifetime/
+late-entry/reentry/partial-failure and product/release obligations remain open.
 
 User reply: resume a separate test launch, superseding the preparation-only hold
 for owned ordinary startup/public-SDK diagnostics only. Baseline bb05448.
