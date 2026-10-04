@@ -60,10 +60,26 @@ SDK source hashes retained privately; no Adobe source redistribution.
 | REG-01 | Resumed authority and one exact owned attempt, no foreign session | DONE; consumed e6 candidate, PID23266 |
 | REG-02 | Identify exact enumeration refusal without project mutation | DONE; marker absent, no begin journal |
 | REG-03 | SDK-conformant startup callback and error/metadata test | IMPLEMENTED; focused SDK/sanitizer PASS, causality UNKNOWN |
-| REG-04 | Fresh clean-source signed build, SDK pins, full regression, reviewed audit | PENDING; historical gates do not cover new callback |
+| REG-04 | Fresh clean-source signed build, SDK pins, full regression, reviewed audit | DONE offline at4218dbe; exact793efe4b67ae/SDK74/registration3/async16/backend7/inert3/oracle/505 Python/62 Node/22 stages PASS; audit reviewed |
 | REG-05 | Safely close owned host and retain exact own installation | BLOCKED; pending exact PID permission/current empty-project proof |
 | REG-06 | New ordinary startup key, Apply, loaded identity, real frame oracle | NOT RUN; depends on REG-04/05, no private/late invocation |
 | REG-07 | Source/docs/evidence/remote/CI and retained obligations reconciliation | IN PROGRESS; no merge/release |
+
+Fresh clean source4218dbe9725ffb474538f7ca9d922e7211ddeaea, nonce
+793efe4b67aea34ddef34cced049b9b9; manifest
+cdbd9f4b43cc8a9947db17e7cc69e20c126f85cb80339550ac28baf167e49ab4.
+Signed bundle three marker exports and two observer exports exactly verified;
+SDK74 stable, signed marker callback metadata/error tests, independent pixel
+oracle,16 async/7 backend/3 inert cases PASS. Supervisor prepare PASS, empty
+control/live absence; no install or launch of this candidate. Full private
+AEHL-checks-p6f0wvzv.zip SHA4640d1f7ebbe897e9637fb65d1aa4d1dae039274d5487cd7b27d1d36863feb51:
+505 Python/no errors/failures/skips,51 panel+11 snapshot Node, all22 stages PASS.
+Fresh raw audit266 text/134 unsupported/no omissions; only unchanged CLI false
+positive at tools/artifact_manifest.py:71, reviewed with raw evidence retained.
+400 source paths retained;393 outside seven intentional files unchanged,
+254 unchanged non-Markdown files. Candidate/preparation/audit/source identities
+recorded under the current private root; final source publication receipt binds
+exact remote and CI separately. Current host verification REG-06 remains NOT RUN.
 
 ## Implementation and safety prerequisites
 

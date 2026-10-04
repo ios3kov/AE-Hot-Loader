@@ -7,8 +7,10 @@ No key/Apply/frame; own PID23266 remains open because safe closure proof failed.
 Await exact window-inspection/empty-session closure permission; do not borrow prior
 PID permissions. Marker now supplies the SDK-typed PluginDataEntryFunction2 startup
 callback, exact PiPL metadata and error propagation. Focused sanitizer/registration
-tests PASS; host-absence causality UNKNOWN. Fresh identified build/full checks/audit
-required before a new owned startup, after PID23266 safely closes. No private calls,
+tests PASS; host-absence causality UNKNOWN. Fresh4218dbe signed793efe4b67ae/
+SDK74/async16/backend7/inert3/independent pixels/supervisor prepare PASS;
+505 Python/no skips,62 Node/all22 stages PASS; raw audit reviewed. New owned
+startup still NOT RUN, dependent on safe PID23266 closure. No private calls,
 late-add, attach, merge or release. Prior evidence/obligations remain unchanged.
 
 Previous continuation: [12-step packet preparation](C1_OWNED_STARTUP_FRAME_2026-10-04.md).

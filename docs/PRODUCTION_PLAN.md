@@ -30,8 +30,10 @@ name/match/category/entry/API/reserved metadata as PiPL, and propagates errors.
 Three registration checks plus existing synthetic pixel/identity/refusal tests
 PASS with ASan/UBSan. Bundle eFKT/FXTC and PiPL13/29 already match SDK/sample.
 This is a verified conformance correction; causality for host absence UNKNOWN.
-Fresh identified build/full regression/audit and original-symptom live verification
-remain required. New startup depends on safe closure of PID23266/no-existing-AE
+Fresh code4218dbe: signed diagnostic793efe4b67ae, SDK74, three registration checks,
+16 async/7 backend/3 inert/independent pixels and supervisor prepare PASS. Full
+505 Python/no failures/errors/skips,62 Node/all22 stages PASS; raw audit reviewed.
+Original-symptom live verification remains NOT RUN. New startup depends on safe closure of PID23266/no-existing-AE
 preflight. C1 PARTIAL; private implementation and release remain BLOCKED.
 [Task/acceptance/evidence mapping](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
 
