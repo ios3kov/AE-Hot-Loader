@@ -30,7 +30,7 @@ Two different owned startup attempts completed within the accepted packet:
 | Native result |PARTIAL_UNKNOWN/create-fixture/key796; exact color subcause not yet journaled |
 | Apply/reverse/actual AE frame |NOT RUN; no successful color preparation/fixture, no frame acceptance |
 | Private entry/late-add/ownership |NOT RUN/UNKNOWN; ordinary startup key is not these proofs |
-| Cleanup |Previous PID46466 empty inspection/normal Quit/exact retirement PASS; current PID50612 preserved; user chose to close AE themselves |
+| Cleanup |Previous PID46466 empty inspection/normal Quit/exact retirement PASS; current PID50612 closed by user; independent no-AE/aerender/exact retirement PASS |
 
 The correction passes the old enumeration gate without weakening byte equality.
 Full nonce/source BuildID remains; compact match carries96 identity bits. A
@@ -40,9 +40,10 @@ is observed in this target AE25.6x101/macOS arm64, not asserted for every SDK/ho
 Current session changed only the authorized empty diagnostic project's depth/
 color preparation; no comp/solid/Apply/frame success. Automatic review denied
 normal Quit because the title is dirty and empty-panel evidence was insufficient.
-User chose “Закрою AE самостоятельно”; no indirect stop or cleanup.
-Installed exact own pair remains while this process runs; other plugin entries
-unchanged. Original supervisor failure is retained, never rewritten as PASS.
+User chose “Закрою AE самостоятельно”, then confirmed “закрыл”. Independent
+no-AE/aerender PASS; exact own pair retained outside discovery with unchanged
+before/after maps and other plugin entries. No indirect stop. Original supervisor
+failure remains unchanged; separate compact-closure-retirement.json records closure.
 
 Private evidence root: aehl-name-projection-live-zz_eap2e; cause/closure of first
 attempt, new source checks/raw audit/manual review, signed manifest, regression
