@@ -8,6 +8,11 @@ PASS for that code. Explicit PID15349 inspection/empty-session closure permissio
 resolved the screenshot rejection; empty32-bpc project quit normally. No AE/
 aerender remains; exact own bundles retained outside discovery. Finer enumeration
 refusal diagnostics are prepared offline with every safety gate retained.
+Final offline repair7134746:505 Python/no skips,62 Node/all22 stages,
+36 core/16 async/7 SDK-backend/3 inert cases and exact signed/74 SDK/independent
+pixels PASS. Prepared inert build was not installed or run in AE. Final docs-only
+commit retains tested code; exact remote/CI and private closeout receipts are
+recorded separately at the checkpoint evidence root.
 Next gate: fresh reviewed public observer determines exact enumeration subcause,
 then one normal-startup key/Apply/marker/frame control. Private late-add/lifetime/
 reentry/compensation gates remain UNKNOWN/BLOCKED; no merge/release.

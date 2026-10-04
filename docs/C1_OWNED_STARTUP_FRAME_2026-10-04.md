@@ -14,8 +14,8 @@ late registration, attachment, merge or release is in this continuation.
 | LIVE-01 | Exact authority, source and owned-session prerequisites | DONE; separate exact owned launches, explicit inspection/empty-session closure authority |
 | LIVE-02 | Actual SDK async callback/options/receipt/world lifetime | Implemented;16 SDK-backed synthetic cases PASS, ASan/UBSan; AE receipt NOT RUN |
 | LIVE-03 | Own signed module/Build ID and public suite binding | PARTIAL; actual observer/live Effect Suite PASS; own marker loaded identity NOT RUN |
-| LIVE-04 | One-shot/project/deadline/refusal protocol | Seven portable cases, seven SDK backend cases and36 core cases PASS; finer enumeration diagnostics prepared offline |
-| LIVE-05 | Exact build/full regression and manual/raw audit | Executed21c315e:505 Python/no skips,62 Node/all22 stages,16 async/7 backend/3 inert PASS; final diagnostic repair requires fresh identified offline checks |
+| LIVE-04 | One-shot/project/deadline/refusal protocol | Seven portable cases, seven SDK backend cases and36 core cases PASS; finer enumeration diagnostics built/checked offline at7134746 |
+| LIVE-05 | Exact build/full regression and manual/raw audit | Executed21c315e:505 Python/no skips,62 Node/all22 stages,16 async/7 backend/3 inert PASS; final7134746 diagnostic repair: same full regression/SDK checks PASS |
 | LIVE-06 | Normal-startup installed key and Apply | PARTIAL;21c315e passed blank/host/color-type guards, REFUSED at enumeration; key/apply NOT RUN |
 | LIVE-07 | Actual marker execution/full frame/scoped cleanup | Frame NOT RUN; own empty sessions quit normally under explicit authority; exact own bundles retained outside discovery |
 | LIVE-08 | Source/docs/evidence/remote/CI reconciliation | Historical daebc531 remote/CI PASS; final current-source publication receipt required; no merge/release |
@@ -252,3 +252,32 @@ marker Build ID/reverse key -> independently checked actual frame. Only after
 that control works can a separately authorized writer/reader investigation use
 it. Private legal late context, object/lifetime/read-set/reentry and partial
 failure remain UNKNOWN; late registration/release remain BLOCKED.
+
+
+## Final offline diagnostic repair and closeout
+
+Clean code7134746bde1ec33e87e21ab673337b8fc7d1cdea;
+Build ID7134746bde1ec33e87e21ab673337b8fc7d1cdea:ef4c6854b6684c5aaa22e3d343efcc78.
+Manifest1e9439da0d41d0b4e566f6bf9c2210d62a40c2e1cf778a9a9f5dcc62a46fff09;
+markerda89ad73dfb10e524dac95328a961b6dc6b3415544d7677a0d6a4fc0abf480db;
+observer29e04dfd77ac44f86504d9e052886da14c1d5082d3f5a743e61753925ad3d8c6.
+Default UNCONFIGURED_INERT; never installed/loaded in AE. Exact signed resource/
+export/build/source/74 SDK pins, independent marker pixels,16 async/7 backend/
+3 inert SDK cases with sanitizers PASS.36 core cases include explicit refusal
+reasons without mutation. Full offline regression AEHL-checks-l5w9k4o3.zip,25 members/CRC/
+member hashes PASS:505 Python/no errors/failures/skips,51 panel+11 snapshot Node,
+all22 stages. Source preservation383 baseline files/245 baseline non-Markdown
+outside12 intentional edited paths; all395 baseline paths remain, five additions.
+387 local links/202 tables/diff whitespace PASS. Raw exact tracked audit266 text/
+134 unsupported/no omissions: one unchanged CLI heuristic finding at
+tools/artifact_manifest.py:71 fingerprint e2999cfe8b5b3a6bd27f0a62 manually
+reviewed/retained. Scanner runtime readiness remains not assessed.
+
+Final documentation-only reconciliation leaves tested non-Markdown bytes intact.
+Exact final commit/remote/two-workflow CI and unchanged main/other heads are
+recorded after publication in publication-final-current.json; prior daebc531
+runs remain historical. Private closeout includes exact source, own diagnostic
+artifacts/control journals/refusal and retirement evidence, regression reports,
+raw audit/disposition and final publication receipt. Excludes SDK/full Adobe
+binaries, screenshots and live host stdout/stderr; hashes/CRC verified. This is
+research evidence, not an installable release or successful hot-load result.
