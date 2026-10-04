@@ -1,5 +1,35 @@
 # AE Hot Loader — current development status
 
+## Latest completed packet — precise empty-world boundary
+
+Source6e0f9a82fea16682edbaf4b2238370b3e4d73466; own run47acf998a1614934a26d5d622217b32b,
+PID62306/birth1791107003431261. Exact signed two-bundle/public SDK startup only.
+Fresh509 Python/no skips,62Node/22stages PASS; checks ZIP SHA256
+ed1f6030406def92d358d8ead6aa7a8f774bcb3d31ff694aaca7f7b55c4d8b6e,
+CRC/member hashes PASS.13 SDK backend/16 async diagnostic/3 inert cases PASS.
+Actual nonOCIO/color/fixture/apply/identity/reverse key796 passed again.
+Callback READY, uncanceled, error0, matching request ID, nonnull receipt.
+AEGP_GetReceiptWorld returned error0 but null world: diagnostic stage world-handle,
+observer phase copy. Type/width/height/rowbytes remain unobserved (zero defaults),
+not measured dimensions of an empty world. No pixel bytes accepted; no render
+counter increase established. Cause below this boundary remains UNKNOWN.
+Native PARTIAL_UNKNOWN/listed-applied-frame-not-run; resource cleanup PASS/safeYES.
+Supervisor OWNED HOST STOPPED, no-AE independently verified. Exact own pair retained
+outside discovery, hashes match; other plugin entries unchanged. No user closure
+needed for this run. Earlier native/supervisor failures remain immutable.
+
+Progress: corrected color gate and actual own Apply are proven; the frame failure
+now has a precise API/output boundary. RUN12 remains OPEN, C1 PARTIAL, ordinary
+late-add NOT RUN. No percentage, runtime safety or release acceptance inferred.
+Next causal packet: inspect the actual layer options/time/effects selection and
+rendered-region contract using exact SDK and bounded own diagnostics; add the
+observed success-with-null-world refusal to regression; isolate the minimal
+supported correction only after evidence. Do not replace async with synchronous
+render, fabricate a world, weaken counter/pixel acceptance, or replay old nonce.
+Source/status/evidence reconciled; research-only push and exact final-SHA CI
+must be recorded separately. No main merge/release/private calls/late-add.
+
+
 ## Frame boundary follow-up within the accepted packet
 
 Corrected5756bb4:674c5faf816044c782fb21a01032a607 on own PID59873 passed public
