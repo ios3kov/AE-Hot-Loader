@@ -1,5 +1,34 @@
 # AE Hot Loader — current Stage C handoff, updated 2026-10-04
 
+## Empty-world diagnostic packet — verified options, missing completion
+
+Code3d3108da3f42a2e85266d364d4fbca443e8d5509; own run6cb7c8f7fc31442f8844b88fa96d06bd,
+PID64849/birth1791108039777097. Fresh signed isolated startup/public SDK only.
+509Python/62Node/all22 stages PASS,18 SDK async ASan/UBSan cases including
+success-null-world and getter/region failure;13 backend/3 inert PASS.
+Checks ZIP SHA25694cdfc5b9726396c47c09e922446dafb0bdfe9b6d7c390810c7f0d11bbe168ae;
+CRC/member hashes PASS. Raw audit preserved; unchanged CLI auth heuristic reviewed.
+Exact target SDK getter signatures/suites verified; no private or invented API.
+Actual fixture/apply/BuildID/reverse key again passed. Readback API errors all0:
+time1/24,step1/24,worldtype8(enum1),downsample1/1,matteSTRAIGHT(enum0).
+Thus wrong requested time/type/downsample/matte is not supported by this run.
+Async request submitted, no callback/native result before controller deadline;
+rendered region/world/counter/pixels remain UNKNOWN, not zero measurements.
+Timeout is new observed outcome, not proof of its cause or a fixed null world.
+No speculative fix selected. No changed synchronous path or relaxed acceptance.
+Supervisor preserved own host: no fresh cleanup-safe/resource release proof.
+Asked user to close only this disposable test project without saving; until
+fresh no-AE verification, exact own pair remains installed and must be retained.
+No UI/project inspection, foreign session termination or plugin deletion.
+EW01–06 DONE preparation/diagnostic;EW07 partial cause UNKNOWN;EW08–10 fix/final
+frame NOT RUN (causal evidence missing);EW11 pending own closure/retirement;
+EW12 source/status/evidence/research publication/CI in progress. C1 PARTIAL,
+ordinary late-add NOT RUN. Prior failures/evidence unchanged.
+Next after closure: account for pending async callback/receipt lifetime and
+completion scheduling using exact supported contract/controlled diagnostics;
+do not replay this nonce or treat non-completion as proof of invalid options.
+
+
 ## Accepted12-step empty-world diagnostic packet
 
 User authorized12-step causal pass. Baseline d8ffb3e8d389b4da0c6735b18b86f3b47d1543cd,
