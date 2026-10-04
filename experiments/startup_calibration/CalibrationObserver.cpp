@@ -107,7 +107,7 @@ public:
 // Read-only scripting is only a safety check. It is not registry evidence.
 constexpr const char* blank_script = R"JS((function () {
     var p = app.project;
-    if (app.version !== '25.6x101' || app.buildNumber !== 101) return 'REFUSED:host-version';
+    if (!/^25\.6(?:\.0)?x101$/.test(app.version) || app.buildNumber !== 101) return 'REFUSED:host-version';
     if (!p || p.file !== null) return 'REFUSED:unsaved-project';
     if (p.dirty !== false || p.numItems !== 0) return 'REFUSED:blank-project';
     if (p.renderQueue.numItems !== 0 || p.renderQueue.rendering !== false) return 'REFUSED:render-queue';
@@ -153,8 +153,9 @@ class Backend {
         Require(p->AEGP_GetProjectByIndex(0, &current) == 0 && current && (!project_ || current == project_));
         diagnostic_stage="native-project-clean";
         Require(p->AEGP_ProjectIsDirty(current, &dirty) == 0 && !dirty);
-        diagnostic_stage="native-project-depth8";
-        Require(p->AEGP_GetProjectBitDepth(current, &depth) == 0 && depth == AEGP_ProjBitDepth_8);
+        diagnostic_stage="native-project-depth-valid";
+        Require(p->AEGP_GetProjectBitDepth(current, &depth) == 0 &&
+            (depth == AEGP_ProjBitDepth_8 || depth == AEGP_ProjBitDepth_16 || depth == AEGP_ProjBitDepth_32));
         project_ = current;
     }
 public:
@@ -170,7 +171,7 @@ public:
             m->AEGP_GetMemHandleSize && m->AEGP_LockMemHandle && m->AEGP_UnlockMemHandle && m->AEGP_FreeMemHandle);
         const auto* p = project_suite_.value;
         Require(p->AEGP_GetNumProjects && p->AEGP_GetProjectByIndex && p->AEGP_ProjectIsDirty &&
-            p->AEGP_GetProjectBitDepth && p->AEGP_GetProjectRootFolder);
+            p->AEGP_GetProjectBitDepth && p->AEGP_SetProjectBitDepth && p->AEGP_GetProjectRootFolder);
         std::ostringstream out;
         out << "AEHL-CAL-SUITE-1\nname=" << kAEGPEffectSuite << "\nversion=" << kAEGPEffectSuiteVersion5
             << "\ntable=" << reinterpret_cast<std::uintptr_t>(e)
@@ -239,6 +240,19 @@ public:
         Save("begin", std::string(calibration_build) + "\n"); return true; }
     bool CreateFixture() {
         if (!OperationAllowed()) return false;
+        // Once has already proved blank/unsaved/unchanged, recorded begin and
+        // entered PartialUnknown. This changes only that owned diagnostic project.
+        AEGP_ProjBitDepth depth{};
+        if (project_suite_.value->AEGP_GetProjectBitDepth(project_, &depth)) return false;
+        if (depth != AEGP_ProjBitDepth_8) {
+            Save("depth-started",std::string("AEHL-CAL-DEPTH-1\nbuild=")+calibration_build+
+                "\nfrom_sdk_enum="+std::to_string(depth)+"\nto=8\n");
+            if (!OperationAllowed() || project_suite_.value->AEGP_SetProjectBitDepth(project_,AEGP_ProjBitDepth_8)) return false;
+            if (!OperationAllowed() || project_suite_.value->AEGP_GetProjectBitDepth(project_, &depth) ||
+                depth != AEGP_ProjBitDepth_8) return false;
+            Save("depth-adjusted","AEHL-CAL-DEPTH-8\n");
+        }
+        if (!OperationAllowed()) return false;
         const A_Ratio aspect{1, 1}, fps{24, 1}; const A_Time duration{1, 1};
         std::vector<A_UTF16Char> name;
         for (const char* p = calibration_fixture; *p; ++p) name.push_back(static_cast<A_UTF16Char>(*p));
@@ -273,7 +287,8 @@ public:
             var p=app.project, c=null, f=null, folders=0;
             var n=')JS") + calibration_fixture + "', m='" + calibration_match + "', complete=" +
             (complete ? "true" : "false") + R"JS(;
-            if (!p || p.file!==null || p.bitsPerChannel!==8 || p.workingSpace!=='' ||
+            if (!p || p.file!==null || (complete ? p.bitsPerChannel!==8 :
+                (p.bitsPerChannel!==8 && p.bitsPerChannel!==16 && p.bitsPerChannel!==32)) || p.workingSpace!=='' ||
                 p.linearBlending!==false || p.linearizeWorkingSpace!==false ||
                 p.renderQueue.numItems!==0 || p.renderQueue.rendering!==false ||
                 p.numItems>3) return 'REFUSED';

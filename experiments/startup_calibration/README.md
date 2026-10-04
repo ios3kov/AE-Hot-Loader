@@ -29,7 +29,7 @@ host exit. Marker identity version2 includes a render counter.
 Default artifacts have an unconfigured host path, and the observer is inert.
 No token, wrong token/host/module, worker thread, stale/replayed request,
 non-private control files, changed project revision, nonempty/saved/dirty
-project, non-8-bit project, queue activity, duplicate/cyclic/missing keys or
+project, invalid depth, queue activity, duplicate/cyclic/missing keys or
 incorrect marker identity stop the affected operation. A failure after entering
 a mutating SDK call is `PARTIAL_UNKNOWN`; there is no automatic project deletion,
 Undo, unregister or asserted rollback. A deadline prevents admission of later
@@ -50,7 +50,7 @@ The ignored private output contains signed bundles, Build IDs, exact source/SDK
 hashes, commands, load commands/dependencies, byte hashes and actual offline
 tests. These include calls into our own signed marker with real SDK declarations,
 independent pixel comparison, ASan/UBSan and default/token/host inert observer
-cases. Four real-SDK adapter cases call only our fake callbacks and check refusal
+cases. Six real-SDK adapter cases call only our fake callbacks and check refusal
 when the project changes or the deadline expires between operations. They are
 synthetic/offline checks; `AE_load`/`AE_render` stay NOT RUN.
 No full SDK/Adobe binaries are copied into the repository or evidence archive.
@@ -114,3 +114,13 @@ refused the blank-project guard before mutation. Key/apply/frame are NOT RUN;
 see the current checkpoint. The consumed session/installation is preserved until
 safe user closure. Current code logs fixed refusal stages and checks native
 completion before reading frame files. It does not relax project guards.
+
+After explicit user permission, UI inspection confirmed the previously refused
+owned session was an empty Untitled Project at32 bpc. It was quit normally, then
+only its exact own plugin folder was retired. Current code accepts valid initial
+8/16/32-bit depth only for read-only blank-project verification; after all blank/
+unsaved/revision/ownership gates and begin, it changes that owned project to8-bit
+through public AEGP_SetProjectBitDepth before fixture creation. Failure stays
+PartialUnknown, no rollback/retry; actual frame still must be8-bit. No app setting
+or preference is written directly. Host version accepts the two SDK string
+spellings25.6x101 and25.6.0x101; exact host SHA/build101 is still required.

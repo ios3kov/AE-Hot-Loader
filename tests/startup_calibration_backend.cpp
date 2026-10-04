@@ -5,7 +5,8 @@
 #include <thread>
 
 namespace {
-int mode = 0, comp_calls = 0, solid_calls = 0;
+int mode = 0, comp_calls = 0, solid_calls = 0, depth_calls = 0;
+AEGP_ProjBitDepth current_depth = AEGP_ProjBitDepth_8;
 AEGP_ProjectH current_project = reinterpret_cast<AEGP_ProjectH>(0x1000);
 template<class R, class... Args> R Stub(Args...) { return R{}; }
 AEGP_EffectSuite5 effects{}; AEGP_CompSuite12 comps{};
@@ -37,7 +38,12 @@ int main(int argc, char** argv) {
         projects.AEGP_GetNumProjects = [](A_long* out) -> A_Err { *out = 1; return 0; };
         projects.AEGP_GetProjectByIndex = [](A_long, AEGP_ProjectH* out) -> A_Err { *out = current_project; return 0; };
         projects.AEGP_ProjectIsDirty = [](AEGP_ProjectH, A_Boolean* out) -> A_Err { *out = FALSE; return 0; };
-        projects.AEGP_GetProjectBitDepth = [](AEGP_ProjectH, AEGP_ProjBitDepth* out) -> A_Err { *out = AEGP_ProjBitDepth_8; return 0; };
+        projects.AEGP_GetProjectBitDepth = [](AEGP_ProjectH, AEGP_ProjBitDepth* out) -> A_Err { *out = current_depth; return 0; };
+        projects.AEGP_SetProjectBitDepth = [](AEGP_ProjectH p, AEGP_ProjBitDepth depth) -> A_Err {
+            Check(p == current_project && depth == AEGP_ProjBitDepth_8); ++depth_calls;
+            if (mode == 5) return 1;
+            current_depth = depth; return 0;
+        };
         projects.AEGP_GetProjectRootFolder = [](AEGP_ProjectH, AEGP_ItemH* out) -> A_Err {
             *out = reinterpret_cast<AEGP_ItemH>(0x2000); return 0; };
         comps.AEGP_CreateComp = [](AEGP_ItemH root, const A_UTF16Char*, A_long, A_long,
@@ -52,18 +58,21 @@ int main(int argc, char** argv) {
             AEGP_CompH, const A_Time*, AEGP_LayerH* out) -> A_Err {
             ++solid_calls; *out = reinterpret_cast<AEGP_LayerH>(0x5000); return 0; };
         const std::string base = std::filesystem::canonical(argv[1]).string();
-        for (mode = 0; mode < 4; ++mode) {
+        for (mode = 0; mode < 6; ++mode) {
             const auto path = base + "/case-" + std::to_string(mode);
             Check(std::filesystem::create_directory(path)); Check(chmod(path.c_str(), 0700) == 0);
             calibration_control = path.c_str(); // test-only generated config has a mutable path pointer
-            current_project = reinterpret_cast<AEGP_ProjectH>(0x1000); comp_calls = solid_calls = 0;
+            current_project = reinterpret_cast<AEGP_ProjectH>(0x1000); comp_calls = solid_calls = depth_calls = 0;
+            current_depth = mode >= 4 ? AEGP_ProjBitDepth_32 : AEGP_ProjBitDepth_8;
             { Backend backend(::Now() + (mode == 2 ? 3 : 120)); Check(backend.BeforeMutation());
               if (mode == 3) current_project = reinterpret_cast<AEGP_ProjectH>(0x4000);
-              Check(backend.CreateFixture() == (mode == 0)); }
-            Check(comp_calls == (mode == 3 ? 0 : 1) && solid_calls == (mode == 0 ? 1 : 0));
+              Check(backend.CreateFixture() == (mode == 0 || mode == 4)); }
+            Check(comp_calls == (mode == 3 || mode == 5 ? 0 : 1) && solid_calls == (mode == 0 || mode == 4 ? 1 : 0));
+            Check(depth_calls == (mode >= 4 ? 1 : 0));
+            Check(current_depth == (mode == 5 ? AEGP_ProjBitDepth_32 : AEGP_ProjBitDepth_8));
             Check(cleanup_ok);
         }
-        std::cout << "PASS: 4 SDK-backend cases; changed-project/deadline refuse later mutation; Adobe_calls=0\n";
+        std::cout << "PASS: 6 SDK-backend cases; changed-project/deadline refuse later mutation; Adobe_calls=0\n";
         return 0;
     } catch (const std::exception& error) { std::cerr << error.what() << '\n'; return 1; }
 }

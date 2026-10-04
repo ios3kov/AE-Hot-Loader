@@ -155,3 +155,27 @@ Research push must be ordinary fast-forward and bind both workflow successes to
 the exact final source SHA in publication-final.json. Main and other branches
 must stay at their observed identities. CI is offline and cannot change the
 owned AE refusal/key/apply/frame status. Full product remains PARTIAL/BLOCKED.
+
+## Authorized inspection and new owned-depth preparation
+
+User explicitly authorized viewing the exact PID9838 session. Read-only CUA
+inspection showed Home; Escape exposed an empty Untitled Project, no composition/
+items/render queue, at32 bpc. This establishes an8-bit precondition mismatch;
+the original native substage itself remains unlogged. Own blank session was
+quit normally via CmdQ; AE/aerender absence independently verified. Only exact
+own directory2e22c5d04405 was moved to its private live/retired-after-authorized-inspection
+and rechecked against its manifest. No other plugin/project/prefs was altered.
+The screenshot rejection has therefore been resolved by concrete user authority;
+prior failure evidence remains immutable, not relabeled as successful frame.
+
+New minimal continuation: validate initial depth8/16/32 read-only, retain all
+blank/unsaved/dirty/revision/color/queue/project checks, then public
+AEGP_SetProjectBitDepth to8 only inside the owned mutation phase after begin and
+PartialUnknown. Recheck same project/deadline and actual8-bit result before
+composition creation. Six SDK backend cases include32→8 and failed adjustment;
+no adjustment is allowed after project change. Frames remain exclusively8-bit;
+no float conversion/deep/MFR claim. Native host check accepts two representations
+25.6x101/25.6.0x101 of the same pinned25.6.0.101 executable/build101.
+A fresh identified candidate and all affected checks precede another owned run;
+consumed sessions/requests are not replayed. Earlier branch/CI receipts bind
+their exact historical source, not the new continuation.
