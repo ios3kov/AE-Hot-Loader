@@ -86,6 +86,22 @@ void Save(const char* name, const std::string& text) {
     }
     Require(fsync(fd.get()) == 0 && fd.close_checked() && fsync(dir.get()) == 0);
 }
+// Fixed own startup facts only; diagnostics cannot change registration outcome.
+void StartupStage(unsigned stage) noexcept {
+    static constexpr const char* leaves[] = {
+        "startup-entry", "startup-acquire-before", "startup-acquire-after",
+        "startup-register-before", "startup-register-after", "startup-release-after",
+        "startup-ready-before", "startup-ready-after"};
+    if (stage >= sizeof(leaves) / sizeof(leaves[0])) return;
+    try {
+        const auto wall = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count();
+        Save(leaves[stage], std::string("AEHL-CAL-STARTUP-STAGE-1\nbuild=") + calibration_build +
+            "\npid=" + std::to_string(getpid()) + "\nbirth=" + std::to_string(Birth()) +
+            "\nstage=" + std::to_string(stage) + "\nwall_ms=" + std::to_string(wall) +
+            "\nmonotonic_ms=" + std::to_string(MonotonicMillis()) + "\n");
+    } catch (...) { /* A missing stage remains unknown, never acceptance. */ }
+}
 std::string Read(const char* name) {
     auto dir = Directory();
     io::Fd fd(openat(dir.get(), name, O_RDONLY | O_NOFOLLOW | O_NONBLOCK | O_CLOEXEC));
@@ -627,13 +643,20 @@ A_Err EntryPointFunc(SPBasicSuite* suites, A_long, A_long, AEGP_PluginID id, AEG
             Executable() != calibration_executable || Module() != calibration_module)
             return 0;
         if (Exists("ready") || Exists("consumed") || Exists("result") || Exists("begin")) return 0;
+        StartupStage(0);
         diagnostic_stage="idle-registration"; basic = suites; plugin_id = id;
+        StartupStage(1);
         { Suite<AEGP_RegisterSuite5> registration(kAEGPRegisterSuite, kAEGPRegisterSuiteVersion5);
+          StartupStage(2); StartupStage(3);
           Require(registration.value->AEGP_RegisterIdleHook &&
-            registration.value->AEGP_RegisterIdleHook(plugin_id, Idle, nullptr) == 0); }
+            registration.value->AEGP_RegisterIdleHook(plugin_id, Idle, nullptr) == 0);
+          StartupStage(4); }
+        StartupStage(5);
         Require(cleanup_ok);
+        StartupStage(6);
         Save("ready", std::string("AEHL-CAL-READY-1\nbuild=") + calibration_build + "\npid=" +
              std::to_string(getpid()) + "\nbirth=" + std::to_string(Birth()) + "\n");
+        StartupStage(7);
     } catch (...) { consumed = true; }
     return 0;
 }

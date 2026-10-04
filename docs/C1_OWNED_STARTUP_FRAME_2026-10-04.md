@@ -1,5 +1,30 @@
 # Owned normal-startup/frame calibration —2026-10-04
 
+## Startup-stage diagnostic pass — accepted2026-10-04
+
+Baseline d1c47069b3c17f0986e330b99dc3418a7eea1524, clean research branch;
+Rules8.0.0/132b7cd, public SDK Development/Validation, Debugging Protocol,
+API-SOURCE/TASK-CLOSE/CLEANUP and native main-thread/lifetime/diagnostics.
+User authorized proposed8-step packet with «делай». Hypothesis: delayed ready
+can be localized between authorized entry, suite acquisition, idle registration,
+suite release and ready publication; no root cause claimed from prior222s.
+ST01 fixed bounded stage facts with PID/birth/build and wall/monotonic millis;
+only after same original activation/executable/module/main-thread/replay guards.
+ST02 stage diagnostics best-effort; failures cannot bypass acceptance or change
+SDK calls, cleanup, request route, callback lifetime,180s startup/120s operation.
+ST03 actualSDK adapter/refusal/inert and full offline regression; exact source.
+ST04 fresh signed own two-bundle candidate and manifest/hash/admission.
+ST05 fresh no-AE inventory then one own normal startup, no foreign session read.
+ST06 only timely exact ready allows existing apply/frame acceptance; otherwise
+request NOT SENT. No nonce replay or timeout extension. Real frame requires
+marker execution plus valid world and independent pixel oracle, not CI.
+ST07 classify observed startup/poll/callback stage with unknowns; exact own
+cleanup only with valid native proof or authorized confirmed own blank session.
+ST08 preserve original results, reconcile source/acceptance/Evidence, research
+push/exact SHA CI; no main merge/release/private calls/cache/preferences changes.
+All new checks NOT RUN until evidence recorded. C1 PARTIAL; late-add NOT RUN.
+
+
 ## Authorized window check and closure —2026-10-04
 
 User authorized viewing exact PID67497. Fresh executable/birth identity matched

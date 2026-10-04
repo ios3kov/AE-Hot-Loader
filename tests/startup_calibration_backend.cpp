@@ -80,6 +80,23 @@ int main(int argc, char** argv) {
             AEGP_CompH, const A_Time*, AEGP_LayerH* out) -> A_Err {
             ++solid_calls; *out = reinterpret_cast<AEGP_LayerH>(0x5000); return 0; };
         const std::string base = std::filesystem::canonical(argv[1]).string();
+        // Real journal ownership/schema and best-effort failure, without Adobe.
+        const auto stages_path = base + "/startup-stages";
+        Check(std::filesystem::create_directory(stages_path));
+        Check(chmod(stages_path.c_str(), 0700) == 0);
+        calibration_control = stages_path.c_str();
+        const auto cleanup_before = cleanup_ok;
+        StartupStage(0); StartupStage(7);
+        const auto entry_fact = Read("startup-entry");
+        Check(entry_fact.find("AEHL-CAL-STARTUP-STAGE-1\nbuild=") == 0 &&
+              entry_fact.find("\nstage=0\nwall_ms=") != std::string::npos &&
+              entry_fact.find("\nmonotonic_ms=") != std::string::npos &&
+              Read("startup-ready-after").find("\nstage=7\n") != std::string::npos);
+        StartupStage(0); // Exclusive write refusal cannot replace the first fact.
+        Check(Read("startup-entry") == entry_fact);
+        StartupStage(99); // Out-of-range cannot create an arbitrary leaf.
+        calibration_control = "/nonexistent/aehl-own-diagnostic-path";
+        StartupStage(1); Check(cleanup_ok == cleanup_before);
         for (mode = 0; mode < 13; ++mode) {
             const auto path = base + "/case-" + std::to_string(mode);
             Check(std::filesystem::create_directory(path)); Check(chmod(path.c_str(), 0700) == 0);
