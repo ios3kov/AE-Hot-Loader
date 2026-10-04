@@ -1,5 +1,36 @@
 # AE Hot Loader — current development and release plan
 
+## Frame boundary follow-up within the accepted packet
+
+Corrected5756bb4:674c5faf816044c782fb21a01032a607 on own PID59873 passed public
+nonOCIO/color checks, created the exact64x48 fixture, applied exact key796 and
+confirmed complete own BuildID/seed through generic effect call and reverse key.
+Fresh source509 Python/62Node/22stages and13 SDK backend/16 async/3 inert PASS;
+checks ZIP SHA256 d61da8e8dd4153f16b2b04108a6fab24980a169ab97d7b1165563074175c6c64.
+Native result PARTIAL_UNKNOWN/listed-applied-frame-not-run, cleanup PASS/safeYES.
+Render-started/render-suite journals exist; no accepted frame. The exact failing
+callback/world/counter/snapshot check is UNKNOWN; no render fix justified yet.
+Owned shutdown timed out10seconds; user confirmed closure. Fresh no-AE and exact
+two-bundle retirement with before/after hashes/other entries unchanged PASS.
+Original native/supervisor partial and cleanup-timeout results remain immutable.
+
+Add bounded main-thread diagnostics only to the existing async capture: fixed
+validation stage, public API numeric error and own callback outcome; own world
+size/type/stride only. Callback still only writes plain data and release-publishes
+completion; no SDK/filesystem/project work added to worker. Callback fields read
+only after acquire/completion. Receipt/options retention/release, rejected world,
+exact counter increase/owned snapshot and pixel acceptance unchanged. No raw
+exception, pointer, profile name, foreign project or host output journal.
+SDK25.6_61 AE_GeneralPlug.h5339–5391: callback ID/cancel/error/receipt contract and
+CheckinFrame world ownership;5247–5257 NewFromLayer includes all effects.
+Existing public suite versions/options/time/route remain; no synchronous switch.
+16 existing SDK async cases must also assert diagnostic stage/callback/size facts
+and omission of callback fields while pending, with sanitizers. Build/check fresh
+identified bytes before a separate targeted frame diagnostic; no replay.
+RUN10–11 Apply/identity DONE; RUN12 real frame OPEN; RUN13 own closures/retirements
+DONE. Final source/status/Evidence/research-only publication still required.
+
+
 ## Resumed14-step color packet — observed None token, guarded normalization
 
 User accepted14-step continuation. Baseline fb011ca3d162b6f37e2b625326906e2d88e47f03;

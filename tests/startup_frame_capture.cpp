@@ -48,6 +48,9 @@ int main() {
             Check(start_failed==(mode>=13));
             if(mode==2 || mode==13) {
                 Check(capture.Pending()&&!capture.Done());Check(capture.Cancel()&&!capture.Cancel()&&cancels==1);
+                const auto diagnostic=capture.Diagnostic();
+                Check(diagnostic.find("callback=PENDING\n")!=std::string::npos &&
+                    diagnostic.find("callback_error=")==std::string::npos);
                 bool refused=false;try { capture.Release(); } catch (...) { refused=true; }Check(refused);
                 std::thread worker(Deliver);worker.join();
             }
@@ -55,6 +58,15 @@ int main() {
             std::string frame;
             try { frame=capture.Copy();copied=true; }
             catch(const std::runtime_error&) {}
+            const char* expected_stage[]={"copied","copied","copied","world-type","world-size",
+                "world-rowbytes","world-base","receipt-world","callback-error","callback-canceled",
+                "callback-id","copied","copied","copy-accepted","copy-accepted","copy-accepted"};
+            const auto diagnostic=capture.Diagnostic();
+            Check(diagnostic.find(std::string("stage=")+expected_stage[mode]+"\n")!=std::string::npos);
+            if(mode==8) Check(diagnostic.find("callback_error=1\n")!=std::string::npos);
+            if(mode==3) Check(diagnostic.find("world_type="+std::to_string(AEGP_WorldType_16)+"\n")!=std::string::npos);
+            if(mode==4) Check(diagnostic.find("width=65\n")!=std::string::npos);
+            if(mode==5) Check(diagnostic.find("rowbytes=255\n")!=std::string::npos);
             Check(copied==(mode<=2 || mode==11 || mode==12));
             if(copied) { Check(frame.size()==64*48*4);
                 for(int y=0;y<48;++y)Check(std::memcmp(frame.data()+y*256,pixels.data()+y*288,256)==0); }

@@ -454,6 +454,10 @@ struct PendingFrame {
 // A submitted context is never destroyed on timeout; late callback needs it.
 // Unresolved contexts/suites remain pinned until the owned host exits.
 PendingFrame* pending=nullptr;
+void FrameDiagnostic(PendingFrame& frame,const char* phase) noexcept {
+    try { Save("render-diagnostic",frame.capture.Diagnostic()+"observer_phase="+phase+"\n"); }
+    catch (...) {} // A missing diagnostic never bypasses the original refusal/cleanup.
+}
 void Publish(startup_calibration::Result result, bool frame, bool safe) {
     const auto status=result.outcome==startup_calibration::Outcome::ListedApplied && frame && cleanup_ok
         ? "LISTED_APPLIED_FRAME_CAPTURED" : result.outcome==startup_calibration::Outcome::Refused
@@ -474,12 +478,15 @@ bool PollFrame() {
     bool frame=false;
     std::string bytes;
     std::uint64_t after=0;
+    const char* phase="before-copy";
     try {
-        Require(p->backend->Allowed()); bytes=p->capture.Copy();
+        Require(p->backend->Allowed()); phase="copy"; bytes=p->capture.Copy();
+        phase="marker-after";
         after=p->backend->MarkerCounter(p->result.key);
-        Require(after>p->before && p->backend->OwnedSnapshot(true)==p->project && p->backend->Allowed());
+        Require(after>p->before); phase="owned-snapshot";
+        Require(p->backend->OwnedSnapshot(true)==p->project && p->backend->Allowed());
         frame=true;
-    } catch (...) { p->result.outcome=startup_calibration::Outcome::PartialUnknown; }
+    } catch (...) { p->result.outcome=startup_calibration::Outcome::PartialUnknown; FrameDiagnostic(*p,phase); }
     bool released=false;
     try { released=p->capture.Release(); } catch (...) { cleanup_ok=false; }
     if (!released) cleanup_ok=false;
@@ -517,6 +524,7 @@ void FinishCalibration(std::unique_ptr<Backend> backend,
         if (result.outcome==startup_calibration::Outcome::ListedApplied && cleanup_ok) {
             pending=new PendingFrame(std::move(backend),result,request.deadline);
             try { pending->Start(); } catch (...) {
+                FrameDiagnostic(*pending,"start");
                 Save("render-submit-failed","AEHL-CAL-SUBMIT-UNKNOWN\n");
                 if (pending->capture.Pending()) return;
                 const bool safe=pending->backend->CleanupSafe();
