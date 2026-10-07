@@ -1,45 +1,71 @@
 # AE Hot Loader — current Stage C handoff, updated 2026-10-04
 
-## One controlled frame run without region diagnostics — 2026-10-07
+## Controlled no-region run: null world refused — 2026-10-07
 
-Baseline `acbf9104170f6683a62efcae4ea920dc9b8a3033`, clean research branch.
-User said «делай» after the twelve-step controlled-run plan. Authority covers one
-own normal startup/public-SDK fixture/apply/frame test, exact owned cleanup,
-Evidence, research-branch publication and CI. No retry, private call/attach,
-preferences/cache/security change, foreign project/session or main release.
+Baseline `acbf9104170f6683a62efcae4ea920dc9b8a3033`; plan commit `2e045c0`.
+User «делай» authorized the twelve-step packet and one own normal-startup test.
 Rules v8.0.0 / `132b7cd`: public-SDK Debugging, Development/Validation, native
 main-thread/lifetime, API sources, task closure and ownership-aware cleanup.
-
-Candidate code `79e2955f3ea07467a71e47b1b5fccc62d6bcbc3b`, nonce
-`711dd22e925b4211a5f279b816d4a25f`, manifest SHA256
+No native/controller code changed in this packet. Candidate code `79e2955`,
+nonce `711dd22e925b4211a5f279b816d4a25f`, manifest SHA256
 `730cd473c515eecf7c5246cf90ca5a0feaa098e62031f3a7c21db24c02af2c5d`.
-Fresh preflight verified both signatures, 74 SDK hashes, exact AE executable,
-all non-Markdown source hashes, empty control, absent live/install destinations.
-Existing exact-code offline 509 Python / 62 Node / 22 stages and original ZIP
-integrity verified, baseline exact-head CI 2/3/44 PASS; unchanged tests not rerun.
-Fresh process inventory: no AE/aerender. Runtime acceptance still pending.
+Both signatures, all 74 SDK hashes, exact AE binary and non-Markdown source
+reverified; unused control/live/install destinations verified before launch.
+Prior exact-code offline 509 Python / 62 Node / 22-stage ZIP and baseline
+exact-head CI 2/3/44 verified. No applicable code change justified rerunning them.
 
-| Task | Acceptance/check | Initial status |
+Own PID 94305, birth `1791364746.239041`, exact executable/build/ready matched.
+Ordinary startup effect key 796 applied to the owned fixture; one frame request
+sent. Callback READY/error0/uncanceled/matchingID/nonnull receipt/onStartThreadYES.
+Region query absent. SDK boundaries 2/3 show GetReceiptWorld returned; diagnostic
+records error0 and `stage=world-handle`, so its output world was null and refused.
+World type/size/base/pixel-copy stages were not reached. No frame.argb/metadata
+accepted, no marker-after/pixel-oracle confirmation. SDK14/15 CheckinFrame and
+SDK16/17 options Dispose returned; outer cleanup/destruction/publication finished.
+Native result PARTIAL_UNKNOWN, stage listed-applied-frame-not-run, cleanup PASS,
+cleanup_safe YES, render NOT_RUN_OR_UNKNOWN. This run advanced beyond the old
+region boundary; it does not establish a general crash fix or receipt lifetime.
+
+| Task | Acceptance and observed result | Status |
 | --- | --- | --- |
-| NF01 | Restore rules/source/branch/Evidence and confirm no unrelated edits | PASS |
-| NF02 | Fresh empty AE/aerender inventory before dependent install/launch | PASS; recheck immediately before launch |
-| NF03 | Exact unused signed candidate, SDK/source/mandatory offline receipts | PASS |
-| NF04 | Install only two uniquely named owned bundles; hashes/signatures match | Pending |
-| NF05 | One normal startup; ready build/PID/birth/executable match | Pending |
-| NF06 | Main-thread owned fixture and ordinary effect apply | Pending |
-| NF07 | One frame request; READY, matching ID, uncanceled/error0/receipt | Pending |
-| NF08 | World handle/type/size/stride/base valid; copy succeeds | Pending |
-| NF09 | Independent pixel oracle PASS and marker counter increases | Pending |
-| NF10 | Exact native owned-project proof before host shutdown; no other sessions; retire exact owned pair after closure | Pending; preserve host/install if proof absent |
-| NF11 | Original result/receipts immutable, private archive and checkpoint reconciled | Pending |
-| NF12 | Research-only publication and exact-head CI; main/other branches retained | Pending |
+| NF01 | Exact source/rules/branch restored; no unrelated changes | PASS |
+| NF02 | Empty AE/aerender before install/launch; exact owned identity afterward | PASS |
+| NF03 | Unused signed candidate/source/SDK and mandatory offline receipts verified | PASS |
+| NF04 | Two unique owned bundles installed; hashes/signatures match | PASS |
+| NF05 | One startup; exact ready/PID/birth/executable/build | PASS |
+| NF06 | Owned fixture and startup effect applied; key 796 | PASS; startup only |
+| NF07 | One async request and successful matching callback with receipt | PASS; not pixel proof |
+| NF08 | Nonnull world/type/size/stride/base/copy | FAIL: world null after error0 |
+| NF09 | Real pixels equal independent oracle; marker counter increases | NOT RUN: no valid world |
+| NF10 | Fresh native proof before own termination; SDK release PASS; host later absent; exact pair retired outside discovery | DONE with original wait timeout preserved |
+| NF11 | Immutable failure/diagnostics and ownership-aware checkpoint/Evidence reconciliation | DONE locally; archive bound separately |
+| NF12 | Research-only publication; exact-head CI and other branches tracked separately | Source/CI tracked separately |
 
-Question: does removing only the optional region query let the same explicit
-async route produce a validated real frame? A before-only trace bounds an
-observed operation; a null world is refused. No acceptance/timeout/lifetime
-weakening. On failure, retain exact evidence and perform only safe cleanup;
-no second launch. C1 PARTIAL/frame UNKNOWN/late registration NOT RUN until
-applicable observed evidence changes the corresponding claim.
+Original supervisor result remains FAIL_OR_UNKNOWN, SHA256
+`8381b07b78724694c06aa973d19812932f41d2db032dffef441aa1cbf9b6c342`.
+Its generic refusal text says “no frame requested/accepted”; actual publication
+was SENT ONCE and callback READY. Interpret that text as no accepted frame,
+not as evidence that no request was made. Do not alter the original receipt.
+Supervisor accepted fresh native owned-project/resource proof before termination,
+but waiting for its own process exceeded 10s. Later independent inventory found
+no AE/aerender; no repeated termination, window/project read or second launch.
+The supervisor's post-run other-plugin comparison did not execute after the wait
+exception; no whole-run metadata PASS inferred. Separate retirement verified
+both bundle hashes and unchanged other-entry metadata before/after that move.
+Exact pair retained in original run live/retired-after-observed-host-exit.
+Late observed host exit does not relabel the frame failure as PASS.
+
+C1 PARTIAL; real render/pixels UNKNOWN; capture refused; late ordinary registration
+NOT RUN. This nonce/control is used and cannot be replayed. No private call/attach,
+preferences/cache/security changes, main merge/release, timeout extension or
+replacement of the async route. Historical receipts/checkpoints retained.
+Next diagnostic question: why does the target explicit async successful receipt
+produce no world on the caller's later idle path? Review exact SDK suite/lifetime
+and call context before choosing a separately authorized experiment. Neither
+callback ownership nor an alternative route is established by this run. Do not
+relax the null-world guard or transfer AsyncManager/PF_Event_DRAW rules onto the
+explicit LayerFrame_Async path. New live validation requires a fresh candidate
+identity, preflight and current authority. Evidence retained in private workspace.
 
 ## Optional receipt-region query removed — 2026-10-07
 
