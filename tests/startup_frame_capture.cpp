@@ -5,7 +5,7 @@
 #include <thread>
 #include <vector>
 namespace {
-int mode=0,checkins=0,disposals=0,cancels=0;
+int mode=0,checkins=0,disposals=0,cancels=0,region_calls=0;
 std::vector<unsigned> trace_events;
 std::thread::id caller_thread;
 bool trace_wrong_thread=false;
@@ -38,8 +38,9 @@ int main() {
         options.AEGP_GetWorldType=[](AEGP_LayerRenderOptionsH,AEGP_WorldType* out)->A_Err { *out=AEGP_WorldType_8;return 0; };
         options.AEGP_GetDownsampleFactor=[](AEGP_LayerRenderOptionsH,A_short* x,A_short* y)->A_Err { *x=1;*y=1;return 0; };
         options.AEGP_GetMatteMode=[](AEGP_LayerRenderOptionsH,AEGP_MatteMode* out)->A_Err { *out=AEGP_MatteMode_STRAIGHT;return 0; };
-        renders.AEGP_GetRenderedRegion=[](AEGP_FrameReceiptH h,A_LRect* out)->A_Err {
-            Check(h==receipt && !trace_events.empty() && trace_events.back()==0);*out={0,0,64,48};return mode==17?1:0; };
+        const auto forbidden_region=[](AEGP_FrameReceiptH,A_LRect*)->A_Err {
+            ++region_calls; return 1;
+        };
         renders.AEGP_RenderAndCheckoutLayerFrame_Async=[](AEGP_LayerRenderOptionsH,
             AEGP_AsyncFrameReadyCallback fn,AEGP_AsyncFrameRequestRefcon arg,AEGP_AsyncRequestId* out)->A_Err {
             callback=fn;context=arg;*out=5;
@@ -56,7 +57,9 @@ int main() {
         worlds.AEGP_GetBaseAddr8=[](AEGP_WorldH,PF_Pixel8** out)->A_Err { *out=mode==6?nullptr:reinterpret_cast<PF_Pixel8*>(pixels.data());return 0; };
         Check(startup_marker::Render(pixels.data(),64,48,288,123));
         for (mode=0;mode<18;++mode) {
-            checkins=disposals=cancels=0; trace_events.clear(); trace_events.reserve(64);
+            checkins=disposals=cancels=region_calls=0; trace_events.clear(); trace_events.reserve(64);
+            // Exercise both an absent optional slot and an available but forbidden query.
+            renders.AEGP_GetRenderedRegion=(mode%2==0)?nullptr:+forbidden_region;
             caller_thread=std::this_thread::get_id(); trace_wrong_thread=false;
             startup_frame::Capture capture(options,renders,worlds,Trace);
             bool start_failed=false;
@@ -88,9 +91,10 @@ int main() {
             if(mode==4) Check(diagnostic.find("width=65\n")!=std::string::npos);
             if(mode==5) Check(diagnostic.find("rowbytes=255\n")!=std::string::npos);
             if(mode==16) Check(diagnostic.find("sdk_error=0\n")!=std::string::npos &&
-                diagnostic.find("receipt=YES\n")!=std::string::npos && diagnostic.find("region_right=64\n")!=std::string::npos);
+                diagnostic.find("receipt=YES\n")!=std::string::npos);
             if(mode==17) Check(capture.OptionsDiagnostic().find("time_error=1\n")!=std::string::npos &&
-                diagnostic.find("region_error=1\n")!=std::string::npos && diagnostic.find("region_right=")==std::string::npos);
+                diagnostic.find("region_right=")==std::string::npos);
+            Check(region_calls==0 && diagnostic.find("region_queried=NO\n")!=std::string::npos);
             if(!start_failed) Check(capture.OptionsDiagnostic().find("requested_world_type="+std::to_string(AEGP_WorldType_8)+"\n")!=std::string::npos);
             Check(copied==(mode<=2 || mode==11 || mode==12 || mode==17));
             if(copied) { Check(frame.size()==64*48*4);
@@ -101,8 +105,8 @@ int main() {
             Check(checkins==old_checkins&&disposals==old_disposals);
             Check(!trace_wrong_thread);
             if (copied) {
-                Check(trace_events.size()>=14);
-                for(unsigned i=0;i<14;++i) Check(trace_events[i]==i);
+                Check(trace_events.size()>=12);
+                for(unsigned i=0;i<12;++i) Check(trace_events[i]==i+2);
             }
             for (std::size_t i=0;i<trace_events.size();i+=2)
                 Check(i+1<trace_events.size() && trace_events[i+1]==trace_events[i]+1);

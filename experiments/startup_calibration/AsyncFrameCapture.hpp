@@ -37,9 +37,6 @@ class Capture {
     A_long observed_width_ = 0, observed_height_ = 0;
     AEGP_WorldType observed_type_ = AEGP_WorldType_NONE;
     std::string option_facts_;
-    A_LRect region_{};
-    A_Err region_error_=1;
-    bool region_queried_=false;
     void ReadOptions() {
         A_Time time{},step{}; AEGP_WorldType type=AEGP_WorldType_NONE;
         A_short x=0,y=0; AEGP_MatteMode matte{};
@@ -78,7 +75,7 @@ public:
             options_.AEGP_SetTimeStep && options_.AEGP_SetWorldType && options_.AEGP_SetDownsampleFactor &&
             options_.AEGP_SetMatteMode && options_.AEGP_GetTime && options_.AEGP_GetTimeStep &&
             options_.AEGP_GetWorldType && options_.AEGP_GetDownsampleFactor && options_.AEGP_GetMatteMode &&
-            render_.AEGP_GetRenderedRegion && render_.AEGP_RenderAndCheckoutLayerFrame_Async &&
+            render_.AEGP_RenderAndCheckoutLayerFrame_Async &&
             render_.AEGP_CancelAsyncRequest && render_.AEGP_CheckinFrame && render_.AEGP_GetReceiptWorld &&
             world_.AEGP_GetType && world_.AEGP_GetSize && world_.AEGP_GetRowBytes && world_.AEGP_GetBaseAddr8);
         static_assert(sizeof(PF_Pixel8) == 4 && offsetof(PF_Pixel8, alpha) == 0 &&
@@ -99,13 +96,7 @@ public:
             (callback_id_==request_?"YES":"NO")+"\nreceipt="+(receipt_?"YES":"NO")+
             "\ncallback_on_start_thread="+(callback_on_start_thread_?"YES":"NO")+"\n";
         else text+="callback=PENDING\n";
-        text+=std::string("region_queried=")+(region_queried_?"YES":"NO")+"\n";
-        if(region_queried_) {
-            text+="region_error="+std::to_string(region_error_)+"\n";
-            if(region_error_==0) text+="region_left="+std::to_string(region_.left)+
-                "\nregion_top="+std::to_string(region_.top)+"\nregion_right="+std::to_string(region_.right)+
-                "\nregion_bottom="+std::to_string(region_.bottom)+"\n";
-        }
+        text+="region_queried=NO\n"; // Optional region diagnostics removed; preserve receipt schema.
         return text+"world_type="+std::to_string(observed_type_)+"\nwidth="+
             std::to_string(observed_width_)+"\nheight="+std::to_string(observed_height_)+
             "\nrowbytes="+std::to_string(rowbytes)+"\n";
@@ -139,7 +130,7 @@ public:
         Check("copy-accepted",accepted_); Check("callback-ready",Done());
         Check("callback-id",callback_id_==request_); Check("callback-canceled",!canceled_);
         Check("callback-error",callback_error_==0); Check("callback-receipt",receipt_!=nullptr);
-        region_error_=Traced(0,[&] { return render_.AEGP_GetRenderedRegion(receipt_,&region_); }); region_queried_=true;
+        // Trace IDs 0/1 remain reserved for the removed optional region query.
         AEGP_WorldH world = nullptr; AEGP_WorldType type = AEGP_WorldType_NONE;
         A_long width = 0, height = 0; PF_Pixel8* pixels = nullptr;
         SDK("receipt-world",Traced(2,[&] { return render_.AEGP_GetReceiptWorld(receipt_,&world); })); Check("world-handle",world!=nullptr);

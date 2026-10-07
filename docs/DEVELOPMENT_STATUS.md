@@ -1,5 +1,38 @@
 # AE Hot Loader — current development status
 
+## Receipt-region boundary observed —2026-10-07
+
+Baseline0d74d020fb71727bea44b8d63198b15afd2cabfa, clean research branch;
+Rules8.0.0/132b7cd/publicSDK Debugging Development/Validation unchanged.
+User «продолжай» authorized prepared diagnostic repeat; existing PID58561
+preserved until user «закрыл». Exact signatures/two-bundle source/74SDK hashes
+reverified,18 SDK async ASan/UBSan cases freshly PASS; exact prior CI PASS2/3/44.
+One own runb5d43fa0a03e4019b9429df0795e5f7c/code0512f84/PID86040 started,
+ready exactPID/birth/build PASS, request SENT ONCE. Callback READY/error0/
+uncanceled/matchingID/receipt present/onStartThreadYES. Outer0/1 Allowed
+returned, outer2 Copy entered; inner SDK0 before GetRenderedRegion present,
+SDK1 after absent; SDK2 GetReceiptWorld not observed. Native final/world/pixels
+absent. Original120s timeout preserved SHA2561a30c9487961e323c2af551dacb4db34c381cc6d63d55727f867bee89647d00a.
+This bounds last confirmed operation; it is not proof of exception instruction,
+receipt lifetime or host root cause. SDK25.6_61 AE_GeneralPlug.h5393–5395
+confirms signature. The region query was added as optional diagnostics in3d3108d;
+prior6e0f9a8 lacked it and recorded GetReceiptWorld error0/null world, not pixels.
+RG01 observation/Evidence DONE. RG02 optional region query and required slot
+removed from Copy; original receipt/world/marker/pixel/cleanup gates and async
+route retained. Trace IDs 0/1 reserved/absent; SDK2 world is the next real call.
+RG03 focused actual-SDK ASan/UBSan regression PASS: 18 cases, zero region calls
+with both absent and present optional slot, original null-world/error/lifetime
+refusals preserved. Full checks and fresh signed candidate pending.
+RG04 no second launch/replay/timeout extension. User reported closure; fresh
+process inventory still found own PID86040 and crash reporter. Installation
+retained; narrow window inspection awaits permission. No window/project read.
+RG05 reconcile source/status/evidence/research push/exactSHA CI. C1 PARTIAL;
+frame UNKNOWN/late-add NOT RUN. Removing diagnostic call is not validated crash
+repair; next live validation remains separate. No private attach/preferences/
+cache/security changes. Old temporary receipts unavailable after restart;
+new own evidence retained in ignored private workspace build directory.
+
+
 ## Crash boundary preparation verified; cause remains unknown —2026-10-04
 
 Code0512f84b43b3e6b1e96cbfc163b0ee0d77a4b771; fresh offline candidate
