@@ -1,5 +1,13 @@
 # Ordinary startup calibration — diagnostic preparation
 
+Current 2026-10-07 preparation adds submit-return publication diagnostics only.
+They distinguish caller-thread inline/deferred completion without SDK or file
+work in Ready. A worker records whether return publication was observed; it
+never reads caller-only state. Reading a receipt on a later idle remains an
+unverified target lifetime contract, so this packet does not install or launch
+AE. Fresh preparation uses the inert binding. See
+[the current lifetime gate and evidence](../../docs/C1_OWNED_STARTUP_FRAME_2026-10-04.md).
+
 This is a separate ordinary control effect and public-SDK observer, not a
 hot-loader implementation or substitute for the ordinary installed-effect goal.
 The current continuation adds one separately authorized owned normal startup,

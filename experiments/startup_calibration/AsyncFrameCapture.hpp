@@ -30,6 +30,10 @@ class Capture {
     A_Boolean canceled_ = TRUE;
     std::thread::id start_thread_;
     bool callback_on_start_thread_=false;
+    // This flag publishes the caller's observation of the submit return. A
+    // worker must not read starting_ (caller-only), nor infer a receipt lifetime.
+    std::atomic<bool> submit_return_published_{false};
+    bool callback_saw_submit_return_=false;
     std::atomic<bool> done_{false};
     bool starting_ = false, sent_ = false, accepted_ = false, option_owned_ = false, cancel_sent_ = false;
     const char* stage_ = "constructed";
@@ -62,6 +66,7 @@ class Capture {
         self->callback_id_ = id; self->canceled_ = canceled;
         self->callback_error_ = error; self->receipt_ = receipt;
         self->callback_on_start_thread_=std::this_thread::get_id()==self->start_thread_;
+        self->callback_saw_submit_return_=self->submit_return_published_.load(std::memory_order_acquire);
         self->done_.store(true, std::memory_order_release);
         return 0; // No SDK/filesystem/project operation on the callback thread.
     }
@@ -94,7 +99,11 @@ public:
         if (Done()) text+=std::string("callback=READY\ncanceled=")+(canceled_?"YES":"NO")+
             "\ncallback_error="+std::to_string(callback_error_)+"\nrequest_id_equal="+
             (callback_id_==request_?"YES":"NO")+"\nreceipt="+(receipt_?"YES":"NO")+
-            "\ncallback_on_start_thread="+(callback_on_start_thread_?"YES":"NO")+"\n";
+            "\ncallback_on_start_thread="+(callback_on_start_thread_?"YES":"NO")+
+            "\ncallback_submit_return_published="+(callback_saw_submit_return_?"YES":"NO")+
+            "\ncallback_delivery="+(callback_on_start_thread_
+                ? (callback_saw_submit_return_?"CALLER_AFTER_SUBMIT":"CALLER_DURING_SUBMIT")
+                : (callback_saw_submit_return_?"WORKER_RETURN_PUBLISHED":"WORKER_RETURN_NOT_PUBLISHED"))+"\n";
         else text+="callback=PENDING\n";
         text+="region_queried=NO\n"; // Optional region diagnostics removed; preserve receipt schema.
         return text+"world_type="+std::to_string(observed_type_)+"\nwidth="+
@@ -115,6 +124,9 @@ public:
         starting_ = true; sent_ = true; // before an inline callback/reentrant idle
         const auto error = render_.AEGP_RenderAndCheckoutLayerFrame_Async(option_, Ready,
             reinterpret_cast<AEGP_AsyncFrameRequestRefcon>(this), &request_);
+        // Publish before admitting caller-side Done/Copy. For a worker that
+        // observes false, the real return may be imminent or not yet published.
+        submit_return_published_.store(true, std::memory_order_release);
         starting_ = false;
         // Ambiguous error after submission must retain this context until callback/host shutdown.
         SDK("submit",error); Check("request-handle",request_!=0);

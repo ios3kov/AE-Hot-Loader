@@ -1,5 +1,22 @@
 # AE Hot Loader — current development status
 
+## Receipt-order preparation; live lifetime gate blocked — 2026-10-07
+
+Baseline `122f22252d5786445945fd57c28d8c6cb2b7d1e3`; user «делай» authorized
+the fourteen-step conditional packet. Atomic submit-return observation added;
+callback still has no SDK/filesystem work, no receipt/route/guard/timeout change.
+21 actual-SDK frame ASan/UBSan cases PASS, including deferred main/worker delivery
+and refusal of reentrant Copy before submit returns. Remaining offline build,
+full regression, scanner/manual review and research-only CI are pending.
+
+Live **BLOCKED / NOT RUN**: SDK25.6_61 does not explicitly establish post-callback
+receipt lifetime. Timing instrumentation is not a reason to repeat the known
+null-world path or assume SDK calls are permitted in any callback. This follows
+the packet's agreed conditional gate, not a request for another permission.
+No install/launch/project/window/shutdown action. Last live failure and all
+historical evidence retained. C1 PARTIAL; real pixels UNKNOWN; late-add NOT RUN.
+See [requirements, sources and RO01–RO14 mapping](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
+
 ## Controlled no-region run: null world refused — 2026-10-07
 
 Baseline `acbf9104170f6683a62efcae4ea920dc9b8a3033`; plan commit `2e045c0`.

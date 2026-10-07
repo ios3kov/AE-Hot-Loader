@@ -1,5 +1,77 @@
 # Owned normal-startup/frame calibration —2026-10-04
 
+## Receipt-order preparation; live lifetime gate blocked — 2026-10-07
+
+Baseline `122f22252d5786445945fd57c28d8c6cb2b7d1e3`, research branch; user
+«делай» authorized the proposed fourteen-step packet, including a single live
+run only if the permitted reading moment is established. Rules remain v8.0.0 /
+`132b7cd`: public-SDK Debugging, API sources, native threading/lifetime,
+Development/Validation, task closure and ownership-aware cleanup.
+
+Last live evidence remains immutable: successful READY and a nonnull receipt,
+but GetReceiptWorld error0/null; no accepted frame. Same-thread delivery alone
+cannot distinguish inline callback from a later main-thread callback. Current
+change adds an atomic submit-return publication flag and fixed diagnostic facts;
+workers never read the caller-only `starting_` flag. Callback remains free of
+SDK/filesystem/project work. No receipt/world/query/cleanup/route/timeout or
+pixel acceptance is changed. This instrumentation does not repair or validate
+the frame, nor prove its lifetime.
+
+Exact SDK25.6_61 header AE_GeneralPlug.h SHA256
+`30d12ec3eb5af1a902c7414053b1be1da0204b226e0b1cdc71272be1e137000c`
+was reviewed at the RenderSuite5 revision8 and callback declarations. It
+provides a receipt for a successful callback and a read-only world released by
+CheckinFrame. It does not explicitly establish retaining and querying that
+receipt after the callback returns, nor guarantee the callback thread. General
+AEGP threading guidance permits main-thread calls; it does not fill this
+explicit async receipt lifetime gap. AsyncManager/PF_Event_DRAW lifetimes and
+synchronous APIs are not substituted. The April2024 author report is discovery,
+not a target-build contract; its worker-thread claims are not adopted.
+Sources: [AEGP threading](https://ae-plugins.docsforadobe.dev/aegps/implementation/#threading),
+[author report](https://community.adobe.com/questions-529/help-with-aegp-renderandcheckoutlayerframe-async-55775).
+
+Live gate **BLOCKED**: an order-only instrumentation change does not justify
+repeating the known null-world path with unresolved lifetime, or moving SDK
+queries into an unverified callback context. This is the condition explicitly
+included in the authorized packet, not missing user permission. No install,
+AE launch/request, window/project read or shutdown occurs in this packet.
+Fresh offline bundles are built with an UNCONFIGURED_INERT host binding; no
+activation token is published. The accepted public async route and existing
+refusal guards remain, but their live acceptance is not inferred from tests.
+
+Delivery facts are published only after Done's acquire. On the caller thread,
+CALLER_DURING_SUBMIT and CALLER_AFTER_SUBMIT distinguish the two execution
+orders. Worker facts report RETURN_PUBLISHED or RETURN_NOT_PUBLISHED; the
+latter is an observed publication boundary, not proof that the real function
+has not returned. No timestamp/thread/address fact establishes world ownership.
+
+| Task | Acceptance / result | Status |
+| --- | --- | --- |
+| RO01 | Restore clean baseline, retained obligations, rules and prior immutable failure | DONE |
+| RO02 | Exact callback/receipt lifetime reviewed; deferred lifetime not established | UNKNOWN; live gate BLOCKED |
+| RO03 | Permitted reading moment/thread reviewed; no worker SDK or speculative callback query | DONE with gap retained |
+| RO04 | Exact header suite revisions checked; previous live slots retained as historical | DONE; no new live suite claim |
+| RO05 | One observational hypothesis: submit-return order is currently unmeasured | DONE; not a root cause |
+| RO06 | Atomic return observation; no callback SDK/IO or caller-only flag read | IMPLEMENTED |
+| RO07 | 21 actual-SDK ASan/UBSan frame cases: inline, worker during submit, delayed caller/worker and reentrant refusal; original null world and cleanup refusals retained | PASS, offline only |
+| RO08 | New unique signed inert candidate | PENDING offline build |
+| RO09 | Exact source/SDK/signatures, regression and review | PENDING remaining checks |
+| RO10 | Host preflight | NOT RUN: live gate blocked before any host operation |
+| RO11 | One own launch/request | NOT RUN: live gate blocked |
+| RO12 | Real world/pixels and marker-after | NOT RUN: no host request |
+| RO13 | Own cleanup / retained Evidence | NO LIVE CLEANUP NEEDED; Evidence pending finalization |
+| RO14 | Research commit/push, exact-head CI and reconciliation | PENDING |
+
+C1 PARTIAL; real render/pixels UNKNOWN; late ordinary registration NOT RUN.
+No main merge/release, private calls/attach, preference/cache/security changes,
+synchronous fallback, retries or timeout extension. Historical evidence and
+unknown material are preserved. Full callback-context reading remains a
+separate decision requiring a verified contract or a specifically scoped safe
+experiment, not an assumption from same-thread delivery or community code.
+Next useful evidence: a target-applicable explicit receipt lifetime contract;
+otherwise choose a documented frame acquisition path as a separately reviewed
+control experiment, preserving the ordinary late-add acceptance.
+
 ## Controlled no-region run: null world refused — 2026-10-07
 
 Baseline `acbf9104170f6683a62efcae4ea920dc9b8a3033`; plan commit `2e045c0`.
