@@ -5,9 +5,13 @@
 Baseline `122f22252d5786445945fd57c28d8c6cb2b7d1e3`; user «делай» authorized
 the fourteen-step conditional packet. Atomic submit-return observation added;
 callback still has no SDK/filesystem work, no receipt/route/guard/timeout change.
-21 actual-SDK frame ASan/UBSan cases PASS, including deferred main/worker delivery
-and refusal of reentrant Copy before submit returns. Remaining offline build,
-full regression, scanner/manual review and research-only CI are pending.
+Code `ca196807908aaa8ce46e96de0f440484785e904d`: 21 actual-SDK frame
+ASan/UBSan cases and 21 TSan cases PASS; deferred caller/worker and reentrant
+refusal covered. New signed inert pair, 13 backend/3 inert cases and pixel oracle
+PASS. Full 509 Python / 62 Node / 22 stages PASS, no macOS skips; archive CRC and
+all member hashes verified. Scanner raw exit1 retained: unchanged local CLI
+heuristic `e2999cfe8b5b3a6bd27f0a62`, manually false positive; C++ reviewed
+separately. Exact final source/CI publication is tracked separately.
 
 Live **BLOCKED / NOT RUN**: SDK25.6_61 does not explicitly establish post-callback
 receipt lifetime. Timing instrumentation is not a reason to repeat the known
@@ -16,6 +20,16 @@ the packet's agreed conditional gate, not a request for another permission.
 No install/launch/project/window/shutdown action. Last live failure and all
 historical evidence retained. C1 PARTIAL; real pixels UNKNOWN; late-add NOT RUN.
 See [requirements, sources and RO01–RO14 mapping](C1_OWNED_STARTUP_FRAME_2026-10-04.md).
+
+User-reported screenshot during this offline packet says "Unable to execute
+script. Scripting Plugin is not installed." Screenshot SHA256
+`b8949089675b9b6e34c6ae7525335bd4a0638f852628c9b9b62f45b8226e5269`.
+No PID/build/request linkage supplied; this is not attributed to the new inert
+candidate or the earlier null-world failure. No session/window/project read or
+dialog action. Existing Script guard checks public AEGP_IsScriptingAvailable
+before ExecuteScript; no guard change/bypass. Read-only app filenames show
+scripting frameworks/palette on disk; completeness/loading/cause remain UNKNOWN.
+This is a separate issue to localize before a future calibration using scripts.
 
 ## Controlled no-region run: null world refused — 2026-10-07
 

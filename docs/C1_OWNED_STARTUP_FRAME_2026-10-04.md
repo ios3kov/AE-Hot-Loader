@@ -53,14 +53,14 @@ has not returned. No timestamp/thread/address fact establishes world ownership.
 | RO04 | Exact header suite revisions checked; previous live slots retained as historical | DONE; no new live suite claim |
 | RO05 | One observational hypothesis: submit-return order is currently unmeasured | DONE; not a root cause |
 | RO06 | Atomic return observation; no callback SDK/IO or caller-only flag read | IMPLEMENTED |
-| RO07 | 21 actual-SDK ASan/UBSan frame cases: inline, worker during submit, delayed caller/worker and reentrant refusal; original null world and cleanup refusals retained | PASS, offline only |
-| RO08 | New unique signed inert candidate | PENDING offline build |
-| RO09 | Exact source/SDK/signatures, regression and review | PENDING remaining checks |
+| RO07 | 21 actual-SDK ASan/UBSan frame cases: inline, worker during submit, delayed caller/worker and reentrant refusal; original null world and cleanup refusals retained | PASS ASan/UBSan + TSan, offline only |
+| RO08 | Unique signed inert candidate nonce179b9e8986dc4426bddbac2e53f7e79c; no prospective host binding | PASS, offline only |
+| RO09 | Both signatures/74 SDK hashes/405 source files; 509 Python, 62 Node, 22 stages; scanner and manual review | PASS offline; scanner raw exit1 false positive retained |
 | RO10 | Host preflight | NOT RUN: live gate blocked before any host operation |
 | RO11 | One own launch/request | NOT RUN: live gate blocked |
 | RO12 | Real world/pixels and marker-after | NOT RUN: no host request |
-| RO13 | Own cleanup / retained Evidence | NO LIVE CLEANUP NEEDED; Evidence pending finalization |
-| RO14 | Research commit/push, exact-head CI and reconciliation | PENDING |
+| RO13 | No session/install created; original live receipt SHA unchanged; own preparation/tests retained in private workspace | NO LIVE CLEANUP NEEDED; Evidence bound separately |
+| RO14 | Code commitca19680; docs-only reconciliation/research publication and exact-head CI | Source/CI tracked separately |
 
 C1 PARTIAL; real render/pixels UNKNOWN; late ordinary registration NOT RUN.
 No main merge/release, private calls/attach, preference/cache/security changes,
@@ -71,6 +71,30 @@ experiment, not an assumption from same-thread delivery or community code.
 Next useful evidence: a target-applicable explicit receipt lifetime contract;
 otherwise choose a documented frame acquisition path as a separately reviewed
 control experiment, preserving the ordinary late-add acceptance.
+
+Offline candidate code `ca196807908aaa8ce46e96de0f440484785e904d`, nonce
+`179b9e8986dc4426bddbac2e53f7e79c`, manifest SHA256
+`09f93e832d1adfc8110ac5b27f161194b7cc2d4a78e5efc316ea467975a6c94d`.
+Both bundle file maps/signatures and all74 SDK hashes verified; control empty,
+live absent, binding UNCONFIGURED_INERT. Exact code full checks: 509 Python,
+62 Node, all22 stages, no macOS skips. Checks ZIP SHA256
+`3ac600acd1ba791badc263be883a6be1b8cb4ba6b6c7845bfbb70c0c47fa73c4`,
+CRC/all member hashes verified. 21 TSan own fake-host cases passed, including
+plain-field consumption after Done acquire before joining the deferred worker;
+this does not cover Adobe threads or establish receipt lifetime. Static scanner
+raw exit1: unchanged local CLI heuristic `e2999cfe8b5b3a6bd27f0a62` manually
+false positive; no C++ coverage claimed by that scanner. No installable/release
+handoff. Exact final head and CI are retained in the private evidence receipt.
+
+User-reported screenshot during this offline packet says "Unable to execute
+script. Scripting Plugin is not installed." Screenshot SHA256
+`b8949089675b9b6e34c6ae7525335bd4a0638f852628c9b9b62f45b8226e5269`.
+No PID/build/request linkage supplied; this is not attributed to the new inert
+candidate or the earlier null-world failure. No session/window/project read or
+dialog action. Existing Script guard checks public AEGP_IsScriptingAvailable
+before ExecuteScript; no guard change/bypass. Read-only app filenames show
+scripting frameworks/palette on disk; completeness/loading/cause remain UNKNOWN.
+This is a separate issue to localize before a future calibration using scripts.
 
 ## Controlled no-region run: null world refused — 2026-10-07
 
