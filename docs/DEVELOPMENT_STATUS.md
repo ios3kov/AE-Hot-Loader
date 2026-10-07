@@ -31,8 +31,8 @@ remains NOT RUN. No dialog action or process shutdown was authorized by the imag
 | RG01 | Preserve the original live failure and localize the last confirmed boundary without assuming root cause | DONE |
 | RG02 | Remove only the optional region query and required slot; keep async route, receipt/world/pixel/marker/cleanup checks | DONE |
 | RG03 | Actual-SDK ASan/UBSan: 18 frame cases, zero region calls with both absent and present slots, original null-world rejection; signed pair, 13 backend and 3 inert cases; full 509 Python / 62 Node / 22 stages | PASS, offline only |
-| RG04 | No second launch, replay, timeout extension or automatic shutdown; own installation retained while PID 86040 persists | BLOCKED: host closure |
-| RG05 | Reconcile source, candidate and evidence; research publication and exact-head CI tracked separately | Local reconciliation DONE; publication/CI pending |
+| RG04 | No second launch/replay/timeout extension or agent shutdown; user closed AE, fresh empty inventory verified, exact old pair retained outside discovery | DONE |
+| RG05 | Source/candidate/Evidence reconciled; research publication only, exact-head CI retained in GitHub checks and private receipt | Local reconciliation DONE; CI tracked separately |
 
 Trace IDs 0/1 are reserved and absent; ID 2 remains the first receipt-world call.
 The fixed diagnostic schema reports `region_queried=NO`. No callback gains SDK
@@ -55,8 +55,12 @@ directory, where the complete run passed. No incomplete ZIP is claimed.
 User reported closure, but fresh inventory still found own PID 86040 (state UEs)
 and no other AE/aerender. User then explicitly authorized only that window's
 inspection. Exact official app-path inspection timed out; window/project content
-was not read. No shutdown or installation retirement performed. A new live run
-requires completed closure, fresh artifact/preflight checks and current authority.
+was not read. No agent shutdown performed. User subsequently confirmed full closure;
+AE/aerender inventories were empty before and after exact old-pair retirement.
+Both old bundle hashes verified; other plugin-entry metadata unchanged. Old pair
+retained under the original run live/retired-after-user-confirmed-closure; original
+timeout SHA unchanged. New candidate remains uninstalled. A new live run requires
+fresh artifact/preflight checks and current authority.
 No private attach/calls, preferences/cache/security changes, main merge or release.
 
 C1 PARTIAL; native frame UNKNOWN; late ordinary registration NOT RUN. Removing
