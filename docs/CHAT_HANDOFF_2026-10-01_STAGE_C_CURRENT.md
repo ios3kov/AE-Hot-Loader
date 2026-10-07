@@ -29,7 +29,16 @@ candidate or the earlier null-world failure. No session/window/project read or
 dialog action. Existing Script guard checks public AEGP_IsScriptingAvailable
 before ExecuteScript; no guard change/bypass. Read-only app filenames show
 scripting frameworks/palette on disk; completeness/loading/cause remain UNKNOWN.
-This is a separate issue to localize before a future calibration using scripts.
+Attribution clarified on the user's instruction: this screenshot is
+NOT_ATTRIBUTED / OUT_OF_SCOPE for AEHL and is not a blocker. The AEHL packet did
+not install or launch its inert candidate. Read-only comparison found concurrent
+other-development startup scripting timeout immediately before the screenshot,
+followed by successful scripting after readiness. This favors another test,
+but the image has no PID/build/request identity, so exact attribution remains
+UNKNOWN. The proposed scripting investigation and separate scripting startup
+are removed from the next AEHL packet. Original evidence is retained; no AE,
+window/project action or message to the other task. The independent null-world
+and async receipt-lifetime gates remain open.
 
 ## Controlled no-region run: null world refused — 2026-10-07
 
