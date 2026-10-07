@@ -19,6 +19,13 @@ A missing after-record bounds the last confirmed operation, not the faulting
 instruction or receipt lifetime. No matching own-plugin crash stack was found
 in three recent reports under the scoped macOS/Adobe log directories.
 
+User-supplied screenshot later confirms AE reported a crash while invoking
+`AEHLCalibrationb5d43fa0a03e`, matching the original run, not new code `79e2955`.
+Screenshot SHA256 `fb06aac14c172c664f8e6cd04974f1cf7074fcc5e63bde78009f78e044c9a847`.
+It identifies the invoked plugin, not the failing instruction or root cause.
+The original timeout receipt is unchanged; changed-candidate native validation
+remains NOT RUN. No dialog action or process shutdown was authorized by the image.
+
 | Task | Acceptance and observed result | Status |
 | --- | --- | --- |
 | RG01 | Preserve the original live failure and localize the last confirmed boundary without assuming root cause | DONE |
