@@ -1,5 +1,46 @@
 # Owned normal-startup/frame calibration —2026-10-04
 
+## One controlled frame run without region diagnostics — 2026-10-07
+
+Baseline `acbf9104170f6683a62efcae4ea920dc9b8a3033`, clean research branch.
+User said «делай» after the twelve-step controlled-run plan. Authority covers one
+own normal startup/public-SDK fixture/apply/frame test, exact owned cleanup,
+Evidence, research-branch publication and CI. No retry, private call/attach,
+preferences/cache/security change, foreign project/session or main release.
+Rules v8.0.0 / `132b7cd`: public-SDK Debugging, Development/Validation, native
+main-thread/lifetime, API sources, task closure and ownership-aware cleanup.
+
+Candidate code `79e2955f3ea07467a71e47b1b5fccc62d6bcbc3b`, nonce
+`711dd22e925b4211a5f279b816d4a25f`, manifest SHA256
+`730cd473c515eecf7c5246cf90ca5a0feaa098e62031f3a7c21db24c02af2c5d`.
+Fresh preflight verified both signatures, 74 SDK hashes, exact AE executable,
+all non-Markdown source hashes, empty control, absent live/install destinations.
+Existing exact-code offline 509 Python / 62 Node / 22 stages and original ZIP
+integrity verified, baseline exact-head CI 2/3/44 PASS; unchanged tests not rerun.
+Fresh process inventory: no AE/aerender. Runtime acceptance still pending.
+
+| Task | Acceptance/check | Initial status |
+| --- | --- | --- |
+| NF01 | Restore rules/source/branch/Evidence and confirm no unrelated edits | PASS |
+| NF02 | Fresh empty AE/aerender inventory before dependent install/launch | PASS; recheck immediately before launch |
+| NF03 | Exact unused signed candidate, SDK/source/mandatory offline receipts | PASS |
+| NF04 | Install only two uniquely named owned bundles; hashes/signatures match | Pending |
+| NF05 | One normal startup; ready build/PID/birth/executable match | Pending |
+| NF06 | Main-thread owned fixture and ordinary effect apply | Pending |
+| NF07 | One frame request; READY, matching ID, uncanceled/error0/receipt | Pending |
+| NF08 | World handle/type/size/stride/base valid; copy succeeds | Pending |
+| NF09 | Independent pixel oracle PASS and marker counter increases | Pending |
+| NF10 | Exact native owned-project proof before host shutdown; no other sessions; retire exact owned pair after closure | Pending; preserve host/install if proof absent |
+| NF11 | Original result/receipts immutable, private archive and checkpoint reconciled | Pending |
+| NF12 | Research-only publication and exact-head CI; main/other branches retained | Pending |
+
+Question: does removing only the optional region query let the same explicit
+async route produce a validated real frame? A before-only trace bounds an
+observed operation; a null world is refused. No acceptance/timeout/lifetime
+weakening. On failure, retain exact evidence and perform only safe cleanup;
+no second launch. C1 PARTIAL/frame UNKNOWN/late registration NOT RUN until
+applicable observed evidence changes the corresponding claim.
+
 ## Optional receipt-region query removed — 2026-10-07
 
 Baseline: `0d74d020fb71727bea44b8d63198b15afd2cabfa`; code:
