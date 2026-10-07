@@ -1,37 +1,64 @@
 # AE Hot Loader — current development and release plan
 
-## Receipt-region boundary observed —2026-10-07
+## Optional receipt-region query removed — 2026-10-07
 
-Baseline0d74d020fb71727bea44b8d63198b15afd2cabfa, clean research branch;
-Rules8.0.0/132b7cd/publicSDK Debugging Development/Validation unchanged.
-User «продолжай» authorized prepared diagnostic repeat; existing PID58561
-preserved until user «закрыл». Exact signatures/two-bundle source/74SDK hashes
-reverified,18 SDK async ASan/UBSan cases freshly PASS; exact prior CI PASS2/3/44.
-One own runb5d43fa0a03e4019b9429df0795e5f7c/code0512f84/PID86040 started,
-ready exactPID/birth/build PASS, request SENT ONCE. Callback READY/error0/
-uncanceled/matchingID/receipt present/onStartThreadYES. Outer0/1 Allowed
-returned, outer2 Copy entered; inner SDK0 before GetRenderedRegion present,
-SDK1 after absent; SDK2 GetReceiptWorld not observed. Native final/world/pixels
-absent. Original120s timeout preserved SHA2561a30c9487961e323c2af551dacb4db34c381cc6d63d55727f867bee89647d00a.
-This bounds last confirmed operation; it is not proof of exception instruction,
-receipt lifetime or host root cause. SDK25.6_61 AE_GeneralPlug.h5393–5395
-confirms signature. The region query was added as optional diagnostics in3d3108d;
-prior6e0f9a8 lacked it and recorded GetReceiptWorld error0/null world, not pixels.
-RG01 observation/Evidence DONE. RG02 optional region query and required slot
-removed from Copy; original receipt/world/marker/pixel/cleanup gates and async
-route retained. Trace IDs 0/1 reserved/absent; SDK2 world is the next real call.
-RG03 focused actual-SDK ASan/UBSan regression PASS: 18 cases, zero region calls
-with both absent and present optional slot, original null-world/error/lifetime
-refusals preserved. Full checks and fresh signed candidate pending.
-RG04 no second launch/replay/timeout extension. User reported closure; fresh
-process inventory still found own PID86040 and crash reporter. Installation
-retained; narrow window inspection awaits permission. No window/project read.
-RG05 reconcile source/status/evidence/research push/exactSHA CI. C1 PARTIAL;
-frame UNKNOWN/late-add NOT RUN. Removing diagnostic call is not validated crash
-repair; next live validation remains separate. No private attach/preferences/
-cache/security changes. Old temporary receipts unavailable after restart;
-new own evidence retained in ignored private workspace build directory.
+Baseline: `0d74d020fb71727bea44b8d63198b15afd2cabfa`; code:
+`79e2955f3ea07467a71e47b1b5fccc62d6bcbc3b` on the research branch.
+Rules v8.0.0 / `132b7cd`, public-SDK Debugging and Development/Validation apply.
+Existing obligations and historical receipts remain unchanged.
 
+One authorized own diagnostic run used code `0512f84`, nonce
+`b5d43fa0a03e4019b9429df0795e5f7c`, PID 86040. Exact ready PID/birth/build
+and callback READY/error0/uncanceled/matching ID/nonnull receipt were observed.
+The caller-thread guard returned; Copy entered; SDK boundary 0 before
+`AEGP_GetRenderedRegion` exists, boundary 1 after and boundary 2 before
+`AEGP_GetReceiptWorld` do not. No final native result/world/pixels were accepted.
+The original 120s timeout remains FAIL_OR_UNKNOWN, SHA256
+`1a30c9487961e323c2af551dacb4db34c381cc6d63d55727f867bee89647d00a`.
+A missing after-record bounds the last confirmed operation, not the faulting
+instruction or receipt lifetime. No matching own-plugin crash stack was found
+in three recent reports under the scoped macOS/Adobe log directories.
+
+| Task | Acceptance and observed result | Status |
+| --- | --- | --- |
+| RG01 | Preserve the original live failure and localize the last confirmed boundary without assuming root cause | DONE |
+| RG02 | Remove only the optional region query and required slot; keep async route, receipt/world/pixel/marker/cleanup checks | DONE |
+| RG03 | Actual-SDK ASan/UBSan: 18 frame cases, zero region calls with both absent and present slots, original null-world rejection; signed pair, 13 backend and 3 inert cases; full 509 Python / 62 Node / 22 stages | PASS, offline only |
+| RG04 | No second launch, replay, timeout extension or automatic shutdown; own installation retained while PID 86040 persists | BLOCKED: host closure |
+| RG05 | Reconcile source, candidate and evidence; research publication and exact-head CI tracked separately | Local reconciliation DONE; publication/CI pending |
+
+Trace IDs 0/1 are reserved and absent; ID 2 remains the first receipt-world call.
+The fixed diagnostic schema reports `region_queried=NO`. No callback gains SDK
+or filesystem work; original acquire/release and cleanup ownership are retained.
+The static scanner retained one unchanged CLI heuristic
+`e2999cfe8b5b3a6bd27f0a62`, manually reviewed as a false positive (not an auth
+route). Raw exit1 and scanner limitations are retained; C++ review was separate.
+Release readiness remains not assessed.
+
+Fresh offline candidate: nonce `711dd22e925b4211a5f279b816d4a25f`, code `79e2955`,
+manifest SHA256 `730cd473c515eecf7c5246cf90ca5a0feaa098e62031f3a7c21db24c02af2c5d`.
+Both signatures and all 74 SDK hashes verified; control empty, live directory
+absent. Candidate installation/AE loading/changed-code frame validation NOT RUN.
+Full-check ZIP SHA256
+`cf2f8887e52a7d773758ee3b4ed5bf5309a6afbdb6f81b6e4280e35b35ab5744`;
+CRC and every member hash verified. Initial output-directory invocation was
+BLOCKED before checks (inside checkout); corrected to a private sibling evidence
+directory, where the complete run passed. No incomplete ZIP is claimed.
+
+User reported closure, but fresh inventory still found own PID 86040 (state UEs)
+and no other AE/aerender. User then explicitly authorized only that window's
+inspection. Exact official app-path inspection timed out; window/project content
+was not read. No shutdown or installation retirement performed. A new live run
+requires completed closure, fresh artifact/preflight checks and current authority.
+No private attach/calls, preferences/cache/security changes, main merge or release.
+
+C1 PARTIAL; native frame UNKNOWN; late ordinary registration NOT RUN. Removing
+the diagnostic call is a controlled experiment, not a validated crash repair.
+Next check: one separately authorized own run of the new candidate, observing
+receipt-world/type/size/base/pixels and native cleanup, with the same acceptance.
+Own receipts are retained under ignored workspace build evidence and a private
+sibling checks directory; older temporary receipts unavailable after restart are
+not represented as recovered. Unknown material and historical evidence retained.
 
 ## Crash boundary preparation verified; cause remains unknown —2026-10-04
 
