@@ -511,3 +511,53 @@ no private API/new quit protocol; bounded existing journals/resource guards and
 main-thread/native paths unchanged. Durable baseline is private metadata only;
 no third-party file content read or changed. A normal automated AE exit remains
 NOT RUN. Fresh controller regression/CI results follow separately.
+
+## Twelve-step reconciliation and fresh controller checks
+
+Controller source `9c010e59406c08dfb29994bde53e8a8bc6c39bd7` pushed on the research branch. Fresh whole
+regression519Python/62Node/22steps PASS, no skips/errors/failures;22stage records,
+CRC and all24check-archive member hashes independently verified. Check ZIP
+`AEHL-checks-d0kffzae.zip`, SHA256`0e18b295d860f1c46113b7f8f9847c2c9d39bf2c4fbf4b98f8bbefd1e2821cda`.
+The first independent tally assumed skipped was an integer and Node TAP style;
+actual report has an empty skipped list and spec-reporter count lines, corrected
+verifier confirms519/62. No test failure or candidate change during that correction.
+Fresh scanner272supported/139unsupported/zero omissions, same rawexit1 local CLI
+false positive; source copy inventory411files verified. Separate source/spec/
+quality review covers no-signal host preservation and independent finalization;
+C++/SDK/render code delta NONE. New controller/native policy runtime NOT RUN;
+no rebuilt artifact inherits the oldc28cb38 live claim. No second install/start/
+request/frame after the exit incident. Targeted11Python startup cases and the
+exact-original-versus-fixed synthetic metadata-loss regression PASS as scoped.
+
+Testedc28cb38 researchCI37829383212 and macOSCI37829383243 both PASS.
+Corrected9c010e5 researchCI37830916133 PASS; macOSCI37830916063 still RUNNING at
+archive assembly. Terminal receipt is retained separately when available; never
+rewrite the already verified archive or claim complete CI for a different HEAD.
+
+Immutable private assembled source/artifact/control/incident/check Evidence:
+`AEHL-complete-control-c28cb38-exit-policy-9c010e5.zip`, SHA256`217cfcfc49fffd22c06baa911d29b840f4eb90082f168733a6bba27e5c687803`;
+898members, CRC/all member digests PASS, mode0600. Contains two full411-file
+source inventories, tested signed own pair/manifest, controlPNG/raw receipts,
+user closure/retirement, supplied alert image, bounded incident metadata and
+fixed-source checks/reviews. Proprietary SDK/Adobe binaries, recovery project
+content, host stdout/stderr and other project/window content excluded; own raw
+logs retained locally. Private research Evidence, not an installable handoff.
+
+| Step | Final bounded result |
+|---|---|
+| QR01–05 | Rules/source/build/signature/SDK/focused checks and no-AE preflight PASS |
+| QR06–07 | One own startup/live acquired suite/key/apply/reverse/identity PASS |
+| QR08–09 | Actual20template inventory/readback and one64x48 RGB8 PNG PASS |
+| QR10 | Complete native receipt/counter0→1/revision34/independent0-diff pixels PASS |
+| QR11 | Native resource/current proof PASS; automatic SIGTERM exit FAIL_OR_UNKNOWN; user closure/exact retirement PASS; whole-live foreign-entry comparison UNKNOWN |
+| QR12 | Exact-source regression/review/private archive/checkpoint reconciliation DONE; fixed macOSCI pending separately |
+
+The packet procedure is reconciled, not all checks PASS. The complete startup
+control acceptance is closed; automatic safe exit remains open and SIGTERM is
+removed from future controller code. C0PASS/C1PARTIAL/late-add C2NOT RUN; async
+receipt lifetimeUNKNOWN, D/release open. Next goal-facing gate is the actual
+startup-writer→acquired-reader data/ownership bridge and append-only publication
+safety; control-frame proof cannot substitute for it. A future automated normal
+quit requires a separate reviewed protocol and real-AE evidence. No main/merge/
+release, foreign project/window/plugin changes, preferences/cache/security edit
+or unknown-material deletion. Recovery project stays untouched.
