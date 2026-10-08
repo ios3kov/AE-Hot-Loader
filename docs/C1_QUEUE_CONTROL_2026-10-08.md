@@ -78,12 +78,12 @@ values or host-object identity on AE. One actual target run is still required.
 | QC02 | Separate queue command; never dispatch async for this request | IMPLEMENTED; request/branch checks |
 | QC03 | Reuse owned native fixture/key/Apply/build/seed gates | IMPLEMENTED; retained actual-SDK tests |
 | QC04 | Independent pattern and bounded PNG decoder | 6 Python cases PASS, including all five PNG filters, RGB/RGBA, corruption/bombs |
-| QC05 | Fresh unique signed source-bound build | PASS offline at c137782; exact signed files and74SDK hashes reverified |
-| QC06 | Guard failures, one render, cleanup, applicable regression | PASS offline:26 generated-script model cases;515Python/62Node/22stages;21SDK frame/13backend/3inert ASan/UBSan cases |
-| QC07 | No foreign AE/aerender before installation | BLOCKED pending user closure of PID13150; no project read |
-| QC08 | One own startup/apply/queue export | NOT RUN |
-| QC09 | Exact PNG/counter/provenance/pixel verification | NOT RUN |
-| QC10 | Review, safe retention/retirement, checkpoint/source/CI reconciliation | IN PROGRESS |
+| QC05 | Fresh unique signed source-bound build | PASS offline at547bd6d; exact signed files and74SDK hashes reverified |
+| QC06 | Guard failures, one render, cleanup, applicable regression | PASS offline:27 generated-script model cases;515Python/62Node/22stages;21SDK frame/13backend/3inert ASan/UBSan cases |
+| QC07 | No foreign AE/aerender before installation | PASS; user closed AE, fresh no-AE/aerender preflight |
+| QC08 | One own startup/apply/queue export | PARTIAL: startup/key/apply PASS; queue refused at template selection before render |
+| QC09 | Exact PNG/counter/provenance/pixel verification | NOT RUN: no output; refusal identity verified |
+| QC10 | Review, safe retention/retirement, checkpoint/source/CI reconciliation | DONE for this bounded attempt; user closed host, exact bundles retained outside discovery; both exact-code CI runs PASS |
 
 The one-shot supervisor reuses120s operation and180s startup budgets; it never
 resets deadlines/retries. Render Queue blocking cannot be forcibly interrupted
@@ -115,7 +115,7 @@ Review correction: run.py previously required18 frame cases while current builde
 produces21. Updated mandatory preflight to21 for the fresh current-source build;
 old bytes cannot pass current-source validation. This does not alter async capture.
 
-## Preparation result and exact Evidence
+## Initial preparation result and exact Evidence (historical c137782)
 
 Code candidate `c137782086a971907df0a28da4f73a59f32f3d15`, research branch pushed.
 Fresh nonce `93b34ac9a7df4975ad98691f389c26ad`; manifest SHA256
@@ -147,11 +147,11 @@ Private receipts and source inventory under ignored
 Research CI37824044004 PASS at exact c137782. Full macOS CI37824044060 still
 in progress at the preparation checkpoint; not promoted to PASS.
 
-QC01–06 preparation complete; QC07–09 await the user's explicit AE-closed
+At the initial c137782 checkpoint QC01–06 preparation was complete; QC07–09 awaited the user's explicit AE-closed
 confirmation and fresh process/file preflight. QC10 documentation/review/source
 publication complete for preparation; exact final CI and live evidence remain
 open. User chose to close PID13150 and report; no message confirming closure
-has arrived. No inspection, shutdown, install or host launch performed.
+has arrived. No inspection, shutdown, install or host launch had been performed at that checkpoint.
 C1 PARTIAL; queue pixels/async receipt lifetime UNKNOWN; late-add/C2 NOT RUN;
 D/release remain open. Evidence/candidates/old checkpoints retained, no deletion.
 
@@ -165,3 +165,66 @@ model case for an edit during render, and verifier refusal for mismatched
 revision. 27 generated-script cases PASS. This affects queue control only.
 The earlier c137782 candidate/515-test receipt remain historical; current native
 artifact and regression must be rebuilt/rechecked before use. No host action.
+
+## Current candidate and one controlled target attempt
+
+Code `547bd6d3465b2c1eb76d27f8245aa83b119180dd`, pushed on the research
+branch. Fresh nonce `0fd1bbe7343d4d56af95cac33dc285c1`; manifest SHA256
+`c2bfbead79a1effd77d15a65bd92f2d7c1528471e7dc28f3e8d37273c94be963`.
+Both signed bundle file maps,411 tracked-source hashes and74SDK hashes PASS.
+Rebuilt exact-SDK ASan/UBSan21 frame/13backend/3inert and own marker oracle PASS;
+27 generated-script guard cases PASS. Full fresh515Python/62Node/22stages PASS,
+zero skips/errors/failures. ZIP `private-evidence-2026-10-08/AEHL-checks-_vkd630a.zip`
+SHA256 `5c10f135c8bc7f4f4740767b4ee169fcd9f720d1364ee249fce79cf089eb2694`;
+CRC and24member digests independently verified. Current tracked-source scanner
+272supported/139unsupported/zero omissions, raw exit1: same unchanged CLI
+false positive reviewed; no clean scanner PASS. Native review separately retained.
+An initial independent verifier used relative SDK paths without the SDK root,
+failed before verification, then corrected and independently checked all74 files;
+no candidate/host change or weaker check. Receipts are private under
+`build-ae-hot-loader/queue-control-2026-10-08-0fd1bbe7343d`.
+Exact research CI37824869756 and macOS CI37824869741 both PASS at547bd6d.
+These establish candidate CI only, not target pixels, hot-add, final docs HEAD
+or release acceptance. Terminal CI receipt retained separately in private Evidence.
+
+User confirmed AE closed; fresh no-AE/aerender preflight PASS. Exactly two unique
+owned signed bundles installed, no replacement. One exact owned AE25.6x101 arm64
+process PID29208/birth1791484459.707439 reached READY; one queue request sent.
+Normal startup enumeration/key796, apply/reverse/build/seed gates completed.
+Native result `PARTIAL_UNKNOWN`, stage `queue-control`; script result:
+`REFUSED`, stage `settings`, reason `png-template-unavailable`.
+The exact name `PNG Sequence` was not available exactly once in local templates.
+This does **not** prove that PNG format or a differently named PNG template is
+absent. No template names/settings were recorded by this candidate. No new
+private call, async capture, render retry, timeout extension or fallback.
+Render entry count initially0; render() was not reached; output folder EMPTY.
+Pixels/queue export NOT RUN, not a render crash or an async-lifetime result.
+
+Native SDK resource release PASS; fresh owned-project shutdown proof absent
+because queue operation was incomplete. Host preserved; user closed PID29208
+without saving the owned fixture. Fresh no-AE/aerender check PASS, only exact
+unique signed installed pair moved to private `live/retired-installation`;
+foreign plugin entries unchanged during the run and retirement. Original
+`live/result.json` remains immutable (automatic cleanup BLOCKED); supplemental
+`live/manual-close-retirement.json` records user closure and retained bundles.
+No user project read/window operation, forced stop, preferences or cache change.
+
+Ten-step packet reconciled: QC01–07 preparation/preflight PASS; QC08 partially
+completed; QC09 pixels NOT RUN for the specific template guard; QC10 review and
+safe retention complete. This is a bounded diagnostic result, not overall task
+or release success. C1 PARTIAL; late-add/C2 NOT RUN; async receipt lifetime
+UNKNOWN; D/release open. Next packet: observe local output-module template names
+and actual Format via documented API in a fresh owned queue fixture, select only
+a verified existing PNG format, preserve all guards, then one separate new nonce
+control frame and independent pixels. No inference that English template names
+or mocked template settings exist in the target host.
+
+Private assembled source/artifact/control/check Evidence:
+`private-evidence-2026-10-08/AEHL-queue-control-547bd6d-0fd1bbe7343d.zip`,
+SHA256 `1b010dd97fbf96fc8c8a563351195f52874d20e9dfa5d816e7e9ea929154445f`;
+460members, CRC and all member hashes PASS, mode0600. Includes all411 exact
+candidate source files, both signed own artifacts and bounded control/result/
+retirement/check receipts. Proprietary SDK/Adobe binaries, project/window files
+and host stdout/stderr excluded; raw own logs retained locally. This is private
+research Evidence, not an installable release. Terminal CI receipt was obtained
+after assembly and is retained separately without rewriting the archive.

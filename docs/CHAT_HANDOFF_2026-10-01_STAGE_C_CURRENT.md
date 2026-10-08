@@ -5,9 +5,12 @@
 User approved ten-step independent Render Queue control and rules **v11.0.0 /
 `e8b763ad2fefd0c5d79f865f7f017ff714cf7c23`**. See the single
 [current task/adoption/acceptance checkpoint](C1_QUEUE_CONTROL_2026-10-08.md).
-Initial preparation PASS at c137782:515Python/62Node/22stages.
-Review added exact post-render revision to shutdown proof; new candidate/checks pending.
-Live NOT RUN pending explicit AE closure. C1 PARTIAL; async pixels UNKNOWN; late-add NOT RUN.
+Current code547bd6d:515Python/62Node/22stages and rebuilt SDK checks PASS.
+One owned AE run reached key796/apply, then refused the exact PNG template name
+before render; pixels NOT RUN. User closed PID29208; exact owned pair retained
+outside discovery, other plugin entries unchanged. Next: observe actual local
+PNG output templates, then a separate fresh control run. C1 PARTIAL; async
+receipt lifetime UNKNOWN; late-add/C2 NOT RUN. Both exact-code CI runs PASS.
 Historical records below retain their original rules and Evidence.
 
 
