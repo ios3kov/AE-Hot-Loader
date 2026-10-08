@@ -1,5 +1,13 @@
 # Ordinary startup calibration — diagnostic preparation
 
+The 2026-10-08 packet adds a separately requested public scripting Render Queue
+control (`run.py --control-render-queue --execute-owned-startup`). It never submits
+an async request. One fresh PNG export is independently decoded without color
+conversion and compared with the per-build oracle; RGB implicit alpha is declared.
+The original async lifetime gate remains open. See the
+[current control acceptance and evidence](../../docs/C1_QUEUE_CONTROL_2026-10-08.md).
+
+
 Current 2026-10-07 preparation adds submit-return publication diagnostics only.
 They distinguish caller-thread inline/deferred completion without SDK or file
 work in Ready. A worker records whether return publication was observed; it

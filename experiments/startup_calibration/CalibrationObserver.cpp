@@ -7,6 +7,7 @@
 #include "NameProjection.hpp"
 #include "ColorPreparation.hpp"
 #include "AsyncFrameCapture.hpp"
+#include "QueueControl.hpp"
 #include <memory>
 #include "CalibrationConfig.hpp" // Generated only by the offline builder.
 #include "../ordinary_discovery/ResourcePassJournal.hpp"
@@ -33,6 +34,7 @@ startup_calibration::Once once;
 bool consumed = false;
 bool idle_active = false;
 bool cleanup_ok = true;
+bool queue_control = false; // Explicit separate request; never an async fallback.
 const char* diagnostic_stage = "authorization";
 void Require(bool okay) { if (!okay) throw std::runtime_error("calibration refused"); }
 std::uint64_t Now() {
@@ -337,17 +339,18 @@ public:
         Require(effect_.value->AEGP_GetInstalledKeyFromLayerEffect(reference_, &value) == 0); return value; }
     bool Allowed() { return OperationAllowed(); }
     AEGP_LayerH Layer() const { return layer_; }
-    std::string OwnedSnapshot(bool complete) {
+    std::string OwnedSnapshot(bool complete, bool queue_done=false) {
         Require(SameProject() && NonOCIO());
         const auto script = std::string(R"JS((function () {
             var p=app.project, c=null, f=null, folders=0;
             var n=')JS") + calibration_fixture + "', m='" + calibration_match + "', complete=" +
-            (complete ? "true" : "false") + R"JS(;
+            (complete ? "true" : "false") + ", queueDone=" + (queue_done ? "true" : "false") +
+            ", output=" + startup_queue::Quote(std::string(calibration_control)+"/queue-output/control[#####].png") + R"JS(;
             if (!p || p.file!==null || (complete ? p.bitsPerChannel!==8 :
                 (p.bitsPerChannel!==8 && p.bitsPerChannel!==16 && p.bitsPerChannel!==32)) ||
                 (p.workingSpace!=='' && p.workingSpace!=='None') ||
                 p.linearBlending!==false || p.linearizeWorkingSpace!==false ||
-                p.renderQueue.numItems!==0 || p.renderQueue.rendering!==false ||
+                p.renderQueue.numItems!==(queueDone?1:0) || p.renderQueue.rendering!==false ||
                 p.numItems>3) return 'REFUSED';
             for (var i=1;i<=p.numItems;i++) {
                 var x=p.item(i);
@@ -365,14 +368,23 @@ public:
                     (complete && effects.numProperties!==1) ||
                     (effects.numProperties===1 && effects.property(1).matchName!==m)) return 'REFUSED';
             } else if (f) return 'REFUSED';
+            if(queueDone) {
+                var q=p.renderQueue.item(1);
+                if(!complete || !c || q.comp!==c || q.status!==RQItemStatus.DONE ||
+                    q.timeSpanStart!==1/24 || q.timeSpanDuration!==1/24 || q.numOutputModules!==1)
+                    return 'REFUSED';
+                var om=q.outputModule(1);
+                if(om.postRenderAction!==PostRenderAction.NONE || om.file.fsName!==new File(output).fsName)
+                    return 'REFUSED';
+            }
             return 'AEHL-CAL-OWNED-1\n'+p.revision+'\n';
         })())JS";
         const auto text=Script(script);
         Require(text.rfind("AEHL-CAL-OWNED-1\n",0)==0 && SameProject());
         return text;
     }
-    bool CleanupSafe() noexcept {
-        try { const auto text=OwnedSnapshot(false);
+    bool CleanupSafe(bool queue_done=false) noexcept {
+        try { const auto text=OwnedSnapshot(queue_done,queue_done);
             Save("cleanup-safe", std::string("AEHL-CAL-CLEANUP-1\nbuild=")+calibration_build+
                 "\npid="+std::to_string(getpid())+"\nbirth="+std::to_string(Birth())+"\n"+text);
             return true;
@@ -393,6 +405,25 @@ public:
         const bool okay = ref && effect_.value->AEGP_DisposeEffect(ref) == 0;
         if (!okay) cleanup_ok = false;
         return okay; }
+    bool QueueControl(std::int32_t key, std::uint64_t deadline) {
+        Require(OperationAllowed());
+        const auto before=MarkerCounter(key);
+        const auto snapshot=OwnedSnapshot(true);
+        const auto revision=std::stoll(snapshot.substr(std::strlen("AEHL-CAL-OWNED-1\n")));
+        const auto program=startup_queue::Script(calibration_fixture,calibration_match,
+            std::string(calibration_control)+"/queue-output",deadline,revision);
+        Save("queue-started",std::string("AEHL-CAL-QUEUE-START-1\nbuild=")+calibration_build+
+            "\nroute=SCRIPT_RENDER_QUEUE\ncounter_before="+std::to_string(before)+"\n");
+        Require(OperationAllowed());
+        const auto response=Script(program); Save("queue-result",response);
+        Require(response.rfind("AEHL-CAL-QUEUE-1\nstatus=DONE\n",0)==0 && OperationAllowed());
+        const auto after=MarkerCounter(key); Require(after>before);
+        OwnedSnapshot(true,true);
+        Save("queue-metadata",std::string("AEHL-CAL-QUEUE-FRAME-1\nbuild=")+calibration_build+
+            "\nkey="+std::to_string(key)+"\ncounter_before="+std::to_string(before)+
+            "\ncounter_after="+std::to_string(after)+"\nworking_space=NONE\n");
+        return true;
+    }
 };
 
 resident_binding::Digest Digest(const std::string& binary) {
@@ -566,6 +597,21 @@ void FinishCalibration(std::unique_ptr<Backend> backend,
                        const startup_calibration::Authorization& bound) {
         const auto result=once.Run(request,bound,*backend);
         ObserveMarkerStartup();
+        if(queue_control) {
+            bool done=false;
+            if(result.outcome==startup_calibration::Outcome::ListedApplied && cleanup_ok) {
+                try {done=backend->QueueControl(result.key,request.deadline);} catch (...) {}
+            }
+            const bool safe=done && backend->CleanupSafe(true);
+            backend.reset(); // Release native suites before asserting cleanup PASS.
+            Save("result",std::string("AEHL-CAL-RESULT-2\nbuild=")+calibration_build+
+                "\nstatus="+(done && cleanup_ok ? "LISTED_APPLIED_QUEUE_EXPORTED" :
+                    result.outcome==startup_calibration::Outcome::Refused ? "REFUSED" : "PARTIAL_UNKNOWN")+
+                "\nstage=queue-control\nkey="+std::to_string(result.key)+
+                "\ncleanup="+(cleanup_ok?"PASS":"FAIL")+"\ncleanup_safe="+(safe?"YES":"NO")+
+                "\nrender="+(done?"QUEUE_PIXEL_CHECK_PENDING":"NOT_RUN_OR_UNKNOWN")+"\n");
+            return;
+        }
         if (result.outcome==startup_calibration::Outcome::ListedApplied && cleanup_ok) {
             pending=new PendingFrame(std::move(backend),result,request.deadline);
             try { pending->Start(); } catch (...) {
@@ -628,7 +674,9 @@ A_Err Idle(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long*) noexcept {
         std::string schema, ownership, binary, trailing;
         std::istringstream input(Read("request"));
         Require(static_cast<bool>(input >> schema >> request.token >> request.pid >> request.birth >> request.deadline >> ownership >> binary));
-        Require(!(input >> trailing) && schema == "AEHL-CAL-REQUEST-2" && ownership == "OWNED-STARTUP-APPLY-RENDER");
+        Require(!(input >> trailing) && schema == "AEHL-CAL-REQUEST-2" &&
+            (ownership == "OWNED-STARTUP-APPLY-RENDER" || ownership == "OWNED-STARTUP-QUEUE-CONTROL"));
+        queue_control=ownership == "OWNED-STARTUP-QUEUE-CONTROL";
         request.owned_blank_project = true;
         const startup_calibration::Authorization bound{calibration_token, getpid(), Birth(), 0, true};
         Require(request.token == bound.token && request.pid == bound.pid && request.birth == bound.birth &&

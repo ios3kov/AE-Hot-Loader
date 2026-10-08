@@ -31,6 +31,7 @@ def load(name, path):
 common = load('startup_live_io', ROOT / 'experiments/ordinary_discovery/run_no_scan_directory_probe.py')
 oracle = load('startup_live_oracle', Path(__file__).with_name('oracle.py'))
 identity = load('startup_live_identity', Path(__file__).with_name('identity.py'))
+png = load('startup_live_png', Path(__file__).with_name('png_frame.py'))
 
 
 def need(value, reason):
@@ -108,12 +109,12 @@ def ready_identity(raw, record, observed):
     return ready
 
 
-def request(record, observed, deadline):
+def request(record, observed, deadline, queue_mode=False):
     need(type(deadline) is int and deadline > 0, 'invalid deadline')
     observer = record['bundles'][1]['binary_sha256']
     return ('AEHL-CAL-REQUEST-2 ' + record['token'] + ' ' + str(observed['pid']) + ' ' +
             str(birth(observed)) + ' ' + str(deadline) +
-            ' OWNED-STARTUP-APPLY-RENDER ' + observer + '\n').encode('ascii')
+            (' OWNED-STARTUP-QUEUE-CONTROL ' if queue_mode else ' OWNED-STARTUP-APPLY-RENDER ') + observer + '\n').encode('ascii')
 
 
 def native_complete(record, raw_result):
@@ -143,6 +144,30 @@ def verify_capture(record, raw_result, raw_metadata, pixels):
             'scope': 'verified transport/pixel assertions; real host provenance additionally requires owned launch/process/artifact checks'}
 
 
+def verify_queue(record, raw_result, raw_metadata, raw_queue, image):
+    result = fields(raw_result, 'AEHL-CAL-RESULT-2')
+    metadata = fields(raw_metadata, 'AEHL-CAL-QUEUE-FRAME-1')
+    queue = fields(raw_queue, 'AEHL-CAL-QUEUE-1')
+    need(result.get('build') == metadata.get('build') == record['build_id'] and
+         result.get('status') == 'LISTED_APPLIED_QUEUE_EXPORTED' and
+         result.get('render') == 'QUEUE_PIXEL_CHECK_PENDING' and
+         result.get('cleanup') == 'PASS' and result.get('cleanup_safe') == 'YES', 'queue native operation incomplete')
+    need(int(result.get('key', '0')) != 0 and result['key'] == metadata.get('key') and
+         0 <= int(metadata['counter_before']) < int(metadata['counter_after']) and
+         metadata.get('working_space') == 'NONE', 'queue marker provenance differs')
+    need(queue.get('status') == 'DONE' and queue.get('format') == 'PNG Sequence' and
+         queue.get('width') == '64' and queue.get('height') == '48' and
+         queue.get('time') == queue.get('duration') == '1/24', 'queue export scope differs')
+    pixels, decoded = png.decode(image)
+    need(queue.get('channels') == ('RGB' if decoded['source_channels'] == 3 else 'RGB + Alpha'),
+         'export channels differ from PNG bytes')
+    comparison = oracle.compare(pixels, 64, 48, record['seed'], order='RGBA8')
+    need(comparison['pixel_status'] == 'PASS', 'queue pixels differ from independent oracle')
+    return {'installed_key': int(result['key']), 'metadata': metadata, 'queue': queue,
+            'png': decoded, 'pixels': comparison, 'png_sha256': hashlib.sha256(image).hexdigest(),
+            'scope': 'startup-only queue control; no async receipt or late-registration proof'}
+
+
 def prepare(manifest, expected_hash):
     raw = common.read(manifest, 4 * 1024 * 1024)
     need(hashlib.sha256(raw).hexdigest() == expected_hash, 'manifest hash changed')
@@ -169,7 +194,7 @@ def prepare(manifest, expected_hash):
     common.private_directory(base); common.private_directory(base / 'control', empty=True)
     need(not install.exists() and not install.is_symlink() and not (base / 'live').exists(), 'replay or occupied destination')
     need(record['offline_tests']['exact_marker_pixel_oracle']['pixel_status'] == 'PASS' and
-         record['offline_tests']['frame'].startswith('PASS:18 SDK async frame cases') and
+         record['offline_tests']['frame'].startswith('PASS:21 SDK async frame cases') and
          record['offline_tests']['backend'].startswith('PASS:13 SDK-backend cases') and
          record['offline_tests']['inert'].startswith('PASS: 3 inert cases'), 'mandatory offline checks missing')
     for item in record['bundles']:
@@ -185,17 +210,21 @@ def prepare(manifest, expected_hash):
     return record, base, install
 
 
-def run(manifest, digest, execute):
+def run(manifest, digest, execute, queue_mode=False):
     need(execute, 'explicit owned-startup execution authority required')
     need(platform.system() == 'Darwin' and platform.machine() == 'arm64', 'wrong execution platform')
     record, base, install = prepare(manifest, digest)
     need(not processes(), 'AE/aerender already running; preserve user session')
+    if queue_mode:
+        (base / 'control' / 'queue-output').mkdir(mode=0o700)
     live = base / 'live'; live.mkdir(mode=0o700)
     before = {p.name: (p.lstat().st_ino, p.lstat().st_mtime_ns, p.lstat().st_mode) for p in PLUGIN_ROOT.iterdir()}
     report = {'schema': 'AEHL-STARTUP-LIVE-1', 'build_id': record['build_id'], 'source': record['source']['commit'],
-              'scope': 'one owned normal startup/public-SDK apply/asynchronous frame', 'result': 'UNKNOWN',
+              'scope': 'one owned startup/apply/script Render Queue control' if queue_mode else
+                       'one owned normal startup/public-SDK apply/asynchronous frame', 'result': 'UNKNOWN',
               'installation': 'NOT RUN', 'launch': 'NOT RUN', 'publication': 'NOT SENT', 'cleanup': 'NOT RUN',
               'late_registration': 'NOT RUN', 'private_calls': 'NOT RUN', 'user_authority':
+              'user authorized the ten-step separate control-render packet' if queue_mode else
               'user said делай after the proposed separate controlled AE startup/apply/frame run'}
     child = None; observed = None
     try:
@@ -231,7 +260,7 @@ def run(manifest, digest, execute):
         stop = time.monotonic() + 120
         need(common.process_identity(child.pid) == observed and processes() == [child.pid], 'process changed before publication')
         report['publication'] = 'OUTCOME UNKNOWN'  # before entering atomic publication
-        data = request(record, observed, int(time.time()) + 110)
+        data = request(record, observed, int(time.time()) + 110, queue_mode)
         write(live / 'publication-intent.json', json.dumps({'build_id': record['build_id'],
               'request_sha256': hashlib.sha256(data).hexdigest(), 'outcome': 'UNKNOWN UNTIL JOURNAL'}, indent=2).encode())
         publish(control, data)
@@ -243,11 +272,22 @@ def run(manifest, digest, execute):
         need(time.monotonic() < stop and common.process_identity(child.pid) == observed, 'late result or changed process')
         raw_result = common.read(control / 'result', 4096)
         report['native_result'] = fields(raw_result, 'AEHL-CAL-RESULT-2')
-        native_complete(record, raw_result)  # refuse before opening nonexistent frame files
-        comparison = verify_capture(record, raw_result,
-            common.read(control / 'frame-metadata', 4096), common.read(control / 'frame.argb', 64 * 48 * 4))
+        if queue_mode:
+            need(report['native_result'].get('status') == 'LISTED_APPLIED_QUEUE_EXPORTED',
+                 'queue control refused/incomplete; no exported pixels accepted')
+            output = control / 'queue-output'; common.private_directory(output)
+            files = list(output.iterdir())
+            need(len(files) == 1 and files[0].name.startswith('control') and files[0].suffix == '.png',
+                 'expected exactly one owned PNG output')
+            comparison = verify_queue(record, raw_result, common.read(control / 'queue-metadata', 4096),
+                common.read(control / 'queue-result', 4096), common.read(files[0], png.MAX_FILE))
+        else:
+            native_complete(record, raw_result)  # refuse before opening nonexistent frame files
+            comparison = verify_capture(record, raw_result,
+                common.read(control / 'frame-metadata', 4096), common.read(control / 'frame.argb', 64 * 48 * 4))
         need(time.monotonic() < stop, 'verification exceeded original operation budget')
-        report.update(comparison); report['result'] = 'PASS'; report['host_provenance'] = 'OWNED AE SDK STARTUP/APPLY/ASYNC FRAME'
+        report.update(comparison); report['result'] = 'PASS'
+        report['host_provenance'] = 'OWNED AE STARTUP/APPLY/SCRIPT RENDER QUEUE' if queue_mode else 'OWNED AE SDK STARTUP/APPLY/ASYNC FRAME'
     except Exception as error:
         report['result'] = 'FAIL_OR_UNKNOWN'; report['reason'] = str(error)
     finally:
@@ -285,8 +325,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--manifest', type=Path, required=True); parser.add_argument('--sha256', required=True)
     parser.add_argument('--execute-owned-startup', action='store_true')
+    parser.add_argument('--control-render-queue', action='store_true', help='separate one-frame PNG control; never invokes async receipt capture')
     args = parser.parse_args()
-    return run(args.manifest.resolve(strict=True), args.sha256, args.execute_owned_startup)
+    return run(args.manifest.resolve(strict=True), args.sha256, args.execute_owned_startup, args.control_render_queue)
 
 
 if __name__ == '__main__':
