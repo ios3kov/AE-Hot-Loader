@@ -15,6 +15,53 @@ and narrows match-getter reentry. Full nested lifetime/reader coverage/partial
 compensation remain open. This earlier checkpoint retains its original evidence
 and does not become a live registration/apply/render result.
 
+
+## Current continuation — 2026-10-08 (in progress)
+
+Baseline `4107853d452e045fa1084b0f94aebd251be92918`, clean research branch.
+User «делай» approves the discussed fourteen-step conditional packet. Rules
+v11.0.0 / `e8b763ad2fefd0c5d79f865f7f017ff714cf7c23`: AI_ENTRYPOINT first,
+Process/API sources/state/closure, Native ownership/thread/review, Tools bounded
+observations and Release validation boundaries. Offline research is Standard;
+private publication remains Critical/BLOCKED. Existing startup PNG control is
+PASS; late-add/C2 NOT RUN and async receipt lifetime UNKNOWN are preserved.
+
+Goal: bind acquired readers and our normal registration callback to their actual
+image provenance, then distinguish established file dataflow from missing live
+record/lifetime/transaction evidence. Non-goals: private calls, attach, callback
+replay, descriptor/root reads, late-add, rendering, automated quit or release.
+The minimal observer may only describe already acquired SDK slot addresses and
+the address supplied by the host to our own registration callback (`dladdr`,
+no invocation/dereference). Read-only observation uses the existing bounded
+main-thread installed-effect enumeration and blank-project guard. Existing
+request modes retain acceptance. Missing metadata must never imply a bridge.
+One normal owned startup is conditional on exact candidate checks, authority and
+AE/aerender absence; it cannot validate private writer safety. No signal is sent.
+
+| Task | Acceptance | State |
+| --- | --- | --- |
+| LB01 | Saved suite addresses reconciled to exact original reader offsets | PASS bounded arithmetic: Count/Next/Match/Reverse share delta `0x300bb5ef8`; Apply delta `0x300bb5df4` differs by `0x104`. Neither is a validated image slide. Live provider required |
+| LB02 | Module provenance and exact file pins recorded for selected live pointers | NOT RUN |
+| LB03 | Own installed key linked to internal record | PARTIAL static; live record UNKNOWN |
+| LB04 | Normal startup writer chain and callback participation distinguished | PARTIAL static; live writer UNKNOWN |
+| LB05 | Descriptor owner and transfer | PARTIAL static |
+| LB06 | Nested dependencies and code lifetime | UNKNOWN beyond selected retained owners |
+| LB07 | Affected render read set | PARTIAL selected static route; full set UNKNOWN |
+| LB08 | Completion/visibility/commit distinguished | PARTIAL; commit UNKNOWN |
+| LB09 | Partial-failure compensation | UNKNOWN; no fault injection |
+| LB10 | Append-only admission | BLOCKED by LB03–LB09 |
+| LB11 | Narrow inert provenance/observation implementation | IMPLEMENTED; separate read-only request cannot reach Apply/frame. Describe six acquired slot pointers and host-supplied own callback address only |
+| LB12 | Bounds, refusal, regressions, review and signed exact build | NOT RUN |
+| LB13 | One admitted startup observation; no apply/frame/private calls | CONDITIONAL NOT RUN |
+| LB14 | Evidence, source publication and final reconciliation | IN PROGRESS |
+
+The user-supplied CI screenshot belongs to `4f3547b`. Both run conclusions were
+`cancelled`; the native report upload subsequently failed because cancellation
+preceded archive creation. Workflows use branch concurrency with
+`cancel-in-progress: true`. This is not a test PASS or an assertion failure.
+Do not push successive closure commits before the code candidate's CI completes.
+Historical findings below retain their original v8 scope and immutable evidence.
+
 ## Result
 
 Later continuation: [host-operation boundaries](C1_COMPLETE_HOST_OPERATION_2026-10-04.md)

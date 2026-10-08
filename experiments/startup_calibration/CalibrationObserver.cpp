@@ -8,6 +8,7 @@
 #include "ColorPreparation.hpp"
 #include "AsyncFrameCapture.hpp"
 #include "QueueControl.hpp"
+#include "ImageProvenance.hpp"
 #include <memory>
 #include "CalibrationConfig.hpp" // Generated only by the offline builder.
 #include "../ordinary_discovery/ResourcePassJournal.hpp"
@@ -35,6 +36,7 @@ bool consumed = false;
 bool idle_active = false;
 bool cleanup_ok = true;
 bool queue_control = false; // Explicit separate request; never an async fallback.
+bool registry_observation = false; // Read-only; cannot fall through to Apply/frame.
 const char* diagnostic_stage = "authorization";
 void Require(bool okay) { if (!okay) throw std::runtime_error("calibration refused"); }
 std::uint64_t Now() {
@@ -87,6 +89,24 @@ void Save(const char* name, const std::string& text) {
         Require(n > 0); offset += static_cast<std::size_t>(n);
     }
     Require(fsync(fd.get()) == 0 && fd.close_checked() && fsync(dir.get()) == 0);
+}
+// Optional fixed metadata. Failure cannot change the SDK operation's result.
+void DescribeProvider(const char* leaf, std::uintptr_t address) noexcept {
+    try {
+        const auto image = startup_image::Inspect(address, [](std::uintptr_t pointer, startup_image::Facts& facts) {
+            Dl_info info{};
+            if (!dladdr(reinterpret_cast<void*>(pointer), &info)) return false;
+            facts.path = info.dli_fname;
+            facts.base = reinterpret_cast<std::uintptr_t>(info.dli_fbase);
+            return true;
+        });
+        Save(leaf, std::string("AEHL-CAL-PROVIDER-1\nbuild=") + calibration_build +
+            "\npid=" + std::to_string(getpid()) + "\nbirth=" + std::to_string(Birth()) +
+            "\nstatus=" + (image.known ? "IMAGE_DESCRIBED" : "UNKNOWN") +
+            "\naddress=" + std::to_string(address) + "\nbase=" + std::to_string(image.base) +
+            "\noffset=" + std::to_string(image.offset) + "\npath_hex=" + image.path_hex +
+            "\nownership=NOT_ACQUIRED\n");
+    } catch (...) {}
 }
 // Fixed own startup facts only; diagnostics cannot change registration outcome.
 void StartupStage(unsigned stage) noexcept {
@@ -222,6 +242,12 @@ public:
             << "\napply=" << reinterpret_cast<std::uintptr_t>(e->AEGP_ApplyEffect)
             << "\nreverse=" << reinterpret_cast<std::uintptr_t>(e->AEGP_GetInstalledKeyFromLayerEffect) << '\n';
         Save("suite", out.str());
+        DescribeProvider("provider-count", reinterpret_cast<std::uintptr_t>(e->AEGP_GetNumInstalledEffects));
+        DescribeProvider("provider-next", reinterpret_cast<std::uintptr_t>(e->AEGP_GetNextInstalledEffect));
+        DescribeProvider("provider-match", reinterpret_cast<std::uintptr_t>(e->AEGP_GetEffectMatchName));
+        DescribeProvider("provider-name", reinterpret_cast<std::uintptr_t>(e->AEGP_GetEffectName));
+        DescribeProvider("provider-apply", reinterpret_cast<std::uintptr_t>(e->AEGP_ApplyEffect));
+        DescribeProvider("provider-reverse", reinterpret_cast<std::uintptr_t>(e->AEGP_GetInstalledKeyFromLayerEffect));
     }
     ~Backend() { if (reference_) { auto ref = reference_; reference_ = nullptr;
         if (effect_.value->AEGP_DisposeEffect(ref)) cleanup_ok = false; } }
@@ -392,6 +418,15 @@ public:
             return true;
         } catch (...) { return false; }
     }
+    bool ObservationSafe(std::int64_t revision) noexcept {
+        try {
+            Require(OperationAllowed() && revision > 0 && BlankProjectRevision() == revision);
+            Save("cleanup-safe", std::string("AEHL-CAL-CLEANUP-1\nbuild=") + calibration_build +
+                "\npid=" + std::to_string(getpid()) + "\nbirth=" + std::to_string(Birth()) +
+                "\nAEHL-CAL-OWNED-1\n" + std::to_string(revision) + "\n");
+            return true;
+        } catch (...) { return false; }
+    }
     std::uint64_t MarkerCounter(std::int32_t key) {
         Require(OperationAllowed() && !reference_);
         A_long count=0; Require(effect_.value->AEGP_GetLayerNumEffects(layer_, &count)==0 && count==1);
@@ -462,10 +497,13 @@ void ObserveMarkerStartup() noexcept {
             "\nlast_callback_result=" + std::to_string(state.last_callback_result) +
             "\nglobal_setup_calls=" + std::to_string(state.global_setup_calls) +
             "\nparameter_setup_calls=" + std::to_string(state.parameter_setup_calls) +
+            "\ncallback_address=" + std::to_string(state.callback_address) +
+            "\nregistration_on_main=" + std::to_string(state.registration_on_main) +
             "\nregistration_name_hex=" + Hex(state.registration_name) +
             "\nregistration_match_hex=" + Hex(state.registration_match) +
             "\narguments_equal_config=" + (std::string(state.registration_name)==calibration_name &&
                 std::string(state.registration_match)==calibration_match ? "YES" : "NO") + "\n";
+        DescribeProvider("provider-registration", static_cast<std::uintptr_t>(state.callback_address));
     } catch (...) { text += "binding=UNKNOWN\n"; }
     Save("marker-startup", text);
     } catch (...) {}
@@ -592,9 +630,11 @@ bool PollFrame() {
 struct PendingNames {
     std::unique_ptr<Backend> backend;
     startup_calibration::Authorization request, bound;
-    startup_names::Schedule schedule{MonotonicMillis()};
-    std::uint64_t start = MonotonicMillis();
+    startup_names::Schedule schedule;
+    std::uint64_t start;
     std::int64_t revision = 0;
+    std::int32_t key = 0, count = 0;
+    explicit PendingNames(std::uint64_t time = MonotonicMillis()) : schedule(time), start(time) {}
 };
 std::unique_ptr<PendingNames> names;
 void FinishCalibration(std::unique_ptr<Backend> backend,
@@ -659,9 +699,30 @@ bool PollNames() {
     if (index==0) names->revision=snapshot.revision;
     diagnostic_stage="name-observation-between-samples-project-changed";
     Require(names->revision==snapshot.revision);
+    if (registry_observation) {
+        diagnostic_stage="registry-observation-own-marker";
+        Require(snapshot.exact == 1);
+        std::int32_t key = 0;
+        for (const auto& entry : snapshot.own)
+            if (entry.match == calibration_match && entry.name == calibration_name) key = entry.key;
+        Require(key != 0);
+        if (index == 0) { names->key = key; names->count = snapshot.count; }
+        Require(key == names->key && snapshot.count == names->count);
+    }
     names->schedule.Advance();
     if (names->schedule.Done()) {
         auto ready=std::move(names); // consumed before any fallible host operation
+        if (registry_observation) {
+            ObserveMarkerStartup();
+            const bool safe = ready->backend->ObservationSafe(ready->revision);
+            ready->backend.reset(); // Suite releases precede resource-cleanup assertion.
+            Save("result",std::string("AEHL-CAL-RESULT-2\nbuild=")+calibration_build+
+                "\nstatus="+(safe && cleanup_ok ? "LISTED_OBSERVED" : "PARTIAL_UNKNOWN")+
+                "\nstage=registry-observation\nkey="+std::to_string(ready->key)+
+                "\ncleanup="+(cleanup_ok?"PASS":"FAIL")+"\ncleanup_safe="+(safe?"YES":"NO")+
+                "\nrender=NOT_RUN\napply=NOT_RUN\n");
+            return true;
+        }
         FinishCalibration(std::move(ready->backend),ready->request,ready->bound);
     }
     return true;
@@ -680,8 +741,10 @@ A_Err Idle(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long*) noexcept {
         std::istringstream input(Read("request"));
         Require(static_cast<bool>(input >> schema >> request.token >> request.pid >> request.birth >> request.deadline >> ownership >> binary));
         Require(!(input >> trailing) && schema == "AEHL-CAL-REQUEST-2" &&
-            (ownership == "OWNED-STARTUP-APPLY-RENDER" || ownership == "OWNED-STARTUP-QUEUE-CONTROL"));
+            (ownership == "OWNED-STARTUP-APPLY-RENDER" || ownership == "OWNED-STARTUP-QUEUE-CONTROL" ||
+             ownership == "OWNED-STARTUP-REGISTRY-OBSERVATION"));
         queue_control=ownership == "OWNED-STARTUP-QUEUE-CONTROL";
+        registry_observation=ownership == "OWNED-STARTUP-REGISTRY-OBSERVATION";
         request.owned_blank_project = true;
         const startup_calibration::Authorization bound{calibration_token, getpid(), Birth(), 0, true};
         Require(request.token == bound.token && request.pid == bound.pid && request.birth == bound.birth &&

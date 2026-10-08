@@ -51,10 +51,10 @@ int main(int argc, char** argv) {
         startup_marker::StartupState state;
         Check(!startup(nullptr));
         state.magic = 0; Check(!startup(&state)); state.magic = 0x41454853;
-        state.version = 1; Check(!startup(&state)); state.version = 2;
+        state.version = 1; Check(!startup(&state)); state.version = 3;
         state.reserved = 1; Check(!startup(&state)); state.reserved = 0;
         Check(startup(&state) && state.registration_started == 0 && state.registration_completed == 0 &&
-              state.global_setup_calls == 0 && state.parameter_setup_calls == 0);
+              state.global_setup_calls == 0 && state.parameter_setup_calls == 0 && state.callback_address == 0);
         Check(std::strcmp(state.registration_name, expected_name) == 0 &&
               std::strcmp(state.registration_match, expected_match) == 0);
         Check(registration(nullptr, nullptr, nullptr, nullptr, nullptr) == PF_Err_INVALID_CALLBACK && registrations == 0);
@@ -63,7 +63,8 @@ int main(int argc, char** argv) {
         callback_result = 37;
         Check(registration(expected_data, Registration, nullptr, nullptr, nullptr) == 37 && registrations == 2);
         Check(startup(&state) && state.registration_started == 3 && state.registration_completed == 3 &&
-              state.last_callback_result == 37 && registrations == 2);
+              state.last_callback_result == 37 && registrations == 2 &&
+              state.callback_address == reinterpret_cast<std::uintptr_t>(&Registration) && state.registration_on_main == 1);
         Check(std::strcmp(state.registration_name, expected_name) == 0 &&
               std::strcmp(state.registration_match, expected_match) == 0);
         PF_OutData out{};

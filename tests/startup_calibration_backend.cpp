@@ -37,6 +37,22 @@ int main(int argc, char** argv) {
             Check(startup_color::Diagnostic(fixed+"private-profile-name") == startup_color::Diagnostic("invalid"));
         }
         SPBasicSuite provider{}; provider.AcquireSuite = Acquire; provider.ReleaseSuite = Stub;
+        unsigned resolver_calls = 0;
+        auto resolver = [&](std::uintptr_t, startup_image::Facts& facts) {
+            ++resolver_calls; facts = {"/owned/image", 0x1000}; return true; };
+        Check(!startup_image::Inspect(0, resolver).known && resolver_calls == 0);
+        Check(!startup_image::Inspect(0xfff, resolver).known);
+        auto description = startup_image::Inspect(0x1010, resolver);
+        Check(description.known && description.offset == 16 && description.base == 0x1000 &&
+            description.path_hex == "2f6f776e65642f696d616765");
+        const auto unknown = startup_image::Inspect(0x1010, [](std::uintptr_t, startup_image::Facts&) { return false; });
+        Check(!unknown.known && unknown.base == 0 && unknown.offset == 0 && unknown.path_hex.empty());
+        for (const auto* path : {"", "relative"})
+            Check(!startup_image::Inspect(0x1010, [&](std::uintptr_t, startup_image::Facts& f) {
+                f = {path, 0x1000}; return true; }).known);
+        const std::string long_path(1024, '/');
+        Check(!startup_image::Inspect(0x1010, [&](std::uintptr_t, startup_image::Facts& f) {
+            f = {long_path.c_str(), 0x1000}; return true; }).known);
         basic = &provider;
         effects.AEGP_GetNumInstalledEffects = Stub; effects.AEGP_GetNextInstalledEffect = Stub;
         effects.AEGP_GetEffectMatchName = Stub; effects.AEGP_GetEffectName = Stub; effects.AEGP_ApplyEffect = Stub;
@@ -123,7 +139,34 @@ int main(int argc, char** argv) {
             }
             if (mode>=11) Check(!Exists("color-started") && !Exists("color-diagnostic") && !Exists("color-engine"));
         }
-        std::cout << "PASS:13 SDK-backend cases; project/deadline/color refusals stop later mutation; fixed diagnostics only; Adobe_calls=0\n";
+        // Exercise the actual read-only finish branch, with fake SDK readers.
+        // No callback here can mutate a project or invoke an Adobe function.
+        mode = 0; registry_observation = true;
+        utilities.AEGP_ExecuteScript = [](AEGP_PluginID, const A_char* script, A_Boolean, AEGP_MemHandle* result, AEGP_MemHandle*) -> A_Err {
+            Check(std::strcmp(script, blank_script) == 0);
+            *result = reinterpret_cast<AEGP_MemHandle>(0x6000); return 0; };
+        effects.AEGP_GetNumInstalledEffects = [](A_long* value)->A_Err { *value = 1; return 0; };
+        effects.AEGP_GetNextInstalledEffect = [](AEGP_InstalledEffectKey prev, AEGP_InstalledEffectKey* next)->A_Err {
+            *next = prev ? 0 : 88; return 0; };
+        effects.AEGP_GetEffectMatchName = [](AEGP_InstalledEffectKey, A_char* value)->A_Err {
+            std::strcpy(value, calibration_match); return 0; };
+        effects.AEGP_GetEffectName = [](AEGP_InstalledEffectKey, A_char* value)->A_Err {
+            std::strcpy(value, calibration_name); return 0; };
+        effects.AEGP_ApplyEffect = [](AEGP_PluginID, AEGP_LayerH, AEGP_InstalledEffectKey, AEGP_EffectRefH*)->A_Err {
+            throw std::runtime_error("read-only mode reached Apply"); };
+        const auto observation_path = base + "/observation";
+        Check(std::filesystem::create_directory(observation_path)); Check(chmod(observation_path.c_str(), 0700) == 0);
+        calibration_control = observation_path.c_str(); script_response = "AEHL-CAL-BLANK-1\n9\n";
+        comp_calls = solid_calls = depth_calls = 0;
+        names = std::make_unique<PendingNames>(MonotonicMillis() - 4000);
+        names->request.deadline = ::Now() + 120;
+        names->backend = std::make_unique<Backend>(names->request.deadline);
+        Check(PollNames() && PollNames() && PollNames() && !names);
+        Check(Read("result").find("status=LISTED_OBSERVED") != std::string::npos &&
+            Read("result").find("apply=NOT_RUN") != std::string::npos && Read("cleanup-safe").find("\n9\n") != std::string::npos);
+        Check(!Exists("begin") && !Exists("render-started") && comp_calls == 0 && solid_calls == 0 && depth_calls == 0);
+        registry_observation = false;
+        std::cout << "PASS:13 SDK-backend cases; project/deadline/color refusals stop later mutation; fixed diagnostics only; image bounds and read-only finish checked; Adobe_calls=0\n";
         return 0;
     } catch (const std::exception& error) { std::cerr << error.what() << '\n'; return 1; }
 }

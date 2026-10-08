@@ -129,12 +129,50 @@ def ready_identity(raw, record, observed):
     return ready
 
 
-def request(record, observed, deadline, queue_mode=False):
+def request(record, observed, deadline, queue_mode=False, observation_mode=False):
     need(type(deadline) is int and deadline > 0, 'invalid deadline')
+    need(not (queue_mode and observation_mode), 'request modes are mutually exclusive')
     observer = record['bundles'][1]['binary_sha256']
     return ('AEHL-CAL-REQUEST-2 ' + record['token'] + ' ' + str(observed['pid']) + ' ' +
             str(birth(observed)) + ' ' + str(deadline) +
-            (' OWNED-STARTUP-QUEUE-CONTROL ' if queue_mode else ' OWNED-STARTUP-APPLY-RENDER ') + observer + '\n').encode('ascii')
+            (' OWNED-STARTUP-REGISTRY-OBSERVATION ' if observation_mode else
+             ' OWNED-STARTUP-QUEUE-CONTROL ' if queue_mode else ' OWNED-STARTUP-APPLY-RENDER ') + observer + '\n').encode('ascii')
+
+
+def verify_observation(record, raw_result, samples):
+    result = fields(raw_result, 'AEHL-CAL-RESULT-2')
+    need(result.get('build') == record['build_id'] and result.get('status') == 'LISTED_OBSERVED' and
+         result.get('cleanup') == 'PASS' and result.get('cleanup_safe') == 'YES' and
+         result.get('render') == result.get('apply') == 'NOT_RUN' and
+         result.get('stage') == 'registry-observation', 'read-only observation incomplete')
+    need(len(samples) == 3, 'three bounded samples required')
+    selected = []
+    for index, raw in enumerate(samples):
+        s = fields(raw, 'AEHL-CAL-NAMES-1')
+        need(s.get('build') == record['build_id'] and s.get('sample') == str(index) and
+             s.get('complete') == 'YES' and s.get('stage') == 'name-observation-complete' and
+             s.get('exact') == '1', 'name sample incomplete or wrong identity')
+        count, revision = int(s['count']), int(s['revision'])
+        need(1 <= count <= 8192 and int(s['traversed']) == count and revision > 0 and
+             1 <= int(s['own_observations']) <= 16, 'observation bounds differ')
+        matches = []
+        for own in range(int(s['own_observations'])):
+            def decode(field):
+                value = s[field]
+                need(0 < len(value) <= 1024 and len(value) % 2 == 0 and
+                     set(value) <= set('0123456789abcdef'), 'invalid bounded name encoding')
+                text = bytes.fromhex(value).decode('utf-8', 'strict')
+                need('\0' not in text, 'embedded name terminator')
+                return text
+            name, match = decode(f'own_{own}_name_hex'), decode(f'own_{own}_match_hex')
+            if match == record['match_name']:
+                need(name == record['config']['calibration_name'], 'own display name differs')
+                matches.append(int(s[f'own_{own}_key']))
+        need(len(matches) == 1 and matches[0] != 0, 'own installed key absent/duplicate')
+        selected.append((matches[0], count, revision))
+    need(len(set(selected)) == 1 and str(selected[0][0]) == result.get('key'), 'key/count/project changed')
+    return {'installed_key': selected[0][0], 'count': selected[0][1], 'revision': selected[0][2],
+            'scope': 'read-only normal-startup enumeration; internal record/owner/late-add NOT PROVED'}
 
 
 def native_complete(record, raw_result):
@@ -260,8 +298,9 @@ def prepare(manifest, expected_hash):
     return record, base, install
 
 
-def run(manifest, digest, execute, queue_mode=False):
+def run(manifest, digest, execute, queue_mode=False, observation_mode=False):
     need(execute, 'explicit owned-startup execution authority required')
+    need(not (queue_mode and observation_mode), 'execution modes are mutually exclusive')
     need(platform.system() == 'Darwin' and platform.machine() == 'arm64', 'wrong execution platform')
     record, base, install = prepare(manifest, digest)
     need(not processes(), 'AE/aerender already running; preserve user session')
@@ -270,10 +309,12 @@ def run(manifest, digest, execute, queue_mode=False):
     live = base / 'live'; live.mkdir(mode=0o700)
     before = {p.name: (p.lstat().st_ino, p.lstat().st_mtime_ns, p.lstat().st_mode) for p in PLUGIN_ROOT.iterdir()}
     report = {'schema': 'AEHL-STARTUP-LIVE-1', 'build_id': record['build_id'], 'source': record['source']['commit'],
-              'scope': 'one owned startup/apply/script Render Queue control' if queue_mode else
+              'scope': 'one owned startup/read-only registry provenance observation' if observation_mode else
+                       'one owned startup/apply/script Render Queue control' if queue_mode else
                        'one owned normal startup/public-SDK apply/asynchronous frame', 'result': 'UNKNOWN',
               'installation': 'NOT RUN', 'launch': 'NOT RUN', 'publication': 'NOT SENT', 'cleanup': 'NOT RUN',
               'late_registration': 'NOT RUN', 'private_calls': 'NOT RUN', 'user_authority':
+              'user authorized the fourteen-step conditional reader/publication packet' if observation_mode else
               'user authorized the ten-step separate control-render packet' if queue_mode else
               'user said делай after the proposed separate controlled AE startup/apply/frame run'}
     child = None; observed = None
@@ -311,7 +352,7 @@ def run(manifest, digest, execute, queue_mode=False):
         stop = time.monotonic() + 120
         need(common.process_identity(child.pid) == observed and processes() == [child.pid], 'process changed before publication')
         report['publication'] = 'OUTCOME UNKNOWN'  # before entering atomic publication
-        data = request(record, observed, int(time.time()) + 110, queue_mode)
+        data = request(record, observed, int(time.time()) + 110, queue_mode, observation_mode)
         write(live / 'publication-intent.json', json.dumps({'build_id': record['build_id'],
               'request_sha256': hashlib.sha256(data).hexdigest(), 'outcome': 'UNKNOWN UNTIL JOURNAL'}, indent=2).encode())
         publish(control, data)
@@ -323,7 +364,12 @@ def run(manifest, digest, execute, queue_mode=False):
         need(time.monotonic() < stop and common.process_identity(child.pid) == observed, 'late result or changed process')
         raw_result = common.read(control / 'result', 4096)
         report['native_result'] = fields(raw_result, 'AEHL-CAL-RESULT-2')
-        if queue_mode:
+        if observation_mode:
+            need(not any((control / leaf).exists() for leaf in ('begin', 'render-started', 'queue-output', 'frame.argb')),
+                 'read-only request unexpectedly entered mutation/render')
+            comparison = verify_observation(record, raw_result,
+                [common.read(control / f'names-{i}', 8192) for i in range(3)])
+        elif queue_mode:
             need(report['native_result'].get('status') == 'LISTED_APPLIED_QUEUE_EXPORTED',
                  'queue control refused/incomplete; no exported pixels accepted')
             output = control / 'queue-output'; common.private_directory(output)
@@ -338,7 +384,8 @@ def run(manifest, digest, execute, queue_mode=False):
                 common.read(control / 'frame-metadata', 4096), common.read(control / 'frame.argb', 64 * 48 * 4))
         need(time.monotonic() < stop, 'verification exceeded original operation budget')
         report.update(comparison); report['result'] = 'PASS'
-        report['host_provenance'] = 'OWNED AE STARTUP/APPLY/SCRIPT RENDER QUEUE' if queue_mode else 'OWNED AE SDK STARTUP/APPLY/ASYNC FRAME'
+        report['host_provenance'] = 'OWNED AE READ-ONLY STARTUP' if observation_mode else \
+            'OWNED AE STARTUP/APPLY/SCRIPT RENDER QUEUE' if queue_mode else 'OWNED AE SDK STARTUP/APPLY/ASYNC FRAME'
     except Exception as error:
         report['result'] = 'FAIL_OR_UNKNOWN'; report['reason'] = str(error)
     finally:
@@ -373,9 +420,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--manifest', type=Path, required=True); parser.add_argument('--sha256', required=True)
     parser.add_argument('--execute-owned-startup', action='store_true')
-    parser.add_argument('--control-render-queue', action='store_true', help='separate one-frame PNG control; never invokes async receipt capture')
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument('--control-render-queue', action='store_true', help='separate one-frame PNG control; never invokes async receipt capture')
+    mode.add_argument('--observe-registry', action='store_true', help='read-only startup enumeration/provider metadata; no Apply or render')
     args = parser.parse_args()
-    return run(args.manifest.resolve(strict=True), args.sha256, args.execute_owned_startup, args.control_render_queue)
+    return run(args.manifest.resolve(strict=True), args.sha256, args.execute_owned_startup,
+               args.control_render_queue, args.observe_registry)
 
 
 if __name__ == '__main__':

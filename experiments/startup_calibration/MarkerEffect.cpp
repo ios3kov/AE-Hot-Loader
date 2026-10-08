@@ -8,6 +8,7 @@
 #include <cstring>
 #include <cstddef>
 #include <atomic>
+#include <pthread.h>
 #ifndef AEHL_MARKER_SEED
 #define AEHL_MARKER_SEED 0x345678u
 #endif
@@ -23,6 +24,8 @@
 static std::atomic<std::uint64_t> registration_started{0}, registration_completed{0};
 static std::atomic<std::int32_t> last_callback_result{0};
 static std::atomic<std::uint64_t> global_setup_calls{0}, parameter_setup_calls{0};
+static std::atomic<std::uint64_t> callback_address{0};
+static std::atomic<std::uint32_t> registration_on_main{0};
 // The exact same immutable byte arrays are passed to the host callback and
 // exposed by the own diagnostic getter. Counter observations remain separate.
 static constexpr char registration_name[] = AEHL_MARKER_NAME;
@@ -32,12 +35,14 @@ static_assert(sizeof(registration_name) <= 64 && sizeof(registration_match) <= 6
 
 extern "C" __attribute__((visibility("default")))
 bool AEHL_MarkerStartupState(startup_marker::StartupState* state) noexcept {
-    if (!state || state->magic != 0x41454853 || state->version != 2 || state->reserved != 0) return false;
+    if (!state || state->magic != 0x41454853 || state->version != 3 || state->reserved != 0 || state->reserved2 != 0) return false;
     state->registration_completed = registration_completed.load(std::memory_order_acquire);
     state->last_callback_result = last_callback_result.load(std::memory_order_acquire);
     state->registration_started = registration_started.load(std::memory_order_acquire);
     state->global_setup_calls = global_setup_calls.load(std::memory_order_acquire);
     state->parameter_setup_calls = parameter_setup_calls.load(std::memory_order_acquire);
+    state->callback_address = callback_address.load(std::memory_order_acquire);
+    state->registration_on_main = registration_on_main.load(std::memory_order_acquire);
     std::memset(state->registration_name, 0, sizeof(state->registration_name));
     std::memset(state->registration_match, 0, sizeof(state->registration_match));
     std::memcpy(state->registration_name, registration_name, sizeof(registration_name));
@@ -50,6 +55,8 @@ extern "C" __attribute__((visibility("default")))
 PF_Err PluginDataEntryFunction2(PF_PluginDataPtr data, PF_PluginDataCB2 callback,
                               struct SPBasicSuite*, const char*, const char*) noexcept {
     registration_started.fetch_add(1, std::memory_order_release);
+    callback_address.store(reinterpret_cast<std::uintptr_t>(callback), std::memory_order_release);
+    registration_on_main.store(pthread_main_np() == 1 ? 1u : 0u, std::memory_order_release);
     const auto result = callback ? callback(data, reinterpret_cast<const A_u_char*>(registration_name),
         reinterpret_cast<const A_u_char*>(registration_match),
         reinterpret_cast<const A_u_char*>("AE Hot Loader Diagnostic"),

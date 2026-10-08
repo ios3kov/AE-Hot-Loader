@@ -86,6 +86,41 @@ class StartupLiveTests(unittest.TestCase):
         self.assertEqual(parts, ['AEHL-CAL-REQUEST-2', 'a'*32, '123', '456000007', '1000',
                                  'OWNED-STARTUP-APPLY-RENDER', 'd'*64])
 
+    def observation(self):
+        self.record.update(match_name='AEHL.M.fixture', config={'calibration_name': 'AEHL Fixture'})
+        result = ('AEHL-CAL-RESULT-2\nbuild=' + self.record['build_id'] +
+            '\nstatus=LISTED_OBSERVED\nstage=registry-observation\nkey=42\ncleanup=PASS\ncleanup_safe=YES\nrender=NOT_RUN\napply=NOT_RUN\n').encode()
+        samples = [('AEHL-CAL-NAMES-1\nbuild=' + self.record['build_id'] +
+            f'\nsample={i}\ncount=2\ntraversed=2\nexact=1\nrevision=9\ncomplete=YES\nstage=name-observation-complete\n'
+            'own_observations=1\nown_0_key=42\nown_0_name_hex=' + b'AEHL Fixture'.hex() +
+            '\nown_0_match_hex=' + b'AEHL.M.fixture'.hex() + '\n').encode() for i in range(3)]
+        return result, samples
+
+    def test_read_only_observation_accepts_three_consistent_own_samples(self):
+        result, samples = self.observation()
+        self.assertEqual(live.verify_observation(self.record, result, samples)['installed_key'], 42)
+        self.assertIn('REGISTRY-OBSERVATION', live.request(self.record, self.process, 1000, observation_mode=True).decode())
+        with self.assertRaises(ValueError): live.request(self.record, self.process, 1000, True, True)
+
+    def test_observation_rejects_mutation_claim_missing_samples_and_wrong_scope(self):
+        result, samples = self.observation()
+        for old, new in [(b'apply=NOT_RUN', b'apply=PASS'), (b'cleanup=PASS', b'cleanup=FAIL'),
+                         (b'status=LISTED_OBSERVED', b'status=LISTED_APPLIED_FRAME_CAPTURED'),
+                         (b'key=42', b'key=0'), (b'build=b', b'build=a')]:
+            with self.subTest(new=new), self.assertRaises(ValueError):
+                live.verify_observation(self.record, result.replace(old, new), samples)
+        with self.assertRaises(ValueError): live.verify_observation(self.record, result, samples[:2])
+
+    def test_observation_rejects_key_count_revision_name_and_encoding_changes(self):
+        result, samples = self.observation()
+        for old, new in [(b'own_0_key=42', b'own_0_key=43'), (b'count=2', b'count=3'),
+                         (b'revision=9', b'revision=10'), (b'exact=1', b'exact=0'),
+                         (b'complete=YES', b'complete=NO'), (b'own_observations=1', b'own_observations=17'),
+                         (b'own_0_name_hex=', b'own_0_name_hex=ff'), (b'own_0_match_hex=', b'own_0_match_hex=z')]:
+            altered = [*samples[:2], samples[2].replace(old, new)]
+            with self.subTest(new=new), self.assertRaises((ValueError, UnicodeError)):
+                live.verify_observation(self.record, result, altered)
+
     def test_stale_wrong_process_or_unreleased_cleanup_refuses(self):
         live.cleanup_proof(self.proof, self.record, self.process, 0.1, self.result)
         for age in (-1, 2.01):
