@@ -1,5 +1,14 @@
 # AE Hot Loader — current Stage C handoff, updated 2026-10-04
 
+
+## Current reader/publication packet — 2026-10-08
+
+Exact code d7225b4: read-only provenance mode prepared; offline/build and both CI
+PASS. One owned startup timed out before READY; observation request NOT SENT.
+C1 PARTIAL, late-add/C2 NOT RUN; PID41222 preserved pending owned-session handling.
+See the [single current checkpoint and LB01–LB14 mapping](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#current-continuation--2026-10-08).
+Earlier completed PNG control and exit incident below remain historical.
+
 ## Current follow-up — 2026-10-08
 
 Twelve-step control: testedc28cb38 produced complete native receipt/counter0→1

@@ -16,7 +16,7 @@ compensation remain open. This earlier checkpoint retains its original evidence
 and does not become a live registration/apply/render result.
 
 
-## Current continuation — 2026-10-08 (in progress)
+## Current continuation — 2026-10-08
 
 Baseline `4107853d452e045fa1084b0f94aebd251be92918`, clean research branch.
 User «делай» approves the discussed fourteen-step conditional packet. Rules
@@ -41,7 +41,7 @@ AE/aerender absence; it cannot validate private writer safety. No signal is sent
 | Task | Acceptance | State |
 | --- | --- | --- |
 | LB01 | Saved suite addresses reconciled to exact original reader offsets | PASS bounded arithmetic: Count/Next/Match/Reverse share delta `0x300bb5ef8`; Apply delta `0x300bb5df4` differs by `0x104`. Neither is a validated image slide. Live provider required |
-| LB02 | Module provenance and exact file pins recorded for selected live pointers | NOT RUN |
+| LB02 | Module provenance and exact file pins recorded for selected live pointers | Exact five file hashes/UUIDs PASS; new live provider observation NOT RUN: startup READY absent |
 | LB03 | Own installed key linked to internal record | PARTIAL static; live record UNKNOWN |
 | LB04 | Normal startup writer chain and callback participation distinguished | PARTIAL static; live writer UNKNOWN |
 | LB05 | Descriptor owner and transfer | PARTIAL static |
@@ -50,10 +50,10 @@ AE/aerender absence; it cannot validate private writer safety. No signal is sent
 | LB08 | Completion/visibility/commit distinguished | PARTIAL; commit UNKNOWN |
 | LB09 | Partial-failure compensation | UNKNOWN; no fault injection |
 | LB10 | Append-only admission | BLOCKED by LB03–LB09 |
-| LB11 | Narrow inert provenance/observation implementation | IMPLEMENTED; separate read-only request cannot reach Apply/frame. Describe six acquired slot pointers and host-supplied own callback address only |
-| LB12 | Bounds, refusal, regressions, review and signed exact build | NOT RUN |
-| LB13 | One admitted startup observation; no apply/frame/private calls | CONDITIONAL NOT RUN |
-| LB14 | Evidence, source publication and final reconciliation | IN PROGRESS |
+| LB11 | Narrow inert provenance/observation implementation | PASS offline: explicit read-only request, no Apply/frame, six acquired pointers plus host-supplied own callback address; actual SDK backend finish branch checked |
+| LB12 | Bounds, refusal, regressions, review and signed exact build | PASS: source d7225b4; 522 Python /62 Node /22 stages, no skips; actual SDK ASan/UBSan build checks; both exact-code CI runs success |
+| LB13 | One admitted startup observation; no apply/frame/private calls | One launch attempted; FAIL_OR_UNKNOWN: no READY within180s. Request NOT SENT; observation/apply/render NOT RUN; no retry |
+| LB14 | Evidence, source publication and final reconciliation | Source pushed; private Evidence/checkpoint retained. Own host PID41222 preserved pending permitted inspection/manual closure; no signal sent |
 
 The user-supplied CI screenshot belongs to `4f3547b`. Both run conclusions were
 `cancelled`; the native report upload subsequently failed because cancellation
@@ -61,6 +61,95 @@ preceded archive creation. Workflows use branch concurrency with
 `cancel-in-progress: true`. This is not a test PASS or an assertion failure.
 Do not push successive closure commits before the code candidate's CI completes.
 Historical findings below retain their original v8 scope and immutable evidence.
+
+### Exact candidate and completed checks
+
+Code `d7225b49c5dec7c9a36af4d8fbd7d64627cbeb64`, run nonce
+`46584b3e72bb4a229fe8873ca9ffac72`. Manifest SHA256
+`06bdad867024c1215b0972554133ca7503a9173c5b76df209b3c93281b51bc7d`.
+Observer and ordinary marker built/signed against all74 SDK pins, then hashes,
+signatures and clean source independently rechecked. Actual SDK adapter/frame/
+backend/inert and marker oracle PASS. Backend includes the actual observation
+finish branch with fake SDK callbacks, proving no CreateComp/solid/depth setter/
+Apply/frame is reached in that test. This is not an AE acceptance claim.
+Own diagnostic ABI3 adds only atomic callback-address/main-thread facts;
+independent samples are not an atomic lifecycle snapshot or drain. Loader
+metadata observation obtains no module owner and never invokes the callback.
+
+Full regression archive `private-evidence-2026-10-08/AEHL-checks-zaak_pea.zip`,
+SHA256 `5e756c5792941859af26c158da9ecb693317350eb38ea7e60d12c594153f8a08`:
+522 Python,62 Node,22 stages PASS; no skips. CRC/all payload hashes PASS.
+Scanner:412 source files,272 supported/140 unsupported, no omissions, rawexit1.
+Unchanged CLI false positive `e2999cfe8b5b3a6bd27f0a62` reviewed without
+suppression; C++ separately reviewed for bounds/lifetime, numeric byte offsets,
+resource pairing, atomic own state and SDK main-thread/reentry restrictions.
+Spec review PASS for narrow scope; quality review PASS in bounded offline scope.
+Full target object lifetime, render consumers and partial rollback remain BLOCKED.
+
+Exact-code CI [research37833308687](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37833308687)
+and [macOS37833308736](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37833308736)
+both completed success. Their PASS belongs to d7225b4; documentation follow-ups
+require their own CI receipt. Cancelled earlier4f3547b runs are not relabelled.
+
+### Single live attempt and unresolved startup
+
+Fresh AE/aerender absence was checked before the admitted launch; the controller
+rechecked it before install and launch. Only the exact unique pair was installed
+under `AEHLStartupCalibration-46584b3e72bb`. Own PID41222, birth
+`1791488387.628645`, exact target executable. No `ready`, startup-stage, suite,
+provider, marker-startup, request or native-result record was produced within
+180seconds. No observation request, script/project operation, Apply, queue or
+frame request was sent. Source/artifact/install PASS does not establish loaded
+observer identity or any reader/provider relationship.
+
+Controller result `FAIL_OR_UNKNOWN`, reason startup timeout; no safe blank-project
+proof. Host preserved; no signal/Apple event/forced exit/second launch. Metadata
+of other plugin entries UNCHANGED. Exact pair remains installed until AE absence
+permits retirement, with all bytes retained. User asked for permission to inspect
+only that session window; no window/project read before their answer. Startup
+cause UNKNOWN: do not blame new provenance code, plugins, recovery or SDK without
+an attributed observation. New controller no-signal policy was exercised here;
+a normal AE quit and full session closure are not certified.
+
+### File reconciliation and remaining admission conditions
+
+Current MEE/FLT/BEE/PluginSupport/aelib file SHA256s and UUIDs match the historical
+pins. A fresh bounded FAT-arm64/Mach-O segment decode reconfirmed all six selected
+MEE table raw words: reverse67bd8, apply67318, count67b54, next68314, name683d4,
+match6865c. These are file chained-pointer candidate targets, not live rebases.
+The saved c28 runtime pointer deltas above do not match one common image slide.
+No guessing/replaying a pointer can substitute for missing provider identity.
+
+Three old `/private/tmp` raw archives referenced below are now UNAVAILABLE;
+this packet records their historical hashes but does not claim fresh archive
+validation. Existing checkpoints and unchanged original file pins were retained.
+The independent verifier first assumed a thin Mach-O container and refused;
+bounded FAT-arm64 slice selection corrected that verifier, not input bytes.
+The SDK verifier initially used nonexistent `sdk_sha256`; correction to actual
+`sdk_files` then checked all74 pins. These two verifier failures were preserved
+as checks, not target/plugin defects.
+
+LB03–LB09 are bounded static knowledge and unresolved live questions. The selected
+file reader bridge, FCSpec routine retention and render-side retained lookup do
+not establish the real control marker's internal record/descriptor path or all
+consumers. Append changes vector/name map/index before a preference lane that
+can throw; normal cleanup is not whole-operation rollback. Notify's byte is not
+a demonstrated visibility gate. No inverse/unregister requirement is added for
+already committed append-only records; incomplete insertion recovery is required.
+A blanket render stop is neither assumed necessary nor sufficient.
+
+Next: identify why our observer has no READY in PID41222 using only permitted
+owned-session evidence. After safe closure, retain the exact installed pair
+outside discovery. Then obtain the six actual provider mappings and callback
+origin before tracing key→record→normal writer/lifetime. Private late-call remains
+BLOCKED; no new effect absent at startup was added; C1 PARTIAL, C2 NOT RUN.
+
+Detailed private metadata/review/admission/CI records:
+`build-ae-hot-loader/registry-live-bridge-2026-10-08-46584b3e72bb`.
+Actual attempt/control/owned logs:
+`build-ae-hot-loader/startup-calibration-46584b3e72bb4a229fe8873ca9ffac72`.
+No Adobe binaries/SDK source or user/recovery project is redistributed.
+
 
 ## Result
 
