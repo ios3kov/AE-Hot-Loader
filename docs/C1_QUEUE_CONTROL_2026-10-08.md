@@ -431,3 +431,83 @@ and archive integrity verification, never relabeled as a new whole-suite run.
 The parser/queue focused regressions run again for this control acceptance.
 Whole control success does not establish new ordinary-effect late registration,
 startup writer→reader ownership or async receipt lifetime; C2/D/release stay open.
+
+## Twelve-step target result and exit-incident remediation
+
+One fresh prospective candidate atc28cb38c04ed61e121d5279b64d853ed30af02b6,
+nonce9061d09296b04e59af2c7616bf921580, manifest SHA256
+ a2f59d11a93e4bfb5aa89d031f8e41e83b3b145303ce55cd1794387ecc74703f.
+411source files/74SDK hashes/signatures/host/source preflight PASS. Fresh SDK
+21frame/13backend/3inert ASan/UBSan and marker oracle PASS. Focused8Python queue
+methods/40JS model cases PASS; prior517Python/62Node/22stage archive and24member
+digests/non-Markdown equality verified, explicitly retained rather than rerun.
+Fresh scanner272supported/139unsupported/zero omissions; raw exit1 retained,
+unchanged argparse CLI false positive reviewed; native scope reviewed separately.
+
+One own AE25.6x101 arm64 PID36671/birth1791486486.91131 startup/key796/apply/
+reverse/build/seed9462224 PASS. One main-thread queue request/render, no retry.
+Observed20templates, selectedexisting `png`, actualFormat PNG Sequence/Channels
+RGB. Native LISTED_APPLIED_QUEUE_EXPORTED, counter0→1, same projectrevision34,
+SDK cleanupPASS and cleanup_safeYES. Exactly one64x48 RGB8 PNG910bytes;
+independent production verifier/oracle0differing channels PASS. RGBA packed/expected
+SHA256d9582b7de46e64913dd8067bc46653fafbb0be784c5b084e29fd58340a6728e5;
+PNG SHA2560a1505ed81d89db2fd4ecea9328aebca6b72fb47bbc80bc4c6b92d5b6b239bc4.
+Implicit opaque alpha only; no color/gamma/size conversion. The previous reader
+failure is repaired in this target run: counter-after and owned snapshot now
+exist; previous65c9eed raw incomplete receipt remains unchanged. Independent
+comparison initially compared JSON lists with in-memory tuples, then normalized
+serialization; values agree. This local verifier error did not change host data.
+
+Exit separately FAILED/UNKNOWN: old supervisor sent child.terminate() (SIGTERM)
+after fresh native proof and then wait10s timed out. Original live result records
+controlPASS/cleanupBLOCKED_OR_UNKNOWN, supervisor exit1; never relabeled whole
+PASS. Owned stderr contains own PID/main-thread7071704 and crash-handler/report
+messages. User image recovery path Crash_9.aep/main-thread7071704 and metadata
+time immediately after native completion link the exit incident to this test.
+Recovery project content not read/copied/deleted. SIGTERM is not a normal AE
+quit; timing supports it as a hypothesis, not a proved crash stack/root cause.
+The last RenderThreadExecutor8threads line and installed third-party warnings
+are not assigned causality; no third-party/GPU/preferences alteration.
+
+User said «закрыл». Fresh no-AE/aerender PASS; exact signed owned pair retained
+outside plugin discovery. Other entries unchanged during retirement PASS;
+whole-live metadata comparison UNKNOWN because the timeout skipped the original
+supervisor's in-memory comparison. Preserve original live/result.json, add only
+manual-close-retirement.json and independent verification/exit receipts.
+
+Minimal scoped controller correction (no new host run): remove every live-host
+termination/wait call; retain even proof-passing host for manual close until a
+normal AE quit protocol has independent target evidence. Preserve framePASS as
+separate from closure; supervisor exit1 remains incomplete manual closure.
+Persist plugin-entry baseline before installation and execute installation
+checks separately even when exit/proof validation fails. Native binaries,
+parser/render/SDK/reentry/lifetime paths unchanged. Added focused regression
+asserting no terminate/kill/send_signal/wait under valid, stale, changed-PID,
+missing-proof and already-exited cases. Initial fixture used macOS /var symlink,
+strict path guard correctly refused; fixture now resolves its owned path, no
+production guard weakening. Eleven startup Python tests PASS after correction.
+No original defective candidate replay or claimed original-versus-fixed crash
+regression; actual old run is retained, new manual-close policy runtime NOT RUN.
+Fresh whole-source regression/review/CI follow below.
+
+QR01–10 control preparation and complete target receipt/pixels PASS; QR11 native
+resource release/current proof PASS, automated exit FAIL_OR_UNKNOWN, user closure
+and exact retirement PASS; QR12 source/evidence reconciliation in progress.
+Control render acceptance is now complete; whole safe automated lifecycle is not.
+C1 PARTIAL, late-add/C2 NOT RUN, async lifetimeUNKNOWN, D/release open. Next goal
+work remains startup writer→live-reader bridge/late-publication safety, with no
+new private/live action inferred from this control. Normal automated quit also
+remains an independent open check; do not repeat SIGTERM or renderer success as
+its substitute.
+
+Controller regression before source freeze: the same metadata-loss test was run
+against the exact exported originalc28cb38 run.py, with owned synthetic files and
+fake SDK/process boundaries. It failed the expected other_plugin_entries assertion
+(one failure, zero errors/setup faults). The corrected controller passes that test
+and preservation/refusal cases; no Adobe call or real process signal. This proves
+the offline metadata-loss repair and no-signal policy only, not a crash-cause fix.
+Review: scope(spec)PASS and source-qualityPASS; preserved whole lifecycle failure,
+no private API/new quit protocol; bounded existing journals/resource guards and
+main-thread/native paths unchanged. Durable baseline is private metadata only;
+no third-party file content read or changed. A normal automated AE exit remains
+NOT RUN. Fresh controller regression/CI results follow separately.

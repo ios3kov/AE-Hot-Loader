@@ -4,6 +4,12 @@ The 2026-10-08 packet adds a separately requested public scripting Render Queue
 control (`run.py --control-render-queue --execute-owned-startup`). It never submits
 an async request. One fresh PNG export is independently decoded without color
 conversion and compared with the per-build oracle; RGB implicit alpha is declared.
+After the owned PID36671 exit incident, the supervisor preserves the host for
+manual closure even when the native owned-project/resource proof passes. It
+never sends SIGTERM or another termination signal. Exit1 indicates unresolved
+closure/retirement; the frame result remains separate. A plugin-entry metadata
+baseline is persisted before install, and installation checks run independently
+of cleanup-proof errors. A normal automated AE quit protocol is not yet verified.
 The original async lifetime gate remains open. See the
 [current control acceptance and evidence](../../docs/C1_QUEUE_CONTROL_2026-10-08.md).
 
@@ -112,9 +118,10 @@ The owned supervisor is `run.py --manifest /absolute/manifest.json --sha256 DIGE
 --execute-owned-startup`. It requires an exact prospective candidate, no existing
 AE/aerender, exact signed files and current source bytes. It exclusively installs
 two unique bundles, starts its own executable, verifies PID/birth/ready, publishes
-once and independently compares all12288 ARGB8 channels. It stops only its unchanged
-child after a fresh native owned-project proof and successful SDK resource release;
-otherwise it preserves the host and reports cleanup BLOCKED. It retires only its
+once and independently compares all12288 ARGB8 channels. It preserves its live owned
+child for manual close, recording the fresh native project/resource proof
+separately. It never signals the process or claims a verified normal exit.
+It retires only its
 exact unique plugin directory outside discovery once all AE processes are absent.
 Original plugins, preferences and projects are never deleted. Journal records and
 pixels remain private evidence. Startup success does not establish hot-add or

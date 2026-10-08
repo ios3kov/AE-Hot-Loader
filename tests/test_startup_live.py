@@ -1,8 +1,12 @@
 """Public startup protocol/pixel refusals; synthetic records are not AE evidence."""
 import importlib.util
+import contextlib
+import io
+import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import Mock, patch
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('startup_live', ROOT / 'experiments/startup_calibration/run.py')
@@ -91,11 +95,90 @@ class StartupLiveTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             live.cleanup_proof(self.proof, self.record, self.process, 0, self.result.replace(b'cleanup=PASS', b'cleanup=FAIL'))
 
+    def test_fresh_owned_proof_preserves_host_and_never_signals_or_waits(self):
+        child = Mock(pid=123)
+        child.poll.return_value = None
+        with tempfile.TemporaryDirectory() as folder:
+            control = Path(folder).resolve()
+            live.write(control / 'cleanup-safe', self.proof)
+            live.write(control / 'result', self.result)
+            with patch.object(live.common, 'process_identity', return_value=self.process), \
+                 patch.object(live, 'processes', return_value=[123]):
+                status = live.preserve_owned_host(child, control, self.record, self.process)
+                self.assertIn('MANUAL CLOSE REQUIRED', status)
+                self.assertIn('no signal sent', status)
+            with patch.object(live.common, 'process_identity', return_value=dict(self.process, pid=124)), \
+                 patch.object(live, 'processes', return_value=[123]):
+                with self.assertRaisesRegex(ValueError, 'process changed'):
+                    live.preserve_owned_host(child, control, self.record, self.process)
+            with patch.object(live.time, 'time', return_value=(control / 'cleanup-safe').stat().st_mtime + 3):
+                with self.assertRaisesRegex(ValueError, 'stale'):
+                    live.preserve_owned_host(child, control, self.record, self.process)
+            (control / 'cleanup-safe').unlink()
+            self.assertIn('host preserved', live.preserve_owned_host(child, control, self.record, self.process))
+            child.poll.return_value = 0
+            self.assertIn('normal exit not certified',
+                          live.preserve_owned_host(child, control, self.record, self.process))
+        child.terminate.assert_not_called()
+        child.kill.assert_not_called()
+        child.send_signal.assert_not_called()
+        child.wait.assert_not_called()
+
     def test_native_refusal_precedes_nonexistent_frame_read(self):
         refused = ('AEHL-CAL-RESULT-2\nbuild=' + self.record['build_id'] +
                    '\nstatus=REFUSED\nstage=project-guard\ncleanup=PASS\nrender=UNKNOWN\n').encode()
         with self.assertRaisesRegex(ValueError, 'status=REFUSED; stage=project-guard'):
             live.native_complete(self.record, refused)
+
+    def test_cleanup_proof_failure_still_records_other_plugins_without_host_signal(self):
+        # Run the real supervisor on owned files and fake SDK/process boundaries.
+        # A malformed proof must preserve the host and still compare other entries.
+        with tempfile.TemporaryDirectory() as folder:
+            base = Path(folder).resolve()
+            control = base / 'control'; control.mkdir(mode=0o700)
+            plugins = base / 'plugins'; plugins.mkdir()
+            foreign = plugins / 'existing.plugin'; foreign.write_bytes(b'unchanged')
+            install = plugins / 'unique-owned'
+            record = dict(self.record, source={'commit': 'b' * 40})
+            record['bundles'] = [{'bundle': name, 'files': {}, 'binary_sha256': 'd' * 64}
+                                 for name in ('marker.plugin', 'observer.plugin')]
+            for item in record['bundles']:
+                (base / item['bundle']).mkdir()
+            child = Mock(pid=123); child.poll.return_value = None
+            process = dict(self.process, executable=str(live.HOST))
+            started = False
+            def launch(*args, **kwargs):
+                nonlocal started
+                started = True
+                live.write(control / 'ready', ('AEHL-CAL-READY-1\nbuild=' + record['build_id'] +
+                           '\npid=123\nbirth=456000007\n').encode())
+                return child
+            def publish(*args):
+                live.write(control / 'result', self.result.replace(
+                    b'LISTED_APPLIED_FRAME_CAPTURED', b'REFUSED'))
+                live.write(control / 'cleanup-safe', b'wrong-proof\n')
+            with patch.object(live, 'prepare', return_value=(record, base, install)), \
+                 patch.object(live.platform, 'system', return_value='Darwin'), \
+                 patch.object(live.platform, 'machine', return_value='arm64'), \
+                 patch.object(live, 'PLUGIN_ROOT', plugins), \
+                 patch.object(live, 'processes', side_effect=lambda: [123] if started else []), \
+                 patch.object(live.common, 'process_identity', return_value=process), \
+                 patch.object(live.common, 'sha_trusted_binary', return_value=live.HOST_SHA), \
+                 patch.object(live.common, 'bundle_hashes', return_value={}), \
+                 patch.object(live.subprocess, 'run'), \
+                 patch.object(live.subprocess, 'Popen', side_effect=launch), \
+                 patch.object(live, 'publish', side_effect=publish), contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(live.run(base / 'manifest.json', '0' * 64, True), 1)
+            report = json.loads((base / 'live/result.json').read_text())
+            self.assertEqual(report.get('other_plugin_entries'), 'UNCHANGED')
+            self.assertIn('BLOCKED_OR_UNKNOWN', report['cleanup'])
+            self.assertEqual(json.loads((base / 'live/plugin-entry-baseline.json').read_text()).keys(),
+                             {'existing.plugin'})
+            self.assertEqual(foreign.read_bytes(), b'unchanged')
+            self.assertTrue(install.is_dir())
+            child.terminate.assert_not_called()
+            child.kill.assert_not_called()
+            child.wait.assert_not_called()
 
     def test_exclusive_journals_duplicates_and_missing_execution_authority(self):
         for data in (b'wrong\na=b\n', b'schema\na=b\na=c\n', b'schema\nbad\n'):

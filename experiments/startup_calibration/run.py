@@ -102,6 +102,26 @@ def cleanup_proof(raw, record, observed, age, raw_result):
          result.get("cleanup_safe") == "YES", "SDK resources not confirmed released")
 
 
+def preserve_owned_host(child, control, record, observed):
+    """A resource/project proof never authorizes SIGTERM as an application quit.
+
+    Preserve the live process for manual close until a normal AE quit protocol
+    has its own target evidence. This function sends no signal or Apple event.
+    """
+    if not child:
+        return 'NOT RUN'
+    if child.poll() is not None:
+        return 'OWNED HOST EXITED: normal exit not certified'
+    if observed and (control / 'cleanup-safe').exists():
+        cleanup_proof(common.read(control / 'cleanup-safe', 1024), record, observed,
+            time.time() - (control / 'cleanup-safe').stat().st_mtime,
+            common.read(control / 'result', 4096))
+        need(common.process_identity(child.pid) == observed and processes() == [child.pid],
+             'cleanup process changed')
+        return 'MANUAL CLOSE REQUIRED: owned-project proof PASS; no signal sent'
+    return 'BLOCKED: no safe current owned-project proof; host preserved'
+
+
 def ready_identity(raw, record, observed):
     ready = fields(raw, 'AEHL-CAL-READY-1')
     need(ready == {'build': record['build_id'], 'pid': str(observed['pid']), 'birth': str(birth(observed))},
@@ -258,6 +278,7 @@ def run(manifest, digest, execute, queue_mode=False):
               'user said делай after the proposed separate controlled AE startup/apply/frame run'}
     child = None; observed = None
     try:
+        write(live / 'plugin-entry-baseline.json', json.dumps(before, sort_keys=True).encode())
         install.mkdir(mode=0o700)
         for item in record['bundles']:
             shutil.copytree(base / item['bundle'], install / item['bundle'], symlinks=True)
@@ -321,19 +342,15 @@ def run(manifest, digest, execute, queue_mode=False):
     except Exception as error:
         report['result'] = 'FAIL_OR_UNKNOWN'; report['reason'] = str(error)
     finally:
-        # Stop only our own unchanged process, after a fresh exact native owned-project proof.
-        # Missing proof/timeout never authorizes stopping a potentially changed user project.
+        # SIGTERM can enter AE crash handling; never use it as a normal quit.
+        # A live owned host is preserved for manual closure, even with fresh proof.
         try:
             control = base / 'control'
-            if child and child.poll() is None and observed and (control / 'cleanup-safe').exists():
-                cleanup_proof(common.read(control / 'cleanup-safe', 1024), record, observed,
-                    time.time() - (control / 'cleanup-safe').stat().st_mtime,
-                    common.read(control / 'result', 4096))
-                need(common.process_identity(child.pid) == observed and processes() == [child.pid], 'cleanup process changed')
-                child.terminate(); child.wait(timeout=10)
-                report['cleanup'] = 'OWNED HOST STOPPED'
-            elif child and child.poll() is None:
-                report['cleanup'] = 'BLOCKED: no safe current owned-project proof; host preserved'
+            report['cleanup'] = preserve_owned_host(child, control, record, observed)
+        except Exception as error:
+            report['cleanup'] = 'BLOCKED_OR_UNKNOWN: ' + str(error)
+        # An exit/proof failure must not skip independent installation checks.
+        try:
             if not processes() and install.exists():
                 need(set(p.name for p in install.iterdir()) == {b['bundle'] for b in record['bundles']}, 'installation scope changed')
                 for item in record['bundles']:
@@ -345,10 +362,11 @@ def run(manifest, digest, execute, queue_mode=False):
             need(after == before, 'original plugin entries changed; no further cleanup')
             report['other_plugin_entries'] = 'UNCHANGED'
         except Exception as error:
-            report['cleanup'] = 'BLOCKED_OR_UNKNOWN: ' + str(error)
+            report['installation_cleanup'] = 'BLOCKED_OR_UNKNOWN: ' + str(error)
         write(live / 'result.json', json.dumps(report, indent=2).encode())
     print(json.dumps({'result': report['result'], 'cleanup': report['cleanup'], 'report': str(live / 'result.json')}))
-    return 0 if report['result'] == 'PASS' and report['cleanup'] == 'OWNED HOST STOPPED' else 1
+    # A frame PASS is separate from manual closure and its supplemental receipt.
+    return 1
 
 
 def main():
