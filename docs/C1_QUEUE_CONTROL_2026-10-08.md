@@ -323,7 +323,7 @@ check, exact signed own pair retained in live/retired-installation; other plugin
 entries unchanged during run/retirement. Raw original report unchanged;
 manual-close-retirement.json supplemental. No window/foreign project read.
 
-Correction in progress: native RevisionLine consumes exactly one terminated
+Implemented correction: native RevisionLine consumes exactly one terminated
 positive canonical safe-integer revision field, rejects duplicate/missing/
 overlarge/nondecimal/unterminated values and bounds4095bytes. Additional
 capability fields are accepted. QueueControl then still requires new marker
@@ -340,7 +340,57 @@ pixels. No acceptance bypass or host retry.
 QT01–12 preparation/inventory and one render completed; QT13 RGB pixel comparison
 PASS but native counter/completion/shutdown proof incomplete, user retirement
 PASS. QT14 reconciliation preserves all evidence; fix rebuild/regression/CI
-pending. Only one own launch/request/render in this packet. No second host run,
+results are recorded below. Only one own launch/request/render in this packet. No second host run,
 replay or extended budget after correction. Next validation needs new exact
 fixed build and one fresh owned run to establish the complete native receipt.
 C1 PARTIAL; late-add/C2 NOT RUN; async receipt lifetime UNKNOWN; D/release open.
+
+## Reader-fix preparation and packet reconciliation
+
+Fixed code `92155daa0ee4753afb6874f8c9e317efed831095`, research branch pushed.
+Fresh inert nonce `d09fad1ea0b243c5bc31054d7312d4c2`, manifest SHA256
+`1cd20b3f28a969eab378f5352d146d2ab2292c3715055b6b41347a668ad3279e`.
+Both signatures/file maps,411source files and74SDK hashes independently PASS.
+Observer binding UNCONFIGURED_INERT; control EMPTY/live ABSENT, install/load/
+render NOT RUN. Exact-SDK21frame/13backend/3inert ASan/UBSan and marker oracle
+PASS. Dedicated bounded native RevisionLine ASan/UBSan12cases PASS, including
+actual retained DONE receipt; Adobe_calls0. Eight queue Python methods/40
+JS model cases PASS; revised full517Python/62Node/22stages PASS, zero skips/
+errors/failures. ZIP AEHL-checks-ha6plzzc.zip SHA256
+0c3bb3aa6b06fcb767521aff8bb75547c257bc230e7a1f77b27783ed894f6f64,
+CRC/24member digests verified. Scanner raw exit1 preserved:272supported/
+139unsupported/zero omissions, same unchanged CLI false positive reviewed.
+Native five-domain/spec/quality review retained separately. No fresh TSan
+required for the pure parser with unchanged thread/SDK path; no lifetime claim.
+Research CI37827710861 and macOS CI37827710776 both PASS at92155da.
+Terminal receipt retained separately after archive assembly. Neither prior65c9eed CI nor local parser tests establish the fixed
+candidate in AE. No second host launch/request/render in this packet.
+
+Final reconciliation: QT01–10 implementation/build/review/local checks done,
+exact fixed CI both PASS; QT11 own start PASS, QT12 actual inventory/
+one queue render PASS at65c9eed; QT13 independent RGB pixels PASS, native
+counter-after/snapshot/completion proof INCOMPLETE, user closure/retirement PASS;
+QT14 scoped source/check/Evidence reconciliation done. Ten-step historical
+results and all old receipts retained. Fixed-runtime completion is the next
+open check; current whole live result remains FAIL_OR_UNKNOWN. C1 PARTIAL,
+late-add/C2 NOT RUN, async receipt lifetime UNKNOWN, D/release open.
+
+Assembled private evidence archive (before terminal fixed macOS CI receipt):
+`private-evidence-2026-10-08/AEHL-template-frame-65c9eed-reader-fix-92155da.zip`,
+SHA256 `02b48af6e2404b2455b005f05c1f7706a3af2b95ac813b1646a321b3ecb44e46`;
+893members, CRC/all member digests PASS, mode0600. Both complete411-file source
+inventories, own signed tested/fixed artifacts, own PNG/control/results/retirement
+and check/review receipts included; SDK/Adobe binaries, project/window files
+and host stdout/stderr excluded, raw own logs retained separately. Tested and
+fixed-inert namespaces prevent transferring runtime claims between candidates.
+Terminal CI/final documentation follow-up are retained separately without
+rewriting this archive. This is research Evidence, not a release/handoff package.
+
+Final review/current-source identity: only four Markdown checkpoint/status
+pointers changed after exact92155da tests; all non-Markdown source still matches
+the signed inert candidate. Docs-only follow-up does not inherit full CI for
+its own HEAD; code/runtime identities remain65c9eed and92155da as above. No
+merge/main/release/security/preferences/foreign-plugin change. Next bounded
+validation: fresh prospectively bound fixed build, one owned startup/control,
+new counter-after and post-render/cleanup-safe receipt, independent pixels,
+then scoped reconciliation. Actual hot-add/writer safety work remains open.

@@ -5,8 +5,9 @@
 Fourteen-step template packet: tested65c9eed, real queue DONE,64x48 RGB pixels
 match the oracle (0differences). Native completion remained PARTIAL_UNKNOWN:
 revision parser rejected appended inventory before counter-after/cleanup proof.
-User closed PID32884; own pair retained outside discovery. Reader fix and fresh
-checks in progress; no second host run. v11.0.0 retained, C1 PARTIAL;
+User closed PID32884; own pair retained outside discovery. Reader fix92155da:
+fresh517Python/62Node/22stages, SDK/signed inert build and parser sanitizers PASS;
+both exact-code CI PASS; fixed AE validation NOT RUN. v11.0.0 retained, C1 PARTIAL;
 late-add/C2 NOT RUN, async lifetime UNKNOWN. See [single checkpoint](C1_QUEUE_CONTROL_2026-10-08.md).
 Previous candidate/failure/cleanup below remain historical.
 
