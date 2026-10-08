@@ -2,10 +2,13 @@
 
 ## Current follow-up — 2026-10-08
 
-User approved fourteen-step template discovery/control packet. Baseline d31d8d0;
-rules v11.0.0 retained. Implementation/tests in progress; new host run NOT RUN.
-See [single task/check/Evidence checkpoint](C1_QUEUE_CONTROL_2026-10-08.md).
-Previous candidate, failure and cleanup below remain historical.
+Fourteen-step template packet: tested65c9eed, real queue DONE,64x48 RGB pixels
+match the oracle (0differences). Native completion remained PARTIAL_UNKNOWN:
+revision parser rejected appended inventory before counter-after/cleanup proof.
+User closed PID32884; own pair retained outside discovery. Reader fix and fresh
+checks in progress; no second host run. v11.0.0 retained, C1 PARTIAL;
+late-add/C2 NOT RUN, async lifetime UNKNOWN. See [single checkpoint](C1_QUEUE_CONTROL_2026-10-08.md).
+Previous candidate/failure/cleanup below remain historical.
 
 ## Current packet — 2026-10-08
 

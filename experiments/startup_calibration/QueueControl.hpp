@@ -5,6 +5,22 @@
 
 // Separate public scripting Render Queue control. No async receipt fallback.
 namespace startup_queue {
+// Revision is one bounded field; additional capability lines are allowed.
+inline std::string RevisionLine(const std::string& response) {
+    const std::string key="\nrevision=";
+    const auto position=response.find(key);
+    if(response.size()>4095 || position==std::string::npos ||
+        response.find(key,position+key.size())!=std::string::npos)
+        throw std::invalid_argument("missing or duplicate queue revision");
+    const auto start=position+key.size(), end=response.find('\n',start);
+    if(end==std::string::npos) throw std::invalid_argument("unterminated queue revision");
+    const auto value=response.substr(start,end-start);
+    if(value.empty() || value.size()>16 || value.front()=='0' ||
+        value.find_first_not_of("0123456789")!=std::string::npos ||
+        (value.size()==16 && value>"9007199254740991"))
+        throw std::invalid_argument("invalid queue revision");
+    return value+'\n';
+}
 inline std::string Quote(const std::string& value) {
     std::string text="\"";
     for (unsigned char c : value) {

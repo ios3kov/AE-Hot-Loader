@@ -419,10 +419,7 @@ public:
         Require(OperationAllowed());
         const auto response=Script(program); Save("queue-result",response);
         Require(response.rfind("AEHL-CAL-QUEUE-1\nstatus=DONE\n",0)==0 && OperationAllowed());
-        const auto position=response.find("\nrevision="); Require(position!=std::string::npos);
-        const auto revision_text=response.substr(position+10);
-        Require(revision_text.size()>1 && revision_text.back()=='\n' &&
-            revision_text.substr(0,revision_text.size()-1).find_first_not_of("0123456789")==std::string::npos);
+        const auto revision_text=startup_queue::RevisionLine(response);
         const auto expected_snapshot=std::string("AEHL-CAL-OWNED-1\n")+revision_text;
         const auto after=MarkerCounter(key); Require(after>before);
         Require(OwnedSnapshot(true,true)==expected_snapshot);

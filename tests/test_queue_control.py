@@ -37,6 +37,21 @@ def image(channels=4, filter_type=0, seed=0x345678):
 
 
 class QueueControlTests(unittest.TestCase):
+    def test_native_revision_field_with_capability_suffix_and_malformed_receipts(self):
+        with tempfile.TemporaryDirectory(prefix='aehl-queue-revision-') as directory:
+            binary=Path(directory)/'read'
+            compiler=shutil.which('clang++') or shutil.which('g++')
+            self.assertIsNotNone(compiler)
+            subprocess.run([compiler,'-std=c++17','-Wall','-Wextra','-Werror',str(ROOT/'tests/queue_script_source.cpp'),'-o',str(binary)],
+                           check=True,capture_output=True,timeout=45)
+            receipt=b'AEHL-CAL-QUEUE-1\nstatus=DONE\nrevision=34\ninventory_complete=YES\ntemplates=png:PNG%20Sequence:RGB;\nselected_template=png\n'
+            result=subprocess.run([str(binary),'--revision'],input=receipt,capture_output=True,timeout=10)
+            self.assertEqual((result.returncode,result.stdout),(0,b'34\n'))
+            for bad in [receipt.replace(b'revision=34',b'revision=0'),receipt.replace(b'revision=34',b'revision=034'),
+                        receipt+b'revision=35\n',b'x\nrevision=34',b'x\nrevision=34x\n',b'x'*4096,
+                        b'x\nrevision=9007199254740992\n']:
+                self.assertNotEqual(subprocess.run([str(binary),'--revision'],input=bad,capture_output=True,timeout=10).returncode,0)
+
     def test_all_png_filters_rgb_rgba_match_independent_oracle(self):
         for channels in (3,4):
             for filter_type in range(5):

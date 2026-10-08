@@ -283,3 +283,64 @@ An added audio-template model initially referenced the template name outside
 its callback; test failed, binding corrected inside applyTemplate, then all40
 script cases/7 Python methods passed. Whitespace check corrected a trailing
 blank line. No AE action or weakened acceptance during these corrections.
+
+## Fourteen-step target result and completion-reader correction
+
+Tested code65c9eed72a46e3db82caa740413f86d838153e76, nonce
+4a464c29bb9d4325bbee56f97008d27c, manifest SHA256
+1b434d04b6604acea7a6fea63684e325815b16a1a2ea1afeb2c2bb333a15264e.
+Native signed file maps,411source files,74SDK hashes PASS. Rebuilt actual-SDK
+21frame/13backend/3inert ASan/UBSan and own marker oracle PASS. Fresh full
+516Python/62Node/22stages PASS, zero skips/errors/failures. Check ZIP
+AEHL-checks-1a2tljo9.zip SHA256
+d77c9319ab056cf2a5f934ba30f8e99532025fa749a4a88d6a948be64f2a2445,
+CRC/24member digests verified. Exact research CI37826641856 and macOS
+CI37826641919 PASS. Scanner raw exit1 retained:272supported/139unsupported,
+zero omissions; same unchanged local CLI false positive; native separately
+reviewed. These receipts cover65c9eed only, not the later fix bytes.
+
+Fresh preflight no AE/aerender; user authorized this packet. One own AE25.6x101
+arm64 process PID32884/birth1791485229.881104, key796 normal startup/apply,
+build/seed4867660 verified, one queue request/render. Complete20-template actual
+inventory recorded; existing template `png` read back Format `PNG Sequence`,
+Channels RGB, selected by format. Queue script reported DONE at revision34.
+No global template creation/settings changes. Output `control00001.png`,914bytes,
+64x48 RGB8. Independent bounded decoder/oracle:0differing channels, PASS,
+packed/expected SHA256
+7a9109355c6d9aff5e6a0dadf648d6b0a643b411f027a47035ceaac560ed15de.
+RGB alpha implicit255; native alpha NOT independently verified. No color/gamma/
+resizing conversion. Real queue DONE and pixel comparison are distinct evidence
+from whole native completion; C1 hot-add/C2 and async lifetime remain unchanged.
+
+Native completion was PARTIAL_UNKNOWN: old QueueControl reader took everything
+after `revision=` as digits. New inventory lines after revision caused refusal
+before counter-after and post-render owned-snapshot/cleanup-safe publication.
+Whole supervisor result FAIL_OR_UNKNOWN, preserved; queue-metadata absent.
+Cannot reconstruct missing counter/lifetime/shutdown proof from matching pixels
+or retrospectively relabel this run PASS. Native SDK resource cleanup PASS;
+automatic host stop not attempted. User closed PID32884; fresh no-AE/aerender
+check, exact signed own pair retained in live/retired-installation; other plugin
+entries unchanged during run/retirement. Raw original report unchanged;
+manual-close-retirement.json supplemental. No window/foreign project read.
+
+Correction in progress: native RevisionLine consumes exactly one terminated
+positive canonical safe-integer revision field, rejects duplicate/missing/
+overlarge/nondecimal/unterminated values and bounds4095bytes. Additional
+capability fields are accepted. QueueControl then still requires new marker
+counter, exact post-render snapshot and unchanged cleanup revision. Review scope
+RevisionLine and its QueueControl consumer: bounded allocations, positive
+integer/Number safe range, no ownership changes, same main-thread affinity,
+fail-closed exceptions; existing SDK RAII preserved. Added production-reader
+regression with extended suffix and malformed receipts. Actual retained DONE
+receipt parses as34 offline; this is no Adobe call and no runtime-fix proof.
+An initial standalone pixel verifier imported a nonexistent oracle module,
+failed before verification; corrected to the actual oracle.py and compared all
+pixels. No acceptance bypass or host retry.
+
+QT01–12 preparation/inventory and one render completed; QT13 RGB pixel comparison
+PASS but native counter/completion/shutdown proof incomplete, user retirement
+PASS. QT14 reconciliation preserves all evidence; fix rebuild/regression/CI
+pending. Only one own launch/request/render in this packet. No second host run,
+replay or extended budget after correction. Next validation needs new exact
+fixed build and one fresh owned run to establish the complete native receipt.
+C1 PARTIAL; late-add/C2 NOT RUN; async receipt lifetime UNKNOWN; D/release open.
