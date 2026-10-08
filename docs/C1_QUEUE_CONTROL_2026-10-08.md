@@ -394,3 +394,40 @@ merge/main/release/security/preferences/foreign-plugin change. Next bounded
 validation: fresh prospectively bound fixed build, one owned startup/control,
 new counter-after and post-render/cleanup-safe receipt, independent pixels,
 then scoped reconciliation. Actual hot-add/writer safety work remains open.
+
+## Authorized twelve-step fixed-reader validation — in progress
+
+User explicitly approved «делай твои 12 содержательных шагов в один проход».
+Baseline1c658794bd834fd31392e05ee161556b90aad805, clean research branch;
+rulesv11.0.0/e8b763ad retained. C1/Development, Critical host/project/render
+scope. Existing production-engineering workflow; no new tool or dependency.
+All non-Markdown bytes match fixed92155da; historical65c9eed pixel success and
+incomplete native completion remain distinct. No product-goal/late-add/async
+change, main/merge/release, foreign-project/window, preferences/cache/security
+operation. Authorization covers one freshly bound owned startup/request/render,
+normal owned exit only with current native proof and exact-bundle retirement.
+No retry, reused nonce, unverified private call or increased deadlines.
+
+| ID | Task | Acceptance / evidence |
+|---|---|---|
+| QR01 | Recover rules/baseline/retained obligations | clean identity and current checkpoint; C1 PARTIAL |
+| QR02 | Compare fixed native reader and consumer | canonical bounded revision; marker-after/snapshot gates unchanged |
+| QR03 | Fresh prospective bound build | unique nonce; exact source/SDK/host/module paths; no installation yet |
+| QR04 | Verify signatures/hashes and applicable checks | actual-SDK sanitizers/oracle; focused queue/reader refusals; bound regression evidence |
+| QR05 | Fresh no-AE/aerender preflight | no foreign process; exclusive owned destination |
+| QR06 | One owned normal startup | PID/birth/executable/build/loaded identity and READY |
+| QR07 | Startup registry/apply proof | acquired suite key, reverse key, unique marker build/seed |
+| QR08 | Actual PNG output settings | complete local template inventory; observed Format/Channels/readback |
+| QR09 | One uncached control frame | standard queue DONE, exactly one private PNG |
+| QR10 | Full receipt and independent pixel/counter proof | positive counter delta, same revision, exact64x48 RGB8 pattern |
+| QR11 | SDK resources and safe owned exit/retirement | cleanup PASS/current own-project proof; preserve if missing; foreign entries unchanged |
+| QR12 | Evidence/status/source reconciliation | immutable private archive/digests; honest scoped result and next gate |
+
+Initial no-AE/aerender inventory PASS. Recheck immediately before dependent live
+action; absence now does not prove later absence. Offline fixed build evidence
+covers92155da; newly bound bytes receive fresh actual-SDK checks. Full prior
+517Python/62Node/22stage evidence may be reused only after non-Markdown equality
+and archive integrity verification, never relabeled as a new whole-suite run.
+The parser/queue focused regressions run again for this control acceptance.
+Whole control success does not establish new ordinary-effect late registration,
+startup writer→reader ownership or async receipt lifetime; C2/D/release stay open.
