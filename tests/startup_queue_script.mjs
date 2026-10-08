@@ -26,6 +26,7 @@ function scenario(mode='ok') {
         if(mode==='changed-on-add')app.project={};return item;}},render(){calls.push('render');item.status=1;
         if(mode==='user-stopped')item.status=2;
         if(mode==='changed-on-render')app.project={};
+        if(mode==='edited-on-render')values['ADBE Scale']=[50,50];
         if(mode==='render-exception')throw Error('secret');}};
     const p={file:null,bitsPerChannel:8,workingSpace:'',linearBlending:false,linearizeWorkingSpace:false,
         revision:7,numItems:2,renderQueue:queue,item(i){return i===1?comp:source;}};
@@ -47,6 +48,7 @@ function scenario(mode='ok') {
 }
 let result=scenario();assert(result.response.includes('status=DONE\n'));
 assert.deepEqual(result.calls,['add','settings','template','render']);
+assert(result.response.includes('revision=7\n'));
 assert.equal(result.queue.numItems,1);assert.equal(result.item.timeSpanStart,1/24);
 assert.equal(result.item.timeSpanDuration,1/24);assert.equal(result.om.file.fsName,'/owned/output/control[#####].png');
 for(const mode of ['saved','depth','working-space','linear','queue-present','rendering','revision','wrong-match',
@@ -56,7 +58,7 @@ for(const mode of ['saved','depth','working-space','linear','queue-present','ren
 for(const mode of ['changed-on-add','template-missing','exception','wrong-format','wrong-channels','readback']) {
     result=scenario(mode);assert(result.response.includes('status=REFUSED\n'),mode);assert(!result.calls.includes('render'),mode);
 }
-for(const mode of ['user-stopped','changed-on-render','render-exception']) {
+for(const mode of ['user-stopped','changed-on-render','edited-on-render','render-exception']) {
     result=scenario(mode);assert(result.response.includes('status=REFUSED\n'),mode);
     assert.equal(result.calls.filter(x=>x==='render').length,1);
 }

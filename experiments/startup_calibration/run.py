@@ -158,6 +158,8 @@ def verify_queue(record, raw_result, raw_metadata, raw_queue, image):
     need(queue.get('status') == 'DONE' and queue.get('format') == 'PNG Sequence' and
          queue.get('width') == '64' and queue.get('height') == '48' and
          queue.get('time') == queue.get('duration') == '1/24', 'queue export scope differs')
+    need(queue.get('revision') == metadata.get('revision') and
+         queue.get('revision', '').isdigit() and int(queue['revision']) > 0, 'queue project revision differs')
     pixels, decoded = png.decode(image)
     need(queue.get('channels') == ('RGB' if decoded['source_channels'] == 3 else 'RGB + Alpha'),
          'export channels differ from PNG bytes')

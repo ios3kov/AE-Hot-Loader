@@ -28,6 +28,7 @@ inline std::string Script(const std::string& fixture, const std::string& match,
         if (!p || p!==app.project || p.file!==null || p.bitsPerChannel!==8 ||
             (p.workingSpace!=='' && p.workingSpace!=='None') || p.linearBlending!==false ||
             p.linearizeWorkingSpace!==false || p.renderQueue.rendering!==false) return 'project';
+        if(typeof p.revision!=='number' || p.revision<1 || Math.floor(p.revision)!==p.revision) return 'revision';
         if (p.renderQueue.numItems!==(queued?1:0) ||
             (queued && (p.renderQueue.item(1)!==q || q.comp!==c))) return 'queue';
         var folders=0,cc=null,ff=null;
@@ -84,7 +85,7 @@ inline std::string Script(const std::string& fixture, const std::string& match,
         if(q.status!==RQItemStatus.DONE) return fail('not-done');
         // Leave this exact queue item in the owned project as diagnostic evidence.
         return 'AEHL-CAL-QUEUE-1\nstatus=DONE\nstage=after-render\nformat=PNG Sequence\nchannels='+
-            settings.Channels+'\nwidth=64\nheight=48\ntime=1/24\nduration=1/24\n';
+            settings.Channels+'\nwidth=64\nheight=48\ntime=1/24\nduration=1/24\nrevision='+p.revision+'\n';
     } catch (_) {return fail('script-exception');}
 })())JS";
 }

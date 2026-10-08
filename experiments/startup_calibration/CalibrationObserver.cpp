@@ -168,6 +168,7 @@ class Backend {
     AEGP_CompH fixture_ = nullptr;
     AEGP_LayerH layer_ = nullptr;
     AEGP_EffectRefH reference_ = nullptr;
+    std::string queue_snapshot_; // Exact post-render revision; user edits revoke shutdown proof.
     bool SameProject() {
         if (pthread_main_np() != 1) return false;
         A_long count = 0; AEGP_ProjectH current = nullptr;
@@ -385,6 +386,7 @@ public:
     }
     bool CleanupSafe(bool queue_done=false) noexcept {
         try { const auto text=OwnedSnapshot(queue_done,queue_done);
+            Require(!queue_done || (!queue_snapshot_.empty() && text==queue_snapshot_));
             Save("cleanup-safe", std::string("AEHL-CAL-CLEANUP-1\nbuild=")+calibration_build+
                 "\npid="+std::to_string(getpid())+"\nbirth="+std::to_string(Birth())+"\n"+text);
             return true;
@@ -417,11 +419,17 @@ public:
         Require(OperationAllowed());
         const auto response=Script(program); Save("queue-result",response);
         Require(response.rfind("AEHL-CAL-QUEUE-1\nstatus=DONE\n",0)==0 && OperationAllowed());
+        const auto position=response.find("\nrevision="); Require(position!=std::string::npos);
+        const auto revision_text=response.substr(position+10);
+        Require(revision_text.size()>1 && revision_text.back()=='\n' &&
+            revision_text.substr(0,revision_text.size()-1).find_first_not_of("0123456789")==std::string::npos);
+        const auto expected_snapshot=std::string("AEHL-CAL-OWNED-1\n")+revision_text;
         const auto after=MarkerCounter(key); Require(after>before);
-        OwnedSnapshot(true,true);
+        Require(OwnedSnapshot(true,true)==expected_snapshot);
+        queue_snapshot_=expected_snapshot;
         Save("queue-metadata",std::string("AEHL-CAL-QUEUE-FRAME-1\nbuild=")+calibration_build+
             "\nkey="+std::to_string(key)+"\ncounter_before="+std::to_string(before)+
-            "\ncounter_after="+std::to_string(after)+"\nworking_space=NONE\n");
+            "\ncounter_after="+std::to_string(after)+"\nworking_space=NONE\nrevision="+revision_text);
         return true;
     }
 };

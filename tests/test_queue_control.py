@@ -68,14 +68,15 @@ class QueueControlTests(unittest.TestCase):
     def test_queue_completion_provenance_counter_and_pixels_are_separate(self):
         record={'build_id':'own-build','seed':0x345678}
         result=b'AEHL-CAL-RESULT-2\nbuild=own-build\nstatus=LISTED_APPLIED_QUEUE_EXPORTED\nrender=QUEUE_PIXEL_CHECK_PENDING\ncleanup=PASS\ncleanup_safe=YES\nkey=796\n'
-        metadata=b'AEHL-CAL-QUEUE-FRAME-1\nbuild=own-build\nkey=796\ncounter_before=0\ncounter_after=1\nworking_space=NONE\n'
-        queue=b'AEHL-CAL-QUEUE-1\nstatus=DONE\nformat=PNG Sequence\nchannels=RGB + Alpha\nwidth=64\nheight=48\ntime=1/24\nduration=1/24\n'
+        metadata=b'AEHL-CAL-QUEUE-FRAME-1\nbuild=own-build\nkey=796\ncounter_before=0\ncounter_after=1\nworking_space=NONE\nrevision=7\n'
+        queue=b'AEHL-CAL-QUEUE-1\nstatus=DONE\nformat=PNG Sequence\nchannels=RGB + Alpha\nwidth=64\nheight=48\ntime=1/24\nduration=1/24\nrevision=7\n'
         self.assertEqual(live.verify_queue(record,result,metadata,queue,image())['pixels']['pixel_status'],'PASS')
         for r,m,q,p in [(result.replace(b'own-build',b'other'),metadata,queue,image()),
                         (result,metadata.replace(b'counter_after=1',b'counter_after=0'),queue,image()),
                         (result.replace(b'cleanup_safe=YES',b'cleanup_safe=NO'),metadata,queue,image()),
                         (result,metadata,queue.replace(b'DONE',b'USER_STOPPED'),image()),
-                        (result,metadata,queue,image(seed=0x345679)),(result,metadata,queue,image(channels=3))]:
+                        (result,metadata,queue,image(seed=0x345679)),(result,metadata,queue,image(channels=3)),
+                        (result,metadata.replace(b'revision=7',b'revision=8'),queue,image())]:
             with self.assertRaises(ValueError):live.verify_queue(record,r,m,q,p)
 
     def test_actual_generated_script_refusals_and_single_render(self):
@@ -88,4 +89,4 @@ class QueueControlTests(unittest.TestCase):
             script.write_bytes(subprocess.run([str(binary)],check=True,capture_output=True,timeout=10).stdout)
             output=subprocess.run(['node',str(ROOT/'tests/startup_queue_script.mjs'),str(script)],
                                   check=True,capture_output=True,timeout=15)
-            self.assertEqual(output.stdout,b'QUEUE_SCRIPT_CASES=26 PASS; model-only; Adobe_calls=0\n')
+            self.assertEqual(output.stdout,b'QUEUE_SCRIPT_CASES=27 PASS; model-only; Adobe_calls=0\n')

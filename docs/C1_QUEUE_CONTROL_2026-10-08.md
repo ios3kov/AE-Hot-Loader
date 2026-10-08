@@ -8,7 +8,8 @@ research/ordinary-plugin-discovery. No main, merge, release or product-goal chan
 
 AI_ENTRYPOINT read first from a separate clean v11.0.0 tag checkout, peeled commit
 `e8b763ad2fefd0c5d79f865f7f017ff714cf7c23`, VERSION11.0.0. Git source/tag identity
-verified; release archives were not used or locally verified. Historical v8.0.0
+verified; GitHub Release confirms this same source, published2026-10-08T17:13:39Z,
+non-draft/non-prerelease. Release archives were not used or locally verified. Historical v8.0.0
 and all earlier Evidence remain frozen. Applied core §1, API §3, automation §4,
 identity/regression/Evidence/task closure, native §23, tools §22, diagnostics §16,
 code review §14, standard migration §34 and the limited handoff checklist §26.
@@ -77,8 +78,8 @@ values or host-object identity on AE. One actual target run is still required.
 | QC02 | Separate queue command; never dispatch async for this request | IMPLEMENTED; request/branch checks |
 | QC03 | Reuse owned native fixture/key/Apply/build/seed gates | IMPLEMENTED; retained actual-SDK tests |
 | QC04 | Independent pattern and bounded PNG decoder | 6 Python cases PASS, including all five PNG filters, RGB/RGBA, corruption/bombs |
-| QC05 | Fresh unique signed source-bound build | NOT RUN until clean code commit |
-| QC06 | Guard failures, one render, cleanup, applicable regression | 26 actual generated-script model cases and 9 retained live-controller cases PASS; native/full pending |
+| QC05 | Fresh unique signed source-bound build | PASS offline at c137782; exact signed files and74SDK hashes reverified |
+| QC06 | Guard failures, one render, cleanup, applicable regression | PASS offline:26 generated-script model cases;515Python/62Node/22stages;21SDK frame/13backend/3inert ASan/UBSan cases |
 | QC07 | No foreign AE/aerender before installation | BLOCKED pending user closure of PID13150; no project read |
 | QC08 | One own startup/apply/queue export | NOT RUN |
 | QC09 | Exact PNG/counter/provenance/pixel verification | NOT RUN |
@@ -113,3 +114,54 @@ channels. Cleanup failure cannot turn render completion into whole-run PASS.
 Review correction: run.py previously required18 frame cases while current builder
 produces21. Updated mandatory preflight to21 for the fresh current-source build;
 old bytes cannot pass current-source validation. This does not alter async capture.
+
+## Preparation result and exact Evidence
+
+Code candidate `c137782086a971907df0a28da4f73a59f32f3d15`, research branch pushed.
+Fresh nonce `93b34ac9a7df4975ad98691f389c26ad`; manifest SHA256
+`e3c7cb382abf9be9c82c02c914828d927dbf25d19c6b3fb07a0c6897f7af1241`.
+Both signed bundle file maps and74SDK hashes independently reverified. Private
+control EMPTY/live ABSENT: installation, host loading and queue render NOT RUN.
+ASan/UBSan21 frame cases,13 backend/3 inert and own signed marker pixel comparison
+PASS. This is offline code evidence; no new TSan run or real AE claim.
+
+Full source-bound local regression:515Python,zero skips/errors/failures;
+62Node tests and22stages PASS. ZIP
+`private-evidence-2026-10-08/AEHL-checks-zkv03ms0.zip`, SHA256
+`3b15064f9d6e8228cd7f182012e2b003033cfedcc746aaf8e5b7a77d49c87008`;
+CRC and24member digests PASS. Initial invocation before creating the private
+output-parent returned BLOCKED before checks; preserved here, corrected to a
+fresh owned directory, then the complete source-bound run above passed.
+
+Scanner first included ignored historical build Evidence and exited2/incomplete
+on an oversized old symbols file. Raw result retained; no clean PASS claimed.
+Corrected scope is a hash-bound copy of all411 tracked candidate files:272
+supported text files,139unsupported types,zero omissions; raw exit1 retained.
+Only finding `e2999cfe8b5b3a6bd27f0a62` is the unchanged argparse local artifact CLI
+at tools/artifact_manifest.py71, not an auth/network route. Manually reviewed
+false positive; C++ unsupported by this scanner, reviewed separately as above.
+
+Private receipts and source inventory under ignored
+`build-ae-hot-loader/queue-control-2026-10-08-93b34ac9a7df`, pointer
+`build-ae-hot-loader/current-queue-control-evidence.json`.
+Research CI37824044004 PASS at exact c137782. Full macOS CI37824044060 still
+in progress at the preparation checkpoint; not promoted to PASS.
+
+QC01–06 preparation complete; QC07–09 await the user's explicit AE-closed
+confirmation and fresh process/file preflight. QC10 documentation/review/source
+publication complete for preparation; exact final CI and live evidence remain
+open. User chose to close PID13150 and report; no message confirming closure
+has arrived. No inspection, shutdown, install or host launch performed.
+C1 PARTIAL; queue pixels/async receipt lifetime UNKNOWN; late-add/C2 NOT RUN;
+D/release remain open. Evidence/candidates/old checkpoints retained, no deletion.
+
+## Review correction before any host run
+
+The completed queue fixture alone did not prove that the user had not changed
+it after export. Current queue script returns the post-render project revision;
+Backend requires the exact same owned snapshot after the marker counter check
+and again for CleanupSafe. A changed revision revokes shutdown proof. Added
+model case for an edit during render, and verifier refusal for mismatched
+revision. 27 generated-script cases PASS. This affects queue control only.
+The earlier c137782 candidate/515-test receipt remain historical; current native
+artifact and regression must be rebuilt/rechecked before use. No host action.

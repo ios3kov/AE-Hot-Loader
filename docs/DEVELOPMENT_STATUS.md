@@ -5,7 +5,9 @@
 User approved ten-step independent Render Queue control and rules **v11.0.0 /
 `e8b763ad2fefd0c5d79f865f7f017ff714cf7c23`**. See the single
 [current task/adoption/acceptance checkpoint](C1_QUEUE_CONTROL_2026-10-08.md).
-C1 PARTIAL; queue-control live NOT RUN; async pixels UNKNOWN; late-add NOT RUN.
+Initial preparation PASS at c137782:515Python/62Node/22stages.
+Review added exact post-render revision to shutdown proof; new candidate/checks pending.
+Live NOT RUN pending explicit AE closure. C1 PARTIAL; async pixels UNKNOWN; late-add NOT RUN.
 Historical records below retain their original rules and Evidence.
 
 
