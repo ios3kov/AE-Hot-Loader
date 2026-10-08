@@ -561,3 +561,11 @@ safety; control-frame proof cannot substitute for it. A future automated normal
 quit requires a separate reviewed protocol and real-AE evidence. No main/merge/
 release, foreign project/window/plugin changes, preferences/cache/security edit
 or unknown-material deletion. Recovery project stays untouched.
+
+Terminal controller CI follow-up: exact9c010e59406c08dfb29994bde53e8a8bc6c39bd7
+research37830916133 and macOS37830916063 both completed/success. Terminal receipt
+obtained after immutable archive assembly, retained separately; the archive's
+RUNNING snapshot remains historical. QR12 CI obligation closed for that exact
+controller source. Final documentation-only commits do not inherit full CI for
+their HEAD; non-Markdown equality was reverified. No new host run, normal-exit
+certification, late-add/C2 success or release approval follows from CI.
