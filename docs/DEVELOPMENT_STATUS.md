@@ -1,5 +1,12 @@
 # AE Hot Loader — current development status
 
+## Current follow-up — 2026-10-08
+
+User approved fourteen-step template discovery/control packet. Baseline d31d8d0;
+rules v11.0.0 retained. Implementation/tests in progress; new host run NOT RUN.
+See [single task/check/Evidence checkpoint](C1_QUEUE_CONTROL_2026-10-08.md).
+Previous candidate, failure and cleanup below remain historical.
+
 ## Current packet — 2026-10-08
 
 User approved ten-step independent Render Queue control and rules **v11.0.0 /

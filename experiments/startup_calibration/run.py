@@ -144,6 +144,33 @@ def verify_capture(record, raw_result, raw_metadata, pixels):
             'scope': 'verified transport/pixel assertions; real host provenance additionally requires owned launch/process/artifact checks'}
 
 
+def queue_templates(queue):
+    from urllib.parse import unquote_to_bytes
+    def decode(value):
+        need(len(value) <= 1152, 'template field too large')
+        raw = unquote_to_bytes(value)
+        text = raw.decode('utf-8', 'strict')
+        # Reject malformed/noncanonical escapes; host emits encodeURIComponent.
+        from urllib.parse import quote
+        need(quote(text, safe="~!*'()-._") == value and 0 < len(text) <= 128, 'invalid template encoding')
+        return text
+    encoded = queue.get('templates', '')
+    need(queue.get('inventory_complete') == 'YES' and len(encoded) <= 2600 and encoded.endswith(';'),
+         'incomplete output template inventory')
+    rows = encoded[:-1].split(';')
+    need(1 <= len(rows) <= 64, 'invalid template count')
+    inventory = []
+    for row in rows:
+        parts = row.split(':'); need(len(parts) == 3, 'invalid template record')
+        inventory.append(tuple(decode(v) for v in parts))
+    names = [v[0] for v in inventory]; need(len(set(names)) == len(names), 'duplicate template names')
+    selected = decode(queue.get('selected_template', ''))
+    eligible = [v for v in inventory if v[1] == 'PNG Sequence' and v[2] in ('RGB', 'RGB + Alpha')]
+    need(eligible and eligible[0][0] == selected and eligible[0][2] == queue.get('channels'),
+         'selected template differs from observed PNG format')
+    return {'selected': selected, 'inventory': inventory}
+
+
 def verify_queue(record, raw_result, raw_metadata, raw_queue, image):
     result = fields(raw_result, 'AEHL-CAL-RESULT-2')
     metadata = fields(raw_metadata, 'AEHL-CAL-QUEUE-FRAME-1')
@@ -160,13 +187,14 @@ def verify_queue(record, raw_result, raw_metadata, raw_queue, image):
          queue.get('time') == queue.get('duration') == '1/24', 'queue export scope differs')
     need(queue.get('revision') == metadata.get('revision') and
          queue.get('revision', '').isdigit() and int(queue['revision']) > 0, 'queue project revision differs')
+    templates = queue_templates(queue)
     pixels, decoded = png.decode(image)
     need(queue.get('channels') == ('RGB' if decoded['source_channels'] == 3 else 'RGB + Alpha'),
          'export channels differ from PNG bytes')
     comparison = oracle.compare(pixels, 64, 48, record['seed'], order='RGBA8')
     need(comparison['pixel_status'] == 'PASS', 'queue pixels differ from independent oracle')
     return {'installed_key': int(result['key']), 'metadata': metadata, 'queue': queue,
-            'png': decoded, 'pixels': comparison, 'png_sha256': hashlib.sha256(image).hexdigest(),
+            'templates': templates, 'png': decoded, 'pixels': comparison, 'png_sha256': hashlib.sha256(image).hexdigest(),
             'scope': 'startup-only queue control; no async receipt or late-registration proof'}
 
 

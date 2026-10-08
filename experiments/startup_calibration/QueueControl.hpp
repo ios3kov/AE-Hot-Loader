@@ -22,7 +22,10 @@ inline std::string Script(const std::string& fixture, const std::string& match,
     var n=)JS")+Quote(fixture)+",m="+Quote(match)+",out="+Quote(output)+
         ",deadline="+std::to_string(deadline)+",revision="+std::to_string(revision)+R"JS(;
     var p=app.project,c=null,f=null,q=null,om=null,phase='scope';
-    function fail(reason) {return 'AEHL-CAL-QUEUE-1\nstatus=REFUSED\nstage='+phase+'\nreason='+reason+'\n';}
+    var inventory='',inventoryComplete=false,selected='',selectedChannels='';
+    function evidence() {return 'inventory_complete='+(inventoryComplete?'YES':'NO')+
+        '\ntemplates='+inventory+'\nselected_template='+encodeURIComponent(selected)+'\n';}
+    function fail(reason) {return 'AEHL-CAL-QUEUE-1\nstatus=REFUSED\nstage='+phase+'\nreason='+reason+'\n'+evidence();}
     function guard(queued) {
         if (Math.floor((new Date()).getTime()/1000)>=deadline) return 'deadline';
         if (!p || p!==app.project || p.file!==null || p.bitsPerChannel!==8 ||
@@ -30,7 +33,7 @@ inline std::string Script(const std::string& fixture, const std::string& match,
             p.linearizeWorkingSpace!==false || p.renderQueue.rendering!==false) return 'project';
         if(typeof p.revision!=='number' || p.revision<1 || Math.floor(p.revision)!==p.revision) return 'revision';
         if (p.renderQueue.numItems!==(queued?1:0) ||
-            (queued && (p.renderQueue.item(1)!==q || q.comp!==c))) return 'queue';
+            (queued && (p.renderQueue.item(1)!==q || q.comp!==c || q.numOutputModules!==1))) return 'queue';
         var folders=0,cc=null,ff=null;
         for(var i=1;i<=p.numItems;i++) {
             var x=p.item(i);
@@ -64,16 +67,41 @@ inline std::string Script(const std::string& fixture, const std::string& match,
         phase='settings';q.timeSpanStart=1/24;q.timeSpanDuration=1/24;
         q.setSettings({'Quality':'Best','Resolution':'Full','Effects':'All On'});
         reason=guard(true);if(reason) return fail(reason);
-        om=q.outputModule(1);
-        var found=0;
-        for(var j=0;j<om.templates.length;j++) if(om.templates[j]==='PNG Sequence') found++;
-        if(found!==1) return fail('png-template-unavailable');
-        om.applyTemplate('PNG Sequence');
-        // Reacquire after settings changes; do not retain an invalidated OM.
+        phase='templates';om=q.outputModule(1);
+        var names=om.templates.slice(0),seen={},settings=null;
+        if(names.length>64) return fail('template-count');
+        // Only the owned queue item changes; never save or alter global templates.
+        for(var j=0;j<names.length;j++) {
+            var name=names[j];
+            if(typeof name!=='string' || name.length<1 || name.length>128 || seen['$'+name])
+                return fail('template-name');
+            seen['$'+name]=true;
+            reason=guard(true);if(reason) return fail(reason);
+            om=q.outputModule(1);om.applyTemplate(name);
+            om=q.outputModule(1);om.postRenderAction=PostRenderAction.NONE;
+            reason=guard(true);if(reason) return fail(reason);
+            settings=om.getSettings(GetSettingsFormat.STRING);
+            var channels=typeof settings.Channels==='string' && settings.Channels.length ? settings.Channels:'UNAVAILABLE';
+            if(typeof settings.Format!=='string' || !settings.Format.length ||
+                settings.Format.length>128 || channels.length>128) return fail('template-settings');
+            var entry=encodeURIComponent(name)+':'+encodeURIComponent(settings.Format)+':'+
+                encodeURIComponent(channels)+';';
+            var candidate=!selected && settings.Format==='PNG Sequence' &&
+                (channels==='RGB' || channels==='RGB + Alpha');
+            if(inventory.length+entry.length>2600 || inventory.length+entry.length+
+                encodeURIComponent(candidate?name:selected).length>3300) return fail('template-budget');
+            inventory+=entry;
+            if(candidate) {selected=name;selectedChannels=channels;}
+        }
+        inventoryComplete=true;
+        if(!selected) return fail('png-template-unavailable');
+        reason=guard(true);if(reason) return fail(reason);
+        phase='settings';om=q.outputModule(1);om.applyTemplate(selected);
+        // Reacquire after every application; host may invalidate the old OM.
         om=q.outputModule(1);om.postRenderAction=PostRenderAction.NONE;
         om.file=new File(out+'/control[#####].png');
         var settings=om.getSettings(GetSettingsFormat.STRING),rs=q.getSettings(GetSettingsFormat.STRING);
-        if(settings.Format!=='PNG Sequence' || (settings.Channels!=='RGB' && settings.Channels!=='RGB + Alpha') ||
+        if(settings.Channels!==selectedChannels || settings.Format!=='PNG Sequence' || (settings.Channels!=='RGB' && settings.Channels!=='RGB + Alpha') ||
             rs.Quality!=='Best' || rs.Resolution!=='Full' || rs.Effects!=='All On' ||
             q.timeSpanStart!==1/24 || q.timeSpanDuration!==1/24 || q.render!==true ||
             om.postRenderAction!==PostRenderAction.NONE || om.file.fsName!==new File(out+'/control[#####].png').fsName)
@@ -85,7 +113,7 @@ inline std::string Script(const std::string& fixture, const std::string& match,
         if(q.status!==RQItemStatus.DONE) return fail('not-done');
         // Leave this exact queue item in the owned project as diagnostic evidence.
         return 'AEHL-CAL-QUEUE-1\nstatus=DONE\nstage=after-render\nformat=PNG Sequence\nchannels='+
-            settings.Channels+'\nwidth=64\nheight=48\ntime=1/24\nduration=1/24\nrevision='+p.revision+'\n';
+            settings.Channels+'\nwidth=64\nheight=48\ntime=1/24\nduration=1/24\nrevision='+p.revision+'\n'+evidence();
     } catch (_) {return fail('script-exception');}
 })())JS";
 }

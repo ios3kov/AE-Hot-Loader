@@ -228,3 +228,58 @@ retirement/check receipts. Proprietary SDK/Adobe binaries, project/window files
 and host stdout/stderr excluded; raw own logs retained locally. This is private
 research Evidence, not an installable release. Terminal CI receipt was obtained
 after assembly and is retained separately without rewriting the archive.
+
+## Follow-up fourteen-step template packet — in progress
+
+User approved the proposed fourteen-step packet. Baseline d31d8d0, clean research
+branch; rules v11.0.0/e8b763ad retained. C1/Development, Critical host/render/data
+scope. Smart Entry/core§1, API§3, automation§4, task closure§11, diagnostics§16,
+native§23, review§14 and limited handoff§26 apply. Existing accepted
+production-engineering toolchain reused, no new package/service/skill admission.
+Contract remains startup control; no late-add, async fallback or global template
+creation. No foreign session/project/preferences/cache/security edits. One new
+owned startup/request/render at most, same120s operation/180s startup budgets.
+
+| Step | Planned task | Check/acceptance |
+|---|---|---|
+| QT01 | Recover baseline/rules/scope | clean d31d8d0; retained obligations |
+| QT02 | Verify template API | OutputModule docs: existing templates/apply/read Format; never set Format/save template |
+| QT03 | Record actual names/formats/channels | bounded percent-encoded receipt on success/refusal |
+| QT04 | Select existing observed PNG | first eligible actual Format=PNG Sequence, RGB/RGBA; template name independent |
+| QT05 | Read back frame/output/color/settings | original64x48/24fps/1/24s/8bpc/None guards retained |
+| QT06 | Resource/project/shutdown review | OM reacquired after apply; one output; unchanged post-render revision required |
+| QT07 | Failure and parser regression | localization/format spoof/absence/invalidated wrapper/bounds/incomplete inventory |
+| QT08 | Full offline regression | exact candidate checks |
+| QT09 | Unique signed candidate | fresh source/build/nonce/SDK/file maps |
+| QT10 | Spec/quality review and CI | native five-risk domains; exact-source CI |
+| QT11 | Fresh no-AE preflight and owned start | no foreign process; own PID/birth/build |
+| QT12 | Actual templates and one render | known eligible format or explicit refusal with receipt |
+| QT13 | Pixels/resources/retirement | oracle + current own-project proof; preserve host if absent |
+| QT14 | Evidence/source/status reconciliation | archive/hash/checkpoint; no release claim |
+
+Implementation:64-template ceiling,128 UTF-16-unit name/Format/Channels ceiling,
+2600 ASCII inventory chars,3300 inventory+selected chars, within native4096-byte
+script-result envelope. URI percent encoding protects separators/newlines and
+records Unicode names without executing them. At every apply, only owned queue
+item changes; guard before/after; reacquire output module and force post-action
+NONE. Completed inventory required before selecting/rendering; partial refusal
+preserved. Final Format/Channels must match eligibility/readback. Native async,
+marker, SDK handle ownership and PNG decoder remain unchanged. Selection still
+requires observed canonical PNG Format; an unrecognized/localized Format value
+will be recorded and refused, not guessed from name or numeric ID.
+
+Spec/quality review before build: Quote/Script, queue_templates and verify_queue
+reviewed for memory/response bounds, numeric/unit bounds, ownership/error cleanup,
+thread affinity/reentry and diagnostic safety. Headers/API ownership and observer
+resource pairing unchanged; pure generated JS exercises fresh OM wrappers.
+Non-image templates without Channels record UNAVAILABLE and cannot be selected.
+Review tightened inventory+selected bound to3300, rejected extra output modules,
+and requires selected Channels to read back unchanged. No other code scope.
+40 generated-script cases and7 queue Python/9 retained startup cases PASS.
+Model checks establish our decisions/refusals, not Adobe execution or PNG presence.
+Fresh exact-code build/regression/CI and actual target run still NOT RUN here.
+
+An added audio-template model initially referenced the template name outside
+its callback; test failed, binding corrected inside applyTemplate, then all40
+script cases/7 Python methods passed. Whitespace check corrected a trailing
+blank line. No AE action or weakened acceptance during these corrections.
