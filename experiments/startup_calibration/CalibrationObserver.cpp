@@ -47,6 +47,15 @@ bool cleanup_ok = true;
 bool queue_control = false; // Explicit separate request; never an async fallback.
 bool registry_observation = false; // Read-only; cannot fall through to Apply/frame.
 const char* diagnostic_stage = "authorization";
+const char* diagnostic_suite = nullptr;
+A_long diagnostic_suite_version = 0;
+SPErr diagnostic_host_error = 0;
+bool diagnostic_host_error_known = false;
+void DiagnosticStage(const char* stage) noexcept {
+    diagnostic_stage = stage;
+    diagnostic_suite = nullptr; diagnostic_suite_version = 0;
+    diagnostic_host_error_known = false;
+}
 void Require(bool okay) { if (!okay) throw std::runtime_error("calibration refused"); }
 std::uint64_t Now() {
     return static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::seconds>(
@@ -154,9 +163,13 @@ template<class T> class Suite {
 public:
     const T* value = nullptr;
     Suite(const char* name, A_long version) : name_(name), version_(version) {
+        DiagnosticStage("sdk-suite-acquire");
+        diagnostic_suite = name_; diagnostic_suite_version = version_;
         Require(basic && basic->AcquireSuite && basic->ReleaseSuite);
         const auto error = basic->AcquireSuite(name_, version_, reinterpret_cast<const void**>(&value));
+        diagnostic_host_error = error; diagnostic_host_error_known = true;
         if (error || !value) {
+            diagnostic_stage = error ? "sdk-suite-acquire" : "sdk-suite-empty";
             if (value) cleanup_ok = false; // No ownership contract for a failed acquisition.
             value = nullptr; throw std::runtime_error("suite unavailable");
         }
@@ -229,6 +242,7 @@ class Backend {
 public:
     explicit Backend(std::uint64_t deadline) : deadline_(deadline), monotonic_stop_(
         std::chrono::steady_clock::now()+Budget(deadline)) {
+        DiagnosticStage("backend-function-table");
         const auto* e = effect_.value; const auto* m = memory_.value;
         Require(e->AEGP_GetNumInstalledEffects && e->AEGP_GetNextInstalledEffect &&
             e->AEGP_GetEffectMatchName && e->AEGP_GetEffectName && e->AEGP_ApplyEffect &&
@@ -238,8 +252,10 @@ public:
             utility_.value->AEGP_ExecuteScript && utility_.value->AEGP_IsScriptingAvailable &&
             m->AEGP_GetMemHandleSize && m->AEGP_LockMemHandle && m->AEGP_UnlockMemHandle && m->AEGP_FreeMemHandle);
         const auto* p = project_suite_.value;
+        DiagnosticStage("backend-project-table");
         Require(p->AEGP_GetNumProjects && p->AEGP_GetProjectByIndex && p->AEGP_ProjectIsDirty &&
             p->AEGP_GetProjectBitDepth && p->AEGP_SetProjectBitDepth && p->AEGP_GetProjectRootFolder);
+        DiagnosticStage("backend-color-table");
         Require(color_suite_.value->AEGP_IsOCIOColorManagementUsed);
         std::ostringstream out;
         out << "AEHL-CAL-SUITE-1\nname=" << kAEGPEffectSuite << "\nversion=" << kAEGPEffectSuiteVersion5
@@ -250,6 +266,7 @@ public:
             << "\nname_slot=" << reinterpret_cast<std::uintptr_t>(e->AEGP_GetEffectName)
             << "\napply=" << reinterpret_cast<std::uintptr_t>(e->AEGP_ApplyEffect)
             << "\nreverse=" << reinterpret_cast<std::uintptr_t>(e->AEGP_GetInstalledKeyFromLayerEffect) << '\n';
+        DiagnosticStage("backend-suite-journal");
         Save("suite", out.str());
         DescribeProvider("provider-count", reinterpret_cast<std::uintptr_t>(e->AEGP_GetNumInstalledEffects));
         DescribeProvider("provider-next", reinterpret_cast<std::uintptr_t>(e->AEGP_GetNextInstalledEffect));
@@ -757,35 +774,52 @@ A_Err Idle(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long*) noexcept {
     struct IdleReset { ~IdleReset() { idle_active=false; } } reset;
     try {
         if (PollFrame() || PollNames() || consumed) return 0;
+        DiagnosticStage("request-discovery");
         if (!Exists("request")) return 0;
         consumed = true; // before parsing, acquisition, reentry or any host operation
         startup_calibration::Authorization request;
         std::string schema, ownership, binary, trailing;
+        DiagnosticStage("request-read");
         std::istringstream input(Read("request"));
+        DiagnosticStage("request-parse-fields");
         Require(static_cast<bool>(input >> schema >> request.token >> request.pid >> request.birth >> request.deadline >> ownership >> binary));
+        DiagnosticStage("request-parse-contract");
         Require(!(input >> trailing) && schema == "AEHL-CAL-REQUEST-2" &&
             (ownership == "OWNED-STARTUP-APPLY-RENDER" || ownership == "OWNED-STARTUP-QUEUE-CONTROL" ||
              ownership == "OWNED-STARTUP-REGISTRY-OBSERVATION"));
         queue_control=ownership == "OWNED-STARTUP-QUEUE-CONTROL";
         registry_observation=ownership == "OWNED-STARTUP-REGISTRY-OBSERVATION";
         request.owned_blank_project = true;
+        DiagnosticStage("request-process-birth");
         const startup_calibration::Authorization bound{calibration_token, getpid(), Birth(), 0, true};
-        Require(request.token == bound.token && request.pid == bound.pid && request.birth == bound.birth &&
-                request.deadline > Now() && request.deadline - Now() <= 120 &&
-                Module() == calibration_module && Executable() == calibration_executable);
+        DiagnosticStage("request-token"); Require(request.token == bound.token);
+        DiagnosticStage("request-process"); Require(request.pid == bound.pid && request.birth == bound.birth);
+        DiagnosticStage("request-deadline"); Require(request.deadline > Now() && request.deadline - Now() <= 120);
+        DiagnosticStage("request-module-path"); Require(Module() == calibration_module);
+        DiagnosticStage("request-executable-path"); Require(Executable() == calibration_executable);
+        DiagnosticStage("request-resident-binding");
         const auto self = resident_binding::Resolve({calibration_module, Digest(binary)}, {"_AEHL_CalibrationBuildIdentity"});
+        DiagnosticStage("request-resident-symbol");
         Require(self.functions.at("_AEHL_CalibrationBuildIdentity") == reinterpret_cast<void*>(&AEHL_CalibrationBuildIdentity));
+        DiagnosticStage("request-names-allocation");
         names=std::make_unique<PendingNames>();
         names->request=request; names->bound=bound;
+        DiagnosticStage("backend-prepare");
         names->backend=std::make_unique<Backend>(request.deadline);
         PollNames();
     } catch (...) {
         consumed = true;
         names.reset();
         ObserveMarkerStartup();
-        try { Save("result", std::string("AEHL-CAL-RESULT-2\nbuild=") + calibration_build +
+        try {
+          std::string details;
+          if (diagnostic_suite) details += std::string("suite=") + diagnostic_suite +
+              "\nsuite_version=" + std::to_string(diagnostic_suite_version) + "\n";
+          if (diagnostic_host_error_known) details += "host_error=" + std::to_string(diagnostic_host_error) + "\n";
+          Save("result", std::string("AEHL-CAL-RESULT-2\nbuild=") + calibration_build +
             "\nstatus=" + (Exists("begin") ? "PARTIAL_UNKNOWN" : "REFUSED") +
-            "\nstage=" + diagnostic_stage + "\ncleanup=" + (cleanup_ok ? "PASS" : "FAIL") + "\nrender=UNKNOWN\n"); } catch (...) {}
+            "\nstage=" + diagnostic_stage + "\ncleanup=" + (cleanup_ok ? "PASS" : "FAIL") + "\nrender=UNKNOWN\n" + details);
+        } catch (...) {}
     }
     return 0;
 }
@@ -800,12 +834,15 @@ A_Err EntryPointFunc(SPBasicSuite* suites, A_long, A_long, AEGP_PluginID id, AEG
             return 0;
         if (Exists("ready") || Exists("consumed") || Exists("result") || Exists("begin")) return 0;
         StartupStage(0);
-        diagnostic_stage="idle-registration"; basic = suites; plugin_id = id;
+        DiagnosticStage("idle-registration"); basic = suites; plugin_id = id;
         StartupStage(1);
         { Suite<AEGP_RegisterSuite5> registration(kAEGPRegisterSuite, kAEGPRegisterSuiteVersion5);
           StartupStage(2); StartupStage(3);
-          Require(registration.value->AEGP_RegisterIdleHook &&
-            registration.value->AEGP_RegisterIdleHook(plugin_id, Idle, nullptr) == 0);
+          DiagnosticStage("idle-registration");
+          Require(registration.value->AEGP_RegisterIdleHook);
+          const auto error = registration.value->AEGP_RegisterIdleHook(plugin_id, Idle, nullptr);
+          diagnostic_host_error = error; diagnostic_host_error_known = true;
+          Require(error == 0);
           StartupStage(4); }
         StartupStage(5);
         Require(cleanup_ok);

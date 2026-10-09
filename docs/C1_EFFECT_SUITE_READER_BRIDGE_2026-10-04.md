@@ -18,6 +18,59 @@ and does not become a live registration/apply/render result.
 
 
 
+## Refusal diagnosis packet — 2026-10-09
+
+Approved16-step continuation. Baseline d9e429266ac0102949aada7bcf499c0a0b429ddc,
+research/ordinary-plugin-discovery, rules11.1.0/source04b606845e0f73ab28b9807bb45682eae4d6ce34.
+AI_ENTRYPOINT restored first; Process1/3/4/7/10/11, Engineering14/16/34/41,
+Tools22, Native23, skills43 and Development handoff26 selected. Critical /
+Development. Local context-discipline and production-engineering apply; no new
+skill installation. Historical Evidence remains immutable.
+
+Acceptance: retain the original native refusal before reading absent samples;
+identify actual failed request/binding/suite stage without weakening validation;
+retain exact own PiPL identity and original adapter-site contract. One new
+register-only startup is conditional on current review/regression/SDK and actual
+owned debugger controls. No private call/object read, Apply/render/project
+mutation, retry, cache/security/preference changes, main/merge/release.
+
+| Stage | Requirement / check | State |
+| --- | --- | --- |
+| RF01 | Old session absence and own pair retirement | PASS user closed; fresh absence; exact pair retired, other entries unchanged |
+| RF02 | Original symptom reproduction | PASS original launcher loses REFUSED behind missing names-0; actual original Idle leaves stale stage |
+| RF03 | Request read/parse stages | Implemented;12 actual Idle negative cases PASS |
+| RF04 | Identity/auth/deadline stages | Implemented; refusal and consumed-once guards retained |
+| RF05 | Resident binding stages | Implemented; strict own module/host/symbol checks unchanged |
+| RF06 | SDK acquisition diagnostics | Implemented; PASS5 actual acquisition controls; fixed suite/version/numeric error |
+| RF07 | Refusal-first receipt | PASS8 supervisor tests; refused result never treated as registry success |
+| RF08 | Absent samples / malformed success | PASS success still requires3 samples and exact key |
+| RF09 | Actual adapter caller file research | PASS10 retained bodies/3699 instructions, exact current originals |
+| RF10 | Exact adapter register/site bytes | PASS aelib63b2c/x8/e0630091 unchanged; no profile/site relaxation |
+| RF11 | Negative diagnostic regression | PASS12 actual Idle refusals +5 actual Suite cases +8 supervisor checks |
+| RF12 | Full regression and exact SDK artifacts | NOT_RUN for new candidate |
+| RF13 | Actual complete/early-exit owned debugger controls | NOT_RUN for new candidate |
+| RF14 | Separate specification and quality review | NOT_RUN for new candidate |
+| RF15 | ONE conditional register-only AE startup | NOT_RUN; gates above required |
+| RF16 | Normal close, retirement, Evidence, research push/CI | Pending exact current artifacts |
+
+Original reproduction compiles and executes the original6a2457d observer against
+selected SDK headers, with owned files and no Adobe callback. Twelve malformed /
+unauthorized requests expose stale idle-registration. Corrected actual Idle
+refuses them at precise stages and cannot replay. The original-launch control
+uses fake SDK/debugger boundaries and actual supervisor/files; original receipt
+FAIL_OR_UNKNOWN is reproduced, corrected refusal retained. These are diagnostic
+regressions, not reproduction of the unknown native root cause.
+
+User explicitly authorized normal closing of owned AE diagnostic sessions without
+waiting for manual confirmation. Verify fresh PID/birth/executable, detach first,
+request ordinary quit and confirm absence before retirement. Unknown unsaved
+projects must not be discarded; blocked quit is not force-kill authority.
+
+Private working evidence: build-ae-hot-loader/refusal-diagnostics-2026-10-09-d9e4292.
+C1 PARTIAL; private append BLOCKED; C2/late-add NOT_RUN. Offline checks do not
+establish actual host suite availability, live writer/key correspondence, full
+render read set, lifetime or partial-failure recovery.
+
 ## Debugger lifecycle packet — 2026-10-09
 
 User approved the proposed14-stage packet («делай»). Clean baseline

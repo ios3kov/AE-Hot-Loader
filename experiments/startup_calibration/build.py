@@ -155,14 +155,15 @@ def main():
                 "static constexpr unsigned calibration_seed = " + str(seed) + "u;\n")
     results = {}
     tests = [("adapter", ROOT / "tests/startup_marker_adapter.cpp"), ("inert", ROOT / "tests/startup_calibration_inert.cpp"),
-             ("backend", ROOT / "tests/startup_calibration_backend.cpp"), ("frame", ROOT / "tests/startup_frame_capture.cpp")]
+             ("backend", ROOT / "tests/startup_calibration_backend.cpp"), ("frame", ROOT / "tests/startup_frame_capture.cpp"),
+             ("request", ROOT / "tests/startup_request_diagnostics.cpp")]
     for label, test in tests:
         binary = output / (label + "-test")
         test_common = common
-        if label == "backend":
+        if label in ("backend", "request"):
             # The actual SDK adapter calls only our fake callbacks here. Its separate
             # test configuration cannot activate the signed observer or its journal.
-            test_config = output / "backend-test-config"; test_config.mkdir(mode=0o700)
+            test_config = output / (label + "-test-config"); test_config.mkdir(mode=0o700)
             (test_config / "CalibrationConfig.hpp").write_text((output / "CalibrationConfig.hpp").read_text().replace(
                 "static constexpr const char* calibration_control", "static const char* calibration_control"))
             (test_config / "CalibrationConfig.hpp").chmod(0o600)
@@ -172,8 +173,8 @@ def main():
             command += [str(Path(__file__).with_name("MarkerEffect.cpp"))]
         run(*(command + ["-o", str(binary)]))
         marker_binary = output / (marker + ".plugin") / "Contents/MacOS" / marker
-        if label == "backend":
-            test_control = output / "backend-test-control"; test_control.mkdir(mode=0o700)
+        if label in ("backend", "request"):
+            test_control = output / (label + "-test-control"); test_control.mkdir(mode=0o700)
             test_args = [str(test_control)]
         elif label == "frame":
             test_args = []

@@ -1,5 +1,17 @@
 # AE Hot Loader — current development status
 
+## Active refusal diagnosis packet — 2026-10-09
+
+Approved16-step packet under rules11.1.0/source04b6068. Old PID86960 absent;
+exact own pair retired outside discovery, other plugins unchanged. Both original
+parser/stale-stage defects reproduced on owned controls and corrected.8 supervisor
+checks and17 actual Idle/SDK refusal controls PASS; full current
+regression/SDK, actual debugger controls and separate review remain pending.
+ONE conditional register-only startup follows these gates; no Apply/render/private
+calls or retries. User authorized normal owned-session quit; preserve unknown
+unsaved work and require actual absence. C1PARTIAL/private append BLOCKED/C2NOT_RUN.
+[RF01–RF16 acceptance and current evidence](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#refusal-diagnosis-packet--2026-10-09).
+
 ## Current debugger lifecycle packet — 2026-10-09
 
 Rules11.1.0/source04b6068; context-discipline and production-engineering applied.

@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import shlex
 import shutil
 import subprocess
@@ -75,6 +76,39 @@ def retire(manifest,digest):
     write_once(base/'trace/retirement.json',{'status':'PASS','path':str(destination),'other_entries':'UNCHANGED','host_absence':'PASS'})
 
 
+def observation_receipt(native, record, control, key):
+    raw=native.common.read(control/'result',4096)
+    result=native.fields(raw,'AEHL-CAL-RESULT-2')
+    need(result.get('build')==record['build_id'],'native result build differs')
+    if result.get('status') in ('REFUSED','PARTIAL_UNKNOWN'):
+        stage=result.get('stage','')
+        need(re.fullmatch(r'[a-z][a-z0-9-]{0,79}',stage) is not None,'invalid refusal stage')
+        cleanup=result.get('cleanup','UNKNOWN')
+        need(cleanup in ('PASS','FAIL','UNKNOWN'),'invalid refusal cleanup')
+        receipt={'status':result['status'],'stage':stage,'cleanup':cleanup,
+                 'scope':'native observation refusal; no samples accepted'}
+        if 'suite' in result:
+            need(re.fullmatch(r'[A-Za-z][A-Za-z0-9 ._-]{0,79}',result['suite']) is not None,'invalid suite diagnostic')
+            version=result.get('suite_version','')
+            need(re.fullmatch(r'[1-9][0-9]{0,8}',version) is not None,'invalid suite version')
+            receipt.update(suite=result['suite'],suite_version=int(version))
+        if 'host_error' in result:
+            error=result['host_error']
+            need(re.fullmatch(r'-?(0|[1-9][0-9]{0,9})',error) is not None and
+                 -(2**31)<=int(error)<2**31,'invalid host error diagnostic')
+            receipt['host_error']=int(error)
+        return receipt
+    need(result.get('status')=='LISTED_OBSERVED' and result.get('cleanup')=='PASS' and
+         result.get('cleanup_safe')=='YES' and result.get('stage')=='registry-observation' and
+         result.get('render')==result.get('apply')=='NOT_RUN','read-only observation incomplete')
+    # Only a matching successful header permits reading the three sample files.
+    receipt=native.verify_observation(record,raw,
+        [native.common.read(control/('names-'+str(i)),32768) for i in range(3)])
+    need(receipt['installed_key']==key,'SDK key differs from trace')
+    receipt['status']='PASS'
+    return receipt
+
+
 def execute(manifest,digest,transport,transport_digest):
     native=load_native()
     record,base,install=native.prepare(Path(manifest),digest)
@@ -106,9 +140,7 @@ def execute(manifest,digest,transport,transport_digest):
             time.sleep(0.1)
         if (control/'result').exists():
             try:
-                receipt=native.verify_observation(record,native.common.read(control/'result',4096),
-                     [native.common.read(control/('names-'+str(i)),32768) for i in range(3)])
-                need(receipt['installed_key']==result.get('key'),'SDK key differs from trace');receipt['status']='PASS'
+                receipt=observation_receipt(native,record,control,result.get('key'))
             except Exception as exc:receipt={'status':'FAIL_OR_UNKNOWN','reason':str(exc)}
         else:receipt={'status':'UNKNOWN','reason':'original request deadline expired; no retry'}
     write_once(base/'trace/sdk-receipt.json',receipt)
