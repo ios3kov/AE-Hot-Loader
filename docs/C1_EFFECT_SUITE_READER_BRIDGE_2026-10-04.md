@@ -29,33 +29,115 @@ Critical/Development: diagnostic labels only, unchanged admission predicates.
 Acceptance: exact fixed refusal stage from actual Resolve, retained in actual Idle
 and supervisor response; no paths/addresses/raw exceptions in diagnostics. All
 hash/path/main-thread/snapshot/header/text/export/one-shot checks remain strict.
-Do not infer the actual AE cause from the earlier OWN breakpoint control. ONE
-conditional register-only owned startup after clean exact-candidate controls;
-normal quit authority persists, no force/save-discard/foreign project reads.
-No private call, Apply/render/project mutation, retry/main/merge/release.
+ONE normal-startup registry-only request; no private call, Apply/render/project
+mutation, AE retry/main/merge/release. Normal owned quit authority persists;
+no force/save-discard/foreign window or project reads.
 
 | Stage | Requirement/check | State |
 | --- | --- | --- |
-| BP01 | Restore pinned rules/candidate/absence gates | Rules/context restored; live absence pending |
-| BP02 | Precise refusal type and safe labels | Implemented; original generic failure reproduction pending |
-| BP03 | First/second snapshot and initial stability | Labels implemented; real own snapshot checks pending |
-| BP04 | Missing/duplicate image and base relationship | Strict predicates retained; own missing path control pending |
-| BP05 | Path/open/stat/read/stability/hash | Labels implemented; own file controls pending |
-| BP06 | Original-file parser/export contract | Context label implemented; parser regression pending |
-| BP07 | Resident header read/mismatch/range | Labels implemented; own memory controls pending |
-| BP08 | Resident text read/mismatch/range/address | Labels implemented; own memory controls pending |
-| BP09 | Actual breakpoint state/control | Fresh own control pending; native cause remains UNKNOWN |
-| BP10 | Final snapshot/stability/export address | Strict checks retained; native outcome pending |
-| BP11 | Actual Idle and supervisor refusal receipt | Two additional actual Idle cases; supervisor test implemented |
-| BP12 | Full candidate regression | Pending |
-| BP13 | Exact SDK/build/review/debugger admission | Pending |
-| BP14 | ONE conditional own AE query | NOT_RUN pending gates |
-| BP15 | Detach/normal owned quit/absence/retirement | NOT_RUN pending own run |
-| BP16 | Reconciliation/Evidence/research CI | Pending; protected archives unchanged |
+| BP01 | Restore pinned rules/candidate/absence gates | PASS exact11.1.0, clean baseline and fresh process inventory |
+| BP02 | Precise refusal type and safe labels | PASS actual original generic hash refusal/current exact predicate, both compile and execute |
+| BP03 | First/second snapshot and initial stability | PASS bounded own snapshots and actual AE precheck; concurrent mutation remains UNKNOWN |
+| BP04 | Missing/duplicate image and base relationship | PASS own missing-image control and actual AE base check; duplicate/overflow branches reviewed, not forced |
+| BP05 | Path/open/stat/read/stability/hash | PASS own contract/open/stat/hash controls and actual AE; concurrent file mutation/read failure not forced |
+| BP06 | Original-file parser/export contract | PASS parser/own export refusal and actual native parser; exact SDK headers retained |
+| BP07 | Resident header read/mismatch/range | PASS own memory diagnostics and actual native header equality |
+| BP08 | Resident text read/mismatch/range/address | Actual AE REFUSED resident-text-mismatch; exact condition identified; cause UNKNOWN |
+| BP09 | Actual breakpoint state/control | PASS own code-breakpoint→text mismatch→remove→PASS; AE causality UNKNOWN; adapter-only trace |
+| BP10 | Final snapshot/stability/export address | PASS own complete Resolve; NOT_REACHED in actual refused AE query |
+| BP11 | Actual Idle and supervisor refusal receipt | PASS14 actual Idle refusals+5 Suite controls; actual native/supervisor preserve resident-text-mismatch |
+| BP12 | Full candidate regression | PASS S1b7a95c5:569Python/62Node/22stages; S2test-fix10453f1:570Python/62Node/22stages, no local skips |
+| BP13 | Exact SDK/build/review/debugger admission | PASS S1SDK74pins/19 request-Suite cases; own complete13events/18stops and early exit23; separate bounded spec/quality review |
+| BP14 | ONE conditional own AE query | EXECUTED_ONCE; REFUSED text mismatch; trace4events/4stops INCOMPLETE adapter; no backend/enumeration |
+| BP15 | Detach/normal owned quit/absence/retirement | PASS ownPID9978 safely detached, normal quit/absence, exact pair preserved outside discovery; other entries unchanged |
+| BP16 | Reconciliation/Evidence/research CI | Private archive and exact final publication/CI closeout below; native/source identities separate |
 
+### Binding predicate reconciliation
+
+Native implementation/build S1b7a95c5ea1157469f912cfd6dea0d98323aeb286.
+New Failure preserves the original generic what() for existing callers and adds
+only fixed literal stages. AtStage preserves more specific failures, never
+relabels allocation failures as malformed image. Original byte/path/snapshot/
+thread/symbol predicates and memory bounds remain; file descriptors use existing
+RAII. Labels cannot authorize a call, mask differing bytes, or retry a request.
+Native review covers Failure/Require/AtStage/ReadPinned/EqualMemory/Resolve,
+Idle receipt integration and SDK test-only mutable configuration. Same-developer
+spec/quality review, not an independent reviewer or host ABI certification.
+
+Actual own controls with ASan/UBSan verify strict file/hash/memory/export/thread
+refusals. Two additional actual Idle cases on an owned executable retain pin-
+contract and parser failures, one-shot receipt/replay guards, and zero Adobe calls.
+Real SDK74file pins:3marker/3inert/13backend/21frame cases and19request-Suite cases
+PASS. Nested native cases are not added to Python count.
+
+First fresh debugger control refused an isolated EXC_BREAKPOINT at spec after
+5events/9stops, safe detach PASS. Cause remains UNKNOWN; receipt retained. One
+fresh sequential control, unchanged collector/site/admission:13events/18stops,
+complete identity/safe detach PASS. Early exit23 ALREADY_EXITED/cleanup_safe PASS.
+No exception stop was reclassified or resumed to make admission pass.
+
+ONE own run ffb144cba1cd4c4ba04dc665307cbd5e, manifest SHA256
+64252cccb3e49c7831fc84c793f5bc0dabaaf0208106389e87f2fb6b5fbe5186,
+PID9978/birth1791554648145869.4events/4stops reach PiPL, remain adapter phase at
+original deadline; writer/descriptor/root/public key UNKNOWN. Request SENT_ONCE.
+Actual raw native and supervisor receipts:REFUSED / resident-text-mismatch /
+cleanupPASS. Current snapshots/path/file pin/Parse/base/header equality passed;
+whole own resident __text byte equality refused before Backend construction,
+suite acquisition and enumeration. This identifies the predicate, not why code
+changed; previous6a2457d/d578835 runs do not acquire this cause retroactively.
+Only adapter site enabled at this trace phase; own-library breakpoint proof is
+conditional and does not prove an observer breakpoint caused the AE difference.
+
+Safe detach PASS; independently verified fresh PID/birth/executable, reused
+reviewed normal-quit helper, normal request SENT, process absence PASS. Exact two
+own bundles retired with full hashes preserved and other discovery entry metadata
+unchanged. No window/project read, save discard, signals or forced exit.
+
+S1local569Python/62Node/22stages PASS; macOSCI PASS, UbuntuCI FAIL because the new
+portable test left argv unused outside native code. Artifact11621368680/raw log
+retained. S2pure test fix10453f100d30637f3578524137ce6d4137e0255f validates argv
+and adds excluded-native-branch compilation regression. Actual original branch
+fails for unused argv, fixed branch passes. An attempted -U__APPLE__ checking
+command failed in Apple's standard-library setup; it is not a product or Linux
+runtime result. Actual Linux confirmation comes from CI. S2local570Python/62Node/
+22stages PASS; native implementation/builder blobs and actual S1 artifact are
+unchanged. No second AE launch or rebuilt native claim under S2.
+
+Complete428-file Git snapshots/scans S1/S2:285supported/143unsupported, no omissions;
+raw scanner1/review_required, sole unchanged vibe.no_ratelimit_auth at
+/tools/artifact_manifest.py:71, fingerprint e2999cfe8b5b3a6bd27f0a62, reviewed local
+argparse CLI false positive. No suppression/full security/runtime/dependency claim.
 Private working evidence: build-ae-hot-loader/binding-predicates-2026-10-09-0ae6de4.
-C1PARTIAL/private append BLOCKED/C2 late-add NOT_RUN. Stability races and failure
-paths not deterministically triggered remain unverified, not silently PASS.
+Historical archives retained. Exact source/runtime/CI identities remain separate.
+
+C1PARTIAL/private append BLOCKED/C2 late-add NOT_RUN. Next: bounded first differing
+own-code offset/classification and exact debugger patch/relocation correlation,
+without accepting unmatched bytes. No replay of this consumed native request.
+
+### Binding predicate Evidence/publication closeout
+
+S2exact research run37942103359 jobs113858829576(panel-contract)/113858829854
+(native-syntax) PASS; macOS run37942103270 job113858829909(build) PASS.
+S1research37941299419 remains FAIL (portable test), native-syntax113856061380 PASS;
+S1macOS37941299772 PASS. IDs bound to exact SHA/run, not inferred from order.
+S2CI does not relabel actual S1AE result, prove runtime safety or hot registration.
+
+Private AEHL-binding-predicates-10453f1.zip SHA256
+44ead2f1d8169f0cabf0794df2865c6c3aebd3ea9df52c710ed3ccba87b7fa85,
+1284members. Full428file exact S1 and428file exact S2 Git blobs/modes, actual SDK
+owned artifacts/journals, complete/incomplete/early-exit controls, original/fixed
+refusal and portable regressions, reviews/scans/raw CI failure/success and
+quit/retirement included. Inventory/CRC/every digest/mode/fullsourcebinding PASS.
+No SDK headers, Adobe binaries, user projects/recovery files or credentials.
+Seven expected protected archive hashes verified; all14 existing archives
+unchanged. Owned AE/aerender and five selected control PIDs independently absent.
+Unknown/history material preserved; no destructive cleanup.
+
+Documentation Evidence E is a separate commit; exact-E CI and full source/archive
+closeout are retained privately after this text, without self-referential edits.
+No main/merge/release. All16 planned items reconciled; remaining native mismatch
+cause and downstream writer/public-key/lifetime/render/partial-error gates are
+explicitly UNKNOWN/BLOCKED/NOT_RUN, not promoted by offline/CI success.
 
 ## Refusal diagnosis packet — 2026-10-09
 

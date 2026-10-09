@@ -1,5 +1,19 @@
 # AE Hot Loader — current development and release plan
 
+## Current binding predicate packet — 2026-10-09
+
+Rules11.1.0/source04b6068. NativeS1b7a95c5 gives precise AE refusal:
+resident-text-mismatch, before Backend/suite/enumeration. Current snapshot/file/
+parser/base/header checks passed; byte-difference cause UNKNOWN. One own run,
+4events/4stops reach PiPL, writer/key UNKNOWN. Safe detach, normal owned quit and
+exact pair retirement PASS; other plugins unchanged. S1SDK74pins/19request-Suite
+cases and complete13event/18stop debugger control PASS; one earlier exception
+stop retained separately. S2test-only10453f1:570Python/62Node/22stages PASS;
+fixes Ubuntu unused-argument check, native implementation unchanged. Exact CI and
+private Evidence in the [single checkpoint](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#binding-predicate-packet--2026-10-09).
+C1PARTIAL/private append BLOCKED/C2NOT_RUN. Next: identify the own-code mismatch
+without weakening byte validation; no native retry in this packet.
+
 ## Current refusal diagnosis packet — 2026-10-09
 
 Rules11.1.0/source04b6068; sourceS d578835:565Python/62Node/22stages, exact SDK74pins,
