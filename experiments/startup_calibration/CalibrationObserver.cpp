@@ -798,7 +798,10 @@ A_Err Idle(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long*) noexcept {
         DiagnosticStage("request-module-path"); Require(Module() == calibration_module);
         DiagnosticStage("request-executable-path"); Require(Executable() == calibration_executable);
         DiagnosticStage("request-resident-binding");
-        const auto self = resident_binding::Resolve({calibration_module, Digest(binary)}, {"_AEHL_CalibrationBuildIdentity"});
+        const auto self = [&] {
+            try { return resident_binding::Resolve({calibration_module, Digest(binary)}, {"_AEHL_CalibrationBuildIdentity"}); }
+            catch (const resident_binding::Failure& error) { DiagnosticStage(error.stage()); throw; }
+        }();
         DiagnosticStage("request-resident-symbol");
         Require(self.functions.at("_AEHL_CalibrationBuildIdentity") == reinterpret_cast<void*>(&AEHL_CalibrationBuildIdentity));
         DiagnosticStage("request-names-allocation");

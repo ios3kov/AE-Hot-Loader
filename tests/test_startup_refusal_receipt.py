@@ -20,6 +20,16 @@ spec.loader.exec_module(native_verifier)
 
 
 class RefusalReceiptTests(unittest.TestCase):
+    def test_binding_predicate_survives_supervisor_without_samples(self):
+        for stage in ('resident-snapshot-first', 'resident-file-open', 'resident-image-parse',
+                      'resident-header-mismatch', 'resident-text-mismatch', 'resident-snapshot-final-stability'):
+            with self.subTest(stage=stage):
+                raw = ('AEHL-CAL-RESULT-2\nbuild=owned-build\nstatus=REFUSED\nstage=' + stage +
+                       '\ncleanup=PASS\nrender=UNKNOWN\n').encode('ascii')
+                receipt, reads, verifier = self.run_supervisor(raw)
+                self.assertEqual(receipt['stage'], stage)
+                self.assertEqual(reads, ['result']); verifier.assert_not_called()
+
     def run_supervisor(self, raw, samples=None, key=42, verified_key=42):
         with tempfile.TemporaryDirectory() as folder:
             base = Path(folder).resolve()

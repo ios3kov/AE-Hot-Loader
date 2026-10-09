@@ -14,7 +14,22 @@
 
 namespace resident_binding {
 using Bytes = std::vector<unsigned char>;
-inline void Require(bool ok) { if (!ok) throw std::runtime_error("resident-binding-refused"); }
+// Fixed diagnostic labels only: no paths, addresses or caller-supplied text.
+class Failure : public std::runtime_error {
+    const char* stage_;
+public:
+    explicit Failure(const char* stage) : std::runtime_error("resident-binding-refused"), stage_(stage) {}
+    const char* stage() const noexcept { return stage_; }
+};
+inline void Require(bool ok, const char* stage = "validation") { if (!ok) throw Failure(stage); }
+template<class F> inline auto AtStage(const char* stage, F action) -> decltype(action()) {
+    try { return action(); }
+    catch (const Failure& error) {
+        if (std::strcmp(error.stage(), "validation") != 0) throw;
+        throw Failure(stage);
+    }
+    catch (const std::runtime_error&) { throw Failure(stage); }
+}
 inline void Range(std::size_t start, std::size_t size, std::size_t limit) {
     Require(start <= limit && size <= limit - start);
 }
@@ -186,26 +201,28 @@ inline bool Path(const std::string& path) {
     return true;
 }
 inline Bytes ReadPinned(const Pin& pin) {
-    Require(Path(pin.path) && std::any_of(pin.sha256.begin(), pin.sha256.end(), [](unsigned char c) { return c; }));
-    FD dir(::open("/", O_RDONLY | O_DIRECTORY | O_CLOEXEC)); std::size_t begin = 1;
+    Require(Path(pin.path) && std::any_of(pin.sha256.begin(), pin.sha256.end(), [](unsigned char c) { return c; }), "resident-pin-contract");
+    const int root = ::open("/", O_RDONLY | O_DIRECTORY | O_CLOEXEC);
+    Require(root >= 0, "resident-file-open"); FD dir(root); std::size_t begin = 1;
     while (true) {
         auto end = pin.path.find('/', begin); const bool last = end == std::string::npos;
         auto part = pin.path.substr(begin, last ? std::string::npos : end - begin);
-        FD next(::openat(dir.n, part.c_str(), O_RDONLY | O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK |
-                        (last ? 0 : O_DIRECTORY)));
+        const int opened = ::openat(dir.n, part.c_str(), O_RDONLY | O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK |
+                                   (last ? 0 : O_DIRECTORY));
+        Require(opened >= 0, "resident-file-open"); FD next(opened);
         if (last) {
             struct stat a{}, b{}; Require(::fstat(next.n, &a) == 0 && S_ISREG(a.st_mode) &&
-                a.st_nlink == 1 && a.st_size > 0 && a.st_size <= 256 * 1024 * 1024);
+                a.st_nlink == 1 && a.st_size > 0 && a.st_size <= 256 * 1024 * 1024, "resident-file-stat");
             Bytes bytes(std::size_t(a.st_size)); std::size_t got = 0;
             while (got < bytes.size()) {
                 auto n = ::read(next.n, bytes.data() + got, bytes.size() - got);
-                Require(n > 0); got += std::size_t(n);
+                Require(n > 0, "resident-file-read"); got += std::size_t(n);
             }
             Require(::fstat(next.n, &b) == 0 && a.st_dev == b.st_dev && a.st_ino == b.st_ino &&
                 a.st_size == b.st_size && a.st_nlink == b.st_nlink && a.st_mode == b.st_mode &&
                 a.st_mtimespec.tv_sec == b.st_mtimespec.tv_sec && a.st_mtimespec.tv_nsec == b.st_mtimespec.tv_nsec &&
-                a.st_ctimespec.tv_sec == b.st_ctimespec.tv_sec && a.st_ctimespec.tv_nsec == b.st_ctimespec.tv_nsec);
-            Require(Hash(bytes) == pin.sha256); return bytes;
+                a.st_ctimespec.tv_sec == b.st_ctimespec.tv_sec && a.st_ctimespec.tv_nsec == b.st_ctimespec.tv_nsec, "resident-file-stability");
+            Require(Hash(bytes) == pin.sha256, "resident-file-hash"); return bytes;
         }
         std::swap(dir.n, next.n); begin = end + 1;
     }
@@ -236,39 +253,46 @@ inline std::vector<Loaded> Snapshot() {
     }
     Require(_dyld_image_count() == count); return images;
 }
-inline void EqualMemory(std::uintptr_t address, const Bytes& bytes, std::size_t offset, std::size_t count) {
+inline void EqualMemory(std::uintptr_t address, const Bytes& bytes, std::size_t offset, std::size_t count,
+                        const char* read_stage = "resident-memory-read", const char* mismatch_stage = "resident-memory-mismatch") {
     Range(offset, count, bytes.size()); Require(address && address <= UINTPTR_MAX - count);
     std::array<unsigned char, 8192> copy{};
     for (std::size_t i = 0; i < count;) {
         const auto n = std::min(copy.size(), count - i);
-        Require(directory_spec::ReadSelfMemory(reinterpret_cast<const void*>(address + i), copy.data(), n));
-        Require(std::memcmp(copy.data(), bytes.data() + offset + i, n) == 0); i += n;
+        Require(directory_spec::ReadSelfMemory(reinterpret_cast<const void*>(address + i), copy.data(), n), read_stage);
+        Require(std::memcmp(copy.data(), bytes.data() + offset + i, n) == 0, mismatch_stage); i += n;
     }
 }
 struct BoundImage { Pin pin; Image image; std::map<std::string, const void*> functions; };
 inline BoundImage Resolve(const Pin& pin, const std::vector<std::string>& names) {
-    const auto before = Snapshot(); Require(before == Snapshot());
+    const auto before = AtStage("resident-snapshot-first", [] { return Snapshot(); });
+    const auto second = AtStage("resident-snapshot-second", [] { return Snapshot(); });
+    Require(before == second, "resident-snapshot-initial-stability");
     const Loaded* found = nullptr;
-    for (const auto& im : before) if (im.path == pin.path) { Require(!found); found = &im; }
-    Require(found); // do not read/load a missing image to make this pass
-    const auto bytes = ReadPinned(pin); auto image = Parse(bytes, names);
+    for (const auto& im : before) if (im.path == pin.path) { Require(!found, "resident-image-duplicate"); found = &im; }
+    Require(found, "resident-image-missing"); // do not read/load a missing image to make this pass
+    const auto bytes = ReadPinned(pin);
+    auto image = AtStage("resident-image-parse", [&] { return Parse(bytes, names); });
     // Derive the runtime base from the resident header, not a user-supplied slide/address.
     if (found->slide >= 0) {
-        Require(image.base_vm <= UINTPTR_MAX - std::uint64_t(found->slide));
-        Require(image.base_vm + std::uint64_t(found->slide) == found->header);
+        Require(image.base_vm <= UINTPTR_MAX - std::uint64_t(found->slide), "resident-image-base");
+        Require(image.base_vm + std::uint64_t(found->slide) == found->header, "resident-image-base");
     } else {
         const auto distance = std::uint64_t(-(found->slide + 1)) + 1;
-        Require(image.base_vm >= distance && image.base_vm - distance == found->header);
+        Require(image.base_vm >= distance && image.base_vm - distance == found->header, "resident-image-base");
     }
-    EqualMemory(found->header, bytes, image.slice, image.header_size);
-    Require(found->header <= UINTPTR_MAX - image.text_offset);
-    EqualMemory(found->header + image.text_offset, bytes, image.slice + image.text_offset, image.text_size);
+    AtStage("resident-header-range", [&] { EqualMemory(found->header, bytes, image.slice, image.header_size,
+        "resident-header-read", "resident-header-mismatch"); });
+    Require(found->header <= UINTPTR_MAX - image.text_offset, "resident-text-address");
+    AtStage("resident-text-range", [&] { EqualMemory(found->header + image.text_offset, bytes,
+        image.slice + image.text_offset, image.text_size, "resident-text-read", "resident-text-mismatch"); });
     BoundImage result{pin, image, {}};
     for (const auto& e : image.exports) {
-        Require(found->header <= UINTPTR_MAX - e.second);
+        Require(found->header <= UINTPTR_MAX - e.second, "resident-export-address");
         result.functions.emplace(e.first, reinterpret_cast<const void*>(found->header + e.second));
     }
-    Require(before == Snapshot()); return result;
+    const auto final = AtStage("resident-snapshot-final", [] { return Snapshot(); });
+    Require(before == final, "resident-snapshot-final-stability"); return result;
     // This is a point-in-time check, not a dyld lock or lifetime lease. The future
     // authorized main-thread caller must recheck pins/state and cannot permit unload.
 }

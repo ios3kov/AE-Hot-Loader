@@ -1,6 +1,8 @@
 // Actual observer, real SDK declarations, owned request files; no Adobe callbacks.
 #include "../experiments/startup_calibration/CalibrationObserver.cpp"
 #include <iostream>
+#include <fstream>
+#include <iterator>
 
 namespace {
 int suite_mode = 0, acquires = 0, releases = 0;
@@ -37,7 +39,19 @@ int main(int argc, char** argv) {
     try {
         Require(argc == 2);
         const auto base = std::filesystem::canonical(argv[1]).string();
-        for (unsigned mode = 0; mode < 12; ++mode) {
+        const auto own_module = Module(), own_executable = Executable();
+        const auto module_before = calibration_module, executable_before = calibration_executable;
+        const auto file_bytes = resident_binding::ReadPinned({own_module, resident_binding::Hash([&] {
+            std::ifstream in(own_module, std::ios::binary); Require(bool(in));
+            return resident_binding::Bytes(std::istreambuf_iterator<char>(in), {});
+        }())});
+        const auto own_hash = resident_binding::Hash(file_bytes);
+        constexpr char digits[] = "0123456789abcdef";
+        std::string binary_hash;
+        for (unsigned char byte : own_hash) { binary_hash += digits[byte >> 4]; binary_hash += digits[byte & 15]; }
+        for (unsigned mode = 0; mode < 14; ++mode) {
+            calibration_module = mode >= 12 ? own_module.c_str() : module_before;
+            calibration_executable = mode >= 12 ? own_executable.c_str() : executable_before;
             const auto path = base + "/request-" + std::to_string(mode);
             Require(std::filesystem::create_directory(path) && chmod(path.c_str(), 0700) == 0);
             calibration_control = path.c_str();
@@ -51,7 +65,7 @@ int main(int argc, char** argv) {
             const auto ownership = mode == 4 ? "WRONG-OWNERSHIP" : "OWNED-STARTUP-REGISTRY-OBSERVATION";
             const auto request = std::string(schema) + " " + token + " " + std::to_string(pid) + " " +
                 std::to_string(born) + " " + std::to_string(deadline) + " " + ownership + " " +
-                std::string(64, '0') + (mode == 5 ? " trailing\n" : "\n");
+                (mode == 13 ? binary_hash : std::string(64, '0')) + (mode == 5 ? " trailing\n" : "\n");
             if (mode == 0) Require(std::filesystem::create_directory(path + "/request"));
             else {
                 Save("request", mode == 2 ? "broken\n" : request);
@@ -61,7 +75,8 @@ int main(int argc, char** argv) {
             const auto result = Read("result");
             const auto stage = mode <= 1 ? "request-read" : mode == 2 ? "request-parse-fields" :
                 mode <= 5 ? "request-parse-contract" : mode == 6 ? "request-token" :
-                mode <= 8 ? "request-process" : mode <= 10 ? "request-deadline" : "request-module-path";
+                mode <= 8 ? "request-process" : mode <= 10 ? "request-deadline" : mode == 11 ? "request-module-path" :
+                mode == 12 ? "resident-pin-contract" : "resident-image-parse";
             if (result.find(std::string("\nstage=") + stage + "\n") == std::string::npos)
                 throw std::runtime_error(std::string("actual Idle refusal lost expected stage ") + stage);
             Require(consumed && !names && result.find("\nstatus=REFUSED\n") != std::string::npos);
@@ -69,7 +84,7 @@ int main(int argc, char** argv) {
             Require(Read("result") == result && !Exists("begin") && !Exists("names-0"));
         }
         SuiteCases();
-        std::cout << "PASS:12 owned request refusals; 5 owned SDK-acquisition cases; actual Idle stage and replay guards; Adobe_calls=0\n";
+        std::cout << "PASS:14 owned request refusals; 5 owned SDK-acquisition cases; actual Idle stage and replay guards; Adobe_calls=0\n";
         return 0;
     } catch (const std::exception& error) { std::cerr << error.what() << '\n'; return 1; }
 }

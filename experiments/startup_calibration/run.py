@@ -284,7 +284,7 @@ def prepare(manifest, expected_hash):
     need(record['offline_tests']['exact_marker_pixel_oracle']['pixel_status'] == 'PASS' and
          record['offline_tests']['frame'].startswith('PASS:21 SDK async frame cases') and
          record['offline_tests']['backend'].startswith('PASS:13 SDK-backend cases') and
-         record['offline_tests'].get('request', '').startswith('PASS:12 owned request refusals; 5 owned SDK-acquisition cases;') and
+         record['offline_tests'].get('request', '').startswith('PASS:14 owned request refusals; 5 owned SDK-acquisition cases;') and
          record['offline_tests']['inert'].startswith('PASS: 3 inert cases'), 'mandatory offline checks missing')
     for item in record['bundles']:
         bundle = base / item['bundle']; need(common.bundle_hashes(bundle) == item['files'], 'candidate bundle changed')

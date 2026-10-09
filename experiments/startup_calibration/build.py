@@ -164,8 +164,13 @@ def main():
             # The actual SDK adapter calls only our fake callbacks here. Its separate
             # test configuration cannot activate the signed observer or its journal.
             test_config = output / (label + "-test-config"); test_config.mkdir(mode=0o700)
-            (test_config / "CalibrationConfig.hpp").write_text((output / "CalibrationConfig.hpp").read_text().replace(
-                "static constexpr const char* calibration_control", "static const char* calibration_control"))
+            test_text = (output / "CalibrationConfig.hpp").read_text().replace(
+                "static constexpr const char* calibration_control", "static const char* calibration_control")
+            if label == "request":
+                for field in ("calibration_module", "calibration_executable"):
+                    test_text = test_text.replace("static constexpr const char* " + field,
+                                                  "static const char* " + field)
+            (test_config / "CalibrationConfig.hpp").write_text(test_text)
             (test_config / "CalibrationConfig.hpp").chmod(0o600)
             test_common = [part if part != "-I" + str(output) else "-I" + str(test_config) for part in common]
         command = test_common + ["-fsanitize=address,undefined", "-fno-omit-frame-pointer", str(test)]

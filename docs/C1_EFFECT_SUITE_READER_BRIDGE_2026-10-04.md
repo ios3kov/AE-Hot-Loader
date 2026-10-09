@@ -18,6 +18,45 @@ and does not become a live registration/apply/render result.
 
 
 
+## Binding predicate packet — 2026-10-09
+
+Approved16 steps; baseline0ae6de420cf0040f7ef55d571672a9f81b889ed7.
+Rules11.1.0/source04b606845e0f73ab28b9807bb45682eae4d6ce34; AI_ENTRYPOINT first,
+Process1/3/4/7/10/11, Engineering14/16/34/41, Tools22, Native23, Skills43,
+Development handoff26. Local context-discipline and production-engineering.
+Critical/Development: diagnostic labels only, unchanged admission predicates.
+
+Acceptance: exact fixed refusal stage from actual Resolve, retained in actual Idle
+and supervisor response; no paths/addresses/raw exceptions in diagnostics. All
+hash/path/main-thread/snapshot/header/text/export/one-shot checks remain strict.
+Do not infer the actual AE cause from the earlier OWN breakpoint control. ONE
+conditional register-only owned startup after clean exact-candidate controls;
+normal quit authority persists, no force/save-discard/foreign project reads.
+No private call, Apply/render/project mutation, retry/main/merge/release.
+
+| Stage | Requirement/check | State |
+| --- | --- | --- |
+| BP01 | Restore pinned rules/candidate/absence gates | Rules/context restored; live absence pending |
+| BP02 | Precise refusal type and safe labels | Implemented; original generic failure reproduction pending |
+| BP03 | First/second snapshot and initial stability | Labels implemented; real own snapshot checks pending |
+| BP04 | Missing/duplicate image and base relationship | Strict predicates retained; own missing path control pending |
+| BP05 | Path/open/stat/read/stability/hash | Labels implemented; own file controls pending |
+| BP06 | Original-file parser/export contract | Context label implemented; parser regression pending |
+| BP07 | Resident header read/mismatch/range | Labels implemented; own memory controls pending |
+| BP08 | Resident text read/mismatch/range/address | Labels implemented; own memory controls pending |
+| BP09 | Actual breakpoint state/control | Fresh own control pending; native cause remains UNKNOWN |
+| BP10 | Final snapshot/stability/export address | Strict checks retained; native outcome pending |
+| BP11 | Actual Idle and supervisor refusal receipt | Two additional actual Idle cases; supervisor test implemented |
+| BP12 | Full candidate regression | Pending |
+| BP13 | Exact SDK/build/review/debugger admission | Pending |
+| BP14 | ONE conditional own AE query | NOT_RUN pending gates |
+| BP15 | Detach/normal owned quit/absence/retirement | NOT_RUN pending own run |
+| BP16 | Reconciliation/Evidence/research CI | Pending; protected archives unchanged |
+
+Private working evidence: build-ae-hot-loader/binding-predicates-2026-10-09-0ae6de4.
+C1PARTIAL/private append BLOCKED/C2 late-add NOT_RUN. Stability races and failure
+paths not deterministically triggered remain unverified, not silently PASS.
+
 ## Refusal diagnosis packet — 2026-10-09
 
 Approved16-step continuation. Baseline d9e429266ac0102949aada7bcf499c0a0b429ddc,
