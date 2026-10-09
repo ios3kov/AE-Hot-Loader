@@ -43,18 +43,18 @@ to the newly launched owned process and removed on detach; no disk image patch.
 | PT01 | Explicit v11.0.1 adoption/source/compatibility | PASS: accepted exact release source |
 | PT02 | Restore exact source/AE/SDK/Evidence | Baseline restored; exact new SDK candidate pending |
 | PT03 | Exact decoded register sites/operand/raw bytes | Prepared from original bodies; candidate admission pending |
-| PT04 | Passive bounded collector | IN PROGRESS |
-| PT05 | File SHA/UUID and mapped image/PC binding | IN PROGRESS |
-| PT06 | Unique own sentinel/context/thread filtering | IN PROGRESS |
-| PT07 | Context→PiPL→FCSpec→writer register flow | IN PROGRESS |
-| PT08 | Own public key/function bracket→lookup result | IN PROGRESS |
-| PT09 | Event/log/deadline/cancellation limits, no kill/retry | IN PROGRESS |
-| PT10 | Wrong process/build/inputs/order and bounds refusals | PASS:9 focused controls; synthetic only |
+| PT04 | Passive bounded collector | Implemented; transport BLOCKED before collector loop |
+| PT05 | File SHA/UUID and mapped image/PC binding | PASS:file admission10sites/5modules; mapped live NOT_RUN |
+| PT06 | Unique own sentinel/context/thread filtering | PASS:synthetic refusals; actual own host NOT_RUN |
+| PT07 | Context→PiPL→FCSpec→writer register flow | Implemented; live UNKNOWN |
+| PT08 | Own public key/function bracket→lookup result | Implemented; live UNKNOWN |
+| PT09 | Event/log/deadline/cancellation limits, no kill/retry | PASS:pure limits; blocking launch prevents runtime deadline proof |
+| PT10 | Wrong process/build/inputs/order and bounds refusals | PASS:10 focused controls; synthetic only |
 | PT11 | Spec/quality and native affected-function inventory | Bounded review recorded; actual SDK build pending |
-| PT12 | Exact clean candidate build/SDK/control checks | NOT RUN |
-| PT13 | Fresh absence, exact own pair, new owned session only | CONDITIONAL / NOT RUN |
-| PT14 | One writer→reader identity trace, no render | CONDITIONAL / NOT RUN |
-| PT15 | Interpret trace or precise refusal, preserve unknowns | NOT RUN |
+| PT12 | Exact clean candidate build/SDK/control checks | PASS:a832467 pair; hardened controller exact candidate pending |
+| PT13 | Fresh absence, exact own pair, new owned session only | BLOCKED:transport; install/AE NOT_RUN |
+| PT14 | One writer→reader identity trace, no render | BLOCKED / NOT_RUN |
+| PT15 | Interpret trace or precise refusal, preserve unknowns | Refusal before collector loop preserved; no host conclusions |
 | PT16 | Evidence/status/checks/research commit/push/exact CI | IN PROGRESS |
 
 One-shot startup180s and subsequent native110/controller120s caps, at most256
@@ -80,16 +80,43 @@ PASS or a reason to launch AE. Actual debugger control remains admission-critica
 
 | Native function | Review scope | Result / limits |
 | --- | --- | --- |
-| Marker AEHL_TraceMarkerBoundary (new) | Arguments/register barrier, no heap/host calls; stack callback borrowed | Reviewed; native build pending |
+| Marker AEHL_TraceMarkerBoundary (new) | Arguments/register barrier, no heap/host calls; stack callback borrowed | Reviewed; actual SDK build PASS:a832467 |
 | PluginDataEntryFunction2 (modified) | Sentinels bracket same existing host callback; actual main-thread proof/status | Reviewed; startup proof pending |
-| Observer AEHL_TraceReaderBoundary (new) | Scalar key/provider/status only; no resource ownership | Reviewed; native build pending |
-| Backend::Match (modified) | Same own key, bounded buffers, acquired provider, main/deadline guard, one public repeat | Reviewed; SDK regression pending |
+| Observer AEHL_TraceReaderBoundary (new) | Scalar key/provider/status only; no resource ownership | Reviewed; actual SDK build PASS:a832467 |
+| Backend::Match (modified) | Same own key, bounded buffers, acquired provider, main/deadline guard, one public repeat | Reviewed; actual SDK regression PASS:a832467 |
 | Other native functions | Unchanged; existing project guards/SDK leases/frame path retained | Not re-reviewed in this packet; prior evidence applies only to prior bytes |
 
 Review inventory is bounded, not a claim that every Adobe consumer or native
 function has been reviewed. Private offsets/register meanings derive from the
 previous complete original-file bodies; actual PC/UUID/file mapping remains a
 live obligation. The isolated fixture tests collector transport only.
+
+### Initial exact preparation results and transport refusal
+
+Implementation source `a8324672cd73175fe24ad3a853a3cb667af7de88`, clean.
+531Python/62Node/22stages PASS; no macOS skips. Actual SDK74pins unchanged;
+trace-enabled signed pair24cb47c6d35d48eeaba738bb96d5206f: adapter/inert3/backend13/
+frame21 controls and independent marker oracle PASS. ManifestSHA
+`e80a27c9dc34629447771c7ec014577afa1e025cf89b223d8999d9a68e306c87`.
+Exact original image/site preparation PASS10sites/5modules; preparation only.
+ProfileSHA`1e8dcf40f42dfccfc33b34bc7b779d537d8b478bb6397c86ff4abf98d7b0774f`.
+Local audit:421tracked files,280supported/141unsupported, no omissions; rawexit1
+retained, same local argparse heuristic e2999cfe8b5b3a6bd27f0a62, manually reviewed
+false positive. Unsupported native code reviewed separately, not scanner PASS.
+
+Original sandbox control failures retain exit_description="no such process",
+exit_status=-1; they are not successful observation or normal-exit proof. The
+separate own control stopped within synchronous SBTarget.Launch before returning
+an owned identity to the collector. Replacing the event listener did not provide
+a successful transport result. Two own fixture/debugger sessions preserved,
+with attention records; permission for narrow cleanup pending. No AE candidate
+installation, AE launch, project/window interaction, private calls or signals.
+Root cause UNKNOWN; launch/stop/detach admission BLOCKED. No target claim follows.
+
+A separate admission hardening now binds all collector source bytes and requires
+one complete detached real fixture result for the exact candidate source before
+AE installation or launch. Missing/stale/partial proof refuses; pure admission
+controls are synthetic, not the missing real proof. New exact checks pending.
 
 ## Startup operation chain packet — 2026-10-09
 

@@ -96,5 +96,18 @@ class StartupTraceTests(unittest.TestCase):
             p.write_text('{"x":1,"x":2}')
             with self.assertRaisesRegex(ValueError,'duplicate'):profile.read_json(p,hashlib.sha256(p.read_bytes()).hexdigest())
 
+    def test_transport_refusal_prevents_ae_admission(self):
+        proof={'kind':'owned-fixture','status':'IDENTITY_OBSERVED','phase':'complete','cleanup_safe':True,
+               'accepted_events':12,'stops':15,'collector_sha256':profile.collector_hashes(),'source_commit':'a'*40,
+               'owned_process':{'executable':str(ROOT/'build-ae-hot-loader/trace-fixture-own/aehl-trace-fixture')}}
+        candidate={'source':{'commit':'a'*40}}
+        profile.transport_admission(proof,candidate)
+        for field,value in [('status','UNKNOWN'),('cleanup_safe',False),('accepted_events',11),('stops',14),
+                            ('source_commit','b'*40),('collector_sha256',{}),('kind','ae-owned-startup')]:
+            bad=copy.deepcopy(proof);bad[field]=value
+            with self.subTest(field=field),self.assertRaisesRegex(ValueError,'transport proof'):profile.transport_admission(bad,candidate)
+        proof['owned_process']['executable']='/Applications/Other.app/Contents/MacOS/Other'
+        with self.assertRaisesRegex(ValueError,'outside fixture'):profile.transport_admission(proof,candidate)
+
 
 if __name__=='__main__':unittest.main()

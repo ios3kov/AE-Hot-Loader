@@ -13,7 +13,7 @@ import shutil
 import subprocess
 import time
 from core import need
-from profile import read_json, validate, native_profile
+from profile import read_json, validate, native_profile, transport_admission
 from lldb_collector import load_native, write_once
 
 
@@ -67,9 +67,10 @@ def retire(manifest,digest):
     write_once(base/'trace/retirement.json',{'status':'PASS','path':str(destination),'other_entries':'UNCHANGED','host_absence':'PASS'})
 
 
-def execute(manifest,digest):
+def execute(manifest,digest,transport,transport_digest):
     native=load_native()
     record,base,install=native.prepare(Path(manifest),digest)
+    transport_admission(read_json(transport,transport_digest),record)
     need(record.get('trace_identity') is True and not native.processes(),'native admission failed')
     profile_record=native_profile(manifest,digest);validate(profile_record)
     # Persist admission and installation inventory before a possible live launch.
@@ -107,15 +108,15 @@ def execute(manifest,digest):
 
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser();parser.add_argument('--profile');parser.add_argument('--manifest')
+    parser=argparse.ArgumentParser();parser.add_argument('--transport-proof');parser.add_argument('--transport-sha256');parser.add_argument('--profile');parser.add_argument('--manifest')
     parser.add_argument('--sha256',required=True);parser.add_argument('--output');parser.add_argument('--retire-owned-pair',action='store_true');parser.add_argument('--execute-owned-startup',action='store_true')
     args=parser.parse_args()
     if args.retire_owned_pair:
         need(args.manifest and not args.profile and not args.execute_owned_startup,'retirement mode only')
         retire(args.manifest,args.sha256)
     elif args.manifest:
-        need(args.execute_owned_startup and not args.profile and not args.output,'explicit unique startup execution required')
-        execute(args.manifest,args.sha256)
+        need(args.execute_owned_startup and args.transport_proof and args.transport_sha256 and not args.profile and not args.output,'explicit unique startup execution required')
+        execute(args.manifest,args.sha256,args.transport_proof,args.transport_sha256)
     else:
         record=validate(read_json(args.profile,args.sha256));need(record['kind']=='owned-fixture' and args.output and not args.execute_owned_startup,'only owned fixture permitted')
         print(json.dumps(drive(args.profile,args.sha256,args.output)))

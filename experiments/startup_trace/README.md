@@ -31,8 +31,11 @@ For AE, first commit the reviewed source, run the research checks and build the
 exact SDK candidate with startup_calibration/build.py `--trace-identity`, its
 expected commit, fresh run ID and prospective host/module pair. No preparation
 command installs or launches AE. Only `launch.py --manifest <absolute manifest>
---sha256 <digest> --execute-owned-startup` admits a unique pair and one new host.
-It refuses an existing AE/aerender, used control directory, changed image/source,
+--sha256 <digest> --transport-proof <absolute fixture result> --transport-sha256
+<digest> --execute-owned-startup` admits a unique pair and one new host.
+It first requires a complete safely detached fixture result for the exact clean
+source/collector bytes; a partial/stale/synthetic result does not establish that
+runtime gate. It refuses an existing AE/aerender, used control directory, changed image/source,
 unknown site, different callback/key/root/descriptor, worker thread, replay or
 budget exhaustion. READY permits one read-only registry request; SDK receipt must
 independently agree with the register trace. A publication failure stays UNKNOWN;

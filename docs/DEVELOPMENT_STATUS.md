@@ -4,8 +4,10 @@
 
 Rules11.0.1 accepted at f80eaa8.16-step packet implements exact register-site
 admission, own native sentinels, ordered bounded correlator and separate public
-receipt verification.29 focused startup tests PASS (9 new identity/refusal
-controls). Native candidate/full regression pending. Real owned fixture
+receipt verification.30 focused startup tests PASS (10 new identity/refusal/admission
+controls). Sourcea832467:531Python/62Node/22stages and exact-SDK trace-enabled
+pair checks PASS; subsequent transport-admission hardening pending exact checks.
+Real owned fixture
 transport is not yet PASS; synchronous LLDB launch stopped inside startup and
 preserved the own control/debugger for attention. AE install/launch NOT_RUN;
 private append BLOCKED, C1 PARTIAL, C2 NOT_RUN.

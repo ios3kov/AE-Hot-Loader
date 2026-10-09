@@ -13,6 +13,18 @@ ROOT = Path(__file__).resolve().parents[2]
 HOST = Path('/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app/Contents/MacOS/After Effects')
 HOST_SHA = '464ad678ca19ba78478e2989c42f42bea3fd95e51c9180c1556c53c973457df6'
 BASE = HOST.parents[1]
+COLLECTOR_SOURCES=tuple('experiments/startup_trace/'+name for name in ('core.py','image.py','profile.py','lldb_collector.py','launch.py','fixture.py','fixture.cpp'))
+
+def collector_hashes():
+    return {name:hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in COLLECTOR_SOURCES}
+
+def transport_admission(proof, candidate):
+    need(proof.get('kind')=='owned-fixture' and proof.get('status')=='IDENTITY_OBSERVED' and proof.get('phase')=='complete' and
+         proof.get('cleanup_safe') is True and proof.get('accepted_events')==12 and proof.get('stops')==15 and
+         proof.get('collector_sha256')==collector_hashes() and proof.get('source_commit')==candidate['source']['commit'],
+         'exact collector transport proof missing or stale; AE install/launch prohibited')
+    host=Path(proof.get('owned_process',{}).get('executable',''))
+    need(host.name=='aehl-trace-fixture' and host.parent.parent==ROOT/'build-ae-hot-loader' and host.parent.name.startswith('trace-fixture-'), 'transport process outside fixture scope')
 PINS = {
  'PS': (BASE/'Frameworks/PluginSupport.framework/Versions/A/PluginSupport', '4d2c200b198124b43887bbb7e53c9e48514621a54feb36085822852978b45832', '64c01ac4-2413-3463-8822-17ee5543052a'),
  'FLT': (BASE/'Frameworks/FLT.dylib', '227f0688d4272b1c0be2b2066d53b702e2363fca6002f873ea0acdc6a4d01256', 'c8786a71-e313-3b20-9494-359fb56d705a'),
@@ -71,7 +83,7 @@ def native_profile(manifest, digest):
         modules[role]=image_record(path);modules[role]['loaded_path']=str(install/item['bundle']/'Contents/MacOS'/Path(item['bundle']).stem)
         sites[role]={'module':role,'offset':offset,'word':im.bytes(offset).hex(),'registers':BOUNDARIES[role]}
     host=image_record(HOST);need(host['sha256']==HOST_SHA,'host pin differs')
-    return {'schema':1,'kind':'ae-owned-startup','host':host,'modules':modules,'sites':sites,
+    return {'schema':1,'kind':'ae-owned-startup','collector_sha256':collector_hashes(),'host':host,'modules':modules,'sites':sites,
             'callback':{'module':'PS','offset':0x4b194}, 'match_function':{'module':'AEGP','offset':0x42554},
             'candidate_manifest':str(Path(manifest)),'candidate_sha256':digest,
             'source_commit':record['source']['commit'],'build_id':record['build_id'],
@@ -81,7 +93,8 @@ def native_profile(manifest, digest):
 
 def validate(record, verify_files=True):
     need(set(record)=={'schema','kind','host','modules','sites','callback','match_function',
-         'candidate_manifest','candidate_sha256','source_commit','build_id','limits','scope'},'profile fields differ')
+         'candidate_manifest','candidate_sha256','source_commit','build_id','limits','scope','collector_sha256'},'profile fields differ')
+    if verify_files:need(record['collector_sha256']==collector_hashes(),'collector source changed')
     need(record['schema']==1 and record['kind'] in ('ae-owned-startup','owned-fixture'),'profile kind')
     need(record['limits']=={'startup_seconds':180,'operation_seconds':120,'native_seconds':110,'events':256,'stops':256,'bytes':1048576},'unreviewed limits')
     need(set(record['sites'])==set(FIELDS),'site inventory differs')

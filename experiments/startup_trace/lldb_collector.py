@@ -57,7 +57,7 @@ def observe(debugger, profile_path, digest, output):
     target=debugger.CreateTarget(record['host']['path'],'arm64-apple-macosx',None,False,error)
     need(error.Success() and target.IsValid(),'target creation failed')
     modules={};breaks={};roles={};process=None;observed=None;trace=None
-    started=time.monotonic();deadline=started+180;publication='NOT_SENT';report={'status':'UNKNOWN','cleanup_safe':False,'kind':record['kind'],'source_commit':record['source_commit']}
+    started=time.monotonic();deadline=started+180;publication='NOT_SENT';report={'status':'UNKNOWN','cleanup_safe':False,'kind':record['kind'],'source_commit':record['source_commit'],'collector_sha256':record['collector_sha256']}
     try:
         for label,pin in record['modules'].items():
             path=pin.get('loaded_path',pin['path']);module=target.AddModule(path,'arm64-apple-macosx',pin['uuid'])
