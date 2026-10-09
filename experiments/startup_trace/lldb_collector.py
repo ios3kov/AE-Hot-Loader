@@ -66,7 +66,9 @@ def observe(debugger, profile_path, digest, output):
             address=modules[site['module']].ResolveFileAddress(site['offset']);need(address.IsValid(),'site resolution failed')
             bp=target.BreakpointCreateBySBAddress(address);need(bp.IsValid() and bp.GetNumLocations()==1,'breakpoint unresolved/ambiguous')
             bp.SetEnabled(role=='marker');breaks[role]=bp;roles[bp.GetID()]=role
-        listener=debugger.GetListener();launch=lldb.SBLaunchInfo([])
+        listener=debugger.GetListener();launch=target.GetLaunchInfo()
+        launch.SetArguments([],False);launch.SetExecutableFile(lldb.SBFileSpec(record['host']['path']),True)
+        launch.SetDetachOnError(True)
         launch.SetLaunchFlags(lldb.eLaunchFlagDebug | lldb.eLaunchFlagStopAtEntry)
         launch.SetWorkingDirectory(str(output));launch.AddOpenFileAction(0,'/dev/null',True,False)
         for leaf in ('host-stdout.log','host-stderr.log'):
@@ -161,4 +163,4 @@ def command(debugger, text, result, _):
 
 
 def __lldb_init_module(debugger, _):
-    debugger.HandleCommand('command script add -f lldb_collector.command aehl-owned-trace')
+    debugger.HandleCommand('command script add -s asynchronous -f lldb_collector.command aehl-owned-trace')
