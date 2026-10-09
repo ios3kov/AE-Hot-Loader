@@ -114,10 +114,12 @@ int main(int argc, char** argv) {
             Idle(nullptr,nullptr,nullptr);Require(Read("result")==result && Read("request-deadline-check")==timing);
         }
         diagnostic_clock.enabled=false;
-        std::cout<<"PASS:5 actual Idle clock scenarios; one-shot timing; OS_clock_changes=0; Adobe_calls=0\n";
 #endif
         SuiteCases();
         std::cout << "PASS:14 owned request refusals; 5 owned SDK-acquisition cases; actual Idle stage and replay guards; Adobe_calls=0\n";
+#ifdef AEHL_CALIBRATION_DIAGNOSTIC_CLOCK_TEST
+        std::cout<<"PASS:5 actual Idle clock scenarios; one-shot timing; OS_clock_changes=0; Adobe_calls=0\n";
+#endif
         return 0;
     } catch (const std::exception& error) { std::cerr << error.what() << '\n'; return 1; }
 }
