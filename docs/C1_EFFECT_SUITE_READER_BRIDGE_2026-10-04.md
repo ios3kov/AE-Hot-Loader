@@ -42,15 +42,15 @@ A missing event remains UNKNOWN and cannot relax same-pointer identity.
 | RD04 | Ordering and branches | PASS startup setter before load/notify; cache bypass retained |
 | RD05 | Own-effect discriminator | PASS design: own metadata PiPL exact equality at adapter |
 | RD06 | Select bounded probe | PASS aelib63b2c x8; no object-memory access |
-| RD07 | Collector update | Implemented mandatory adapter phase and partial-result field |
+| RD07 | Collector update | PASS source5901b9f: mandatory adapter and bounded partial result |
 | RD08 | Original sites/modules | PASS new aelib SHA/UUID/instruction and FLT import |
-| RD09 | Negative controls | PASS21 focused tests; synthetic, not AE |
-| RD10 | Own debugger fixture | Pending exact clean candidate |
-| RD11 | Review/SDK/regression | Pending exact clean candidate |
-| RD12 | Conditional fresh isolated AE | NOT_RUN pending mandatory gates |
-| RD13 | Own writer→real reader/key | NOT_RUN; no new live claim |
-| RD14 | Owned state cleanup | Pending; no host/install so far |
-| RD15 | Evidence/research publication/CI | Pending; no release |
+| RD09 | Negative controls | PASS21 focused tests and5 exact-source transport refusals; synthetic |
+| RD10 | Own debugger fixture | PASS13events/18stops; safe detach/own fixture exit |
+| RD11 | Review/SDK/regression | PASS543Python/62Node/22stages,74SDKpins, separate review |
+| RD12 | Conditional fresh isolated AE | INCOMPLETE: one owned PID78203; four accepted events |
+| RD13 | Own writer→real reader/key | UNKNOWN: adapter not observed; request sent, no response |
+| RD14 | Owned state cleanup | PASS own host absent, exact pair retained outside discovery |
+| RD15 | Evidence/research publication/CI | PASS502member private Evidence; research push/exact CI in closeout |
 
 Ten complete original bodies/3699 instructions/757 raw direct branch targets
 verified. New aelib SetupAEPlugin63aa0–63c04 copies IPlugin and IPiPL references
@@ -75,9 +75,54 @@ five ignored events. Callback/module/source/process/thread checks remain strict.
 Private working evidence: build-ae-hot-loader/route-discriminator-2026-10-09-6098ac0,
 capture.json, route-reconciliation.json, skill-admission.json. Original proprietary
 bytes stay local; public checkpoint contains bounded findings/identities only.
-C1 PARTIAL, private append BLOCKED, C2/late-add NOT_RUN. Fresh source verification,
-conditional host result, archive and exact-head CI will be reconciled below.
+C1 PARTIAL, private append BLOCKED, C2/late-add NOT_RUN. Current exact verification and host result are reconciled below; final research
+publication/exact-head CI belongs to the separately bound closeout.
 
+
+### Exact verification, owned attempt and closeout
+
+Implementation source5901b9f4a4d188bb44d402da766b2bf889f470ca is clean and
+543Python/62Node/22stages PASS, zero skips. Separate spec/quality review PASS;
+281 supported +141 unsupported tracked files, no scanner omissions. One unchanged
+heuristic finding at artifact_manifest.py71 is manually reviewed local argparse
+CLI, no auth route; raw exit1 retained, no suppression or runtime certification.
+Actual SDK25.6_61 build74pins, adapter3/backend13/frame21 and independent marker
+pixel oracle PASS. Fresh fixture PID76237:13accepted/18stops, ignored convert1 /
+adapter2 / spec1 / writer1; detach PASS and exact PID absent. Old12/15, missing
+adapter, stale source/helper and unsafe-detach proofs refused before installation.
+Native build b32e7c53efca4aacb510e6c35487a1f0 manifestSHA
+b012a2393b7911da453a802baf1e13b30705fd9640eb7d48ebac39af1980dffb.
+
+One authorized native startup PID78203 after fresh AE absence. Own four event
+files marker1/marker2/convert/PiPL reproduce earlier bounded identity. New adapter
+was not observed. SDK READY produced one request; request file and intent exist,
+no consumed/result. A stable-stop check refused a snapshot already RUNNING
+(state6, zero threads, same before/after StopID13018). Poll-to-capture transition
+cannot be treated as an isolated breakpoint. StopID is not the number of admitted
+stops; total count UNKNOWN because the final collector result is missing.
+
+Launcher reported debugger exited unexpectedly before final collector journal.
+Detach UNKNOWN, not PASS. Subsequent fresh inventory found no AE processes and
+exact PID absent; cause of native/debugger exit and any crash remain UNKNOWN.
+No second launch, private call, object read, Apply/render/project mutation, signal
+or window access. Full frame/lifetime/late-add gates unchanged. This new runtime
+refusal does not retrospectively explain58a0673 or establish that the adapter
+route cannot work. Fixing the real debugger stop/report lifecycle is now required
+before another native run; then observe the adapter without weakening identity.
+
+Exact pair hashes/discovery inventory checked and own pair moved to
+trace/retired-installation; other plugin entries unchanged. No deletion of
+historical/unknown material. Native-attempt reconciliation is separate from the
+missing collector result and preserves that absence.
+
+Private Evidence AEHL-metadata-adapter-5901b9f.zip:502members, all CRC/SHA/modes,
+complete422file source verified; SHA256
+0c5d7930bc27820e708dbb6e00814a4b94b2578f21c14ae548543e6664507e6a.
+Runner AEHL-checks-s3jqan9g.zip is bound in verification-summary and payload.
+No original Adobe binaries, SDK header bytes, user/recovery projects or credentials
+in this archive. Previous Evidence unchanged. Docs-only final commit must preserve
+all tested executable bytes; research exact-head CI/source binding is retained in
+private final closeout. No merge/main/release or installable handoff.
 
 ## PiPL route and stop classification — 2026-10-09
 

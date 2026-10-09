@@ -1,5 +1,20 @@
 # AE Hot Loader — current development status
 
+## Current metadata adapter packet — 2026-10-09
+
+Rules11.1.0/source04b6068; necessary local context-discipline and
+production-engineering skills applied. Source5901b9f adds one exact own-PiPL
+adapter observation; bounded file forwarding established, live correspondence
+UNKNOWN.543Python/62Node/22stages, actual SDK74pins, own debugger13events/18stops
+and separate review PASS. One native attempt stopped after4events: running-state
+snapshot refused, debugger exited without final receipt. Request sent, no response;
+detach/exit cause UNKNOWN. Host absent; exact pair retained outside discovery,
+other plugins unchanged.502member private Evidence verified. C1PARTIAL, private
+append BLOCKED, C2/late-add NOT_RUN. Next: stabilize debugger stop/report lifecycle,
+then prove own adapter→writer→reader. Research publication/CI in final closeout.
+[Current15-stage acceptance and Evidence](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#metadata-adapter-discriminator--2026-10-09).
+
+
 ## Active PiPL-route packet — 2026-10-09
 
 Rules11.1.0/source04b6068 and new local Codex skills reconciled. Exact source

@@ -5,7 +5,7 @@ and select the applicable canonical modules before each significant stage.
 Adopted on 2026-10-09 at the user's explicit migration request:
 AE-Development-Rules **11.1.0**, tag `v11.1.0`, peeled source
 `04b606845e0f73ab28b9807bb45682eae4d6ce34`.
-See [current passive-trace adoption and scope](docs/C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#pipl-route-and-stop-classification--2026-10-09).
+See [current adapter-trace adoption and scope](docs/C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#metadata-adapter-discriminator--2026-10-09).
 Previous v11.0.1 and v11.0.0 adoptions remain historical.
 Previous v8.0.0 adoption and Evidence remain historical and unchanged.
 Before a significant step, select risk/component/delivery rules and relevant
