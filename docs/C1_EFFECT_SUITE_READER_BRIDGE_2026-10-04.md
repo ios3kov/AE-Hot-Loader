@@ -18,6 +18,93 @@ and does not become a live registration/apply/render result.
 
 
 
+## Three decisive questions: debugger-free SDK baseline — 2026-10-09
+
+Rules 11.1.0 / 04b606845e0f73ab28b9807bb45682eae4d6ce34, pinned
+AI_ENTRYPOINT read; native baseline bf01606c24e89b0bdfc37f2763eefd0eedf7bf97,
+clean research branch. Critical / Development. Context Discipline and Production
+Engineering applied; Process1/3/4/7/10/11, Engineering14/16/34, Native23,
+Skills43 selected. The user approved the three-question research block with
+one controlled SDK observation; normal owned quit authority persists.
+Product goal/old obligations unchanged. No new private call, late-add, Apply,
+render, worker AEGP, force termination, preferences or third-party changes.
+
+| Question / acceptance | Actual result and limit |
+| --- | --- |
+| R1: Independently re-audit historical dynamic/PiPL signal | PASS original startup/late result hashes, exact two bundle inventories, original source and same historical PID/start. Dynamic absent→present, count785→786, PiPL-only stays absent. Observer is scripting `app.effects`; direct SDK key/descriptor and render NOT_PROVED. |
+| R2: Observe own code with enabled/disabled/deleted breakpoint | PARTIAL: enabled-first own control PASS, refusal while enabled and original code PASS after disable/delete. Pre-created-disabled controls stopped with unexpected owned exceptions and safely detached; no admitted complete result. AE exclusive BRK cause UNKNOWN. |
+| R3: Acquire actual suite/key, then qualify reader↔writer | PARTIAL: ONE debugger-free AE run PASS for SDK5 acquisition and three complete samples, exact own key796, count787, project revision1 unchanged. Seven provider addresses map to pinned original files/symbols. Live descriptor/writer identity remains BLOCKED/unobserved. |
+| Safe owned lifecycle | PASS ordinary quit, independent absence, exact two own bundles retained outside discovery; original discovery entries unchanged. All three own control PIDs absent. |
+
+### Historical signal: confirmed scope, not a combined hot-load result
+
+Recovered inputs are read-only originals under the older local checkout, not
+recreated summaries. Startup result SHA256
+0ba47000c24e68c49731b7bf8143f10395c893b22a3f8957add6306769b1cf42 and
+late result493f0bc3cd2535614658fa40beb96f94a2837d6ba71dc9ec1f5dc87a83531587
+match the pre-recorded values. Build50a85fce3046/sourcef393fbd; Agent04fea706.
+The two independent preflight snapshots share PID21168/start and unchanged
+blank-project counters; the intended dynamic match changes from absent to present.
+The collector source explicitly reads `app.effects`, not EffectSuite enumeration.
+Historical labels called this a registry observation; this review qualifies its
+measurement surface without rewriting the historical result.
+
+Historical Agent performs ML::LoadPlugins followed by differential video-module
+notification. The fixture forwards host-supplied callback in PluginDataEntryFunction2;
+its EffectMain is an unsafe no-op. Original callback/FLT writer traces are absent.
+Do not repeat that stub or private operation. Separate build50650366d8b6's disabled
+layer application and any startup render cannot be joined into this run's success.
+
+### Actual debugger-free SDK observation
+
+Fresh run c5597b75c5b5426280904b986f70f05a, native sourcebf01606; AE25.6x101,
+arm64, PID62731/birth1791577446487587. Default observer (trace_identity=false),
+no LLDB target, attach or breakpoint. Three complete traversals return the exact
+own matchAEHL.M.c5597b75c5b5426280904b98 with key796/count787, revision1.
+Native LISTED_OBSERVED / cleanupPASS; Apply/renderNOT_RUN. Supervisor exit1 is
+its documented preserved-host convention, not a registry failure. Independent
+normal quit and retirement are supplemental PASS, not an overwritten result.
+
+Own marker counters: one host registration callback, result0, main thread;
+GLOBAL_SETUP0 and PARAMS_SETUP0 at sampling. Thus this own effect is listed before
+those selectors in this run. This is not proof of late publication or ownership.
+
+Acquired count/next/match/name/apply/reverse providers are AEGPDriver offsets
+41a4c/4220c/42554/422cc/4110c/41ad0. Registration callback is PluginSupport4b194.
+Original hashes/UUIDs match admitted pins before/after bounded file inspection.
+Only count/next/match/name were called; acquiring Apply/reverse pointers does not
+establish execution. Original Match bytes subtract702, narrow signed16 and call
+FLT_InqPFInfo; key796 therefore corresponds to index94 in this selected file lane.
+Original Apply calls FLTp_GetFCAddress and BEE_CmdApplyEffect. Callback appends
+PluginData; its return0 alone is not an ordinary-registry commit. These are
+file observations attached to actual acquired addresses, not live object reads.
+
+### Controls, candidate and next dependency
+
+Enabled-first own driverPID62269 completes all three checks and exits0. Two
+pre-disabled controlsPID62412/62702 preserve incomplete exception-stop receipts,
+safe detach and original logs. Post-detach stdout cannot certify stopped phases.
+No disabled-byte masking, deadline extension or weakening of binding checks.
+
+First SDK preparation used the wrong prospective global installation root and
+was refused before installation; preserved. Fresh preparation uses the controller's
+actual per-user root, all74 exact SDK pins and mandatory owned offline tests PASS.
+Native source is unchanged; exact bf01606 research37984699036/macOS37984699081
+CI inherited. New documentation CI is separate. Full native regression is not
+repeated for this documentation-only closeout; no new release acceptance.
+
+Private work: build-ae-hot-loader/decisive-research-2026-10-09-bf01606.
+Raw historical inputs, own control sources/results, signed own candidate,
+actual SDK/provider/name receipts and selected original-file review remain private.
+Historical archives/unknown files are preserved; no cleanup deletion is justified.
+
+C1 PARTIAL / private append BLOCKED / C2 late-add NOT_RUN. The next experiment
+must bridge the actual acquired reader's selected index to the startup writer's
+own descriptor/root. Reuse this debugger-free SDK witness; isolate register tracing
+so it cannot patch the observer before strict self-binding. Full host transaction,
+render dependencies and partial failure remain separate unknowns. Do not repeat a
+broad scan or treat callback success/app.effects/count as full publication proof.
+
 ## Request deadline timeline — 2026-10-09
 
 Rules 11.1.0 / source 04b606845e0f73ab28b9807bb45682eae4d6ce34;

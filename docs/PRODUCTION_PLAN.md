@@ -1,5 +1,19 @@
 # AE Hot Loader — current development and release plan
 
+## Current decisive research block — 2026-10-09
+
+Historical original evidence re-audited: dynamic match appeared in the same
+process through `app.effects`; direct SDK-key proof is absent from that old run.
+ONE new debugger-free SDK baseline PASS: exact own key796 in three complete
+samples; actual AEGPDriver readers and PluginSupport registration callback mapped.
+GLOBAL_SETUP/PARAMS_SETUP counters0 at listing. Enabled-first restoration control
+PASS; pre-disabled exception controls PARTIAL, AE BRK cause UNKNOWN.
+Normal owned quit/absence/exact pair retirement PASS. Native sourcebf01606 unchanged;
+fresh SDK74 pins/offline controls PASS; inherited exact native CI separate from docs CI.
+C1 PARTIAL / private append BLOCKED / C2 NOT_RUN. Next: actual reader index→own
+startup descriptor/writer, preserving strict binding and product goal.
+[Single three-question reconciliation](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#three-decisive-questions-debugger-free-sdk-baseline--2026-10-09).
+
 ## Current request timeline packet — 2026-10-09
 
 Rules 11.1.0/source 04b6068. Native S2 1bbbbf3: 584 Python/62 Node/22 stages,
