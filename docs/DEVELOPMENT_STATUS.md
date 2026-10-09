@@ -1,5 +1,20 @@
 # AE Hot Loader — current development status
 
+## Current debugger lifecycle packet — 2026-10-09
+
+Rules11.1.0/source04b6068; context-discipline and production-engineering applied.
+Source6a2457d:557Python/62Node/22stages, SDK74pins, separate review, complete and
+early-exit debugger controls PASS; exact-source research/macOS CI PASS. One own
+AE run PID86960 preserved observation/final journals and detached safely.
+Four events reach PiPL; no adapter event before deadline, writer/key UNKNOWN.
+SDK request REFUSED; saved idle-registration label is stale, actual failed
+predicate UNKNOWN. Missing names-0 parser error is not the root cause. No
+Apply/render/project mutation, retry or second launch. User closure and exact
+pair retirement pending. 509member final S Evidence verified; preparation archive retained. Docs E/CI separate.
+C1PARTIAL, private append BLOCKED, C2/late-add NOT_RUN. Next: precise refusal stages
+and refusal-first parsing, then verify actual adapter path with strict identity.
+[DL01–DL14 and native reconciliation](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#debugger-lifecycle-packet--2026-10-09).
+
 ## Current metadata adapter packet — 2026-10-09
 
 Rules11.1.0/source04b6068; necessary local context-discipline and

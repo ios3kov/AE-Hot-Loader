@@ -40,18 +40,18 @@ conditional on exact review/regression/SDK and real fresh debugger controls.
 | --- | --- | --- |
 | DL01 | Last refusal and missing report, exact identity | PASS restored source/run/PID78203; exit cause UNKNOWN |
 | DL02 | Original failure reproduction | PASS exact original launcher with owned child exit23; native cause NOT_REPRODUCED |
-| DL03 | Stop transition handling | Implemented dedicated pre-launch listener, exact process event and stop ID guards |
-| DL04 | Unexpected debugger exit report | Implemented separate launcher-failure; even exit0 not safe detach |
-| DL05 | Cleanup/refusal reporting | Implemented observation before cleanup and final UNKNOWN on exception |
+| DL03 | Stop transition handling | PASS bounded controls: dedicated listener/event identity and stable stop guards; AE cause UNKNOWN |
+| DL04 | Unexpected debugger exit report | PASS owned child exit23 and exit0 negative control; separate failure, cleanup UNKNOWN |
+| DL05 | Cleanup/refusal reporting | PASS observation before cleanup, all-removal/refusal and exception/invalid-process controls |
 | DL06 | Negative identity/state/cleanup controls | PASS14 focused tests; synthetic/own child only |
-| DL07 | Exact-source admission | Implemented9 source hashes; old/missing-helper proofs rejected |
-| DL08 | Real owned debugger controls | Pending clean source, complete and early-exit variants |
-| DL09 | Review/regression/SDK | Pending clean source |
-| DL10 | Conditional one isolated AE startup | NOT_RUN pending mandatory gates and fresh exclusivity |
-| DL11 | Own PiPL adapter observation | NOT_RUN; strict equality retained |
-| DL12 | Own descriptor→writer→real public key | NOT_RUN dependent on DL11 |
-| DL13 | Owned cleanup/preservation | Pending; no new host/install so far |
-| DL14 | Evidence/research publication/exact CI | Pending; no main/release |
+| DL07 | Exact-source admission | PASS9 source hashes; incomplete/early-exit/missing-helper/stale/unsafe proof refused |
+| DL08 | Real owned debugger controls | PASS complete13events/18stops/detach; early exit23 incomplete with ALREADY_EXITED; both PIDs absent |
+| DL09 | Review/regression/SDK | PASS separate same-developer review,557Python/62Node/22stages/SDK74pins; scanner finding reviewed |
+| DL10 | Conditional one isolated AE startup | EXECUTED_ONCE / INCOMPLETE: original deadline; observation/final journals and safe detach PASS |
+| DL11 | Own PiPL adapter observation | INCOMPLETE:4accepted events/4stops; no adapter event, strict equality retained |
+| DL12 | Own descriptor→writer→real public key | BLOCKED / NOT_RUN: adapter unknown; SDK request REFUSED, exact predicate UNKNOWN |
+| DL13 | Owned cleanup/preservation | Fixtures absent and debugger detached; user closure/host absence and exact pair retirement pending |
+| DL14 | Evidence/research publication/exact CI | Preparation Evidence verified; source research push PASS; final docs/exact-head CI closeout separate below; full native packet pending |
 
 Installed LLDB2103.0.34.103 API text confirms SetListener replaces the debugger's
 normal process listener. Upstream SBLaunchInfo/SBProcess and process_events.py
@@ -67,12 +67,116 @@ an Adobe/LLDB crash reproduction. Cleanup now attempts every own breakpoint
 removal; failure blocks detach, and exception retains final refusal. Observation
 write failure cannot skip cleanup. Invalid launched process is UNKNOWN rather
 than certified NO_PROCESS. Request intent without final collector result remains
-UNKNOWN; no request retry. Real complete/early-exit fixtures are still required.
+UNKNOWN; no request retry. Fresh real complete/early-exit fixtures now pass the bounded controls below.
 
 Private working evidence build-ae-hot-loader/debugger-lifecycle-2026-10-09-a7fc9e6:
 baseline, original-regression, focused logs and skill/API provenance. Actual native
 cause, own adapter/writer/reader, full lifetime/render-readset/partial compensation
 remain UNKNOWN. C1PARTIAL, private append BLOCKED, C2/late-add NOT_RUN.
+
+
+### Exact-source preparation verification and pending native gate
+
+Implementation source S6a2457dc00282e8fb45b0ae9096833bbefcd9c63, clean during
+verification; nine source files bind transport. Actual installed Apple LLDB
+complete control PID84923:13 accepted events/18stops, own metadata adapter
+SAME_POINTER_OBSERVED, detach PASS. Early-exit variant PID84906:exit23,
+BLOCKED_OR_INCOMPLETE, cleanup safe/ALREADY_EXITED; it cannot authorize AE.
+Fresh process-only inventory confirms both PIDs absent. No target kill/signal.
+Transport negative controls reject early exit, missing lifecycle.py, stale source
+and unsafe cleanup; prospective exact native profile/own signed bytes validate.
+
+557Python tests,62Node tests,22 runner stages,zero skipped/failures PASS on S.
+Actual SDK25.6_61 build:74 header pins,3 adapter registration checks,13 backend,
+21 async-frame and3 inert cases, independent synthetic marker oracle PASS.
+These are offline controls; no AE/frame/hot-add evidence. Separate specification
+and quality review by the same developer PASS; no independent-agent claim.
+Scanner exact424-file Git blob/mode snapshot:283 supported/141 unsupported,
+zero omissions. Rawexit1 retains one unchanged fingerprint
+e2999cfe8b5b3a6bd27f0a62,tools/artifact_manifest.py:71: local argparse mode,
+reviewed FALSE_POSITIVE_LOCAL_CLI, not suppressed. Runtime readiness NOT_ASSESSED.
+
+Private AEHL-debugger-lifecycle-6a2457d-preparation.zip:474members, complete424
+source files, CRC/all-member SHA/modes PASS, SHA256
+fda224b23e50ff0e6b8309cbd9adefd5a1a32d306564985542886011047c8010.
+Preparation snapshot includes exact runner AEHL-checks-417he8qr.zip, reviews, original owned-child
+reproduction, complete/early-exit journals and candidate manifest/profile.
+No original Adobe binaries/SDK header bytes/user projects/recovery/credentials.
+Prior metadata adapter primary and E-closeout archive digests remain unchanged.
+Prepared run78def39669704e30af04c5e024160fa6 manifest SHA256
+7ab304e210f4d61cb15863d7800688dc37b6d8af099454f713709e45072f16f1;
+At preparation the pair remained local/uninstalled and control empty. Prepared profile was
+file-only and does not replace the execution-time admission/exclusivity checks.
+
+At preparation user replied «Закрою AE и сообщу» about foreign PID81724, not «закрыл».
+Process-only inventory found no AE/aerender at the preparation checkpoint, but
+does not substitute the pending human closure confirmation. DL10–12 therefore
+NOT_RUN; no installation or new host session. On confirmation, recheck process
+absence, exact source/artifact/profile and fresh complete transport, then run
+ONE already authorized normal-startup register-only observation. No Apply/render,
+private calls/memory, foreign window/project, retries or target termination.
+Only successful own adapter identity admits writer/reader claims; an incomplete
+native trace remains incomplete. C1 PARTIAL, private append BLOCKED, C2/late-add
+NOT_RUN. Full ownership/readset/partial compensation and original exit cause
+UNKNOWN. Mandatory fixture/build/review preparation is complete. The pending gate was
+later satisfied by «закрыл» and one launch executed, reconciled below. Research source push PASS; docs E and exact-head
+CI are bound in the private final closeout receipt, not inferred from S tests.
+
+
+
+### One conditional native attempt: observation and refusal preserved
+
+User then confirmed «закрыл». Fresh AE/aerender absence, exact candidate bytes,
+source/9-file transport and profile admission PASS. ONE fresh owned startup
+run78def39669704e30af04c5e024160fa6,PID86960,birth1791548835191399 executed;
+no second launch/retry or limit widening. Four accepted events on one proven main
+thread establish own callback/context→conversion→PiPL;4stops,phase adapter.
+No adapter event arrived before the original operation deadline; own descriptor,
+writer/root/key remain UNKNOWN. No count of successful windows or lack of crash
+is used as proof of registry correctness. Prior PID78203 exit cause remains UNKNOWN.
+
+Unlike the previous missing-journal outcome, this attempt preserved both
+observation.json and result.json, cleanup_safe true/detach PASS. Result SHA256
+52b47a57ba5579139736eb398666c6bfb1f589ae966a053a8146441452ff460e.
+This verifies bounded reporting/cleanup in this execution, not a proven fix for
+the prior AE disappearance or a completed own adapter path.
+
+One read-only request SENT_ONCE. Own SDK result REFUSED,cleanup PASS,
+render UNKNOWN; names-0 and subsequent samples absent. Parser receipt
+FAIL_OR_UNKNOWN mentions missing names-0; it does not identify root cause.
+The saved stage idle-registration is a stale label: independent startup stage4,
+release/ready markers show idle hook registration completed. In existing source,
+Idle keeps that label through request parsing, authorization, resident binding
+and backend preparation until PollNames. Exact failed predicate UNKNOWN; do not
+report RegisterIdleHook failure or failure of the installed-effect registry.
+No Apply/render/project mutation. Native tracing complete identity INCOMPLETE,
+public registry witness NOT_ESTABLISHED. Full lifetime/render-readset/partial
+compensation UNKNOWN; C1PARTIAL/private append BLOCKED/C2late-add NOT_RUN.
+
+Source6a2457d research CI PASS: research37929853919(native-syntax113817626041,
+panel-contract113817626316), macOS37929854114(build113817626610). These exact S
+CI checks do not certify the native registry claim. Docs E publication/exact-head
+CI and complete private final Evidence are separate receipts.
+
+Private final S Evidence AEHL-debugger-lifecycle-6a2457d.zip:509members,
+complete424-file Git-tree source, CRC/all-member SHA/modes PASS; SHA256
+3518483f56ff88edb8174c4ba2cb584de91f0c5c3a51d48e065835204caa203e.
+Preparation archive remains immutable. The new archive binds native observation,
+final/sdk journals, startup facts and exact-source CI. At this snapshot owned
+host PID86960 remains present; user manual closure requested, debugger detached.
+Own pair retained in discovery until fresh host absence permits exact retirement;
+other plug-ins/projects/preferences and recovery material untouched. DL13 remains
+pending, not cleanup PASS. No merge/main/release. Documentation-only E binds this
+source/result with unchanged non-Markdown Git blobs; final exact E CI receipt and
+full E source/primary archive binding retained in the private closeout.
+
+Next bounded work: distinguish request/read/parse/authorization/resident binding/
+backend-acquisition refusal with fixed own stages; parse REFUSED before requesting
+sample files so it stays visible; separately verify the actual metadata-to-PiPL
+adapter caller/site from original files. Keep equality and budgets unchanged.
+No second AE launch in this packet. Fresh exact controls/build/review and host
+exclusivity remain mandatory before any later authorized observation.
+
 
 
 ## Metadata adapter discriminator — 2026-10-09
