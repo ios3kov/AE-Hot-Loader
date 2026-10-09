@@ -2,13 +2,16 @@
 
 ## Current request timeline packet — 2026-10-09
 
-Rules11.1.0/source04b6068; baseline1e9854f. Approved16-step timing packet.
-System Sleep/DarkWake/Wake events support the prior expiry hypothesis; exclusive
-cause UNKNOWN. Paired publication/first Idle/deadline/binding clocks and injected
-normal/delay/forward/backward controls prepared; exact full checks and ONE
-conditional awake AE run pending. No guard weakening or clock/power changes.
-C1PARTIAL/private appendBLOCKED/C2NOT_RUN.
-[Single checkpoint and16-task mapping](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#request-deadline-timeline--2026-10-09).
+Rules 11.1.0/source 04b6068. Native S2 1bbbbf3: 584 Python/62 Node/22 stages,
+SDK 74 pins, scanner review, debugger control and exact research/macOS CI PASS.
+ONE actual AE run: request processed in ~84 s, within deadline; no measured sleep
+or wall shift. SDK REFUSED resident-text-mismatch at own TraceReaderBoundary;
+BRK/address correlation found, restoration/cause UNKNOWN. Enumeration NOT_RUN.
+Safe detach/normal owned quit/absence/exact pair retirement PASS; other plugins unchanged.
+Primary private Evidence verified; documentation E/CI closure retained separately.
+C1 PARTIAL/private append BLOCKED/C2 NOT_RUN. Next: owned disabled-versus-deleted
+reader breakpoint restoration, preserving strict code/time/identity checks.
+[Single checkpoint and 16-task reconciliation](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#request-deadline-timeline--2026-10-09).
 
 ## Current own-code classification packet — 2026-10-09
 

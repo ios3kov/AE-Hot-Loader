@@ -20,56 +20,131 @@ and does not become a live registration/apply/render result.
 
 ## Request deadline timeline — 2026-10-09
 
-Rules11.1.0/source04b606845e0f73ab28b9807bb45682eae4d6ce34;
-baseline1e9854fc79256e2236fea009d50d6b0160cbb690. Critical/Development;
-context-discipline and production-engineering. Process1/3/4/7/10/11,
-Engineering14/16/34/41, Tools22, Native23, Skills43 and Delivery26 apply.
-User approved16 steps and ONE conditional owned registry-only startup. Normal
-owned quit authority persists. No private call, Apply/render/project mutation,
+Rules 11.1.0 / source 04b606845e0f73ab28b9807bb45682eae4d6ce34;
+baseline 1e9854fc79256e2236fea009d50d6b0160cbb690. Critical / Development.
+Local Context Discipline and Production Engineering applied. Process 1/3/4/7/10/11,
+Engineering 14/16/34/41, Tools 22, Native 23, Skills 43 and Delivery 26 selected.
+The user approved 16 steps and ONE conditional owned registry-only startup.
+Normal owned quit authority persists. No private call, Apply/render/project mutation,
 clock change, forced sleep/termination, persistent power preference or release.
 
-| Task | Acceptance / evidence | Current state |
+| Task | Acceptance / evidence | Result and limit |
 | --- | --- | --- |
-| RT01 | Restore exact prior source/run/receipts | PASS1e9854f and own b5cf2e54c8ea |
-| RT02 | Preserve timing and historical Evidence | PASS31 private ZIP hashes inventoried |
-| RT03 | Narrow actual Sleep/Wake correlation | PASS system sleep overlaps deadline; temporal support, exclusive cause UNKNOWN |
-| RT04 | Paired publication clocks and completion | Implemented; exact source verification pending |
-| RT05 | First request receipt/parse/deadline clocks | Actual owned Idle controls PASS; AE NOT_RUN |
-| RT06 | Binding-before/after timing, strict supervisor identity/schema | Implemented; own malformed/foreign controls PASS |
+| RT01 | Restore exact prior source/run/receipts | PASS baseline 1e9854f and own b5cf2e54c8ea |
+| RT02 | Preserve historical Evidence | PASS 31 private ZIP hashes unchanged |
+| RT03 | Narrow actual Sleep/Wake correlation | PASS temporal sleep overlap; exclusive/lid cause UNKNOWN |
+| RT04 | Bound publication/completion clocks | PASS observed in the actual S2 run |
+| RT05 | First request/parse/deadline clocks | PASS actual owned Idle controls and actual AE receipt |
+| RT06 | Binding clocks and strict identity/schema | PASS binding-before; binding-after NOT_RUN after strict code refusal; foreign/malformed controls PASS |
 | RT07 | Normal delivery control | PASS pure timing and actual owned Idle |
-| RT08 | Active delay/sleep interval control | PASS injected clocks; no real OS sleep/clock changes |
+| RT08 | Active delay/sleep interval control | PASS injected clocks; no actual forced OS sleep |
 | RT09 | Forward wall change control | PASS injected expired request retains refusal |
 | RT10 | Backward wall change control | PASS injected future-window request retains refusal |
-| RT11 | Full offline regression | Pending clean identified source |
-| RT12 | Exact SDK/build | Pending fresh own pair; no old artifact relabel |
-| RT13 | Review/scanner/fresh debugger control | Pending exact source |
-| RT14 | ONE awake conditional AE observation | NOT_RUN until admission; no retry |
-| RT15 | Safe detach/normal owned quit/absence/retirement | Conditional; no save discard or force |
-| RT16 | Immutable Evidence/checkpoint/research CI | Pending; no main/merge/release |
+| RT11 | Complete offline regression | PASS S1/S2: 584 Python, 62 Node, 22 stages, no skips |
+| RT12 | Exact SDK/build/admission | PASS S2 SDK 74 pins; S1 receipt-prefix defect refused before installation, corrected without weakening checks |
+| RT13 | Spec/native/quality/scanner/debugger review | PASS bounded same-developer review; full 431-file scanner inventory; fresh S2 fixture 13 events/18 stops and detach PASS |
+| RT14 | ONE awake conditional AE observation | EXECUTED_ONCE; timing OBSERVED, SDK REFUSED resident-text-mismatch; enumeration/bridge BLOCKED |
+| RT15 | Safe detach/normal owned quit/absence/retirement | PASS own PID 54531; other discovery entries unchanged |
+| RT16 | Immutable Evidence/checkpoint/research CI | S2 exact research/macOS CI PASS; primary archive verified below; documentation E/CI retained separately |
 
-Old request published near18:44:50UTC, deadline18:46:40UTC, result19:11:23UTC.
-Scoped system power records show Sleep18:45:01/18:45:09 and19:00:33UTC.
-Exact private epochs are authoritative. Full Wake19:10:12UTC is after
-the deadline. Several DarkWake events do not establish AE main-thread execution.
-First parser included Wake Requests planning lines; corrected exact-label parser
-excludes them. Retained both summaries; no conclusion depends on that error.
-Sleep hypothesis is supported, lid-specific cause not proven by the recorded
-Maintenance categories. Prior run lacks first Idle clocks: processing delay and
-sleep contribution cannot be fully separated retroactively.
+### What the clock evidence establishes
 
-New own timing records capture wall/steady milliseconds and absolute/continuous
-Mach ticks with explicit timebase. Apple declares continuous time advances during
-sleep in [mach_time.h](https://github.com/apple/darwin-xnu/blob/main/osfmk/mach/mach_time.h).
-Local system header availability/units verified before native build; no Apple
-implementation copied. Metadata only, no deadline renewal, retry or changed
-authorization. Snapshot sampling is sequential;1second diagnostic tolerance and
-causal limits retained. Time evidence cannot complete C1 or authorize late-add.
-Actual signed bundle never defines the test-clock injection flag; only the owned
-request-test compilation does. Existing deadline/code/PID/birth/auth guards remain.
+Prior request b5cf2e54c8ea was published near 18:44:50 UTC, deadline 18:46:40 UTC,
+result 19:11:23 UTC. Scoped power records show Sleep 18:45:01/18:45:09 and
+19:00:33 UTC; full Wake 19:10:12 UTC is after the deadline. Exact private epochs
+are authoritative. DarkWake does not establish AE main-thread execution.
+The initial parser also matched Wake Requests planning lines; the corrected
+exact-label parser excludes them. Both summaries remain preserved, and no
+conclusion depends on that error. These records support the sleep hypothesis;
+Maintenance categories do not prove lid-specific cause. Prior first Idle clocks
+are absent, so exclusive causality cannot be established retroactively.
 
-C1PARTIAL/private appendBLOCKED/C2late-addNOT_RUN. Working Evidence:
-build-ae-hot-loader/request-timeline-2026-10-09-1e9854f. Final results will replace
-only this current packet; all historical sections and obligations remain intact.
+Actual S2 run 9250c32c08874d85917f402c4c789746, PID 54531, birth
+1791575967562526: publication-to-first-Idle wall 83949 ms, active 83948 ms,
+continuous 83948 ms. Deadline check wall 83951 ms, active/continuous 83950 ms.
+Measured suspension excess 0 ms, wall/continuous difference 1 ms;
+WITHIN_BUDGET. No suspension or wall shift was observed over this interval.
+The request passed the original deadline predicate and reached binding-before.
+This is timing evidence for this run, not proof about every startup or the prior
+lid action. Sampling is sequential with a 1000 ms diagnostic tolerance.
+
+The local system header declares continuous time advances during sleep:
+[Apple mach_time.h](https://github.com/apple/darwin-xnu/blob/main/osfmk/mach/mach_time.h).
+Actual system header hash/declarations are retained privately. Raw Mach ticks and
+explicit timebase are recorded; exact integer conversion is used by the parser.
+No OS clock change, forced sleep, deadline renewal, replay or new SDK call was added.
+The signed observer excludes the test-clock injection flag; only the owned
+request-test compilation uses it. Diagnostic write failure remains UNKNOWN and
+cannot convert a refused operation into success.
+
+### Native outcome and code classification
+
+Native source S1: 793df1ee5d573808dde989cf87c858426b0fab3c.
+S1's new timing summary accidentally preceded the mandatory request-test receipt
+prefix. Admission refused before any install/AE launch. S2 1bbbbf33fc2968d644c1a0c7c0d328c0a7ff991b
+only moves that summary after the existing prefix. Native implementation is
+unchanged; rebuilt S2 bytes have their own run identity and fresh verification.
+An initial short-SHA check command refused input; the full exact-SHA run passed.
+Neither setup failure was hidden or reclassified as runtime success.
+
+ONE actual S2 observation: request SENT_ONCE; native and supervisor preserve
+REFUSED / resident-text-mismatch / cleanup PASS. Original-file classification
+maps relative offset 12/file offset 1612 to nearest own symbol
+_AEHL_TraceReaderBoundary, distance 0: expected instruction 0xd10083ff,
+resident 0xd4200000 (ARM64 BRK). Own recorded reader breakpoint metadata has the
+same UUID/file address but enabled/location_enabled false and hardware false.
+This is a concrete location correlation, not proof of code-restoration timing or
+exclusive debugger causality. No byte was masked/accepted; no additional live
+memory read or private invocation was made. Actual binding-after, suite acquisition
+and enumeration were not reached. The older mismatch remains historical.
+
+Trace 4 events/4 stops reaches adapter phase; the original trace deadline expires
+with metadata adapter/writer/root/public key UNKNOWN. Timing receipt is independent
+of that incomplete trace. Three successful windows or a correct clock do not prove
+safe publication, lifetime or complete render coverage.
+
+Safe detach PASS. Fresh own PID/birth/executable and exclusivity were checked before
+reviewed normal quit; request SENT and independent absence PASS. Exact own pair
+retired with full hashes preserved; other discovery entries unchanged. The launcher's
+historical MANUAL_REQUIRED close label is superseded by the separate owned-quit
+and retirement witnesses, not rewritten. No window/project reads, save discard,
+signals/force termination or shared preference/third-party plugin changes.
+
+### Verification and retained Evidence
+
+Both sources: 584 Python/62 Node/22 offline stages PASS with no skips.
+S2 SDK 74-file pins: 3 marker/3 inert/13 backend/21 frame and 14 Idle/5 Suite/5
+clock controls PASS; nested native cases are not added to the Python count.
+These synthetic controls invoke no Adobe callbacks and establish no private ABI.
+S1/S2 fresh debugger fixtures each complete 13 events/18 stops, safe detach PASS.
+431 Git files: 288 supported/143 unsupported in each scanner inventory, no omissions.
+Scanner raw exit 1/review_required; sole unchanged vibe.no_ratelimit_auth at
+local CLI tools/artifact_manifest.py:71, fingerprint e2999cfe8b5b3a6bd27f0a62,
+reviewed false positive with no suppression. Review is by the same developer,
+not an independent host certification; static release readiness remains unassessed.
+
+S2 exact-source CI:
+[research 37983125640](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37983125640)
+and [macOS 37983125672](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37983125672)
+PASS. S1 research passed; S1 macOS was automatically cancelled after the S2 push,
+not counted as PASS. Documentation E keeps native S2 unchanged; exact E CI and
+full Git-byte/mode inheritance are retained separately after the documentation commit.
+
+Private primary archive AEHL-request-timeline-1bbbbf3.zip, SHA-256
+5348d6a580ae451607bc499345adeaecac276ea7f7816b07eef0ae96f3d4ffae,
+1714 entries/6774220 bytes: full 431-file S1/S2 Git blobs/modes,
+own exact builds/control journals, actual trace/timing/refusal/classification,
+reviews/scanner/CI, cleanup witnesses. Every archived byte/mode/CRC verified.
+No SDK headers, Adobe binaries or user projects are copied. Historical 31 ZIPs
+remain unchanged. Work records:
+build-ae-hot-loader/request-timeline-2026-10-09-1e9854f.
+Final documentation E/CI closure is a separate immutable archive, not an overwrite.
+
+C1 PARTIAL / private append BLOCKED / C2 late-add NOT_RUN. Next: reproduce
+**disabled versus deleted** reader-breakpoint restoration in an owned control,
+then prove original own code is restored before a separately authorized AE run.
+Do not accept changed bytes, extend the deadline or retry this packet's request.
+All older sections and retained product/render obligations remain unchanged.
 
 ## Own text mismatch classification — 2026-10-09
 
