@@ -18,6 +18,67 @@ and does not become a live registration/apply/render result.
 
 
 
+## Metadata adapter discriminator — 2026-10-09
+
+User authorized15-stage continuation and all necessary local Codex skills.
+Clean baseline6098ac08cc9db359c4fe8aa14b34dadcae49b26e; rules11.1.0 exact
+04b606845e0f73ab28b9807bb45682eae4d6ce34. AI_ENTRYPOINT and applicable
+Process/Engineering/Tools/Native/skills modules restored. context-discipline and
+production-engineering texts rechecked with unchanged admitted digests below.
+No skill installation or added authority. Critical / Development diagnostic scope;
+no private calls/object reads, foreign-session access, Apply/render, signals,
+security changes, main/merge/release. Preserve original user and historical files.
+
+Acceptance: locate the first independently observable intermediate transfer of
+our metadata-produced PiPL before FCSpec; exact-site review, negative controls,
+real owned fixture, SDK and regression must pass before conditional fresh AE.
+A missing event remains UNKNOWN and cannot relax same-pointer identity.
+
+| Stage | Observable acceptance | Current state |
+| --- | --- | --- |
+| RD01 | Resource PiPL construction | PASS bounded original-file body; new allocation/copy/query |
+| RD02 | Metadata PiPL/cache path | PASS reused complete body; own live lane UNKNOWN |
+| RD03 | Copies/adapters | PASS bounded MEE/aelib/FLT forwarding; wrappers distinguished |
+| RD04 | Ordering and branches | PASS startup setter before load/notify; cache bypass retained |
+| RD05 | Own-effect discriminator | PASS design: own metadata PiPL exact equality at adapter |
+| RD06 | Select bounded probe | PASS aelib63b2c x8; no object-memory access |
+| RD07 | Collector update | Implemented mandatory adapter phase and partial-result field |
+| RD08 | Original sites/modules | PASS new aelib SHA/UUID/instruction and FLT import |
+| RD09 | Negative controls | PASS21 focused tests; synthetic, not AE |
+| RD10 | Own debugger fixture | Pending exact clean candidate |
+| RD11 | Review/SDK/regression | Pending exact clean candidate |
+| RD12 | Conditional fresh isolated AE | NOT_RUN pending mandatory gates |
+| RD13 | Own writer→real reader/key | NOT_RUN; no new live claim |
+| RD14 | Owned state cleanup | Pending; no host/install so far |
+| RD15 | Evidence/research publication/CI | Pending; no release |
+
+Ten complete original bodies/3699 instructions/757 raw direct branch targets
+verified. New aelib SetupAEPlugin63aa0–63c04 copies IPlugin and IPiPL references
+with owner count changes; both PiPL branches leave original interface in x8 at
+63b2c before FLT_SetupAEPlugin import63b34. FLT passes copied interfaces into
+FiltSetup8f1ac on the selected ordinary branch. Separate resource path creates a
+new PiPL from copied bytes; it does not establish which lane our effect selects.
+
+aelib startup61558/6155c materializes callback63aa0, setter61570 precedes
+LoadAEPlugins6158c and FLT notify615a4. MEE SetupFilterbbe0–c274 acquires that
+setter atbc30 and invokes a copied callback with retained interfaces atbd24;
+hardcoded-cache branch can bypass callback. Producer→MEE caller identity remains
+open. Original code inspection is not a live correspondence or late-call contract.
+
+New trace adds exactly one admitted adapter event before FCSpec. Null/different
+interfaces are ignored under unchanged stop budget and their addresses are not
+journaled. Partial metadata_adapter observation does not claim writer identity,
+resource exclusion or lifetime. Native admission binds new aelib pin and rejects
+old12/15 transport proofs; current fixture requires13events/18stops including
+five ignored events. Callback/module/source/process/thread checks remain strict.
+
+Private working evidence: build-ae-hot-loader/route-discriminator-2026-10-09-6098ac0,
+capture.json, route-reconciliation.json, skill-admission.json. Original proprietary
+bytes stay local; public checkpoint contains bounded findings/identities only.
+C1 PARTIAL, private append BLOCKED, C2/late-add NOT_RUN. Fresh source verification,
+conditional host result, archive and exact-head CI will be reconciled below.
+
+
 ## PiPL route and stop classification — 2026-10-09
 
 User requests local Codex skill reconciliation and authorizes the proposed18-step

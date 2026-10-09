@@ -19,7 +19,7 @@ profile=importlib.util.module_from_spec(spec);spec.loader.exec_module(profile)
 
 def events():
     rows=[('marker',[1,10,20,0,1]),('marker',[2,10,20,0,1]),('convert',[10]),('pipl',[30]),
-          ('spec',[30,40]),('writer',[40,50]),('index',[40,6,50]),('writer_return',[50]),
+          ('adapter',[30]),('spec',[30,40]),('writer',[40,50]),('index',[40,6,50]),('writer_return',[50]),
           ('reader',[1,77,60,0,1]),('match',[77]),('lookup',[40,70,50,7]),('reader',[2,77,60,0,1])]
     return [{'pid':123,'birth':456,'thread':789,'role':role,'values':dict(zip(core.FIELDS[role],values))} for role,values in rows]
 
@@ -28,19 +28,47 @@ class StartupTraceTests(unittest.TestCase):
     def test_complete_chain_has_no_product_or_lifetime_claim(self):
         t=core.Trace(123,456,20,60)
         for e in events():self.assertTrue(t.feed(e))
-        r=t.result();self.assertEqual(r['status'],'IDENTITY_OBSERVED');self.assertEqual(r['accepted_events'],12)
+        r=t.result();self.assertEqual(r['status'],'IDENTITY_OBSERVED');self.assertEqual(r['accepted_events'],13)
         self.assertEqual((r['late_add'],r['atomic_commit'],r['complete_lifetime'],r['render_readset']),('NOT_RUN','UNKNOWN','UNKNOWN','UNKNOWN'))
 
     def test_other_context_interface_descriptor_ignored_with_budget(self):
         t=core.Trace(123,456,20,60)
         for e in events():
-            if e['role'] in ('convert','spec','writer'):
-                other=copy.deepcopy(e);field={'convert':'context','spec':'pipl','writer':'descriptor'}[e['role']]
+            if e['role'] in ('convert','adapter','spec','writer'):
+                other=copy.deepcopy(e);field={'convert':'context','adapter':'pipl','spec':'pipl','writer':'descriptor'}[e['role']]
                 other['values'][field]=999;self.assertFalse(t.feed(other))
+                if e['role']=='adapter':
+                    other['values'][field]=0;self.assertFalse(t.feed(other))
             t.feed(e)
-        self.assertEqual(t.stops,15);self.assertEqual(len(t.events),12)
-        self.assertEqual(t.result()['ignored_stops_by_role'],{'convert':1,'spec':1,'writer':1})
+        self.assertEqual(t.stops,18);self.assertEqual(len(t.events),13)
+        self.assertEqual(t.result()['ignored_stops_by_role'],{'convert':1,'adapter':2,'spec':1,'writer':1})
         self.assertEqual(t.result()['resource_vs_metadata_lane'],'UNKNOWN')
+
+    def test_adapter_is_required_before_descriptor_even_with_same_interface(self):
+        t=core.Trace(123,456,20,60)
+        for e in events()[:4]:t.feed(e)
+        with self.assertRaisesRegex(ValueError,'unexpected'):t.feed(events()[5])
+        self.assertEqual(t.result()['metadata_adapter'],'UNKNOWN')
+        self.assertIsNone(t.descriptor)
+
+    def test_adapter_partial_success_is_not_writer_or_resource_identity(self):
+        t=core.Trace(123,456,20,60)
+        for e in events()[:5]:t.feed(e)
+        r=t.result()
+        self.assertEqual(r['metadata_adapter'],'SAME_POINTER_OBSERVED')
+        self.assertEqual((r['status'],r['pipl_bridge'],r['resource_vs_metadata_lane']),('INCOMPLETE','UNKNOWN','UNKNOWN'))
+        self.assertIsNone(r['descriptor'])
+        with self.assertRaisesRegex(ValueError,'replayed'):t.feed(events()[4])
+
+    def test_adapter_mismatch_cannot_expand_scope_or_reset_budget(self):
+        t=core.Trace(123,456,20,60)
+        for e in events()[:4]:t.feed(e)
+        other=copy.deepcopy(events()[4]);other['values']['pipl']=999
+        with patch.object(core,'MAX_STOPS',5):
+            self.assertFalse(t.feed(other))
+            with self.assertRaisesRegex(ValueError,'stop budget'):t.feed(events()[4])
+        self.assertEqual(t.result()['metadata_adapter'],'UNKNOWN')
+        self.assertEqual(t.phase,'adapter')
 
     def test_changed_pid_birth_or_thread_refuses(self):
         for field in ('pid','birth','thread'):
@@ -49,9 +77,9 @@ class StartupTraceTests(unittest.TestCase):
             self.assertNotEqual(t.result()['status'],'IDENTITY_OBSERVED')
 
     def test_wrong_callback_main_key_lookup_root_owner_or_index_refuses(self):
-        cases=[(0,'callback',99),(0,'main',0),(1,'status',1),(3,'pipl',0),(4,'descriptor',0),
-               (5,'root',0),(6,'index',8192),(7,'root',99),(8,'function',99),(8,'main',0),
-               (9,'key',99),(10,'root',99),(10,'descriptor',99),(10,'owner',0),(10,'index',6),(11,'status',1),(11,'key',99)]
+        cases=[(0,'callback',99),(0,'main',0),(1,'status',1),(3,'pipl',0),(5,'descriptor',0),
+               (6,'root',0),(7,'index',8192),(8,'root',99),(9,'function',99),(9,'main',0),
+               (10,'key',99),(11,'root',99),(11,'descriptor',99),(11,'owner',0),(11,'index',6),(12,'status',1),(12,'key',99)]
         for index,field,value in cases:
             t=core.Trace(123,456,20,60);rows=events();rows[index]['values'][field]=value
             for e in rows[:index]:t.feed(e)
@@ -100,11 +128,11 @@ class StartupTraceTests(unittest.TestCase):
 
     def test_transport_refusal_prevents_ae_admission(self):
         proof={'kind':'owned-fixture','status':'IDENTITY_OBSERVED','phase':'complete','cleanup_safe':True,
-               'accepted_events':12,'stops':15,'collector_sha256':profile.collector_hashes(),'source_commit':'a'*40,
+               'accepted_events':13,'stops':18,'metadata_adapter':'SAME_POINTER_OBSERVED','collector_sha256':profile.collector_hashes(),'source_commit':'a'*40,
                'owned_process':{'executable':str(ROOT/'build-ae-hot-loader/trace-fixture-own/aehl-trace-fixture')}}
         candidate={'source':{'commit':'a'*40}}
         profile.transport_admission(proof,candidate)
-        for field,value in [('status','UNKNOWN'),('cleanup_safe',False),('accepted_events',11),('stops',14),
+        for field,value in [('status','UNKNOWN'),('cleanup_safe',False),('accepted_events',12),('stops',15),('metadata_adapter','UNKNOWN'),
                             ('source_commit','b'*40),('collector_sha256',{}),('kind','ae-owned-startup')]:
             bad=copy.deepcopy(proof);bad[field]=value
             with self.subTest(field=field),self.assertRaisesRegex(ValueError,'transport proof'):profile.transport_admission(bad,candidate)

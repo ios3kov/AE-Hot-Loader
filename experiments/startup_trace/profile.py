@@ -20,12 +20,14 @@ def collector_hashes():
 
 def transport_admission(proof, candidate):
     need(proof.get('kind')=='owned-fixture' and proof.get('status')=='IDENTITY_OBSERVED' and proof.get('phase')=='complete' and
-         proof.get('cleanup_safe') is True and proof.get('accepted_events')==12 and proof.get('stops')==15 and
+         proof.get('cleanup_safe') is True and proof.get('accepted_events')==13 and proof.get('stops')==18 and
+         proof.get('metadata_adapter')=='SAME_POINTER_OBSERVED' and
          proof.get('collector_sha256')==collector_hashes() and proof.get('source_commit')==candidate['source']['commit'],
          'exact collector transport proof missing or stale; AE install/launch prohibited')
     host=Path(proof.get('owned_process',{}).get('executable',''))
     need(host.name=='aehl-trace-fixture' and host.parent.parent==ROOT/'build-ae-hot-loader' and host.parent.name.startswith('trace-fixture-'), 'transport process outside fixture scope')
 PINS = {
+ 'AELIB': (BASE/'Frameworks/aelib.framework/Versions/A/aelib', 'f6124504c8eea332ef257bf1111e6db656c2e07bb57a7b178ec775020ba5407f', '17942daf-6b13-30c3-9cbc-ab42ab3d0f1f'),
  'PS': (BASE/'Frameworks/PluginSupport.framework/Versions/A/PluginSupport', '4d2c200b198124b43887bbb7e53c9e48514621a54feb36085822852978b45832', '64c01ac4-2413-3463-8822-17ee5543052a'),
  'FLT': (BASE/'Frameworks/FLT.dylib', '227f0688d4272b1c0be2b2066d53b702e2363fca6002f873ea0acdc6a4d01256', 'c8786a71-e313-3b20-9494-359fb56d705a'),
  'AEGP': (BASE/'Required/AEGPDriver.plugin/Contents/MacOS/AEGPDriver', '3d7a4a24505bb06d19509da4bacf963cf5e0b2b647a0791cbfdeccf6f496e778', 'a1e61d11-11e0-31e5-80fc-1a594c5d1f31'),
@@ -35,6 +37,9 @@ PINS = {
 SITES = {
  'convert': ('PS', 0x4b754, 'ff4303d1', {'context':'x0'}),
  'pipl': ('PS', 0x4b87c, 'e02700f9', {'pipl':'x0'}),
+ # Both PiPL copy branches retain the original interface in x8 up to this
+ # instruction; x0/x1 here still refer to InterfaceRef wrappers, not objects.
+ 'adapter': ('AELIB', 0x63b2c, 'e0630091', {'pipl':'x8'}),
  'spec': ('FLT', 0x8d2f0, 'c80640f9', {'pipl':'x0','descriptor':'x24'}),
  'writer': ('FLT', 0x50a0, '080040f9', {'descriptor':'x0','root':'x20'}),
  'index': ('FLT', 0x5304, 'e00314aa', {'descriptor':'x9','index':'w8','root':'x20'}),

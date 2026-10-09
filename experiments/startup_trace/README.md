@@ -20,6 +20,17 @@ before execution; loaded PC/module/path and acquired function are checked live.
 
 ## Controls and admission
 
+The current trace requires one additional metadata-adapter event between PiPL
+creation and FCSpec. In pinned aelib at 0x63b2c, x8 contains the copied IPiPL
+interface, not the address of its InterfaceRef wrapper. Both copy branches were
+reviewed through the FLT import. Only exact equality with the own PiPL is accepted;
+foreign/null interfaces consume stop budget without recording their addresses.
+Partial `metadata_adapter=SAME_POINTER_OBSERVED` proves only that intermediate
+event. The resource lane, writer, lifetime and late-add remain separate unknowns.
+Current real fixture admission requires13 accepted events,18 stops including
+five ignored events (one convert, two adapter, one spec, one writer), safe detach,
+and exact current source/collector bytes. Old12/15 proofs cannot admit this code.
+
 Run `python3 -m unittest discover -s tests -p test_startup_trace.py` for synthetic
 order/identity/budget/file refusals. These inputs never count as AE evidence.
 `fixture.py` creates one tiny executable under a fresh private

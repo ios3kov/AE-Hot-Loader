@@ -9,11 +9,11 @@ import json
 MAX_EVENTS = 256
 MAX_STOPS = 256
 MAX_BYTES = 1024 * 1024
-ROLES = ('marker', 'convert', 'pipl', 'spec', 'writer', 'index', 'writer_return',
+ROLES = ('marker', 'convert', 'pipl', 'adapter', 'spec', 'writer', 'index', 'writer_return',
          'reader', 'match', 'lookup')
 FIELDS = {
     'marker': ('stage', 'context', 'callback', 'status', 'main'),
-    'convert': ('context',), 'pipl': ('pipl',),
+    'convert': ('context',), 'pipl': ('pipl',), 'adapter': ('pipl',),
     'spec': ('pipl', 'descriptor'), 'writer': ('descriptor', 'root'),
     'index': ('descriptor', 'index', 'root'), 'writer_return': ('root',),
     'reader': ('stage', 'key', 'function', 'status', 'main'),
@@ -36,13 +36,14 @@ class Trace:
         self.thread = self.context = self.pipl = self.descriptor = self.root = None
         self.index = self.key = None
         self.events = []; self.stops = self.size = 0
-        self.ignored = {'convert': 0, 'spec': 0, 'writer': 0}
+        self.adapter_seen = False
+        self.ignored = {'convert': 0, 'adapter': 0, 'spec': 0, 'writer': 0}
 
     @property
     def enabled(self):
         return {
             'marker-start': {'marker'}, 'marker-end': {'marker'},
-            'convert': {'convert'}, 'pipl': {'pipl'}, 'spec': {'spec'},
+            'convert': {'convert'}, 'pipl': {'pipl'}, 'adapter': {'adapter'}, 'spec': {'spec'},
             'writer': {'writer'}, 'index': {'index'},
             'writer-return': {'writer_return'}, 'reader-start': {'reader'},
             'match': {'match'}, 'lookup': {'lookup'}, 'reader-end': {'reader'},
@@ -63,6 +64,7 @@ class Trace:
         # Other startup descriptors are ignored only by exact context/interface/
         # descriptor equality, never by time, index guesses or string dereference.
         mismatch = ((role == 'convert' and v['context'] != self.context) or
+                    (role == 'adapter' and v['pipl'] != self.pipl) or
                     (role == 'spec' and v['pipl'] != self.pipl) or
                     (role == 'writer' and v['descriptor'] != self.descriptor))
         if mismatch:
@@ -80,7 +82,9 @@ class Trace:
                 need(v['context'] == self.context, 'marker context changed'); self.phase = 'convert'
         elif role == 'convert': self.phase = 'pipl'
         elif role == 'pipl':
-            need(v['pipl'] != 0, 'null PiPL interface'); self.pipl = v['pipl']; self.phase = 'spec'
+            need(v['pipl'] != 0, 'null PiPL interface'); self.pipl = v['pipl']; self.phase = 'adapter'
+        elif role == 'adapter':
+            self.adapter_seen = True; self.phase = 'spec'
         elif role == 'spec':
             need(v['descriptor'] != 0, 'null FCSpec'); self.descriptor = v['descriptor']; self.phase = 'writer'
         elif role == 'writer':
@@ -115,6 +119,7 @@ class Trace:
                 'writer_index': self.index, 'accepted_events': len(self.events),
                 'stops': self.stops, 'ignored_stops_by_role': dict(self.ignored),
                 'pipl_bridge': 'SAME_POINTER_OBSERVED' if self.phase == 'complete' else 'UNKNOWN',
+                'metadata_adapter': 'SAME_POINTER_OBSERVED' if self.adapter_seen else 'UNKNOWN',
                 'resource_vs_metadata_lane': 'UNKNOWN', 'scope': 'normal startup register correspondence only',
                 'late_add': 'NOT_RUN', 'complete_lifetime': 'UNKNOWN',
                 'atomic_commit': 'UNKNOWN', 'render_readset': 'UNKNOWN'}
