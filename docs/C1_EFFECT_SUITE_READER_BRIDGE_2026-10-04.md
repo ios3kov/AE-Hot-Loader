@@ -17,6 +17,85 @@ and does not become a live registration/apply/render result.
 
 
 
+
+## PiPL route and stop classification — 2026-10-09
+
+User requests local Codex skill reconciliation and authorizes the proposed18-step
+packet («сверься ... и потом делай»). Initial clean research source
+13a73cca1c1c402eaf5c79a59bf53c69a88111da. Adopt rules11.1.0 exact source
+04b606845e0f73ab28b9807bb45682eae4d6ce34 (tag67359cba5ff85401c90455ccde803e65dcc91a85);
+AI_ENTRYPOINT first, applicable Process1/3/4/7/10/11, Engineering14/16/34/41,
+Tools22, Native23, skills43 and Development handoff26. Current main equals release.
+Changes correct tooling execution/link checks; mandatory native/runtime scope is
+preserved. Existing project runner tools/run_research_checks.py supplies actual
+checks; no empty preflight or documentation-only shortcut for changed code.
+
+Local context-discipline textSHA6032bfbd7d38b06e80a41a4dacd01da73148f543ba55e70ceff037fe38c79b93
+and production-engineering textSHA655791fc067e891b7ea7a301ef3e74736b61ad1b1e854c792b2bc3ec76da93fb
+reviewed/admitted for this scoped continuation. Needed text resources and hashes
+are in private skill-admission.json. Existing admitted scanner retained separately.
+No skill installation/update or execution of new skill code; text adds no authority.
+Other local skill metadata was considered; visual/content/website skills are not
+needed here. No mandatory second agent or claimed skill efficiency improvement.
+
+Acceptance: distinguish stop refusal categories and identify a defensible own
+PiPL-to-FCSpec route before a conditional new AE writer/reader trace. Retain strict
+identity and original packets/Evidence. Critical / Development; no private call,
+object memory read, fault injection, foreign-session attach/read/close, Apply/render,
+signal, security change, main/merge/release. A missing identity route blocks only
+conditional host operations; complete independent code/checks/Evidence.
+
+| Task | Requirement / observable result | State |
+| --- | --- | --- |
+| PS01 | Rules11.1.0 and actual local skills adoption | PASS: exact source/text review; no authority added |
+| PS02 | Baseline/status/retained obligations/Evidence | PASS: clean13a73cc and partial58a0673 trace restored |
+| PS03 | Attributed old stop reason, without guessing | UNKNOWN: generic refusal; old thread-reason metadata absent |
+| PS04 | PiPL creation/caller file path | PASS bounded reused bodies; two distinct creation paths |
+| PS05 | Copy/adaptation/ordering for own effect | UNKNOWN: interface type is not live object identity |
+| PS06 | Own PiPL→FCSpec→writer linkage | PARTIAL file scan/setup path; live own lane UNKNOWN |
+| PS07 | Exact original module/site/body/call pins | PASS:3modules,5body ranges,5direct branches rechecked |
+| PS08 | Bounded typed stop classification and missed-site counters | Implemented; exact candidate checks pending |
+| PS09 | Negative identity/shape/race/exception/bounds controls | PASS:18 focused tests; synthetic only |
+| PS10 | Fresh real owned debugger fixture | NOT_RUN until clean source committed |
+| PS11 | Separate spec/quality/affected code review | Pending |
+| PS12 | Exact SDK build/regression and source identity | Pending |
+| PS13 | Conditional one new owned AE startup | BLOCKED: discriminating own route not established |
+| PS14 | Live own writer correspondence | BLOCKED / NOT_RUN: PS06 prerequisite |
+| PS15 | Same record and public key/reader | BLOCKED / NOT_RUN: own writer identity prerequisite |
+| PS16 | Owned-state cleanup/preservation | No new host/install; earlier pair retired; controls retained |
+| PS17 | Private Evidence and checkpoint reconciliation | In progress |
+| PS18 | Research commit/push/exact-head CI | Pending; no release |
+
+### Route reconciliation and limits
+
+Reused pinned complete bodies explain the gap in the earlier trace model, without
+claiming a new function discovery. PluginSupport PFPluginDataToPiPL4b754 calls
+PiPL::CreateClassRef at4b7bc, populates metadata, and receives IPiPL at4b87c.
+GetPiPLs caches/retains interfaces; this does not establish a FLT consumer.
+Separately, PLUGp_GetPiPL10074 reads/copies resource bytes and calls
+ML::PiPL::Create(vector<char>&) at10294. FLT_PLUGScanFunc calls PLUG_GetPiPL
+at8d028 and FiltSetup at8d084; the setup reads its interface at8d2f0 and can reach
+AddEffect through the known resource lane. The resource route was already recorded
+in September; the new correction is that the collector's metadata-PiPL equality
+is an unverified bridge assumption for this own effect. Same interface type,
+match name, timing or adjacent pointers cannot reconcile these objects.
+
+File-only original pins and five direct branch targets PASS. Own selected lane,
+possible adapter/copy and ordering of writer relative to metadata conversion
+remain UNKNOWN. A new run of the same hypothesis is not a discriminating probe;
+PS13–15 stay BLOCKED. No claim that hot registration is impossible.
+
+Stop capture now bounds threads to256 (oversized prefix8), records debugger stop
+IDs/reasons and breakpoint IDs plus an OS signal number only. It refuses changing
+state/stop ID, multiple/zero/unowned breakpoint reasons, concurrent exception,
+ambiguous shape and wrong proven thread before accessing a frame. Initial launch
+stop accepts only isolated exec or the debugger's SIGSTOP; unknown signal/exception
+cannot be continued. No unknown frames/registers/target objects. This diagnoses
+future refusals; it does not retroactively identify or fix the old refusal.
+Counters retain ignored convert/spec/writer counts without foreign descriptor
+addresses. Complete same-pointer observation and unknown resource/metadata lane
+remain distinct from a host ownership/render/atomic-publication contract.
+
 ## Passive owned startup trace — 2026-10-09
 
 User «ДЕЛАЙ» authorizes the proposed16-step implementation/verification packet,

@@ -69,3 +69,21 @@ execution. Installation bytes are moved outside discovery and retained.
 The58a0673 AE attempt observed four callback/conversion/PiPL events, then refused
 an ambiguous stop; writer and reader were not reached. The post-run corrections
 are separate from that historical native evidence. See the current C1 checkpoint.
+
+
+## PiPL route qualification and stop classification
+
+The metadata callback produces a PiPL through CreateClassRef/population; PLUG's
+ordinary resource path separately calls PiPL::Create(vector<char>&). Interface
+names do not prove these are the same own live object. The old trace observed only
+the metadata PiPL; its own writer bridge remains UNKNOWN. Until a discriminating
+own route is established, another AE attempt is BLOCKED in the current checkpoint.
+Do not weaken equality or identify an own descriptor by adjacency.
+
+`stops.py` captures bounded debugger metadata, validates stable state/stop ID and
+one isolated owned breakpoint before any frame access. Mixed exceptions, wrong
+proven thread and ambiguous breakpoint data refuse. Initial launch stop must be
+isolated exec or SIGSTOP. Oversized inventories retain only eight metadata rows
+and refuse; maximum allowed inventory256. Core results include ignored-site
+counts and retain UNKNOWN for resource-versus-metadata lane. No historical stop
+reason or Adobe contract is inferred from synthetic controls.

@@ -36,6 +36,7 @@ class Trace:
         self.thread = self.context = self.pipl = self.descriptor = self.root = None
         self.index = self.key = None
         self.events = []; self.stops = self.size = 0
+        self.ignored = {'convert': 0, 'spec': 0, 'writer': 0}
 
     @property
     def enabled(self):
@@ -61,9 +62,12 @@ class Trace:
             need(event['thread'] == self.thread, 'not the proven own main thread')
         # Other startup descriptors are ignored only by exact context/interface/
         # descriptor equality, never by time, index guesses or string dereference.
-        if role == 'convert' and v['context'] != self.context: return False
-        if role == 'spec' and v['pipl'] != self.pipl: return False
-        if role == 'writer' and v['descriptor'] != self.descriptor: return False
+        mismatch = ((role == 'convert' and v['context'] != self.context) or
+                    (role == 'spec' and v['pipl'] != self.pipl) or
+                    (role == 'writer' and v['descriptor'] != self.descriptor))
+        if mismatch:
+            self.ignored[role] += 1
+            return False
         data = json.dumps(event, sort_keys=True, separators=(',', ':')).encode()
         need(len(self.events) < MAX_EVENTS and self.size + len(data) <= MAX_BYTES, 'event payload budget exhausted')
         if role == 'marker':
@@ -109,6 +113,8 @@ class Trace:
                 'phase': self.phase, 'pid': self.pid, 'birth': self.birth,
                 'descriptor': self.descriptor, 'root': self.root, 'key': self.key,
                 'writer_index': self.index, 'accepted_events': len(self.events),
-                'stops': self.stops, 'scope': 'normal startup register correspondence only',
+                'stops': self.stops, 'ignored_stops_by_role': dict(self.ignored),
+                'pipl_bridge': 'SAME_POINTER_OBSERVED' if self.phase == 'complete' else 'UNKNOWN',
+                'resource_vs_metadata_lane': 'UNKNOWN', 'scope': 'normal startup register correspondence only',
                 'late_add': 'NOT_RUN', 'complete_lifetime': 'UNKNOWN',
                 'atomic_commit': 'UNKNOWN', 'render_readset': 'UNKNOWN'}

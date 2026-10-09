@@ -39,6 +39,8 @@ class StartupTraceTests(unittest.TestCase):
                 other['values'][field]=999;self.assertFalse(t.feed(other))
             t.feed(e)
         self.assertEqual(t.stops,15);self.assertEqual(len(t.events),12)
+        self.assertEqual(t.result()['ignored_stops_by_role'],{'convert':1,'spec':1,'writer':1})
+        self.assertEqual(t.result()['resource_vs_metadata_lane'],'UNKNOWN')
 
     def test_changed_pid_birth_or_thread_refuses(self):
         for field in ('pid','birth','thread'):
@@ -133,6 +135,70 @@ class StartupTraceTests(unittest.TestCase):
             with patch('lldb_collector.os.link',side_effect=OSError('control refusal')),self.assertRaises(OSError):
                 write_once(path,{'cleanup_safe':False})
             self.assertFalse(path.exists());self.assertTrue(path.with_name('result.json.pending').is_file())
+
+
+class StopMetadataTests(unittest.TestCase):
+    def snapshot(self):
+        return {'state':5,'state_after':5,'stop_id':9,'stop_id_after':9,'total_threads':1,
+                'threads':[{'index':0,'id':77,'reason':3,'none':False,'breakpoint':True,
+                            'reason_data_count':2,'breakpoint_id':4,'location_id':1}]}
+
+    def test_isolated_owned_breakpoint_selects_exact_proven_thread(self):
+        from stops import select
+        self.assertEqual(select(self.snapshot(),5,{4:'spec'},77),(0,'spec'))
+        with self.assertRaisesRegex(ValueError,'main thread'):select(self.snapshot(),5,{4:'spec'},78)
+        with self.assertRaisesRegex(ValueError,'unowned'):select(self.snapshot(),5,{5:'writer'})
+
+    def test_zero_multiple_and_mixed_stop_reasons_refuse(self):
+        from stops import select
+        for kind in ('none','multiple','exception'):
+            r=self.snapshot()
+            if kind=='none':r['threads'][0].update(none=True,breakpoint=False)
+            else:
+                other=copy.deepcopy(r['threads'][0]);other['index']=1;other['id']=78
+                if kind=='exception':other.update(reason=6,breakpoint=False)
+                r['threads'].append(other);r['total_threads']=2
+            with self.subTest(kind=kind),self.assertRaisesRegex(ValueError,'isolated'):select(r,5,{4:'spec'})
+
+    def test_transient_state_or_stop_id_never_selects_a_frame(self):
+        from stops import select
+        for field,value in (('state_after',6),('stop_id_after',10)):
+            r=self.snapshot();r[field]=value
+            with self.subTest(field=field),self.assertRaisesRegex(ValueError,'changed'):select(r,5,{4:'spec'})
+
+    def test_ambiguous_breakpoint_shape_and_incomplete_inventory_refuse(self):
+        from stops import select
+        r=self.snapshot();r['threads'][0]['reason_data_count']=4
+        with self.assertRaisesRegex(ValueError,'shape'):select(r,5,{4:'spec'})
+        r=self.snapshot();r['total_threads']=2
+        with self.assertRaisesRegex(ValueError,'inventory'):select(r,5,{4:'spec'})
+
+    def test_launch_stop_never_continues_unknown_signal_or_exception(self):
+        from stops import initial
+        from types import SimpleNamespace
+        api=SimpleNamespace(eStateStopped=5,eStopReasonExec=7,eStopReasonSignal=5)
+        r=self.snapshot();r['threads'][0].update(reason=5,breakpoint=False,signal_number=17,reason_data_count=1)
+        initial(r,api,17)
+        for reason,signal_number in ((5,11),(6,17),(0,17)):
+            r['threads'][0].update(reason=reason,signal_number=signal_number)
+            with self.assertRaisesRegex(ValueError,'expected launch'):initial(r,api,17)
+
+    def test_capture_is_bounded_and_does_not_request_frames(self):
+        from stops import capture,select
+        from types import SimpleNamespace
+        api=SimpleNamespace(eStopReasonBreakpoint=3,eStopReasonNone=0,eStopReasonSignal=5)
+        class Thread:
+            def GetStopReason(self):return 0
+            def GetStopReasonDataCount(self):return 0
+            def GetThreadID(self):return 77
+        class Process:
+            visits=0
+            def GetState(self):return 5
+            def GetStopID(self):return 9
+            def GetNumThreads(self):return 257
+            def GetThreadAtIndex(self,index):self.visits+=1;return Thread()
+        p=Process();r=capture(p,api);self.assertEqual(p.visits,8)
+        with self.assertRaisesRegex(ValueError,'bound'):select(r,5,{4:'spec'})
 
 
 if __name__=='__main__':unittest.main()

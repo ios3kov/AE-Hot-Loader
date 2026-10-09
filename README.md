@@ -10,18 +10,20 @@ product**.
 Current verified state: [DEVELOPMENT_STATUS](docs/DEVELOPMENT_STATUS.md).  
 Current gates: [PRODUCTION_PLAN](docs/PRODUCTION_PLAN.md).  
 Development requirements: [AGENTS](AGENTS.md).
-Accepted rules baseline: **AE Development Rules 11.0.1**, pinned source
-`f80eaa8534987ddedaf44720ca8a85dfe122ce14`; see
-[current adoption and passive-trace checkpoint](docs/C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#passive-owned-startup-trace--2026-10-09).
+Accepted rules baseline: **AE Development Rules 11.1.0**, pinned source
+`04b606845e0f73ab28b9807bb45682eae4d6ce34`; see
+[current adoption and passive-trace checkpoint](docs/C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#pipl-route-and-stop-classification--2026-10-09).
 Earlier rules and Evidence remain historical.
 
 ## Current Stage C
 
 The core unresolved problem is ordinary-effect late registration.
-The current [startup-operation chain checkpoint](docs/C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#startup-operation-chain-packet--2026-10-09)
-binds observed providers to selected original-file paths and specifies a bounded
-own-record identity trace. The passive collector/admission remain unimplemented;
-that conditional run is NOT RUN. C1 PARTIAL; newly hot-added effect C2 NOT RUN.
+The current [PiPL route and stop-classification packet](docs/C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#pipl-route-and-stop-classification--2026-10-09)
+reconciles the partial passive trace with two distinct PiPL creation paths.
+The collector is implemented and its owned transport has passed; the previous
+AE attempt reached four metadata/PiPL events, but no own writer/reader identity.
+Own resource versus metadata lane remains UNKNOWN. C1 PARTIAL; private append
+BLOCKED; newly hot-added effect C2 NOT_RUN.
 
 Preserved live evidence:
 

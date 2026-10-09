@@ -9,10 +9,12 @@ import importlib.util
 import json
 import os
 import shlex
+import signal
 import sys
 import time
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from core import Trace, need
+from stops import capture, select, initial as initial_stop
 from profile import validate, read_json, ROOT
 
 
@@ -112,23 +114,28 @@ def observe(debugger, profile_path, digest, output):
             if state==lldb.eStateStopped:
                 stopid=process.GetStopID()
                 if stopid!=last_stop:
-                    last_stop=stopid;stopped=[t for t in process if t.GetStopReason()==lldb.eStopReasonBreakpoint]
-                    if not stopped and entry_stop:
+                    last_stop=stopid
+                    initial=capture(process,lldb) if entry_stop else None
+                    if entry_stop and initial['total_threads']<=256 and not any(t['breakpoint'] for t in initial['threads']):
                         entry_stop=False
-                        write_once(output/'initial-stop.json',{'state':int(state),'stop':int(stopid),'breakpoints':{r:[{'address':int(bp.GetLocationAtIndex(i).GetAddress().GetLoadAddress(target)),'enabled':bool(bp.IsEnabled())} for i in range(bp.GetNumLocations())] for r,bp in breaks.items()}})
+                        try:
+                            initial_stop(initial,lldb,int(signal.SIGSTOP))
+                        except ValueError as exc:
+                            initial['refusal']=str(exc)
+                            write_once(output/'unexpected-stop.json',initial)
+                            raise
+                        write_once(output/'initial-stop.json',{'state':int(state),'stop':int(stopid),'metadata':initial,'breakpoints':{r:[{'address':int(bp.GetLocationAtIndex(i).GetAddress().GetLoadAddress(target)),'enabled':bool(bp.IsEnabled())} for i in range(bp.GetNumLocations())] for r,bp in breaks.items()}})
                         need(process.Continue().Success(),'initial continue failed')
                     else:
                         entry_stop=False
-                        if len(stopped)!=1:
-                            write_once(output/'unexpected-stop.json',{'state':int(state),'stop_id':int(stopid),
-                                'total_threads':process.GetNumThreads(),'breakpoint_threads':len(stopped),
-                                'threads':[{'id':int(process.GetThreadAtIndex(i).GetThreadID()),
-                                    'reason':int(process.GetThreadAtIndex(i).GetStopReason()),
-                                    'reason_data_count':int(process.GetThreadAtIndex(i).GetStopReasonDataCount())}
-                                    for i in range(min(process.GetNumThreads(),8))]})
-                        need(len(stopped)==1,'unexpected stop or simultaneous breakpoints')
-                        thread=stopped[0];need(thread.GetStopReasonDataCount()==2,'breakpoint stop shape')
-                        role=roles.get(thread.GetStopReasonDataAtIndex(0));need(role is not None,'unowned breakpoint')
+                        snapshot=capture(process,lldb)
+                        try:
+                            selected,role=select(snapshot,lldb.eStateStopped,roles,trace.thread if trace else None)
+                        except ValueError as exc:
+                            snapshot['refusal']=str(exc)
+                            write_once(output/'unexpected-stop.json',snapshot)
+                            raise
+                        thread=process.GetThreadAtIndex(selected)
                         frame=thread.GetFrameAtIndex(0);pc=frame.GetPCAddress();site=record['sites'][role];pin=record['modules'][site['module']]
                         need(pc.GetModule().GetUUIDString().lower()==pin['uuid'] and pc.GetFileAddress()==site['offset'],'mapped PC/module changed')
                         actual=str(Path(pc.GetModule().GetFileSpec().fullpath).resolve());need(actual==pin.get('loaded_path',pin['path']),'mapped module path differs')

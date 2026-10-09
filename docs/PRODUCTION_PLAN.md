@@ -1,5 +1,17 @@
 # AE Hot Loader — current development and release plan
 
+## Active PiPL-route packet — 2026-10-09
+
+Rules11.1.0 /04b6068 and actual local Codex skills reconciled.18-step packet
+addresses the partial trace and distinct resource/metadata PiPL creation paths.
+Own selected route and stop cause remain UNKNOWN. Typed bounded stop classification
+and ignored-site counters implemented; current checks/build/owned fixture pending.
+New AE startup/writer/public-reader operations BLOCKED until discriminating own
+identity exists; no repeat of the same unverified pointer assumption. C1 PARTIAL,
+private append BLOCKED, C2/late-add NOT_RUN. All historical Evidence retained.
+See the [single current checkpoint](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#pipl-route-and-stop-classification--2026-10-09).
+
+
 ## Active passive-trace closeout — 2026-10-09
 
 Approved16-step PT01–PT16 packet under rules11.0.1 reached one own startup trace:
