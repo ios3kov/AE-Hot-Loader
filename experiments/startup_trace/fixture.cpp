@@ -3,8 +3,16 @@
  std::uint64_t a, std::uint64_t b=0, std::uint64_t c=0, std::uint64_t d=0, std::uint64_t e=0) { \
  asm volatile("" : : "r"(a), "r"(b), "r"(c), "r"(d), "r"(e) : "memory"); }
 POINT(marker) POINT(convert) POINT(pipl) POINT(spec) POINT(writer)
-POINT(index) POINT(writer_return) POINT(reader) POINT(match) POINT(lookup)
+POINT(index) POINT(writer_return) POINT(reader) POINT(match)
 POINT(callback)
+// Preserve the callee-saved registers; expose a real SIMD pair at one exact NOP.
+extern "C" __attribute__((naked, noinline, used)) void lookup(
+ std::uint64_t, std::uint64_t, std::uint64_t, std::uint64_t) {
+ asm volatile("stp x21, x22, [sp, #-16]!\n"
+              "mov x21, x2\nmov x22, x3\nfmov d0, x0\nmov v0.d[1], x1\n"
+              ".globl _lookup_probe\n_lookup_probe:\nnop\n"
+              "ldp x21, x22, [sp], #16\nret\n");
+}
 int main() {
  const auto cb=reinterpret_cast<std::uintptr_t>(&callback);
  const auto mf=reinterpret_cast<std::uintptr_t>(&match);

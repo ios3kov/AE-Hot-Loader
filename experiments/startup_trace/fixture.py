@@ -8,7 +8,7 @@ import platform
 import subprocess
 import uuid
 from core import FIELDS, need
-from profile import ROOT, image_record, validate, collector_hashes
+from profile import ROOT, image_record, validate, collector_hashes, fixture_site
 from image import Image
 
 
@@ -21,9 +21,7 @@ def build():
     subprocess.run(['clang++','-std=c++17','-arch','arm64','-O0','-Wall','-Wextra','-Werror',
                     str(Path(__file__).with_name('fixture.cpp')),'-o',str(target)],check=True,timeout=60)
     pin=image_record(target);im=Image(target)
-    sites={role:{'module':'fixture','offset':im.symbol('_'+role),
-           'word':im.bytes(im.symbol('_'+role)).hex(),
-           'registers':{field:'x'+str(i) for i,field in enumerate(FIELDS[role])}} for role in FIELDS}
+    sites={role:fixture_site(im,role) for role in FIELDS}
     source=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
     record={'schema':1,'kind':'owned-fixture','collector_sha256':collector_hashes(),'host':pin,'modules':{'fixture':pin},'sites':sites,
         'callback':{'module':'fixture','offset':im.symbol('_callback')},

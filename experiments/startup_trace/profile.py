@@ -48,6 +48,12 @@ BOUNDARIES = {
 }
 
 
+def fixture_site(im, role):
+    offset=im.symbol('_lookup_probe' if role=='lookup' else '_'+role)
+    registers={'descriptor':'v0.low','owner':'v0.high','root':'x21','index':'w22'} if role=='lookup' else {field:'x'+str(i) for i,field in enumerate(FIELDS[role])}
+    return {'module':'fixture','offset':offset,'word':im.bytes(offset).hex(),'registers':registers}
+
+
 def read_json(path, digest):
     p=Path(path); need(p.is_absolute() and not any(q.is_symlink() for q in (p,*p.parents)), 'profile path/symlink')
     st=p.stat();need(stat.S_ISREG(st.st_mode) and st.st_uid==os.getuid() and st.st_mode&0o077==0 and st.st_size<=4*1024*1024, 'profile ownership/mode/byte budget'); raw=p.read_bytes()
@@ -132,8 +138,7 @@ def validate(record, verify_files=True):
         if verify_files:
             im=Image(record['host']['path'])
             for role in FIELDS:
-                offset=im.symbol('_'+role)
-                need(record['sites'][role]=={'module':'fixture','offset':offset,'word':im.bytes(offset).hex(),'registers':{field:'x'+str(i) for i,field in enumerate(FIELDS[role])}},'fixture sentinel escape')
+                need(record['sites'][role]==fixture_site(im,role),'fixture sentinel escape')
             need(record['callback']=={'module':'fixture','offset':im.symbol('_callback')} and record['match_function']=={'module':'fixture','offset':im.symbol('_match')},'fixture function escape')
     if verify_files:
         for pin in [record['host'],*record['modules'].values()]:

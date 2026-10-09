@@ -74,7 +74,7 @@ def observe(debugger, profile_path, digest, output):
         for leaf in ('host-stdout.log','host-stderr.log'):
             fd=os.open(output/leaf,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600);os.close(fd)
         launch.AddOpenFileAction(1,str(output/'host-stdout.log'),False,True);launch.AddOpenFileAction(2,str(output/'host-stderr.log'),False,True)
-        if candidate:launch.SetEnvironmentEntries(['AEHL_STARTUP_CALIBRATION_TOKEN='+candidate['token']],False)
+        if candidate:launch.SetEnvironmentEntries(['AEHL_STARTUP_CALIBRATION_TOKEN='+candidate['token']],True)
         need(not is_ae or not native.processes(),'a session opened before launch')
         write_once(output/'launch-intent.json',{'state':'OUTCOME_UNKNOWN','executable':record['host']['path']})
         process=target.Launch(launch,error);report['launch_error']=str(error) if not error.Success() else None
