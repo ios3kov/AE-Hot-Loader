@@ -109,5 +109,30 @@ class StartupTraceTests(unittest.TestCase):
         proof['owned_process']['executable']='/Applications/Other.app/Contents/MacOS/Other'
         with self.assertRaisesRegex(ValueError,'outside fixture'):profile.transport_admission(proof,candidate)
 
+    def test_journal_publication_is_complete_and_never_replaces(self):
+        import os
+        from lldb_collector import write_once
+        original=os.link
+        with tempfile.TemporaryDirectory() as d:
+            path=Path(d)/'result.json';record={'cleanup_safe':True,'status':'fixture'}
+            def publish(source,target,**kwargs):
+                self.assertFalse(Path(target).exists())
+                self.assertEqual(json.loads(Path(source).read_text()),record)
+                return original(source,target,**kwargs)
+            with patch('lldb_collector.os.link',side_effect=publish):write_once(path,record)
+            self.assertEqual(json.loads(path.read_text()),record)
+            self.assertEqual(path.stat().st_mode&0o777,0o600)
+            self.assertFalse(path.with_name('result.json.pending').exists())
+            with self.assertRaises(FileExistsError):write_once(path,{'cleanup_safe':False})
+            self.assertEqual(json.loads(path.read_text()),record)
+
+    def test_failed_journal_publication_preserves_pending_without_final(self):
+        from lldb_collector import write_once
+        with tempfile.TemporaryDirectory() as d:
+            path=Path(d)/'result.json'
+            with patch('lldb_collector.os.link',side_effect=OSError('control refusal')),self.assertRaises(OSError):
+                write_once(path,{'cleanup_safe':False})
+            self.assertFalse(path.exists());self.assertTrue(path.with_name('result.json.pending').is_file())
+
 
 if __name__=='__main__':unittest.main()

@@ -53,7 +53,7 @@ def drive(profile, digest, output):
 def retire(manifest,digest):
     native=load_native();record=read_json(manifest,digest);base=Path(manifest).parent
     admission=read_json(base/'trace-preparation/profile.json',hashlib.sha256((base/'trace-preparation/profile.json').read_bytes()).hexdigest())
-    validate(admission);need(admission['candidate_manifest']==str(manifest) and admission['candidate_sha256']==digest,'retirement admission differs')
+    validate(admission,check_current_source=False);need(admission['kind']=='ae-owned-startup' and admission['candidate_manifest']==str(manifest) and admission['candidate_sha256']==digest,'retirement admission differs')
     need(not native.processes(),'AE/aerender present; own installation retained in place')
     install=native.PLUGIN_ROOT/('AEHLStartupCalibration-'+record['run_id'][:12])
     need(install.is_dir() and not install.is_symlink() and set(p.name for p in install.iterdir())=={item['bundle'] for item in record['bundles']},'own retirement scope changed')

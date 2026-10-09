@@ -97,10 +97,10 @@ def native_profile(manifest, digest):
             'scope':'register-only own normal-startup identity observation; no private calls/expressions/memory/attach/kill/render'}
 
 
-def validate(record, verify_files=True):
+def validate(record, verify_files=True, check_current_source=True):
     need(set(record)=={'schema','kind','host','modules','sites','callback','match_function',
          'candidate_manifest','candidate_sha256','source_commit','build_id','limits','scope','collector_sha256'},'profile fields differ')
-    if verify_files:need(record['collector_sha256']==collector_hashes(),'collector source changed')
+    if verify_files and check_current_source:need(record['collector_sha256']==collector_hashes(),'collector source changed')
     need(record['schema']==1 and record['kind'] in ('ae-owned-startup','owned-fixture'),'profile kind')
     need(record['limits']=={'startup_seconds':180,'operation_seconds':120,'native_seconds':110,'events':256,'stops':256,'bytes':1048576},'unreviewed limits')
     need(set(record['sites'])==set(FIELDS),'site inventory differs')
@@ -132,7 +132,7 @@ def validate(record, verify_files=True):
             need(record['sites'][role]=={'module':role,'offset':offset,'word':im.bytes(offset).hex(),'registers':BOUNDARIES[role]},'own sentinel differs')
         for name,digest in candidate['source']['tracked_sha256'].items():
             path=Path(name);need(not path.is_absolute() and '..' not in path.parts,'source path escape')
-            if path.suffix!='.md':need(hashlib.sha256((ROOT/path).read_bytes()).hexdigest()==digest,'candidate source changed')
+            if check_current_source and path.suffix!='.md':need(hashlib.sha256((ROOT/path).read_bytes()).hexdigest()==digest,'candidate source changed')
     else:
         need(record['modules']=={'fixture':record['host']} and record['candidate_manifest'] is None and record['candidate_sha256'] is None,'fixture module/source escape')
         if verify_files:

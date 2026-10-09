@@ -22,8 +22,11 @@ def load_native():
 
 
 def write_once(path, record):
-    fd=os.open(path,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600)
+    path=Path(path);temporary=path.with_name(path.name+'.pending')
+    fd=os.open(temporary,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600)
     with os.fdopen(fd,'w') as out: json.dump(record,out,indent=2);out.write('\n');out.flush();os.fsync(out.fileno())
+    # Publish complete bytes without replacement; preserve pending on failure.
+    os.link(temporary,path,follow_symlinks=False);temporary.unlink()
 
 
 def reg(frame, name, api):
@@ -115,7 +118,15 @@ def observe(debugger, profile_path, digest, output):
                         write_once(output/'initial-stop.json',{'state':int(state),'stop':int(stopid),'breakpoints':{r:[{'address':int(bp.GetLocationAtIndex(i).GetAddress().GetLoadAddress(target)),'enabled':bool(bp.IsEnabled())} for i in range(bp.GetNumLocations())] for r,bp in breaks.items()}})
                         need(process.Continue().Success(),'initial continue failed')
                     else:
-                        entry_stop=False;need(len(stopped)==1,'unexpected stop or simultaneous breakpoints')
+                        entry_stop=False
+                        if len(stopped)!=1:
+                            write_once(output/'unexpected-stop.json',{'state':int(state),'stop_id':int(stopid),
+                                'total_threads':process.GetNumThreads(),'breakpoint_threads':len(stopped),
+                                'threads':[{'id':int(process.GetThreadAtIndex(i).GetThreadID()),
+                                    'reason':int(process.GetThreadAtIndex(i).GetStopReason()),
+                                    'reason_data_count':int(process.GetThreadAtIndex(i).GetStopReasonDataCount())}
+                                    for i in range(min(process.GetNumThreads(),8))]})
+                        need(len(stopped)==1,'unexpected stop or simultaneous breakpoints')
                         thread=stopped[0];need(thread.GetStopReasonDataCount()==2,'breakpoint stop shape')
                         role=roles.get(thread.GetStopReasonDataAtIndex(0));need(role is not None,'unowned breakpoint')
                         frame=thread.GetFrameAtIndex(0);pc=frame.GetPCAddress();site=record['sites'][role];pin=record['modules'][site['module']]

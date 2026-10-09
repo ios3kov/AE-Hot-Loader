@@ -1,15 +1,19 @@
 # AE Hot Loader — current development and release plan
 
-## Active passive-trace implementation — 2026-10-09
+## Active passive-trace closeout — 2026-10-09
 
-Approved16-step PT01–PT16 packet and explicit rules11.0.1 adoption. Implement a
-bounded register-only collector and own immutable identity sentinels; conditional
-single fresh owned startup trace after exact safety/build checks. Goal is actual
-own writer-to-reader record correspondence; no late call/Apply/frame. Acceptance,
-limits, affected checks and current states live in the [single checkpoint](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#passive-owned-startup-trace--2026-10-09).
-Previous C1PARTIAL/C2NOT RUN, async/lifetime/render/partial recovery and all Evidence
-remain open/preserved. No new host operation yet.
+Approved16-step PT01–PT16 packet under rules11.0.1 reached one own startup trace:
+main-thread callback→conversion→PiPL confirmed, FCSpec/writer/reader UNKNOWN.
+The ambiguous stop was refused and debugger detached. User closed AE; exact pair
+retired outside discovery. Finish corrected-source tests, owned fixture, bounded
+review, private Evidence and research-branch exact-head CI. No second AE startup,
+Apply/frame/private call, main/merge/release in this packet.
 
+Next packet must resolve actual PiPL-to-FCSpec dataflow and the stop classification
+before any new conditional owned startup. Preserve strict own identity; no pointer
+adjacency or guessed descriptor. Lifetime/render-readset/partial compensation,
+C1PARTIAL/C2NOT_RUN and release obligations remain open. Acceptance and current
+states live in the [single checkpoint](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#passive-owned-startup-trace--2026-10-09).
 
 ## Current startup-operation chain — 2026-10-09
 

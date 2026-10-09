@@ -49,9 +49,23 @@ plugin discovery only after fresh host absence and bundle/inventory verification
 Limits: startup180s; subsequent controller120/native110s;256 accepted events and
 256 stop events;1MiB trace/log bytes. A blocked synchronous debugger launch may
 not return to the collector deadline loop: the launcher records MANUAL_ATTENTION
-and retains the debugger. This is a missing admission property until the real
-fixture verifies launch/stop/detach behavior. Never auto-quit an unknown target.
+and retains the debugger. The real fixture must verify launch/stop/detach behavior for each exact
+source before AE admission. Never auto-quit an unknown target.
 
 LLDB API reference: [SBTarget](https://lldb.llvm.org/python_api/lldb.SBTarget.html),
 [SBProcess](https://lldb.llvm.org/python_api/lldb.SBProcess.html),
 [SBLaunchInfo](https://lldb.llvm.org/python_api/lldb.SBLaunchInfo.html).
+
+Journal final paths become visible only after full write/flush/fsync and exclusive
+hard-link publication. Failed publication retains a pending file and does not
+replace an existing receipt. Ambiguous stops refuse and retain bounded thread
+reason metadata; no unknown frames/registers or object memory are inspected.
+
+`--retire-owned-pair` may validate a historical admission after collector source
+changes, while retaining exact image/site/candidate/bundle checks and two fresh
+host-absence guards. This cleanup-only source comparison exception never admits
+execution. Installation bytes are moved outside discovery and retained.
+
+The58a0673 AE attempt observed four callback/conversion/PiPL events, then refused
+an ambiguous stop; writer and reader were not reached. The post-run corrections
+are separate from that historical native evidence. See the current C1 checkpoint.

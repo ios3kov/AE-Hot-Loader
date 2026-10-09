@@ -1,17 +1,19 @@
 # AE Hot Loader — current development status
 
-## Current passive collector preparation — 2026-10-09
+## Current passive startup observation — 2026-10-09
 
-Rules11.0.1 accepted at f80eaa8.16-step packet implements exact register-site
-admission, own native sentinels, ordered bounded correlator and separate public
-receipt verification.30 focused startup tests PASS (10 new identity/refusal/admission
-controls). Sourcea832467:531Python/62Node/22stages and exact-SDK trace-enabled
-pair checks PASS; subsequent transport-admission hardening pending exact checks.
-Real owned fixture
-transport is not yet PASS; synchronous LLDB launch stopped inside startup and
-preserved the own control/debugger for attention. AE install/launch NOT_RUN;
-private append BLOCKED, C1 PARTIAL, C2 NOT_RUN.
-See [current packet and bounded review inventory](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#passive-owned-startup-trace--2026-10-09).
+Rules11.0.1 accepted at f80eaa8. The16-step packet reached one real owned startup
+at58a0673 after completed exact-source debugger controls and SDK checks.
+Four events confirm our main-thread callback and temporary context→conversion→PiPL.
+Own FCSpec/writer/root/public reader remain UNKNOWN. After163stops the collector
+refused an ambiguous stop and detached safely. Registry request NOT_SENT;
+Apply/render/project mutation NOT_RUN. User closed PID61529; fresh absence and
+exact pair retirement PASS; other plugin entries unchanged.
+
+Post-run journal publication and bounded stop-metadata corrections are under final
+verification; no second AE launch in this packet. C1 PARTIAL; private append
+BLOCKED; C2/late-add NOT_RUN. Offline and transport success do not complete these
+gates. [Current checkpoint and bounded review](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#passive-owned-startup-trace--2026-10-09).
 
 ## Current startup-operation chain — 2026-10-09
 

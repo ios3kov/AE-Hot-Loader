@@ -40,22 +40,23 @@ to the newly launched owned process and removed on detach; no disk image patch.
 
 | Task | Acceptance | State |
 | --- | --- | --- |
-| PT01 | Explicit v11.0.1 adoption/source/compatibility | PASS: accepted exact release source |
-| PT02 | Restore exact source/AE/SDK/Evidence | Baseline restored; exact new SDK candidate pending |
-| PT03 | Exact decoded register sites/operand/raw bytes | Prepared from original bodies; candidate admission pending |
-| PT04 | Passive bounded collector | Implemented; transport BLOCKED before collector loop |
-| PT05 | File SHA/UUID and mapped image/PC binding | PASS:file admission10sites/5modules; mapped live NOT_RUN |
-| PT06 | Unique own sentinel/context/thread filtering | PASS:synthetic refusals; actual own host NOT_RUN |
-| PT07 | Context→PiPL→FCSpec→writer register flow | Implemented; live UNKNOWN |
-| PT08 | Own public key/function bracket→lookup result | Implemented; live UNKNOWN |
-| PT09 | Event/log/deadline/cancellation limits, no kill/retry | PASS:pure limits; blocking launch prevents runtime deadline proof |
-| PT10 | Wrong process/build/inputs/order and bounds refusals | PASS:10 focused controls; synthetic only |
-| PT11 | Spec/quality and native affected-function inventory | Bounded review recorded; actual SDK build pending |
-| PT12 | Exact clean candidate build/SDK/control checks | PASS:a832467 pair; hardened controller exact candidate pending |
-| PT13 | Fresh absence, exact own pair, new owned session only | BLOCKED:transport; install/AE NOT_RUN |
-| PT14 | One writer→reader identity trace, no render | BLOCKED / NOT_RUN |
-| PT15 | Interpret trace or precise refusal, preserve unknowns | Refusal before collector loop preserved; no host conclusions |
-| PT16 | Evidence/status/checks/research commit/push/exact CI | IN PROGRESS |
+| PT01 | Explicit v11.0.1 adoption/source/compatibility | PASS: exact accepted release source |
+| PT02 | Exact source/AE/SDK/Evidence | PASS: source58a0673, 74 SDK pins, historical Evidence retained |
+| PT03 | Exact register sites/operands/raw bytes | PASS: admitted10sites/5modules; no guessed offsets |
+| PT04 | Passive bounded collector transport | PASS: real owned scalar and SIMD fixture;12events/15stops/detach |
+| PT05 | File and mapped image/PC identity | PASS:file pins and four accepted live sites; remaining live mappings unconfirmed |
+| PT06 | Own sentinel/context/main-thread filtering | PASS: native marker stages1/2, status0, pinned callback |
+| PT07 | Context→PiPL→FCSpec→writer | PARTIAL: context→conversion→PiPL observed; own FCSpec/writer UNKNOWN |
+| PT08 | Own public key/function→lookup | NOT_RUN: registry request NOT_SENT |
+| PT09 | Bounded refusal, detach, no signals/retry | PASS:163stops within cap; ambiguous stop refused; detach PASS |
+| PT10 | Identity/order/budget/admission/journal controls | PASS:12 focused controls; synthetic inputs do not count as host evidence |
+| PT11 | Separate spec/quality/native inventory review | Bounded review retained; post-run corrections pending final checks below |
+| PT12 | Exact clean candidate build/SDK/control checks | PASS:58a0673,532Python/62Node/22stages and SDK controls; corrected source checked separately |
+| PT13 | Fresh own session and exact pair preservation | PASS: PID61529; user closed; absence confirmed; exact pair retired; other entries unchanged |
+| PT14 | Complete writer→reader identity trace | INCOMPLETE:4accepted events/163stops, phase spec |
+| PT15 | Preserve precise refusal and uncertainty | PASS: unexpected stop/simultaneous breakpoints; underlying reason UNKNOWN |
+| PT16 | Evidence/status/research publication/exact CI | Closeout in progress; no main/merge/release |
+
 
 One-shot startup180s and subsequent native110/controller120s caps, at most256
 accepted events/1MiB; no renewed deadline/restart. All stop events additionally
@@ -81,7 +82,7 @@ PASS or a reason to launch AE. Actual debugger control remains admission-critica
 | Native function | Review scope | Result / limits |
 | --- | --- | --- |
 | Marker AEHL_TraceMarkerBoundary (new) | Arguments/register barrier, no heap/host calls; stack callback borrowed | Reviewed; actual SDK build PASS:a832467 |
-| PluginDataEntryFunction2 (modified) | Sentinels bracket same existing host callback; actual main-thread proof/status | Reviewed; startup proof pending |
+| PluginDataEntryFunction2 (modified) | Sentinels bracket same existing host callback; actual main-thread proof/status | Reviewed;58a0673 native callback bracket PASS; downstream writer UNKNOWN |
 | Observer AEHL_TraceReaderBoundary (new) | Scalar key/provider/status only; no resource ownership | Reviewed; actual SDK build PASS:a832467 |
 | Backend::Match (modified) | Same own key, bounded buffers, acquired provider, main/deadline guard, one public repeat | Reviewed; actual SDK regression PASS:a832467 |
 | Other native functions | Unchanged; existing project guards/SDK leases/frame path retained | Not re-reviewed in this packet; prior evidence applies only to prior bytes |
@@ -117,6 +118,50 @@ A separate admission hardening now binds all collector source bytes and requires
 one complete detached real fixture result for the exact candidate source before
 AE installation or launch. Missing/stale/partial proof refuses; pure admission
 controls are synthetic, not the missing real proof. New exact checks pending.
+
+
+### Actual startup observation and post-run corrections
+
+The initial synchronous transport failures above remain historical failures.
+Both attention processes were already absent at the identity guard after the
+user authorized their narrow cleanup; no signals were sent. Explicit launch
+information, asynchronous command execution and inherited environment retention
+were corrected in746e547/58a0673. Real owned SIMD fixture81892e517f644ec2b556ede6b37c9488
+at58a067344ca8a2f284bd33e4fb5adc1bf3cf65af passed12accepted/15stops/safe detach.
+Its resultSHA is60e32a3615ebd74a9ed39037c3bdbceae00e4a6423336b992980c7b6b06b9c2e.
+This proves bounded debugger transport only, not an Adobe registry contract.
+
+Exactly one AE startup used that clean source and SDK pair
+41a2f963d2cf417eabccf1a29ab524ac, manifestSHA
+68d6480ff9e472d028930c558e3621fe496abd8966a41f8b24a8a8b5a3cf8bdd.
+Owned PID61529/birth1791541583674840 produced four accepted events: marker
+entry/return on the actual main thread, status0 and pinned PluginSupport callback,
+then the same temporary context reached conversion and an admitted PiPL interface.
+Own FCSpec, writer, index, registry root and public reader remain UNKNOWN.
+After163stops in phase spec, the collector refused "unexpected stop or simultaneous
+breakpoints". Underlying reason UNKNOWN: this version did not journal thread stop
+metadata. This is neither an attributed AE crash nor proof that the writer cannot
+publish. PiPL copying/adaptation is a hypothesis, not an observed bridge.
+
+Breakpoints were removed and detach PASS. Registry request NOT_SENT; SDK receipt,
+Apply/render and project mutation NOT_RUN. Late READY after detach did not cause a
+query or retry. User closed the session; fresh AE/aerender absence and exact pair
+retirement PASS, unrelated discovery entries UNCHANGED. The pair and all failed
+controls are retained. No second AE attempt in this packet.
+
+Post-run correction publishes complete journal JSON through an exclusive pending
+file and a no-replacement hard link, preventing readers from seeing partial final
+bytes. Two controls cover complete publication, duplicate refusal and failed-link
+preservation. Future ambiguous stops retain bounded reason metadata, without
+unknown frames/registers or object reads. Historical retirement skips comparison
+with today's collector/source only; exact historical candidate, host/module/site/
+bundle identity and fresh absence remain mandatory. Execution still requires
+current source and a fresh exact-source completed fixture. These corrections have
+not been run on AE and cannot retroactively repair this partial trace.
+
+Next bounded question: establish the actual PiPL-to-FCSpec dataflow and classify
+stop metadata. Do not relax identity equality or infer an own descriptor from
+adjacent pointers. C1 PARTIAL; private append BLOCKED; C2/late-add NOT_RUN.
 
 ## Startup operation chain packet — 2026-10-09
 
