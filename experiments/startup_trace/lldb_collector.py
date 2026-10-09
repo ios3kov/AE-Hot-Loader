@@ -16,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from core import Trace, need
 from stops import capture, select, initial as initial_stop
 from profile import validate, read_json, ROOT
+from lifecycle import stopped_event, same_stop
 
 
 def load_native():
@@ -39,6 +40,30 @@ def reg(frame, name, api):
         result=data.GetUnsignedInt64(error,0 if part[1]=='low' else 8)
     else: result=value.GetValueAsUnsigned(error)
     need(error.Success(),'register decode failed');return result
+
+
+def finalize(target, process, breaks, report, output, api):
+    # Evidence failure cannot prevent attempted cleanup. Preserve an incomplete
+    # observation before touching debugger state; final result stays separate.
+    try:
+        write_once(output/'observation.json',report)
+    except OSError:
+        report['observation_journal']='FAIL'
+    try:
+        removed=[target.BreakpointDelete(bp.GetID()) for bp in breaks.values()]
+        need(all(removed), 'own breakpoint removal failed')
+        if process is None:
+            report.update(cleanup_safe=True,detach='NO_LAUNCH')
+        elif not process.IsValid() or process.GetProcessID()<=0:
+            report.update(cleanup_safe=False,detach='UNKNOWN_INVALID_PROCESS')
+        elif process.GetState()==api.eStateExited:
+            report.update(cleanup_safe=True,detach='ALREADY_EXITED')
+        else:
+            detached=process.Detach(False)
+            report.update(cleanup_safe=detached.Success(),detach='PASS' if detached.Success() else 'BLOCKED: '+str(detached))
+    except Exception as exc:
+        report.update(cleanup_safe=False,detach='UNKNOWN_CLEANUP_FAILURE',cleanup_reason=str(exc))
+    write_once(output/'result.json',report)
 
 
 def observe(debugger, profile_path, digest, output):
@@ -71,7 +96,10 @@ def observe(debugger, profile_path, digest, output):
             address=modules[site['module']].ResolveFileAddress(site['offset']);need(address.IsValid(),'site resolution failed')
             bp=target.BreakpointCreateBySBAddress(address);need(bp.IsValid() and bp.GetNumLocations()==1,'breakpoint unresolved/ambiguous')
             bp.SetEnabled(role=='marker');breaks[role]=bp;roles[bp.GetID()]=role
-        listener=debugger.GetListener();launch=target.GetLaunchInfo()
+        # The command interpreter must not consume this observer's process
+        # events. A dedicated listener is installed before the fresh launch.
+        listener=lldb.SBListener('aehl-owned-startup');launch=target.GetLaunchInfo()
+        launch.SetListener(listener)
         launch.SetArguments([],False);launch.SetExecutableFile(lldb.SBFileSpec(record['host']['path']),True)
         launch.SetDetachOnError(True)
         launch.SetLaunchFlags(lldb.eLaunchFlagDebug | lldb.eLaunchFlagStopAtEntry)
@@ -107,11 +135,12 @@ def observe(debugger, profile_path, digest, output):
                     write_once(output/'publication-intent.json',{'state':'OUTCOME_UNKNOWN','pid':observed['pid'],'build_id':candidate['build_id'],'monotonic_deadline':deadline})
                     native.publish(control,native.request(candidate,observed,int(time.time())+110,observation_mode=True))
                     publication='SENT_ONCE'
+            event=lldb.SBEvent();received=listener.WaitForEvent(1,event)
             state=process.GetState()
             if state==lldb.eStateExited:
                 report['exit_status']=process.GetExitStatus();report['exit_description']=process.GetExitDescription()
                 raise ValueError('owned process exited before complete identity trace')
-            if state==lldb.eStateStopped:
+            if received and stopped_event(event,process,lldb):
                 stopid=process.GetStopID()
                 if stopid!=last_stop:
                     last_stop=stopid
@@ -135,6 +164,7 @@ def observe(debugger, profile_path, digest, output):
                             snapshot['refusal']=str(exc)
                             write_once(output/'unexpected-stop.json',snapshot)
                             raise
+                        same_stop(process,snapshot['stop_id'],lldb)
                         thread=process.GetThreadAtIndex(selected)
                         frame=thread.GetFrameAtIndex(0);pc=frame.GetPCAddress();site=record['sites'][role];pin=record['modules'][site['module']]
                         need(pc.GetModule().GetUUIDString().lower()==pin['uuid'] and pc.GetFileAddress()==site['offset'],'mapped PC/module changed')
@@ -142,29 +172,23 @@ def observe(debugger, profile_path, digest, output):
                         if trace is None:trace=Trace(observed['pid'],native.birth(observed),pointer('callback'),None)
                         if role=='reader':trace.match_function=pointer('match_function')
                         values={name:reg(frame,r,lldb) for name,r in site['registers'].items()}
+                        same_stop(process,snapshot['stop_id'],lldb)
                         accepted=trace.feed({'pid':observed['pid'],'birth':native.birth(observed),'thread':int(thread.GetThreadID()),'role':role,'values':values})
                         if accepted:write_once(output/('event-%03d.json'%len(trace.events)),trace.events[-1])
                         for r,bp in breaks.items():bp.SetEnabled(r in trace.enabled)
                         if trace.phase=='complete':report.update(trace.result());break
                         need(process.Continue().Success(),'owned continue failed')
-            event=lldb.SBEvent();listener.WaitForEvent(1,event)
     except Exception as exc:
         report.update(status='BLOCKED_OR_INCOMPLETE',reason=str(exc))
         if trace:report['partial_trace']=trace.result()
     finally:
-        # Delete our own breakpoints before detach; never quit/kill an attached
-        # process on failure. The external launcher keeps debugger stdin open.
-        for bp in breaks.values():target.BreakpointDelete(bp.GetID())
-        if process is None or not process.IsValid() or process.GetProcessID()<=0:
-            report.update(cleanup_safe=True,detach='NO_PROCESS')
-        elif process.GetState()==lldb.eStateExited:
-            report.update(cleanup_safe=True,detach='ALREADY_EXITED')
-        else:
-            detached=process.Detach(False)
-            report.update(cleanup_safe=detached.Success(),detach='PASS' if detached.Success() else 'BLOCKED: '+str(detached))
+        # Preserve the observation before cleanup touches the debugger again.
+        # A debugger crash during cleanup must not erase the partial evidence.
         report['publication']=publication
         report['scope']='normal startup identity only; late-add/Apply/render NOT_RUN'
-        write_once(output/'result.json',report)
+        # Delete our own breakpoints before detach; never quit/kill an attached
+        # process on failure. The external launcher keeps debugger stdin open.
+        finalize(target,process,breaks,report,output,lldb)
     return report
 
 

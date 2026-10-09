@@ -15,10 +15,11 @@ import time
 from core import need
 from profile import read_json, validate, native_profile, transport_admission
 from lldb_collector import load_native, write_once
+from lifecycle import debugger_exit
 
 
 def drive(profile, digest, output):
-    validate(read_json(profile,digest))
+    record=validate(read_json(profile,digest))
     output=Path(output);output.mkdir(mode=0o700)
     # Collector requires an empty private directory; debugger console is a sibling.
     console=output.with_name(output.name+'-debugger.log')
@@ -33,7 +34,14 @@ def drive(profile, digest, output):
         while not (output/'result.json').exists():
             if console.stat().st_size>1048576 and not (output/'cancel').exists():
                 write_once(output/'cancel',{'reason':'debugger console byte budget exceeded'})
-            need(child.poll() is None,'debugger exited unexpectedly; host outcome unknown')
+            exitcode=child.poll()
+            if exitcode is not None:
+                # Separate launcher evidence never masquerades as a collector
+                # result or a successful detach, even when exitcode is zero.
+                failure=debugger_exit(record,exitcode,(output/'publication-intent.json').exists())
+                write_once(output/'launcher-failure.json',failure)
+                child.stdin.close()
+                return failure
             if time.monotonic()-started>310 and not attention:
                 write_once(output/'attention.json',{'status':'MANUAL_ATTENTION','reason':'No collector result; debugger preserved. Do not kill an unknown host.'});attention=True
                 print('MANUAL_ATTENTION: collector result absent; debugger retained',flush=True)
@@ -88,6 +96,8 @@ def execute(manifest,digest,transport,transport_digest):
     result=drive(str(profile),hashlib.sha256(profile.read_bytes()).hexdigest(),base/'trace')
     # This separate witness is required for the public result, even if registers matched.
     control=Path(record['config']['calibration_control']);receipt={'status':'NOT_RUN'}
+    if result.get('publication')=='UNKNOWN':
+        receipt={'status':'UNKNOWN','reason':'debugger ended without collector result; request outcome unknown'}
     if result.get('publication')=='SENT_ONCE':
         intent=json.loads((base/'trace/publication-intent.json').read_text())
         deadline=intent['monotonic_deadline']

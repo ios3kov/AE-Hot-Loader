@@ -20,6 +20,17 @@ before execution; loaded PC/module/path and acquired function are checked live.
 
 ## Controls and admission
 
+The process uses a dedicated SBListener supplied before launch. Stopped events
+must belong to the exact LLDB process instance and PID; already restarted loader
+events do not authorize thread/frame access or Continue. Existing stable state,
+stop ID, isolated breakpoint and own main-thread checks remain mandatory.
+An observation journal is saved before cleanup; cleanup exceptions retain an
+UNKNOWN final result. If LLDB exits without that result, a separate launcher
+failure journal records its exit code and uncertain cleanup/publication. Even
+exit0 is never a successful detach. Neither path retries or terminates a target.
+The early-exit fixture variant checks an incomplete process exit and cannot admit
+AE. Nine collector source files, including lifecycle.py, bind transport proofs.
+
 The current trace requires one additional metadata-adapter event between PiPL
 creation and FCSpec. In pinned aelib at 0x63b2c, x8 contains the copied IPiPL
 interface, not the address of its InterfaceRef wrapper. Both copy branches were

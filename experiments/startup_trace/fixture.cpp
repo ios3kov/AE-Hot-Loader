@@ -14,6 +14,9 @@ extern "C" __attribute__((naked, noinline, used)) void lookup(
               "ldp x21, x22, [sp], #16\nret\n");
 }
 int main() {
+#ifdef AEHL_FIXTURE_EARLY_EXIT
+ return 23;
+#endif
  const auto cb=reinterpret_cast<std::uintptr_t>(&callback);
  const auto mf=reinterpret_cast<std::uintptr_t>(&match);
  marker(1,0x1000,cb,0,1); marker(2,0x1000,cb,0,1);

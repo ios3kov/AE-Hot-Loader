@@ -12,13 +12,15 @@ from profile import ROOT, image_record, validate, collector_hashes, fixture_site
 from image import Image
 
 
-def build():
+def build(early_exit=False):
     need(platform.system()=='Darwin' and platform.machine()=='arm64','fixture needs native macOS arm64')
     need(not subprocess.check_output(['git','status','--porcelain=v1','--untracked-files=all'],cwd=ROOT),'fixture source must be clean')
     directory=ROOT/'build-ae-hot-loader'/('trace-fixture-'+uuid.uuid4().hex)
     directory.mkdir(mode=0o700)
     target=directory/'aehl-trace-fixture'
+    need(type(early_exit) is bool,'fixture variant')
     subprocess.run(['clang++','-std=c++17','-arch','arm64','-O0','-Wall','-Wextra','-Werror',
+                    *(['-DAEHL_FIXTURE_EARLY_EXIT'] if early_exit else []),
                     str(Path(__file__).with_name('fixture.cpp')),'-o',str(target)],check=True,timeout=60)
     pin=image_record(target);im=Image(target)
     sites={role:fixture_site(im,role) for role in FIELDS}
@@ -35,4 +37,5 @@ def build():
 
 
 if __name__=='__main__':
-    p,d=build();print(json.dumps({'profile':str(p),'sha256':d}))
+    parser=argparse.ArgumentParser();parser.add_argument('--early-exit',action='store_true')
+    args=parser.parse_args();p,d=build(args.early_exit);print(json.dumps({'profile':str(p),'sha256':d}))

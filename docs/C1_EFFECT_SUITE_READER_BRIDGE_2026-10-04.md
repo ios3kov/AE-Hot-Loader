@@ -18,6 +18,63 @@ and does not become a live registration/apply/render result.
 
 
 
+## Debugger lifecycle packet — 2026-10-09
+
+User approved the proposed14-stage packet («делай»). Clean baseline
+ a7fc9e69729410d66f64033bb9c0954958eede05; rules11.1.0 exact source
+04b606845e0f73ab28b9807bb45682eae4d6ce34, AI_ENTRYPOINT first. Process1/3/4/7/
+10/11, Engineering16/34/41, Tools22, Native23, skills43 and Development handoff26
+apply. context-discipline and production-engineering admitted texts restored;
+no new skill installation/authority. Critical / Development. Retain prior source,
+Evidence, native journal absence and unknown exit cause without reinterpretation.
+
+Acceptance: reproduce the launcher missing-report mode on an owned child; process
+stop events must belong to one fresh target, stable stop ID before/after register
+capture; report observation before cleanup and journal unexpected debugger exit
+separately. No final-result forgery, automatic retry, target kill/signal, worker
+AEGP call, private API/object read, foreign session/window/project, Apply/render,
+security change or main/merge/release. One new normal-startup AE observation is
+conditional on exact review/regression/SDK and real fresh debugger controls.
+
+| Stage | Requirement / observable result | Current state |
+| --- | --- | --- |
+| DL01 | Last refusal and missing report, exact identity | PASS restored source/run/PID78203; exit cause UNKNOWN |
+| DL02 | Original failure reproduction | PASS exact original launcher with owned child exit23; native cause NOT_REPRODUCED |
+| DL03 | Stop transition handling | Implemented dedicated pre-launch listener, exact process event and stop ID guards |
+| DL04 | Unexpected debugger exit report | Implemented separate launcher-failure; even exit0 not safe detach |
+| DL05 | Cleanup/refusal reporting | Implemented observation before cleanup and final UNKNOWN on exception |
+| DL06 | Negative identity/state/cleanup controls | PASS14 focused tests; synthetic/own child only |
+| DL07 | Exact-source admission | Implemented9 source hashes; old/missing-helper proofs rejected |
+| DL08 | Real owned debugger controls | Pending clean source, complete and early-exit variants |
+| DL09 | Review/regression/SDK | Pending clean source |
+| DL10 | Conditional one isolated AE startup | NOT_RUN pending mandatory gates and fresh exclusivity |
+| DL11 | Own PiPL adapter observation | NOT_RUN; strict equality retained |
+| DL12 | Own descriptor→writer→real public key | NOT_RUN dependent on DL11 |
+| DL13 | Owned cleanup/preservation | Pending; no new host/install so far |
+| DL14 | Evidence/research publication/exact CI | Pending; no main/release |
+
+Installed LLDB2103.0.34.103 API text confirms SetListener replaces the debugger's
+normal process listener. Upstream SBLaunchInfo/SBProcess and process_events.py
+are primary API sources; their current upstream code is not the Apple host build.
+The shared listener is a concrete ownership issue and a testable hypothesis for
+state handling, not proven cause of PID78203 disappearance. No timeout widening
+or catch-and-resume: stale/foreign/mixed stops still refuse before frame access.
+
+Own original launch.py extracted from exact a7fc9e6; controlled Python child
+receives two inert stdin lines then exits23. Original helper raises without a
+failure journal; corrected helper records separate cleanup UNKNOWN. This is not
+an Adobe/LLDB crash reproduction. Cleanup now attempts every own breakpoint
+removal; failure blocks detach, and exception retains final refusal. Observation
+write failure cannot skip cleanup. Invalid launched process is UNKNOWN rather
+than certified NO_PROCESS. Request intent without final collector result remains
+UNKNOWN; no request retry. Real complete/early-exit fixtures are still required.
+
+Private working evidence build-ae-hot-loader/debugger-lifecycle-2026-10-09-a7fc9e6:
+baseline, original-regression, focused logs and skill/API provenance. Actual native
+cause, own adapter/writer/reader, full lifetime/render-readset/partial compensation
+remain UNKNOWN. C1PARTIAL, private append BLOCKED, C2/late-add NOT_RUN.
+
+
 ## Metadata adapter discriminator — 2026-10-09
 
 User authorized15-stage continuation and all necessary local Codex skills.
