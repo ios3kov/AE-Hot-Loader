@@ -7,3 +7,11 @@ def marker_match(run_id):
     # The exact target host returned only31 bytes of our previous44-byte match.
     # Preserve96 bits here; the complete nonce and source remain in the BuildID.
     return 'AEHL.M.' + run_id[:24]
+
+
+def resource_match(run_id, discriminate=False):
+    """A separate resource identity only for the read-only route experiment."""
+    match = marker_match(run_id)
+    if type(discriminate) is not bool:
+        raise ValueError('route discriminator must be Boolean')
+    return 'AEHL.R.' + run_id[:24] if discriminate else match

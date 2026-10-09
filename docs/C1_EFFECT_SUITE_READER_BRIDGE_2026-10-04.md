@@ -18,6 +18,56 @@ and does not become a live registration/apply/render result.
 
 
 
+## Competing route hypotheses and discriminator — 2026-10-09
+
+Rules11.1.0/04b6068; baseline d603581. Critical/Development, Context Discipline
+and Production Engineering. User approved maximum combined block after the seven
+competing hypotheses. Preserve product goal, source/Evidence and owned normal-quit
+authority. ONE conditional debugger-free normal-startup SDK observation; no private
+invocation, late-add, Apply/render, worker AEGP, preferences or foreign-session access.
+
+| Step | Observable acceptance | Preparation state |
+| --- | --- | --- |
+| RH01 | Restore clean branch/source and original Evidence | PASS d603581; prior exact research/macOS CI PASS |
+| RH02 | Adopted entrypoint/modules/skills | PASS pinned11.1.0; no automatic latest-main adoption |
+| RH03 | Target SDK registration and reader contracts | PASS local25.6_61; registration entry distinct from selectors; NONE/previous-key enumeration |
+| RH04 | Metadata preparation versus ordinary publication | PASS selected original callback/context/conversion; live commit not inferred |
+| RH05 | Enumerate fallback/cache/setup routes | PARTIAL static alternatives; actual own lane UNKNOWN |
+| RH06 | Interface copies and ownership edges | PARTIAL static retained interfaces; actual transfer UNKNOWN |
+| RH07 | Backward reader/index/storage slice | PASS selected exact file lane/shared FLT; live own record UNKNOWN |
+| RH08 | Forward callback/context/PiPL slice | PASS selected file slice; actual producer-to-writer gap remains |
+| RH09 | Reconcile seven hypotheses and discrimination | PREPARED contrast metadata/resource names; missing trace is not impossibility |
+| RH10 | Scoped observer and controls | 21 focused Python cases PASS; full exact-source checks/SDK build pending |
+| RH11 | ONE admitted normal-startup observation | NOT_RUN at preparation; no debugger or host object reads |
+| RH12 | Final review/Evidence/checkpoint/source/CI | Pending; no product or release gate promoted |
+
+The existing marker has the same match name in PluginDataEntryFunction2 and its
+resource PiPL. Its installed presence cannot distinguish which registration lane
+produced the record. Opt-in builder now emits compact resource AEHL.R.<nonce>
+versus unchanged callback AEHL.M.<nonce>, with the same unique display name.
+Native MarkerEffect/CalibrationObserver code, SDK API, flags, binding, deadline
+and observation guards are unchanged. DeRez reads the compiled PiPL back and
+compares full bytes. Resource identity enters the candidate manifest. Controller
+refuses this candidate in Apply/queue/render mode before installation; trace
+sentinels cannot be combined. Three complete SDK traversals compare metadata
+presence with the distinct resource name and require stable keys/project/count.
+This establishes a name-route observation only, not live pointer/writer identity,
+cache exclusion, transitive lifetime, transaction or late publication.
+
+Seven alternatives remain: two-stage publication; unobserved alternate/cache
+route; old scripting-only late signal; copied identity; startup context dependency;
+separate metadata/FLT/canonical/UI projections; multiple module/root generations.
+Selected original-file evidence already establishes shared FLT backing storage.
+Do not restart that proven static question or equate it with actual own live identity.
+Current software reader-sentinel breakpoint can interfere with strict resident
+code checks. This experiment uses the established debugger-free witness. Hardware
+LLDB scripting API was researched but not implemented/admitted as an AE remedy.
+
+Private state/evidence: build-ae-hot-loader/route-hypotheses-2026-10-09-d603581.
+C1 PARTIAL / private append BLOCKED / C2 late-add NOT_RUN. Final actual result
+will be appended here; historical sections below remain unchanged.
+
+
 ## Three decisive questions: debugger-free SDK baseline — 2026-10-09
 
 Rules 11.1.0 / 04b606845e0f73ab28b9807bb45682eae4d6ce34, pinned

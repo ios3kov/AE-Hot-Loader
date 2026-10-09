@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import platform
 import plistlib
+import re
 import subprocess
 import tempfile
 import uuid
@@ -62,10 +63,14 @@ def main():
     parser.add_argument("--sdk", type=Path, required=True, help="SDK 25.6_61 Examples directory")
     parser.add_argument("--expected-commit", required=True)
     parser.add_argument("--trace-identity", action="store_true", help="enable inert register boundary sentinels and bounded own-key repeat; never a private call")
+    parser.add_argument("--discriminate-registration-route", action="store_true",
+                        help="give resource PiPL a distinct match name; read-only startup experiment, no trace/Apply/render")
     parser.add_argument("--run-id", help="fresh 32-character lowercase hex identity for a concrete prospective installation")
     parser.add_argument("--prospective-host", type=Path, help="future authorized host executable; this argument performs no host operation")
     parser.add_argument("--prospective-module", type=Path, help="future exact observer executable location; no installation")
     args = parser.parse_args()
+    if args.discriminate_registration_route and args.trace_identity:
+        parser.error("route discriminator must run without debugger trace sentinels")
     if bool(args.prospective_host) != bool(args.prospective_module):
         parser.error("prospective host and observer location must be supplied together")
     if platform.system() != "Darwin" or platform.machine() != "arm64":
@@ -84,6 +89,7 @@ def main():
     control = output / "control"; control.mkdir(mode=0o700); control.chmod(0o700)
     marker = "AEHLMarker" + run_id[:12]; observer = "AEHLCalibration" + run_id[:12]
     match = identity.marker_match(run_id)
+    resource_match = identity.resource_match(run_id, args.discriminate_registration_route)
     build = source["commit"] + ":" + run_id
     token = uuid.uuid4().hex
     seed = int(run_id[:6], 16)
@@ -123,7 +129,7 @@ def main():
             "CFBundleVersion": "1", "LSRequiresCarbon": True}))
         resource = output / (stem + ".r")
         if stem == marker:
-            data = pipl.pipl("AEHL Marker " + run_id[:12], match)
+            data = pipl.pipl("AEHL Marker " + run_id[:12], resource_match)
             resource.write_text("data 'PiPL' (16000) {\n" + "\n".join(
                 '$"' + data[i:i+32].hex() + '"' for i in range(0, len(data), 32)) + "\n};\n")
         else:
@@ -131,6 +137,14 @@ def main():
                 'Kind { AEGP }, Name { "' + stem + '" }, Category { "General Plugin" },\n'
                 'CodeMacARM64 { "EntryPointFunc" }\n}};\n')
         run("Rez", "-useDF", "-i", str(sdk / "Resources"), str(resource), "-o", str(contents / "Resources" / (stem + ".rsrc")))
+        if stem == marker:
+            # Independently read the compiled resource, not the generated .r text.
+            dump = run("DeRez", "-useDF", "-only", "PiPL", str(contents / "Resources" / (stem + ".rsrc")))
+            compiled = bytes.fromhex("".join(re.findall(r'\$"([0-9A-Fa-f ]+)"', dump)))
+            if compiled != data:
+                raise RuntimeError("compiled marker PiPL differs from the selected resource identity")
+            resource_proof = {"status": "PASS", "match": resource_match,
+                              "pipl_sha256": hashlib.sha256(compiled).hexdigest()}
         binary = contents / "MacOS" / stem
         command = common + ["-bundle", "-fvisibility=hidden", "-Wl," + ",".join("-exported_symbol," + name for name in exports),
                   "-DAEHL_BUILD_ID=" + cpp(build), "-DAEHL_MARKER_SEED=" + str(seed) + "u",
@@ -199,9 +213,10 @@ def main():
     if checks.source_identity(ROOT, args.expected_commit) != source or sdk_files(sdk) != pins:
         raise RuntimeError("source/SDK changed during build")
     record = {"schema": "AEHL-STARTUP-CALIBRATION-1", "trace_identity": args.trace_identity, "source": source, "build_id": build,
+              "registration_route_discriminator": args.discriminate_registration_route, "resource_match_name": resource_match,
               "sdk_files": pins, "compiler": run("clang++", "--version"), "system_sdk": run("xcrun", "--show-sdk-version"),
               "run_id": run_id, "match_name": match, "seed": seed, "token": token, "config": config,
-              "bundles": bundles, "offline_tests": results,
+              "bundles": bundles, "offline_tests": results, "resource_pipl_identity": resource_proof,
               "observer_host_binding": "PROSPECTIVE_ONLY_NOT_AUTHORIZATION" if args.prospective_host else "UNCONFIGURED_INERT",
               "install": "NOT RUN", "AE_load": "NOT RUN", "AE_render": "NOT RUN", "late_registration": "NOT RUN",
               "scope": "offline diagnostic preparation; not a release or live approval"}

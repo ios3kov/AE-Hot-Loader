@@ -162,3 +162,15 @@ confirmed an empty project; normal Quit and exact owned-bundle retirement are
 recorded separately. Current stages distinguish every enumeration rejection
 without weakening acceptance or logging other effect names. The diagnostic
 repair is offline until a fresh identified run is reviewed.
+# Registration route discriminator
+
+`build.py --discriminate-registration-route` preserves the safe marker code and
+host-supplied metadata callback but gives the resource PiPL a different compact
+match name (`AEHL.R.` versus callback `AEHL.M.`), with the same unique display
+name. DeRez reads the compiled resource back and verifies its full PiPL bytes.
+This opt-in candidate permits only `run.py --observe-registry`; Apply, queue and
+render requests refuse before installation. It cannot mix trace sentinels.
+Three complete SDK samples distinguish metadata-name presence and resource-name
+presence. This is a normal-startup name-route observation, not live pointer
+identity, cache exclusion, complete registration or hot-add proof. A missing
+metadata name preserves the native refusal and original complete/partial sample.

@@ -132,6 +132,8 @@ def ready_identity(raw, record, observed):
 def request(record, observed, deadline, queue_mode=False, observation_mode=False):
     need(type(deadline) is int and deadline > 0, 'invalid deadline')
     need(not (queue_mode and observation_mode), 'request modes are mutually exclusive')
+    need(not record.get('registration_route_discriminator', False) or observation_mode,
+         'route discriminator permits read-only observation only')
     observer = record['bundles'][1]['binary_sha256']
     return ('AEHL-CAL-REQUEST-2 ' + record['token'] + ' ' + str(observed['pid']) + ' ' +
             str(birth(observed)) + ' ' + str(deadline) +
@@ -147,6 +149,7 @@ def verify_observation(record, raw_result, samples):
          result.get('stage') == 'registry-observation', 'read-only observation incomplete')
     need(len(samples) == 3, 'three bounded samples required')
     selected = []
+    resource_selected = []
     for index, raw in enumerate(samples):
         s = fields(raw, 'AEHL-CAL-NAMES-1')
         need(s.get('build') == record['build_id'] and s.get('sample') == str(index) and
@@ -156,6 +159,7 @@ def verify_observation(record, raw_result, samples):
         need(1 <= count <= 8192 and int(s['traversed']) == count and revision > 0 and
              1 <= int(s['own_observations']) <= 16, 'observation bounds differ')
         matches = []
+        resources = []
         for own in range(int(s['own_observations'])):
             def decode(field):
                 value = s[field]
@@ -168,11 +172,24 @@ def verify_observation(record, raw_result, samples):
             if match == record['match_name']:
                 need(name == record['config']['calibration_name'], 'own display name differs')
                 matches.append(int(s[f'own_{own}_key']))
+            if record.get('registration_route_discriminator', False) and match == record['resource_match_name']:
+                need(name == record['config']['calibration_name'], 'resource display name differs')
+                resources.append(int(s[f'own_{own}_key']))
+        need(len(resources) <= 1 and all(0 < key < 2**31 for key in resources),
+             'resource installed key invalid/duplicate')
+        resource_selected.append(tuple(resources))
         need(len(matches) == 1 and matches[0] != 0, 'own installed key absent/duplicate')
         selected.append((matches[0], count, revision))
     need(len(set(selected)) == 1 and str(selected[0][0]) == result.get('key'), 'key/count/project changed')
-    return {'installed_key': selected[0][0], 'count': selected[0][1], 'revision': selected[0][2],
-            'scope': 'read-only normal-startup enumeration; internal record/owner/late-add NOT PROVED'}
+    need(len(set(resource_selected)) == 1, 'resource key changed between samples')
+    answer = {'installed_key': selected[0][0], 'count': selected[0][1], 'revision': selected[0][2],
+              'scope': 'read-only normal-startup enumeration; internal record/owner/late-add NOT PROVED'}
+    if record.get('registration_route_discriminator', False):
+        resource = resource_selected[0]
+        need(not resource or resource[0] != selected[0][0], 'distinct names share an installed key')
+        answer.update(resource_key=resource[0] if resource else None,
+                      route_observation='BOTH_NAMES_LISTED' if resource else 'METADATA_NAME_LISTED_RESOURCE_NAME_ABSENT')
+    return answer
 
 
 def native_complete(record, raw_result):
@@ -268,6 +285,15 @@ def prepare(manifest, expected_hash):
     need(len(record['token']) == 32 and set(record['token']) <= set('0123456789abcdef'), 'invalid activation token')
     need(record['build_id'] == record['source']['commit'] + ':' + run and
          record['match_name'] == identity.marker_match(run) and record['seed'] == int(run[:6], 16), 'candidate identity differs')
+    route = record.get('registration_route_discriminator', False)
+    need(type(route) is bool and record.get('resource_match_name', record['match_name']) ==
+         identity.resource_match(run, route), 'resource route identity differs')
+    need(not route or record.get('trace_identity') is False, 'route discriminator cannot mix debugger trace')
+    if route:
+        proof = record.get('resource_pipl_identity', {})
+        need(proof.get('status') == 'PASS' and proof.get('match') == record['resource_match_name'] and
+             isinstance(proof.get('pipl_sha256'), str) and len(proof['pipl_sha256']) == 64 and
+             set(proof['pipl_sha256']) <= set('0123456789abcdef'), 'compiled resource identity missing')
     common.no_links(HOST); common.no_links(PLUGIN_ROOT)
     need(common.sha_trusted_binary(HOST) == HOST_SHA, 'AE binary changed')
     install = PLUGIN_ROOT / ('AEHLStartupCalibration-' + run[:12])
@@ -304,6 +330,8 @@ def run(manifest, digest, execute, queue_mode=False, observation_mode=False):
     need(not (queue_mode and observation_mode), 'execution modes are mutually exclusive')
     need(platform.system() == 'Darwin' and platform.machine() == 'arm64', 'wrong execution platform')
     record, base, install = prepare(manifest, digest)
+    need(not record.get('registration_route_discriminator', False) or observation_mode,
+         'route discriminator permits read-only observation only')
     need(not processes(), 'AE/aerender already running; preserve user session')
     if queue_mode:
         (base / 'control' / 'queue-output').mkdir(mode=0o700)

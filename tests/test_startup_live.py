@@ -102,6 +102,97 @@ class StartupLiveTests(unittest.TestCase):
         self.assertIn('REGISTRY-OBSERVATION', live.request(self.record, self.process, 1000, observation_mode=True).decode())
         with self.assertRaises(ValueError): live.request(self.record, self.process, 1000, True, True)
 
+    def route_observation(self, resource_key=None):
+        result, samples = self.observation()
+        self.record.update(registration_route_discriminator=True, resource_match_name='AEHL.R.fixture')
+        if resource_key is not None:
+            samples = [s.replace(b'own_observations=1', b'own_observations=2') +
+                       (f'own_1_key={resource_key}\nown_1_name_hex=' + b'AEHL Fixture'.hex() +
+                        '\nown_1_match_hex=' + b'AEHL.R.fixture'.hex() + '\n').encode() for s in samples]
+        return result, samples
+
+    def test_route_discriminator_names_are_bounded_and_default_is_unchanged(self):
+        run = 'c'*32
+        self.assertEqual(live.identity.resource_match(run), live.identity.marker_match(run))
+        resource = live.identity.resource_match(run, True)
+        self.assertEqual(resource, 'AEHL.R.' + run[:24])
+        self.assertEqual(len(resource), 31)
+        self.assertNotEqual(resource, live.identity.marker_match(run))
+        for invalid in (1, 'true', None):
+            with self.assertRaises(ValueError): live.identity.resource_match(run, invalid)
+
+    def test_route_discriminator_classifies_complete_metadata_only_and_both(self):
+        for key, expected in ((None, 'METADATA_NAME_LISTED_RESOURCE_NAME_ABSENT'), (43, 'BOTH_NAMES_LISTED')):
+            result, samples = self.route_observation(key)
+            answer = live.verify_observation(self.record, result, samples)
+            self.assertEqual(answer['route_observation'], expected)
+            self.assertEqual(answer['resource_key'], key)
+            self.assertIn('NOT PROVED', answer['scope'])
+
+    def test_route_discriminator_forbids_apply_and_queue_requests(self):
+        self.route_observation()
+        for queue in (False, True):
+            with self.assertRaisesRegex(ValueError, 'read-only'):
+                live.request(self.record, self.process, 1000, queue_mode=queue)
+        self.assertIn(b'REGISTRY-OBSERVATION', live.request(self.record, self.process, 1000, observation_mode=True))
+
+    def test_route_discriminator_rejects_mutating_mode_before_process_or_install(self):
+        self.route_observation()
+        with patch.object(live, 'prepare', return_value=(self.record, Path('/unused'), Path('/unused'))), \
+             patch.object(live.platform, 'system', return_value='Darwin'), \
+             patch.object(live.platform, 'machine', return_value='arm64'), \
+             patch.object(live, 'processes') as processes:
+            for queue in (False, True):
+                with self.assertRaisesRegex(ValueError, 'read-only'):
+                    live.run(Path('/unused'), 'unused', True, queue_mode=queue)
+            processes.assert_not_called()
+
+    def test_route_candidate_bad_resource_and_mixed_trace_refuse_before_host_checks(self):
+        import hashlib
+        run = 'a'*32
+        record = {'schema': 'AEHL-STARTUP-CALIBRATION-1', 'source': {'clean': True, 'commit': 'b'*40},
+                  'observer_host_binding': 'PROSPECTIVE_ONLY_NOT_AUTHORIZATION',
+                  'install': 'NOT RUN', 'AE_load': 'NOT RUN', 'AE_render': 'NOT RUN', 'late_registration': 'NOT RUN',
+                  'run_id': run, 'token': 'c'*32, 'build_id': 'b'*40+':'+run,
+                  'match_name': live.identity.marker_match(run), 'seed': int(run[:6],16),
+                  'registration_route_discriminator': True, 'resource_match_name': live.identity.resource_match(run,True),
+                  'trace_identity': False}
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder).resolve()/'manifest.json'
+            for field, value, message in (('resource_match_name', record['match_name'], 'resource route'),
+                                          ('trace_identity', True, 'mix debugger'),
+                                          ('registration_route_discriminator', 1, 'resource route'),
+                                          ('resource_pipl_identity', {}, 'compiled resource')):
+                altered = dict(record); altered[field] = value
+                raw = json.dumps(altered).encode(); path.write_bytes(raw); path.chmod(0o600)
+                with patch.object(live.common, 'no_links') as host_check, self.assertRaisesRegex(ValueError,message):
+                    live.prepare(path,hashlib.sha256(raw).hexdigest())
+                # Reading the owned manifest checks its path first; no host or
+                # installation-root validation is reached by these refusals.
+                self.assertEqual(host_check.call_count, 1)
+                self.assertEqual(host_check.call_args.args, (path,))
+
+    def test_route_discriminator_rejects_resource_alias_wrong_name_and_changed_key(self):
+        for key in (0, -1, 42, 2**31):
+            result, samples = self.route_observation(key)
+            with self.assertRaisesRegex(ValueError, 'resource|distinct'):
+                live.verify_observation(self.record, result, samples)
+        result, samples = self.route_observation(43)
+        for old, new in ((b'own_1_key=43', b'own_1_key=44'),
+                         (b'own_1_name_hex=', b'own_1_name_hex=ff')):
+            with self.assertRaises((ValueError, UnicodeError)):
+                live.verify_observation(self.record, result, [*samples[:2], samples[2].replace(old, new)])
+
+    def test_route_discriminator_rejects_duplicate_and_incomplete_resource_evidence(self):
+        result, samples = self.route_observation(43)
+        duplicate = [s.replace(b'own_observations=2', b'own_observations=3') +
+                     b'own_2_key=44\nown_2_name_hex=' + b'AEHL Fixture'.hex().encode() +
+                     b'\nown_2_match_hex=' + b'AEHL.R.fixture'.hex().encode() + b'\n' for s in samples]
+        with self.assertRaisesRegex(ValueError, 'duplicate'):
+            live.verify_observation(self.record, result, duplicate)
+        with self.assertRaises(ValueError):
+            live.verify_observation(self.record, result, [s.replace(b'complete=YES', b'complete=NO') for s in samples])
+
     def test_observation_rejects_mutation_claim_missing_samples_and_wrong_scope(self):
         result, samples = self.observation()
         for old, new in [(b'apply=NOT_RUN', b'apply=PASS'), (b'cleanup=PASS', b'cleanup=FAIL'),
