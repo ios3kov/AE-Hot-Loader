@@ -1,5 +1,13 @@
 # AE Hot Loader — current development and release plan
 
+## Current own-code classification packet — 2026-10-09
+
+Authorized16-step packet on rules11.1.0/source04b6068, baseline6a3982e.
+Preparing bounded first-byte/instruction diagnostics, own debugger metadata and
+original-file classification; validation and conditional AE run pending.
+C1PARTIAL/private append BLOCKED/C2NOT_RUN. Exact task/acceptance/Evidence:
+[single checkpoint](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#own-text-mismatch-classification--2026-10-09).
+
 ## Current binding predicate packet — 2026-10-09
 
 Rules11.1.0/source04b6068. NativeS1b7a95c5 gives precise AE refusal:

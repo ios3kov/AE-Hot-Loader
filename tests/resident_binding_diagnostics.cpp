@@ -57,6 +57,25 @@ int main(int argc, char** argv) {
                 Refused("resident-text-read", [&] {
                     EqualMemory(1, actual, 0, actual.size(), "resident-text-read", "resident-text-mismatch");
                 });
+                Difference difference;
+                Refused("resident-text-mismatch", [&] {
+                    EqualMemory(address, different, 0, different.size(), "resident-text-read", "resident-text-mismatch", &difference);
+                });
+                Require(difference.known && difference.relative_offset == 2 && difference.file_offset == 2 &&
+                        difference.expected_word == 0x04090201U && difference.actual_word == 0x04030201U);
+                EqualMemory(address, actual, 0, actual.size(), "resident-text-read", "resident-text-mismatch", &difference);
+                Require(!difference.known);
+                Refused("resident-text-read", [&] {
+                    EqualMemory(1, actual, 0, actual.size(), "resident-text-read", "resident-text-mismatch", &difference);
+                }); Require(!difference.known);
+                Bytes large(8200, 0), expected(8212, 0);
+                large[8197] = 19; expected[12 + 8197] = 23;
+                const auto large_address = reinterpret_cast<std::uintptr_t>(large.data());
+                Refused("resident-text-mismatch", [&] {
+                    EqualMemory(large_address, expected, 12, large.size(), "resident-text-read", "resident-text-mismatch", &difference);
+                });
+                Require(difference.known && difference.relative_offset == 8197 && difference.file_offset == 8209 &&
+                        difference.expected_word == (23U << 8) && difference.actual_word == (19U << 8));
             } else if (mode == "resident") {
                 Refused("resident-image-missing", [&] { Resolve(pin, {"_AEHL_OwnUnused"}); });
                 void* handle = dlopen(path.c_str(), RTLD_NOW | RTLD_LOCAL); Require(handle);

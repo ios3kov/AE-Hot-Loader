@@ -83,6 +83,12 @@ int main(int argc, char** argv) {
             Idle(nullptr, nullptr, nullptr); // One-shot refusal cannot overwrite the result.
             Require(Read("result") == result && !Exists("begin") && !Exists("names-0"));
         }
+        DiagnosticStage("resident-text-mismatch");
+        diagnostic_difference = {true, 6, 4102, 0x04030201U, 0x04090201U};
+        const auto difference_details = DiagnosticDetails();
+        Require(difference_details == "mismatch_relative_offset=6\nmismatch_file_offset=4102\nmismatch_expected_word=67305985\nmismatch_actual_word=67699201\n");
+        DiagnosticStage("resident-text-read");
+        Require(DiagnosticDetails().empty()); // A later error cannot leak stale code details.
         SuiteCases();
         std::cout << "PASS:14 owned request refusals; 5 owned SDK-acquisition cases; actual Idle stage and replay guards; Adobe_calls=0\n";
         return 0;

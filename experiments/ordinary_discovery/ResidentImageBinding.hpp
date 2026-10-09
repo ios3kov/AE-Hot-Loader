@@ -15,6 +15,11 @@
 namespace resident_binding {
 using Bytes = std::vector<unsigned char>;
 // Fixed diagnostic labels only: no paths, addresses or caller-supplied text.
+struct Difference {
+    bool known = false;
+    std::size_t relative_offset = 0, file_offset = 0;
+    std::uint32_t expected_word = 0, actual_word = 0;
+};
 class Failure : public std::runtime_error {
     const char* stage_;
 public:
@@ -254,17 +259,39 @@ inline std::vector<Loaded> Snapshot() {
     Require(_dyld_image_count() == count); return images;
 }
 inline void EqualMemory(std::uintptr_t address, const Bytes& bytes, std::size_t offset, std::size_t count,
-                        const char* read_stage = "resident-memory-read", const char* mismatch_stage = "resident-memory-mismatch") {
+                        const char* read_stage = "resident-memory-read", const char* mismatch_stage = "resident-memory-mismatch",
+                        Difference* difference = nullptr) {
+    if (difference) *difference = {};
     Range(offset, count, bytes.size()); Require(address && address <= UINTPTR_MAX - count);
     std::array<unsigned char, 8192> copy{};
     for (std::size_t i = 0; i < count;) {
         const auto n = std::min(copy.size(), count - i);
         Require(directory_spec::ReadSelfMemory(reinterpret_cast<const void*>(address + i), copy.data(), n), read_stage);
-        Require(std::memcmp(copy.data(), bytes.data() + offset + i, n) == 0, mismatch_stage); i += n;
+        if (std::memcmp(copy.data(), bytes.data() + offset + i, n) != 0) {
+            // Diagnostic only, from the already-read chunk; never reread, mask
+            // or accept changed code. At most one aligned four-byte instruction.
+            if (difference && count % 4 == 0 && offset % 4 == 0) {
+                std::size_t first = 0;
+                while (first < n && copy[first] == bytes[offset + i + first]) ++first;
+                const auto word = first - first % 4;
+                if (first < n && word + 4 <= n) {
+                    difference->relative_offset = i + first;
+                    difference->file_offset = offset + i + first;
+                    for (unsigned j = 0; j < 4; ++j) {
+                        difference->expected_word |= std::uint32_t(bytes[offset + i + word + j]) << (8 * j);
+                        difference->actual_word |= std::uint32_t(copy[word + j]) << (8 * j);
+                    }
+                    difference->known = true;
+                }
+            }
+            throw Failure(mismatch_stage);
+        }
+        i += n;
     }
 }
 struct BoundImage { Pin pin; Image image; std::map<std::string, const void*> functions; };
-inline BoundImage Resolve(const Pin& pin, const std::vector<std::string>& names) {
+inline BoundImage Resolve(const Pin& pin, const std::vector<std::string>& names, Difference* difference = nullptr) {
+    if (difference) *difference = {};
     const auto before = AtStage("resident-snapshot-first", [] { return Snapshot(); });
     const auto second = AtStage("resident-snapshot-second", [] { return Snapshot(); });
     Require(before == second, "resident-snapshot-initial-stability");
@@ -285,7 +312,7 @@ inline BoundImage Resolve(const Pin& pin, const std::vector<std::string>& names)
         "resident-header-read", "resident-header-mismatch"); });
     Require(found->header <= UINTPTR_MAX - image.text_offset, "resident-text-address");
     AtStage("resident-text-range", [&] { EqualMemory(found->header + image.text_offset, bytes,
-        image.slice + image.text_offset, image.text_size, "resident-text-read", "resident-text-mismatch"); });
+        image.slice + image.text_offset, image.text_size, "resident-text-read", "resident-text-mismatch", difference); });
     BoundImage result{pin, image, {}};
     for (const auto& e : image.exports) {
         Require(found->header <= UINTPTR_MAX - e.second, "resident-export-address");

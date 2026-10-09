@@ -42,6 +42,24 @@ def reg(frame, name, api):
     need(error.Success(),'register decode failed');return result
 
 
+def own_breakpoint_inventory(record, breaks):
+    # Debugger metadata only, not a read of target code or a proof that a patch
+    # was installed. Own images only; disabled locations remain observable.
+    rows=[]
+    for role, bp in breaks.items():
+        site=record['sites'][role]
+        if site['module'] not in ('marker','observer','fixture'): continue
+        need(bp.IsValid() and bp.GetNumLocations()==1, 'own inventory breakpoint differs')
+        location=bp.GetLocationAtIndex(0);address=location.GetAddress()
+        pin=record['modules'][site['module']]
+        need(address.IsValid() and address.GetModule().GetUUIDString().lower()==pin['uuid'] and
+             address.GetFileAddress()==site['offset'], 'own inventory location differs')
+        rows.append({'role':role,'module':site['module'],'uuid':pin['uuid'],
+                     'file_address':int(address.GetFileAddress()),'enabled':bool(bp.IsEnabled()),
+                     'location_enabled':bool(location.IsEnabled()),'hardware':bool(bp.IsHardware())})
+    return {'scope':'own debugger metadata; actual patch bytes UNKNOWN','breakpoints':rows}
+
+
 def finalize(target, process, breaks, report, output, api):
     # Evidence failure cannot prevent attempted cleanup. Preserve an incomplete
     # observation before touching debugger state; final result stays separate.
@@ -131,6 +149,7 @@ def observe(debugger, profile_path, digest, output):
                 if publication=='NOT_SENT' and (control/'ready').exists():
                     native.ready_identity(native.common.read(control/'ready',512),candidate,observed)
                     need(not any((control/x).exists() for x in ('request','consumed','result','begin')),'publication replay')
+                    write_once(output/'publication-breakpoints.json', own_breakpoint_inventory(record,breaks))
                     publication='OUTCOME_UNKNOWN';deadline=now+120
                     write_once(output/'publication-intent.json',{'state':'OUTCOME_UNKNOWN','pid':observed['pid'],'build_id':candidate['build_id'],'monotonic_deadline':deadline})
                     native.publish(control,native.request(candidate,observed,int(time.time())+110,observation_mode=True))
@@ -176,6 +195,7 @@ def observe(debugger, profile_path, digest, output):
                         accepted=trace.feed({'pid':observed['pid'],'birth':native.birth(observed),'thread':int(thread.GetThreadID()),'role':role,'values':values})
                         if accepted:write_once(output/('event-%03d.json'%len(trace.events)),trace.events[-1])
                         for r,bp in breaks.items():bp.SetEnabled(r in trace.enabled)
+                        if accepted:write_once(output/('own-breakpoints-%03d.json'%len(trace.events)), own_breakpoint_inventory(record,breaks))
                         if trace.phase=='complete':report.update(trace.result());break
                         need(process.Continue().Success(),'owned continue failed')
     except Exception as exc:
@@ -186,6 +206,8 @@ def observe(debugger, profile_path, digest, output):
         # A debugger crash during cleanup must not erase the partial evidence.
         report['publication']=publication
         report['scope']='normal startup identity only; late-add/Apply/render NOT_RUN'
+        try:write_once(output/'final-breakpoints.json', own_breakpoint_inventory(record,breaks))
+        except Exception:report['own_breakpoint_inventory']='UNKNOWN'
         # Delete our own breakpoints before detach; never quit/kill an attached
         # process on failure. The external launcher keeps debugger stdin open.
         finalize(target,process,breaks,report,output,lldb)

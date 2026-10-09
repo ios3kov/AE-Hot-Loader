@@ -139,6 +139,24 @@ class StartupTraceTests(unittest.TestCase):
         proof['owned_process']['executable']='/Applications/Other.app/Contents/MacOS/Other'
         with self.assertRaisesRegex(ValueError,'outside fixture'):profile.transport_admission(proof,candidate)
 
+    def test_own_inventory_is_metadata_only_and_preserves_disabled_locations(self):
+        from types import SimpleNamespace
+        from lldb_collector import own_breakpoint_inventory
+        uuid='a'*36
+        location=SimpleNamespace(IsEnabled=lambda:False,GetAddress=lambda:SimpleNamespace(IsValid=lambda:True,
+            GetModule=lambda:SimpleNamespace(GetUUIDString=lambda:uuid),GetFileAddress=lambda:4096))
+        bp=SimpleNamespace(IsValid=lambda:True,GetNumLocations=lambda:1,GetLocationAtIndex=lambda _:location,
+                           IsEnabled=lambda:False,IsHardware=lambda:False)
+        record={'sites':{'reader':{'module':'observer','offset':4096},'writer':{'module':'FLT','offset':8192}},
+                'modules':{'observer':{'uuid':uuid}}}
+        report=own_breakpoint_inventory(record,{'reader':bp,'writer':object()})
+        self.assertEqual(len(report['breakpoints']),1)
+        self.assertFalse(report['breakpoints'][0]['enabled']);self.assertFalse(report['breakpoints'][0]['location_enabled'])
+        self.assertEqual(report['scope'],'own debugger metadata; actual patch bytes UNKNOWN')
+        location.GetAddress=lambda:SimpleNamespace(IsValid=lambda:True,GetModule=lambda:SimpleNamespace(GetUUIDString=lambda:uuid),
+                                                   GetFileAddress=lambda:4100)
+        with self.assertRaisesRegex(ValueError,'location differs'):own_breakpoint_inventory(record,{'reader':bp})
+
     def test_journal_publication_is_complete_and_never_replaces(self):
         import os
         from lldb_collector import write_once

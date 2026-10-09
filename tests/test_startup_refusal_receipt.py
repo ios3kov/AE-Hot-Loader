@@ -30,6 +30,36 @@ class RefusalReceiptTests(unittest.TestCase):
                 self.assertEqual(receipt['stage'], stage)
                 self.assertEqual(reads, ['result']); verifier.assert_not_called()
 
+    def test_bounded_own_code_difference_survives_actual_supervisor(self):
+        raw = (b'AEHL-CAL-RESULT-2\nbuild=owned-build\nstatus=REFUSED\nstage=resident-text-mismatch\n'
+               b'cleanup=PASS\nmismatch_relative_offset=6\nmismatch_file_offset=4102\n'
+               b'mismatch_expected_word=67305985\nmismatch_actual_word=67699201\n')
+        receipt, reads, verifier = self.run_supervisor(raw)
+        self.assertEqual(receipt['own_text_difference'], {'relative_offset':6, 'file_offset':4102,
+                         'expected_word':67305985, 'actual_word':67699201})
+        self.assertEqual(reads, ['result']); verifier.assert_not_called()
+
+    def test_partial_out_of_range_and_wrong_stage_difference_are_refused(self):
+        raw = (b'AEHL-CAL-RESULT-2\nbuild=owned-build\nstatus=REFUSED\nstage=resident-text-mismatch\n'
+               b'cleanup=PASS\nmismatch_relative_offset=6\nmismatch_file_offset=4102\n'
+               b'mismatch_expected_word=67305985\nmismatch_actual_word=67699201\n')
+        for old,new in [(b'resident-text-mismatch',b'resident-text-read'),
+                        (b'mismatch_relative_offset=6',b'mismatch_relative_offset=-1'),
+                        (b'mismatch_relative_offset=6',b'mismatch_relative_offset=67108864'),
+                        (b'mismatch_file_offset=4102',b'mismatch_file_offset=4103'),
+                        (b'mismatch_file_offset=4102',b'mismatch_file_offset=4'),
+                        (b'mismatch_expected_word=67305985',b'mismatch_expected_word=4294967296'),
+                        (b'mismatch_actual_word=67699201',b'mismatch_actual_word=67305985'),
+                        (b'mismatch_actual_word=67699201',b'mismatch_actual_word=67699202'),
+                        (b'mismatch_actual_word=67699201\n',b''),
+                        (b'mismatch_actual_word=67699201',b'mismatch_actual_word=private-bytes'),
+                        (b'mismatch_actual_word=67699201',b'mismatch_actual_word=67699201\nmismatch_extra=1')]:
+            with self.subTest(new=new):
+                receipt, reads, verifier = self.run_supervisor(raw.replace(old,new))
+                self.assertEqual(receipt['status'],'FAIL_OR_UNKNOWN')
+                self.assertNotIn('own_text_difference',receipt)
+                self.assertEqual(reads,['result']);verifier.assert_not_called()
+
     def run_supervisor(self, raw, samples=None, key=42, verified_key=42):
         with tempfile.TemporaryDirectory() as folder:
             base = Path(folder).resolve()

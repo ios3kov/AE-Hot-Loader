@@ -97,6 +97,25 @@ def observation_receipt(native, record, control, key):
             need(re.fullmatch(r'-?(0|[1-9][0-9]{0,9})',error) is not None and
                  -(2**31)<=int(error)<2**31,'invalid host error diagnostic')
             receipt['host_error']=int(error)
+        keys = ('mismatch_relative_offset', 'mismatch_file_offset', 'mismatch_expected_word', 'mismatch_actual_word')
+        if any(k.startswith('mismatch_') for k in result):
+            need(stage == 'resident-text-mismatch' and all(k in result for k in keys) and
+                 {k for k in result if k.startswith('mismatch_')} == set(keys), 'invalid mismatch schema')
+            values = {}
+            for k, limit in zip(keys, (64*1024*1024, 256*1024*1024, 2**32, 2**32)):
+                value = result[k]
+                need(re.fullmatch(r'0|[1-9][0-9]{0,9}', value) is not None and int(value) < limit,
+                     'invalid mismatch diagnostic')
+                values[k] = int(value)
+            need(values[keys[1]] >= values[keys[0]] and
+                 (values[keys[1]] - values[keys[0]]) % 4 == 0 and
+                 values[keys[2]] != values[keys[3]], 'inconsistent mismatch diagnostic')
+            byte = values[keys[0]] % 4
+            need((values[keys[2]] >> (8*byte)) & 255 != (values[keys[3]] >> (8*byte)) & 255,
+                 'reported first byte is equal')
+            mask = (1 << (8*byte)) - 1
+            need(values[keys[2]] & mask == values[keys[3]] & mask, 'earlier instruction byte differs')
+            receipt['own_text_difference'] = {k.removeprefix('mismatch_'): v for k,v in values.items()}
         return receipt
     need(result.get('status')=='LISTED_OBSERVED' and result.get('cleanup')=='PASS' and
          result.get('cleanup_safe')=='YES' and result.get('stage')=='registry-observation' and

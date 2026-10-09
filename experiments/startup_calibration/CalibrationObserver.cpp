@@ -51,10 +51,24 @@ const char* diagnostic_suite = nullptr;
 A_long diagnostic_suite_version = 0;
 SPErr diagnostic_host_error = 0;
 bool diagnostic_host_error_known = false;
+resident_binding::Difference diagnostic_difference;
 void DiagnosticStage(const char* stage) noexcept {
     diagnostic_stage = stage;
+    diagnostic_difference = {};
     diagnostic_suite = nullptr; diagnostic_suite_version = 0;
     diagnostic_host_error_known = false;
+}
+std::string DiagnosticDetails() {
+    std::string details;
+    if (diagnostic_suite) details += std::string("suite=") + diagnostic_suite +
+        "\nsuite_version=" + std::to_string(diagnostic_suite_version) + "\n";
+    if (diagnostic_host_error_known) details += "host_error=" + std::to_string(diagnostic_host_error) + "\n";
+    if (diagnostic_difference.known) details +=
+        "mismatch_relative_offset=" + std::to_string(diagnostic_difference.relative_offset) +
+        "\nmismatch_file_offset=" + std::to_string(diagnostic_difference.file_offset) +
+        "\nmismatch_expected_word=" + std::to_string(diagnostic_difference.expected_word) +
+        "\nmismatch_actual_word=" + std::to_string(diagnostic_difference.actual_word) + "\n";
+    return details;
 }
 void Require(bool okay) { if (!okay) throw std::runtime_error("calibration refused"); }
 std::uint64_t Now() {
@@ -799,8 +813,13 @@ A_Err Idle(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long*) noexcept {
         DiagnosticStage("request-executable-path"); Require(Executable() == calibration_executable);
         DiagnosticStage("request-resident-binding");
         const auto self = [&] {
-            try { return resident_binding::Resolve({calibration_module, Digest(binary)}, {"_AEHL_CalibrationBuildIdentity"}); }
-            catch (const resident_binding::Failure& error) { DiagnosticStage(error.stage()); throw; }
+            resident_binding::Difference difference;
+            try { return resident_binding::Resolve({calibration_module, Digest(binary)}, {"_AEHL_CalibrationBuildIdentity"}, &difference); }
+            catch (const resident_binding::Failure& error) {
+                DiagnosticStage(error.stage());
+                if (std::strcmp(error.stage(), "resident-text-mismatch") == 0) diagnostic_difference = difference;
+                throw;
+            }
         }();
         DiagnosticStage("request-resident-symbol");
         Require(self.functions.at("_AEHL_CalibrationBuildIdentity") == reinterpret_cast<void*>(&AEHL_CalibrationBuildIdentity));
@@ -815,10 +834,7 @@ A_Err Idle(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long*) noexcept {
         names.reset();
         ObserveMarkerStartup();
         try {
-          std::string details;
-          if (diagnostic_suite) details += std::string("suite=") + diagnostic_suite +
-              "\nsuite_version=" + std::to_string(diagnostic_suite_version) + "\n";
-          if (diagnostic_host_error_known) details += "host_error=" + std::to_string(diagnostic_host_error) + "\n";
+          const auto details = DiagnosticDetails();
           Save("result", std::string("AEHL-CAL-RESULT-2\nbuild=") + calibration_build +
             "\nstatus=" + (Exists("begin") ? "PARTIAL_UNKNOWN" : "REFUSED") +
             "\nstage=" + diagnostic_stage + "\ncleanup=" + (cleanup_ok ? "PASS" : "FAIL") + "\nrender=UNKNOWN\n" + details);

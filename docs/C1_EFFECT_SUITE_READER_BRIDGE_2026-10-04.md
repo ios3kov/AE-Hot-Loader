@@ -18,6 +18,45 @@ and does not become a live registration/apply/render result.
 
 
 
+## Own text mismatch classification — 2026-10-09
+
+Rules11.1.0/source04b606845e0f73ab28b9807bb45682eae4d6ce34;
+baseline6a3982eca4c96768078253e938809e4a2c826028, clean research branch.
+User authorizes the discussed16-step packet, including ONE conditional owned
+startup after fresh regression/SDK/debugger admission and normal owned quit.
+Critical risk / Development delivery. Existing C1 PARTIAL, private append BLOCKED,
+C2/late-add NOT_RUN persist. No acceptance of changed bytes, private call,
+Apply/render, project mutation, foreign-session read, force termination or release.
+Necessary local context-discipline and production-engineering skills reused;
+canonical Process1/3/4/7/10/11, Engineering14/16/34/41, Tools22, Native23,
+Skills43 and Delivery26 selected. Other product/render obligations remain open.
+
+| Task | Requirement / observable acceptance | Check / current state |
+| --- | --- | --- |
+| TM01 | Restore exact run/source/artifacts and preserve older Evidence | clean6a3982e; private baseline inventory |
+| TM02 | Bounded first own mismatch offset and four-byte instruction | diagnostic implementation; validation pending |
+| TM03 | Read failures distinct from byte mismatch; no stale details | native memory/refusal controls pending |
+| TM04 | Map relative/file offsets, including fat slice and alignment | original-file classifier controls pending |
+| TM05 | Identify nearest own symbol; no invented function boundaries | actual own-file symtab mapping pending |
+| TM06 | Inspect original fixup/relocation metadata, not assume cause | bounded file classification pending |
+| TM07 | Actual own breakpoint UUID/file-address/enabled/hardware metadata | collector snapshots and own control pending |
+| TM08 | Own library patch control, strict refusal retained | actual debugger control pending |
+| TM09 | Own removal restores whole code equality | same owned control pending |
+| TM10 | Owned loader without debugger | plain-driver execution pending |
+| TM11 | Actual Idle serialization and supervisor reject malformed detail | actual SDK/offline adapter checks pending |
+| TM12 | Full regression and exact SDK build | pending identified clean source |
+| TM13 | Separate spec/quality/native/scanner review and fresh debugger admission | pending exact source |
+| TM14 | ONE conditional registry-only AE run; otherwise explicit blocker | NOT_RUN pending prerequisites |
+| TM15 | Safe detach, normal own quit, absence and exact pair retirement | conditional; no force/discard |
+| TM16 | Immutable private Evidence, current checkpoint/research CI reconciliation | pending; no merge/release |
+
+The original runtime predicate is resident-text-mismatch in b7a95c5; exact
+changed bytes/cause remain UNKNOWN. Original controls and source are retained.
+BRK encoding classification uses LLVM20.1.0 primary instruction definitions:
+[AArch64InstrInfo](https://github.com/llvm/llvm-project/blob/llvmorg-20.1.0/llvm/lib/Target/AArch64/AArch64InstrInfo.td#L3068),
+[AArch64InstrFormats](https://github.com/llvm/llvm-project/blob/llvmorg-20.1.0/llvm/lib/Target/AArch64/AArch64InstrFormats.td#L4749).
+Encoding or matching breakpoint metadata alone is not proof of AE root cause.
+
 ## Binding predicate packet — 2026-10-09
 
 Approved16 steps; baseline0ae6de420cf0040f7ef55d571672a9f81b889ed7.
