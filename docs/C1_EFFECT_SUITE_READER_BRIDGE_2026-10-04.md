@@ -17,6 +17,174 @@ and does not become a live registration/apply/render result.
 
 
 
+## Startup operation chain packet — 2026-10-09
+
+Baseline `508b371d681a23232eabf448af4fe769d28482f2`, initially clean research
+branch. User «делай» approves fourteen dependency-ordered steps. Accepted rules
+v11.0.0 / `e8b763ad2fefd0c5d79f865f7f017ff714cf7c23`: entrypoint first,
+Process/API-source/state/closure, Native bounds/ownership/thread/reentry,
+Tools bounded diagnostics and Release validation. Standard file research;
+process-internal observation/private publication are separate Critical operations.
+No late-add follows from a successful normal-startup trace. Historical provider/
+PNG/timeout archives, A/B/C1/C2/D/release obligations and async lifetime remain.
+
+Goal: connect actual acquired AEGPDriver readers and the own PluginSupport
+callback with preparation/publication/instance/frame dependencies. Previously
+reviewed bodies are **reused**, not counted as new discoveries. Native candidate
+`d7225b49c5dec7c9a36af4d8fbd7d64627cbeb64` and all repository executable bytes
+are unchanged. No installation, AE launch/attach/process read, fixture, window,
+signal, replay, private call, fault injection, main/merge/release in this packet.
+
+| Task | Observable acceptance | Result and limit |
+| --- | --- | --- |
+| SC01 | Exact source/SDK/module/provider pins and preserved earlier receipt | PASS original-file pins; actual acquired providers reuse the separate LC receipt below |
+| SC02 | Input PluginData context lifetime/transfer | PASS bounded file path; temporary context unwinds after conversion, not a retained registration token |
+| SC03 | Metadata consumer/conversion into PiPL | PASS file dataflow and raw callback-address materialization; virtual live receiver still UNKNOWN |
+| SC04 | Ordinary FCSpec construction | PASS selected file construction; own live descriptor UNKNOWN |
+| SC05 | Resource/provider lanes to normal writer | PARTIAL: three setup-to-AddEffect call sites; actual own startup lane UNKNOWN |
+| SC06 | Descriptor-to-acquired-reader bridge, including index/copy | PARTIAL: original-file shared FLT receiver/accessor established; own live record not observed |
+| SC07 | Descriptor owner acquisition/release | PARTIAL: retained FCSpec/routine owner pairs; full actual lifetime UNKNOWN |
+| SC08 | Nested/module/code dependencies | PARTIAL: selected releases retained; complete escaped/callback/code graph UNKNOWN |
+| SC09 | Apply task/sequence handoff | PASS selected file chain; an additional FCSpec lookup occurs during application; no new Apply performed |
+| SC10 | Render reads versus writer mutations | PARTIAL: reuse selected retained lookup; complete affected readset/synchronization UNKNOWN |
+| SC11 | Partial insertion/error compensation | PARTIAL: post-insert throw possible; local cleanup is not demonstrated registry compensation |
+| SC12 | Concrete bounded diagnostic plan and admission/refusal | PREPARED: identity-only recipe below and private JSON; executable collector/admission checks NOT RUN |
+| SC13 | One own run only if exact safe profile established | BLOCKED / NOT RUN: executable collector and own-record correlation prerequisites absent |
+| SC14 | Evidence/review/source/docs/checks/CI/preservation | Local verification and research publication closeout below; no product gate promotion |
+
+### Connected file findings and reused boundaries
+
+1. **Actual callback to metadata consumer.** On the exact pinned PluginSupport,
+   `GetPFPluginData` at `4b5d8–4b754` calls the plugin entry indirectly at `4b668`.
+   Raw ADRP/ADD bytes at `4b654/4b658` materialize callback address `4b194`, matching
+   the separate actual host-supplied callback provenance. Caller context is passed
+   as x0; suite/app name/version are other arguments. This connects the observed
+   provider to a selected file path; it does not observe its live caller objects.
+   Missing EntryFunction2 can fall back to the older entry; missing both returns3.
+2. `PluginImpl::GetPiPLs` at `4c72c–4c990` creates a local metadata context, calls
+   GetPFPluginData at `4c790`, converts with `PFPluginDataToPiPL` at `4c7a0`, and
+   can fall back to virtual resource loading when conversion is empty. It caches
+   separately retained PiPL interfaces. Normal/exceptional metadata destruction
+   and buffer recycling mean the supplied callback context cannot be saved and
+   replayed later. Callback success is metadata preparation, **not FLT commit**.
+3. Ordinary construction allocates FCSpec0x220, initializes its owner pair and
+   per-object mutex, then retains a PLUG routine descriptor through SetRoutineDescH.
+   Both path/resource and provider lanes reach post-setup and AddEffect. Raw direct
+   BL collection identifies three FiltSetup→AddEffect sites `8e05c/8e404/8e68c`,
+   SetupAEPlugin→FiltSetup `8f1ac`, loading-done→FiltSetup `8f7ec`, and AddEffect→
+   RegisterNewFilter `8bd8c`. These paths were already reviewed in the
+   [routine handoff](C1_ROUTINE_HANDOFF_2026-10-03.md) and
+   [transaction batch](C1_REGISTRY_TRANSACTION_BATCH_2026-10-03.md).
+   Loading-done also performs other initialization/diagnostics; it is not a safe
+   late-registration primitive. RegisterEffectIfMissing is the previously reviewed
+   placeholder route, not a newly loaded ordinary-effect path.
+4. The actual acquired AEGPDriver wrapper imports bind original-file readers to
+   FLT. Same singleton/indexed accessor is used by the writer and selected readers,
+   as established in LC below. Public installed key796 corresponds to candidate
+   short index94 in that file path; no own live FCSpec address was read. Enumeration
+   is cursor-based, starting at SDK `AEGP_InstalledEffectKey_NONE`, not an API
+   contract that key equals array index. Address equality or shared singleton
+   alone would not prove the required identity/ownership/late-call contract.
+5. Apply enters ordinary BEE command16, task execution and ApplyNewEffect/sequence
+   construction. The latter has an additional GetFCAddress lookup; therefore a
+   wrapper's retained owner must not be mistaken for the whole application lifetime.
+   Selected SmartRender lookup retains FCSpec while under the catalog mutex; see
+   [sequence/render dependencies](C1_SEQUENCE_RENDER_DEPENDENCIES_2026-10-04.md).
+   Nested dependencies and all remaining UI/dispatch/callback reads are unresolved.
+   Global render stop is neither universally required nor itself sufficient for
+   append. Protection must cover the actual conflicting accesses and dependencies.
+6. RegisterNewFilter updates vector, then name map, descriptor index and preferences.
+   Preferences can throw after mutation; FiltSetup may AddEffect before optional
+   ReadyFilter/lazy globals. Local unwinding does not establish compensation of
+   visible indices/names/callbacks. Notify's byte is not a proven visibility gate.
+   Unregister of a successfully committed append-only record is outside the initial
+   goal; recovery from incomplete insertion remains necessary. No faults injected.
+
+### Concrete next diagnostic, not an executable host profile
+
+The initial trace question is only **own normal-startup writer→own actual reader**.
+Apply/render are excluded from that first trace so a missing identity cannot be
+hidden behind a successful historical frame. Exact module-relative candidate
+sites and acceptance are retained in private `diagnostic-plan.json`:
+
+| Ordered observation | Required result |
+| --- | --- |
+| Own PluginDataEntryFunction2 boundary | Unique candidate/match name, main thread, new owned PID/birth and supplied callback provenance |
+| PluginSupport4b668 and GetPiPLs4c790/4c7a0 | Observe context/transfer while alive; no stored-context replay or guessed dereference |
+| FiltSetup selected AddEffect lane and writer8bd8c | Descriptor and root addresses from individually decoded register sites; retain actual lane/owner transfer |
+| Own acquired Match42554 through FLT lookup4b9c | Correlate the same public key/match name request to its actual lookup result and earlier writer descriptor |
+| Stop at proven identity or first unmet gate | Missing correlation = UNKNOWN; count/timing/adjacent events do not substitute for transfer |
+
+This requires a reviewed collector for image-relative register-site observation,
+validated operand sites, own-record correlation and independent limit/refusal
+checks. It is **not implemented or admitted** here. The private specification is
+inert and never launches a process. Prospective limits: one new owned process,
+one request, at most256 events/1MiB, startup180s, native110s/controller120s with
+no renewed deadline or retry. Current process absence, new PID/birth, exact new
+candidate and blank-project lifecycle must be checked immediately before a run.
+No expressions/private calls, arbitrary object reads, callback replacement,
+setter replay, fault injection or signal-based shutdown are part of that plan.
+
+The conditional SC13 was therefore not run. Repeating the already established
+normal startup PNG or read-only enumeration would not resolve this identity gap.
+The next implementation task is that bounded passive collector and its admission
+controls, followed by one own identity trace if its exact prerequisites pass.
+An observed bridge would still leave append safety, partial recovery and full
+render dependency proof open. Permission cannot supply a missing ABI/lifetime.
+
+### Bounded verification and preservation
+
+Private evidence root: `build-ae-hot-loader/startup-operation-chain-2026-10-09-508b371`.
+Fresh selected recapture:23 complete bodies/6094 instructions/1147 direct branch
+targets. Independent parser rechecks file SHA256, arm64 UUID, nlist next-symbol
+bounds, raw/transcript digests, all1712 direct and conditional branch destinations;
+PASS. Changed-boundary negative control refuses. Raw ADRP/ADD callback address
+and the retained direct caller lists PASS. This is original-file evidence, not
+live execution and not23 new discoveries. Full Adobe binaries and SDK/project/
+recovery files are not packaged.
+
+Tool-only corrections retained: observed BEE271537 symbols exceeded the initial
+200000 parser bound (adjusted to bounded300000 with file checks); a substring
+error check mistook runtime_error symbol text for a diagnostic (anchored); the
+independent verifier used the wrong UUID key and initially mistook TBZ bit-number
+for a branch target (corrected). Initial scripts are retained. No target bytes
+changed, no AE/plugin failure inferred. Separate review checks metadata lifetime,
+virtual/indirect boundaries, additional apply lookup, post-insertion failure and
+non-equivalence of commit/notify/cleanup. Reused native/offline tests preserve
+their original candidate identity; new evidence scripts have their own checks.
+
+C1 PARTIAL; newly hot-added ordinary effect/key/apply/frame C2 NOT RUN. Private
+append BLOCKED; actual live own descriptor/complete lifetime/readset/commit/
+partial recovery UNKNOWN; async receipt lifetime still UNKNOWN. Prior source,
+installed-pair retirement, provider observations, PNG control, timeout archive
+and crash/exit incidents remain unchanged. No new cleanup needed; all uncertain
+and historical materials retained. Research-source validation/publication follows
+below, separately from product, host execution and release.
+
+### Research-source closeout receipt
+
+PASS:158 local links/54 table structures at the pre-footer source, all408
+unchanged baseline files byte-identical, all executable source unchanged, diff
+check. Exact host/AEGPDriver/SDK header SHA256 and prior provider archive unchanged.
+No new native compilation/full local regression: unchanged d7225b4 retains its
+identified522Python/62Node/22-stage and SDK evidence; CI checks this source separately.
+Initial whole-directory scanner exit2 was INCOMPLETE because ignored/private
+build text exhausted its budget. Retained, not acceptance. Complete412-file
+tracked snapshot:272 supported/140 unsupported/0 omissions, raw exit1 with the
+same reviewed local CLI false positive `e2999cfe8b5b3a6bd27f0a62`; no suppression
+or scanner/product PASS claim. Native unsupported code unchanged/reused review.
+
+Private archive `private-evidence-2026-10-09/AEHL-startup-operation-chain-508b371.zip`,
+SHA256 `604b80d9b51ec24bc1853ad8d97be0544f4e599ca5595a76c77b868571adcb2f`:
+478 payload members, CRC/unique members/all SHA256 PASS. Contains exact pre-footer
+tracked source snapshot, selected original transcripts, reproducible collectors/
+independent verifier, inert diagnostic specification and review; no full Adobe
+binaries/SDK/project/recovery files. This digest footer is separately bound to
+final source to avoid a circular archive hash. Prior Evidence untouched.
+SC14 bounded research closure complete locally; commit/push/exact-head CI receipts
+are stored alongside the archive receipt, not inferred from earlier CI. No
+merge/release authorization is consumed or new host safety claim made.
+
 ## Late READY continuation — 2026-10-09
 
 Baseline `d9fb66e0ccc921c37da24040cdb8f1a845be3e64`, clean research branch.

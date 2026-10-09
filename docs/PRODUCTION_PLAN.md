@@ -1,5 +1,22 @@
 # AE Hot Loader — current development and release plan
 
+## Current startup-operation chain — 2026-10-09
+
+Fourteen-step packet: bounded file verification/reconciliation and concrete
+identity-only diagnostic plan prepared. Actual callback4b194 binds to the metadata
+consumer; its temporary context is not a retained publication token. Resource/
+provider writer lanes and selected reader/apply/render/partial-error boundaries
+are reused, not counted as new findings.23 bodies/6094 instructions; independent
+1712 branch targets verified. Native d7225b4 unchanged. Own live descriptor,
+complete affected readset/lifetime and partial compensation remain UNKNOWN.
+C1 PARTIAL; private append BLOCKED; C2 NOT RUN. Conditional startup trace NOT RUN:
+reviewed bounded collector and own-record correlation are still required. No AE,
+installation, private reads/calls, frame, signals or release in this packet.
+Next: implement bounded passive register-site collector/admission controls, then
+one own normal-startup identity trace only if checks pass. Historical Evidence
+retained. [SC01–SC14 and exact limits](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#startup-operation-chain-packet--2026-10-09).
+
+
 ## Current acquired reader bridge — 2026-10-09
 
 Same owned d7225b4 session reached late READY; first read-only query PASS:
