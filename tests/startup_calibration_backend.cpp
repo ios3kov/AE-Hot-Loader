@@ -165,8 +165,31 @@ int main(int argc, char** argv) {
         Check(Read("result").find("status=LISTED_OBSERVED") != std::string::npos &&
             Read("result").find("apply=NOT_RUN") != std::string::npos && Read("cleanup-safe").find("\n9\n") != std::string::npos);
         Check(!Exists("begin") && !Exists("render-started") && comp_calls == 0 && solid_calls == 0 && depth_calls == 0);
+#ifdef AEHL_REGISTRATION_ROUTE_RESOURCE_MATCH
+        static int route_mode = 0;
+        effects.AEGP_GetNumInstalledEffects = [](A_long* value)->A_Err { *value = route_mode == 2 ? 2 : 1; return 0; };
+        effects.AEGP_GetNextInstalledEffect = [](AEGP_InstalledEffectKey prev, AEGP_InstalledEffectKey* next)->A_Err {
+            *next = !prev ? 88 : route_mode == 2 && prev == 88 ? 89 : 0; return 0; };
+        effects.AEGP_GetEffectMatchName = [](AEGP_InstalledEffectKey key, A_char* value)->A_Err {
+            std::strcpy(value, route_mode == 1 || key == 89 ? AEHL_REGISTRATION_ROUTE_RESOURCE_MATCH : calibration_match); return 0; };
+        for (route_mode = 0; route_mode < 3; ++route_mode) {
+            const auto path = base + "/route-" + std::to_string(route_mode);
+            Check(std::filesystem::create_directory(path) && chmod(path.c_str(),0700) == 0);
+            calibration_control = path.c_str();
+            names = std::make_unique<PendingNames>(MonotonicMillis()-4000);
+            names->request.deadline = ::Now()+120;
+            names->backend = std::make_unique<Backend>(names->request.deadline);
+            Check(PollNames() && PollNames() && PollNames() && !names);
+            Check(Read("result").find("status=LISTED_OBSERVED") != std::string::npos && Exists("names-2") &&
+                  Exists("cleanup-safe") && !Exists("begin") && !Exists("render-started") &&
+                  comp_calls == 0 && solid_calls == 0 && depth_calls == 0);
+        }
+#endif
         registry_observation = false;
         std::cout << "PASS:13 SDK-backend cases; project/deadline/color refusals stop later mutation; fixed diagnostics only; image bounds and read-only finish checked; Adobe_calls=0\n";
+#ifdef AEHL_REGISTRATION_ROUTE_RESOURCE_MATCH
+        std::cout << "PASS:3 actual observer route cases M-only/R-only/both; three samples and no mutation; Adobe_calls=0\n";
+#endif
         return 0;
     } catch (const std::exception& error) { std::cerr << error.what() << '\n'; return 1; }
 }

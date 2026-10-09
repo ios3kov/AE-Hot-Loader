@@ -141,20 +141,30 @@ def request(record, observed, deadline, queue_mode=False, observation_mode=False
              ' OWNED-STARTUP-QUEUE-CONTROL ' if queue_mode else ' OWNED-STARTUP-APPLY-RENDER ') + observer + '\n').encode('ascii')
 
 
-def verify_observation(record, raw_result, samples):
+def observation_complete(record, raw_result):
     result = fields(raw_result, 'AEHL-CAL-RESULT-2')
+    need(result.get('build') == record['build_id'], 'observation build differs')
+    need(result.get('status') == 'LISTED_OBSERVED',
+         'native observation refused/incomplete: status=' + result.get('status', 'UNKNOWN') +
+         '; stage=' + result.get('stage', 'UNKNOWN'))
     need(result.get('build') == record['build_id'] and result.get('status') == 'LISTED_OBSERVED' and
          result.get('cleanup') == 'PASS' and result.get('cleanup_safe') == 'YES' and
          result.get('render') == result.get('apply') == 'NOT_RUN' and
          result.get('stage') == 'registry-observation', 'read-only observation incomplete')
+    return result
+
+
+def verify_observation(record, raw_result, samples):
+    result = observation_complete(record, raw_result)
     need(len(samples) == 3, 'three bounded samples required')
     selected = []
+    metadata_selected = []
     resource_selected = []
     for index, raw in enumerate(samples):
         s = fields(raw, 'AEHL-CAL-NAMES-1')
         need(s.get('build') == record['build_id'] and s.get('sample') == str(index) and
-             s.get('complete') == 'YES' and s.get('stage') == 'name-observation-complete' and
-             s.get('exact') == '1', 'name sample incomplete or wrong identity')
+             s.get('complete') == 'YES' and s.get('stage') == 'name-observation-complete',
+             'name sample incomplete or wrong identity')
         count, revision = int(s['count']), int(s['revision'])
         need(1 <= count <= 8192 and int(s['traversed']) == count and revision > 0 and
              1 <= int(s['own_observations']) <= 16, 'observation bounds differ')
@@ -178,17 +188,26 @@ def verify_observation(record, raw_result, samples):
         need(len(resources) <= 1 and all(0 < key < 2**31 for key in resources),
              'resource installed key invalid/duplicate')
         resource_selected.append(tuple(resources))
-        need(len(matches) == 1 and matches[0] != 0, 'own installed key absent/duplicate')
-        selected.append((matches[0], count, revision))
+        contrast = record.get('registration_route_discriminator', False)
+        need(len(matches) <= 1 and all(key != 0 for key in matches) and
+             s.get('exact') == str(len(matches)), 'own installed key/exact count invalid/duplicate')
+        need(matches or (contrast and resources), 'own installed key absent')
+        metadata_selected.append(tuple(matches))
+        selected.append(((matches or resources)[0], count, revision))
     need(len(set(selected)) == 1 and str(selected[0][0]) == result.get('key'), 'key/count/project changed')
     need(len(set(resource_selected)) == 1, 'resource key changed between samples')
+    need(len(set(metadata_selected)) == 1, 'metadata key changed between samples')
     answer = {'installed_key': selected[0][0], 'count': selected[0][1], 'revision': selected[0][2],
               'scope': 'read-only normal-startup enumeration; internal record/owner/late-add NOT PROVED'}
     if record.get('registration_route_discriminator', False):
         resource = resource_selected[0]
-        need(not resource or resource[0] != selected[0][0], 'distinct names share an installed key')
-        answer.update(resource_key=resource[0] if resource else None,
-                      route_observation='BOTH_NAMES_LISTED' if resource else 'METADATA_NAME_LISTED_RESOURCE_NAME_ABSENT')
+        metadata = metadata_selected[0]
+        need(not (resource and metadata) or resource[0] != metadata[0], 'distinct names share an installed key')
+        answer.update(metadata_key=metadata[0] if metadata else None,
+                      resource_key=resource[0] if resource else None,
+                      route_observation='BOTH_NAMES_LISTED' if metadata and resource else
+                      'METADATA_NAME_LISTED_RESOURCE_NAME_ABSENT' if metadata else
+                      'RESOURCE_NAME_LISTED_METADATA_NAME_ABSENT')
     return answer
 
 
@@ -394,6 +413,7 @@ def run(manifest, digest, execute, queue_mode=False, observation_mode=False):
         raw_result = common.read(control / 'result', 4096)
         report['native_result'] = fields(raw_result, 'AEHL-CAL-RESULT-2')
         if observation_mode:
+            observation_complete(record, raw_result) # Refusal takes precedence over absent later samples.
             need(not any((control / leaf).exists() for leaf in ('begin', 'render-started', 'queue-output', 'frame.argb')),
                  'read-only request unexpectedly entered mutation/render')
             comparison = verify_observation(record, raw_result,

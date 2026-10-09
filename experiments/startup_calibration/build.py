@@ -126,6 +126,8 @@ def main():
               "-I" + str(headers), "-I" + str(headers / "SP"), "-I" + str(output)]
     if args.trace_identity:
         common += ["-DAEHL_TRACE_IDENTITY=1"]
+    if args.discriminate_registration_route:
+        common += ["-DAEHL_REGISTRATION_ROUTE_RESOURCE_MATCH=" + cpp(resource_match)]
     for stem, source_name, exports in [
         (marker, "MarkerEffect.cpp", ["_EffectMain", "_AEHL_MarkerBuildIdentity", "_PluginDataEntryFunction2", "_AEHL_MarkerStartupState"]),
         (observer, "CalibrationObserver.cpp", ["_EntryPointFunc", "_AEHL_CalibrationBuildIdentity"])]:

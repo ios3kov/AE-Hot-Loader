@@ -727,6 +727,7 @@ struct PendingNames {
     std::uint64_t start;
     std::int64_t revision = 0;
     std::int32_t key = 0, count = 0;
+    startup_names::Selection selection;
     explicit PendingNames(std::uint64_t time = MonotonicMillis()) : schedule(time), start(time) {}
 };
 std::unique_ptr<PendingNames> names;
@@ -794,12 +795,15 @@ bool PollNames() {
     Require(names->revision==snapshot.revision);
     if (registry_observation) {
         diagnostic_stage="registry-observation-own-marker";
-        Require(snapshot.exact == 1);
-        std::int32_t key = 0;
-        for (const auto& entry : snapshot.own)
-            if (entry.match == calibration_match && entry.name == calibration_name) key = entry.key;
-        Require(key != 0);
-        if (index == 0) { names->key = key; names->count = snapshot.count; }
+        const auto selected = startup_names::Select(snapshot, calibration_name, calibration_match
+#ifdef AEHL_REGISTRATION_ROUTE_RESOURCE_MATCH
+            , AEHL_REGISTRATION_ROUTE_RESOURCE_MATCH
+#endif
+        );
+        Require(selected.valid);
+        const auto key = selected.Key();
+        if (index == 0) { names->key = key; names->count = snapshot.count; names->selection = selected; }
+        Require(selected.metadata == names->selection.metadata && selected.resource == names->selection.resource);
         Require(key == names->key && snapshot.count == names->count);
     }
     names->schedule.Advance();
@@ -844,6 +848,9 @@ A_Err Idle(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long*) noexcept {
              ownership == "OWNED-STARTUP-REGISTRY-OBSERVATION"));
         queue_control=ownership == "OWNED-STARTUP-QUEUE-CONTROL";
         registry_observation=ownership == "OWNED-STARTUP-REGISTRY-OBSERVATION";
+#ifdef AEHL_REGISTRATION_ROUTE_RESOURCE_MATCH
+        Require(registry_observation); // Contrast artifact cannot enter Apply/render even via a direct request.
+#endif
         request.owned_blank_project = true;
         DiagnosticStage("request-process-birth");
         const startup_calibration::Authorization bound{calibration_token, getpid(), Birth(), 0, true};

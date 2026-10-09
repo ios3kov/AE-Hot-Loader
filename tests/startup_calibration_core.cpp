@@ -85,9 +85,33 @@ void NameCases() {
         Check(caught && b.applies==0 && b.creates==0);++cases; }
     std::cout << "NAME_PROJECTION_CASES=" << cases << " PASS; Adobe_calls=0; apply=NOT_RUN\n";
 }
+void RouteCases() {
+    int cases = 0;
+    for (int mode = 0; mode < 12; ++mode) {
+        startup_names::Snapshot s; s.complete = true; s.exact = 1;
+        s.own = {{42,"own","M"}};
+        if (mode == 1) { s.exact = 0; s.own = {{43,"own","R"}}; }
+        if (mode == 2) s.own.push_back({43,"own","R"});
+        if (mode == 3) s.complete = false;
+        if (mode == 4) s.own[0].name = "foreign";
+        if (mode == 5) s.own[0].key = 0;
+        if (mode == 6) s.own.push_back({44,"own","M"});
+        if (mode == 7) s.own = {{43,"own","R"},{44,"own","R"}};
+        if (mode == 8) s.own.push_back({42,"own","R"});
+        if (mode == 9) s.exact = 0;
+        if (mode == 10) { s.exact = 0; s.own.clear(); }
+        if (mode == 11) { s.exact = 0; s.own = {{43,"own","R"}}; }
+        const auto selection = startup_names::Select(s,"own","M",mode == 11 ? "" : "R");
+        Check(selection.valid == (mode <= 2));
+        if (mode <= 2) Check(selection.Key() == (mode == 1 ? 43 : 42));
+        ++cases;
+    }
+    std::cout << "ROUTE_SELECTION_CASES=" << cases << " PASS; Adobe_calls=0; apply=NOT_RUN\n";
+}
 int main(int argc, char** argv) {
     try {
         if (argc==2 && std::string(argv[1])=="names") { NameCases();return 0; }
+        if (argc==2 && std::string(argv[1])=="routes") { RouteCases();return 0; }
         if (argc == 2 && std::string(argv[1]) == "pixels") {
             std::vector<unsigned char> bytes(19 * 4 * 11 + 11 * 7, 0xA5);
             Check(startup_marker::Render(bytes.data(), 19, 11, 83, 0x345678));

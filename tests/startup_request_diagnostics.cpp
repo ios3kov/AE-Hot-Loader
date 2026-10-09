@@ -115,8 +115,24 @@ int main(int argc, char** argv) {
         }
         diagnostic_clock.enabled=false;
 #endif
+#ifdef AEHL_REGISTRATION_ROUTE_RESOURCE_MATCH
+        for (const auto* ownership : {"OWNED-STARTUP-APPLY-RENDER", "OWNED-STARTUP-QUEUE-CONTROL"}) {
+            const auto path=base+"/forbidden-"+std::string(ownership);
+            Require(std::filesystem::create_directory(path) && chmod(path.c_str(),0700)==0);
+            calibration_control=path.c_str();consumed=false;cleanup_ok=true;
+            Save("request",std::string("AEHL-CAL-REQUEST-2 ")+calibration_token+" "+
+                std::to_string(getpid())+" "+std::to_string(Birth())+" "+std::to_string(Now()+110)+
+                " "+ownership+" "+binary_hash+"\n");
+            Idle(nullptr,nullptr,nullptr);
+            Require(Read("result").find("\nstage=request-parse-contract\n")!=std::string::npos &&
+                !Exists("request-binding-before") && !Exists("begin") && !Exists("names-0") && !names);
+        }
+#endif
         SuiteCases();
         std::cout << "PASS:14 owned request refusals; 5 owned SDK-acquisition cases; actual Idle stage and replay guards; Adobe_calls=0\n";
+#ifdef AEHL_REGISTRATION_ROUTE_RESOURCE_MATCH
+        std::cout << "PASS:2 direct contrast-request Apply/queue refusals before resident binding or Backend; Adobe_calls=0\n";
+#endif
 #ifdef AEHL_CALIBRATION_DIAGNOSTIC_CLOCK_TEST
         std::cout<<"PASS:5 actual Idle clock scenarios; one-shot timing; OS_clock_changes=0; Adobe_calls=0\n";
 #endif

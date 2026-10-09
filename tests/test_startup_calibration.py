@@ -41,6 +41,10 @@ class StartupCalibrationTests(unittest.TestCase):
         result = subprocess.run([str(self.binary), "names"], check=True, capture_output=True, timeout=15)
         self.assertEqual(result.stdout, b"NAME_PROJECTION_CASES=17 PASS; Adobe_calls=0; apply=NOT_RUN\n")
 
+    def test_route_selection_requires_exact_owned_names_and_complete_unique_keys(self):
+        result = subprocess.run([str(self.binary), "routes"], check=True, capture_output=True, timeout=15)
+        self.assertEqual(result.stdout, b"ROUTE_SELECTION_CASES=12 PASS; Adobe_calls=0; apply=NOT_RUN\n")
+
     def test_actual_color_script_refusals_stop_later_setters_and_hide_raw_errors(self):
         result = subprocess.run(["node", str(ROOT / "tests/startup_color_script.mjs")],
             check=True, stdin=subprocess.DEVNULL, capture_output=True, timeout=15)

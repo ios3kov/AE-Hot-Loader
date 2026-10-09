@@ -137,6 +137,27 @@ class StartupLiveTests(unittest.TestCase):
             self.assertEqual(answer['resource_key'], key)
             self.assertIn('NOT PROVED', answer['scope'])
 
+    def test_route_discriminator_resource_only_requires_three_complete_consistent_samples(self):
+        result, samples = self.route_observation()
+        samples = [s.replace(b'exact=1', b'exact=0').replace(b'AEHL.M.fixture'.hex().encode(),
+                   b'AEHL.R.fixture'.hex().encode()) for s in samples]
+        answer = live.verify_observation(self.record, result, samples)
+        self.assertEqual(answer['route_observation'], 'RESOURCE_NAME_LISTED_METADATA_NAME_ABSENT')
+        self.assertIsNone(answer['metadata_key']); self.assertEqual(answer['resource_key'], 42)
+        with self.assertRaises(ValueError): live.verify_observation(self.record, result, samples[:1])
+        for old, new in ((b'exact=0', b'exact=1'), (b'own_0_key=42', b'own_0_key=43')):
+            with self.assertRaises(ValueError):
+                live.verify_observation(self.record, result, [*samples[:2],samples[2].replace(old,new)])
+        self.record['registration_route_discriminator'] = False
+        with self.assertRaises(ValueError): live.verify_observation(self.record, result, samples)
+
+    def test_observation_native_refusal_is_reported_before_missing_sample_files(self):
+        result, _ = self.observation()
+        refused = result.replace(b'status=LISTED_OBSERVED', b'status=REFUSED').replace(
+            b'stage=registry-observation', b'stage=registry-observation-own-marker')
+        with self.assertRaisesRegex(ValueError, 'REFUSED; stage=registry-observation-own-marker'):
+            live.observation_complete(self.record, refused)
+
     def test_route_discriminator_forbids_apply_and_queue_requests(self):
         self.route_observation()
         for queue in (False, True):

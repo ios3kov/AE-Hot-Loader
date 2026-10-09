@@ -13,6 +13,33 @@ struct Snapshot {
     std::int64_t revision = 0;
     std::vector<Entry> own;
 };
+struct Selection {
+    bool valid = false;
+    std::int32_t metadata = 0, resource = 0;
+    std::int32_t Key() const { return metadata ? metadata : resource; }
+};
+// Only a read-only route experiment can supply a second exact match identity.
+// No display-only fallback, duplicate identity, key alias or partial traversal.
+inline Selection Select(const Snapshot& s, const std::string& name,
+                        const std::string& metadata, const std::string& resource = {}) {
+    Selection result;
+    if (!s.complete || metadata.empty() || resource == metadata) return result;
+    int matches = 0;
+    for (const auto& entry : s.own) {
+        const bool m = entry.match == metadata;
+        const bool r = !resource.empty() && entry.match == resource;
+        if (!m && !r) continue;
+        if (entry.name != name || !entry.key) return {};
+        auto& key = m ? result.metadata : result.resource;
+        if (key) return {};
+        key = entry.key;
+        if (m) ++matches;
+    }
+    if (s.exact != matches || !result.Key() ||
+        (result.metadata && result.metadata == result.resource)) return {};
+    result.valid = true;
+    return result;
+}
 // Read-only evidence, never an Apply decision. Only our identifiable names are
 // retained; all other names are transient. Keys remain opaque cursor values.
 template<class Backend>
