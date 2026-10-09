@@ -1,5 +1,16 @@
 # AE Hot Loader — current development status
 
+## Current passive collector preparation — 2026-10-09
+
+Rules11.0.1 accepted at f80eaa8.16-step packet implements exact register-site
+admission, own native sentinels, ordered bounded correlator and separate public
+receipt verification.29 focused startup tests PASS (9 new identity/refusal
+controls). Native candidate/full regression pending. Real owned fixture
+transport is not yet PASS; synchronous LLDB launch stopped inside startup and
+preserved the own control/debugger for attention. AE install/launch NOT_RUN;
+private append BLOCKED, C1 PARTIAL, C2 NOT_RUN.
+See [current packet and bounded review inventory](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#passive-owned-startup-trace--2026-10-09).
+
 ## Current startup-operation chain — 2026-10-09
 
 Fourteen-step packet: bounded file verification/reconciliation and concrete

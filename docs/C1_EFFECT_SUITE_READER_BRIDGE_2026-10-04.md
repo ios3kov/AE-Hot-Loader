@@ -17,6 +17,80 @@ and does not become a live registration/apply/render result.
 
 
 
+## Passive owned startup trace — 2026-10-09
+
+User «ДЕЛАЙ» authorizes the proposed16-step implementation/verification packet,
+including one conditional fresh owned identity-only startup observation. Initial
+clean research source `f0d67514d9c7247abd8fcb6946a5180e70c5d184`; old native d7225b4
+and Evidence retained. Rules11.0.1 / `f80eaa8534987ddedaf44720ca8a85dfe122ce14`,
+annotated tag1482f6166eb5b89e21fc6594e9aab430ba01b93a verified to that commit.
+AI_ENTRYPOINT first; Process1/3/4/7/10/11, Engineering14/34/41, Tools22, Native23,
+Release26 apply. Editorial patch preserves mandatory scope/IDs; native review
+inventory retained. Documentation adoption Light; collector/native integration
+Critical / Development. Production-engineering implementation/review/checks.
+
+Acceptance: exact unique own marker callback context → host conversion → actual
+PiPL interface → FCSpec used by normal startup writer → same FCSpec/root used by
+actual acquired public match-name reader, with register-site/event/process/build
+identity. A trace is observation, not proof of late-call safety or atomic commit.
+No private function invocation, expressions, object memory reads, registry mutation,
+fault injection, existing-process attach, render/Apply, signals, settings change,
+foreign sessions, main/merge/release. Debugger software breakpoints are confined
+to the newly launched owned process and removed on detach; no disk image patch.
+
+| Task | Acceptance | State |
+| --- | --- | --- |
+| PT01 | Explicit v11.0.1 adoption/source/compatibility | PASS: accepted exact release source |
+| PT02 | Restore exact source/AE/SDK/Evidence | Baseline restored; exact new SDK candidate pending |
+| PT03 | Exact decoded register sites/operand/raw bytes | Prepared from original bodies; candidate admission pending |
+| PT04 | Passive bounded collector | IN PROGRESS |
+| PT05 | File SHA/UUID and mapped image/PC binding | IN PROGRESS |
+| PT06 | Unique own sentinel/context/thread filtering | IN PROGRESS |
+| PT07 | Context→PiPL→FCSpec→writer register flow | IN PROGRESS |
+| PT08 | Own public key/function bracket→lookup result | IN PROGRESS |
+| PT09 | Event/log/deadline/cancellation limits, no kill/retry | IN PROGRESS |
+| PT10 | Wrong process/build/inputs/order and bounds refusals | PASS:9 focused controls; synthetic only |
+| PT11 | Spec/quality and native affected-function inventory | Bounded review recorded; actual SDK build pending |
+| PT12 | Exact clean candidate build/SDK/control checks | NOT RUN |
+| PT13 | Fresh absence, exact own pair, new owned session only | CONDITIONAL / NOT RUN |
+| PT14 | One writer→reader identity trace, no render | CONDITIONAL / NOT RUN |
+| PT15 | Interpret trace or precise refusal, preserve unknowns | NOT RUN |
+| PT16 | Evidence/status/checks/research commit/push/exact CI | IN PROGRESS |
+
+One-shot startup180s and subsequent native110/controller120s caps, at most256
+accepted events/1MiB; no renewed deadline/restart. All stop events additionally
+have a bounded allowance to refuse excessive unrelated traffic. SDK observer
+keeps blank-project guard and existing request identity/consumption; only trace
+build adds inert exported register boundary sentinels and one bounded same-key
+GetEffectMatchName repetition after the exact own match was already found.
+Actual main-thread proof and acquire provider address are passed as register
+arguments, not guessed from catalog strings or timestamps. No own identity by
+adjacency. Missing chain/refusal leaves C1PARTIAL/C2NOT RUN/appendBLOCKED.
+
+### PT11 separate review and native function inventory
+
+Spec review: own context/interface/FCSpec equality is required, not adjacency.
+Pointer correspondence observes host data flow only; normal writer return is not
+an atomic transaction or permission for a late call. Public receipt and register
+trace remain separate witnesses. Quality review corrected publication ambiguity
+(intent UNKNOWN until atomic request succeeds), pre-mutation event budget checks,
+profile ownership/digest/duplicate checks and dynamic sentinel/source binding.
+A fresh process launch blocked inside LLDB is preserved, not relabeled timeout
+PASS or a reason to launch AE. Actual debugger control remains admission-critical.
+
+| Native function | Review scope | Result / limits |
+| --- | --- | --- |
+| Marker AEHL_TraceMarkerBoundary (new) | Arguments/register barrier, no heap/host calls; stack callback borrowed | Reviewed; native build pending |
+| PluginDataEntryFunction2 (modified) | Sentinels bracket same existing host callback; actual main-thread proof/status | Reviewed; startup proof pending |
+| Observer AEHL_TraceReaderBoundary (new) | Scalar key/provider/status only; no resource ownership | Reviewed; native build pending |
+| Backend::Match (modified) | Same own key, bounded buffers, acquired provider, main/deadline guard, one public repeat | Reviewed; SDK regression pending |
+| Other native functions | Unchanged; existing project guards/SDK leases/frame path retained | Not re-reviewed in this packet; prior evidence applies only to prior bytes |
+
+Review inventory is bounded, not a claim that every Adobe consumer or native
+function has been reviewed. Private offsets/register meanings derive from the
+previous complete original-file bodies; actual PC/UUID/file mapping remains a
+live obligation. The isolated fixture tests collector transport only.
+
 ## Startup operation chain packet — 2026-10-09
 
 Baseline `508b371d681a23232eabf448af4fe769d28482f2`, initially clean research

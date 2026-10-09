@@ -61,6 +61,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sdk", type=Path, required=True, help="SDK 25.6_61 Examples directory")
     parser.add_argument("--expected-commit", required=True)
+    parser.add_argument("--trace-identity", action="store_true", help="enable inert register boundary sentinels and bounded own-key repeat; never a private call")
     parser.add_argument("--run-id", help="fresh 32-character lowercase hex identity for a concrete prospective installation")
     parser.add_argument("--prospective-host", type=Path, help="future authorized host executable; this argument performs no host operation")
     parser.add_argument("--prospective-module", type=Path, help="future exact observer executable location; no installation")
@@ -107,9 +108,13 @@ def main():
     (output / "CalibrationConfig.hpp").chmod(0o600)
     common = ["clang++", "-std=c++17", "-arch", "arm64", "-mmacosx-version-min=12.0", "-Wall", "-Wextra", "-Werror",
               "-I" + str(headers), "-I" + str(headers / "SP"), "-I" + str(output)]
+    if args.trace_identity:
+        common += ["-DAEHL_TRACE_IDENTITY=1"]
     for stem, source_name, exports in [
         (marker, "MarkerEffect.cpp", ["_EffectMain", "_AEHL_MarkerBuildIdentity", "_PluginDataEntryFunction2", "_AEHL_MarkerStartupState"]),
         (observer, "CalibrationObserver.cpp", ["_EntryPointFunc", "_AEHL_CalibrationBuildIdentity"])]:
+        if args.trace_identity:
+            exports = exports + (["_AEHL_TraceMarkerBoundary"] if stem == marker else ["_AEHL_TraceReaderBoundary"])
         bundle = output / (stem + ".plugin"); contents = bundle / "Contents"
         (contents / "MacOS").mkdir(parents=True); (contents / "Resources").mkdir()
         (contents / "Info.plist").write_bytes(plistlib.dumps({
@@ -161,7 +166,7 @@ def main():
             (test_config / "CalibrationConfig.hpp").write_text((output / "CalibrationConfig.hpp").read_text().replace(
                 "static constexpr const char* calibration_control", "static const char* calibration_control"))
             (test_config / "CalibrationConfig.hpp").chmod(0o600)
-            test_common = common[:-1] + ["-I" + str(test_config)]
+            test_common = [part if part != "-I" + str(output) else "-I" + str(test_config) for part in common]
         command = test_common + ["-fsanitize=address,undefined", "-fno-omit-frame-pointer", str(test)]
         if label == "adapter":
             command += [str(Path(__file__).with_name("MarkerEffect.cpp"))]
@@ -185,7 +190,7 @@ def main():
         raise RuntimeError("inert test unexpectedly touched control journal")
     if checks.source_identity(ROOT, args.expected_commit) != source or sdk_files(sdk) != pins:
         raise RuntimeError("source/SDK changed during build")
-    record = {"schema": "AEHL-STARTUP-CALIBRATION-1", "source": source, "build_id": build,
+    record = {"schema": "AEHL-STARTUP-CALIBRATION-1", "trace_identity": args.trace_identity, "source": source, "build_id": build,
               "sdk_files": pins, "compiler": run("clang++", "--version"), "system_sdk": run("xcrun", "--show-sdk-version"),
               "run_id": run_id, "match_name": match, "seed": seed, "token": token, "config": config,
               "bundles": bundles, "offline_tests": results,

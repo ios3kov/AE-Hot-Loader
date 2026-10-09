@@ -10,9 +10,9 @@ product**.
 Current verified state: [DEVELOPMENT_STATUS](docs/DEVELOPMENT_STATUS.md).  
 Current gates: [PRODUCTION_PLAN](docs/PRODUCTION_PLAN.md).  
 Development requirements: [AGENTS](AGENTS.md).
-Accepted rules baseline: **AE Development Rules 11.0.0**, pinned source
-`e8b763ad2fefd0c5d79f865f7f017ff714cf7c23`; see
-[current adoption and control-render checkpoint](docs/C1_QUEUE_CONTROL_2026-10-08.md).
+Accepted rules baseline: **AE Development Rules 11.0.1**, pinned source
+`f80eaa8534987ddedaf44720ca8a85dfe122ce14`; see
+[current adoption and passive-trace checkpoint](docs/C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#passive-owned-startup-trace--2026-10-09).
 Earlier rules and Evidence remain historical.
 
 ## Current Stage C

@@ -50,6 +50,16 @@ bool AEHL_MarkerStartupState(startup_marker::StartupState* state) noexcept {
     return true;
 }
 
+#ifdef AEHL_TRACE_IDENTITY
+// Only the own host-driven entry calls this inert, register-only observation site.
+// The debugger does not call it. No object is borrowed beyond the entry lifetime.
+extern "C" __attribute__((visibility("default"), noinline))
+void AEHL_TraceMarkerBoundary(unsigned stage, PF_PluginDataPtr context,
+    PF_PluginDataCB2 callback, unsigned status, unsigned main_thread) noexcept {
+    asm volatile("" : : "r"(stage), "r"(context), "r"(callback), "r"(status), "r"(main_thread) : "memory");
+}
+#endif
+
 // Standard SDK host-invoked startup callback only. Never called by the observer.
 extern "C" __attribute__((visibility("default")))
 PF_Err PluginDataEntryFunction2(PF_PluginDataPtr data, PF_PluginDataCB2 callback,
@@ -57,12 +67,19 @@ PF_Err PluginDataEntryFunction2(PF_PluginDataPtr data, PF_PluginDataCB2 callback
     registration_started.fetch_add(1, std::memory_order_release);
     callback_address.store(reinterpret_cast<std::uintptr_t>(callback), std::memory_order_release);
     registration_on_main.store(pthread_main_np() == 1 ? 1u : 0u, std::memory_order_release);
+#ifdef AEHL_TRACE_IDENTITY
+    AEHL_TraceMarkerBoundary(1, data, callback, 0, registration_on_main.load(std::memory_order_acquire));
+#endif
     const auto result = callback ? callback(data, reinterpret_cast<const A_u_char*>(registration_name),
         reinterpret_cast<const A_u_char*>(registration_match),
         reinterpret_cast<const A_u_char*>("AE Hot Loader Diagnostic"),
         reinterpret_cast<const A_u_char*>("EffectMain"), 0x65464b54,
         PF_AE_PLUG_IN_VERSION, PF_AE_PLUG_IN_SUBVERS, 0,
         reinterpret_cast<const A_u_char*>("https://github.com/ios3kov/AE-Hot-Loader")) : PF_Err_INVALID_CALLBACK;
+#ifdef AEHL_TRACE_IDENTITY
+    AEHL_TraceMarkerBoundary(2, data, callback, static_cast<unsigned>(result),
+        registration_on_main.load(std::memory_order_acquire));
+#endif
     last_callback_result.store(result, std::memory_order_release);
     registration_completed.fetch_add(1, std::memory_order_release);
     return result;

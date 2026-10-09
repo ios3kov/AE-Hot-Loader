@@ -14,6 +14,7 @@
 #include "../ordinary_discovery/ResourcePassJournal.hpp"
 #include "../ordinary_discovery/ResidentImageBinding.hpp"
 #include <chrono>
+#include <cstdint>
 #include <climits>
 #include <cstring>
 #include <cstdlib>
@@ -26,6 +27,14 @@
 
 extern "C" __attribute__((visibility("default")))
 const char* AEHL_CalibrationBuildIdentity() noexcept { return calibration_build; }
+
+#ifdef AEHL_TRACE_IDENTITY
+extern "C" __attribute__((visibility("default"), noinline))
+void AEHL_TraceReaderBoundary(unsigned stage, AEGP_InstalledEffectKey key,
+    std::uintptr_t function, unsigned status, unsigned main_thread) noexcept {
+    asm volatile("" : : "r"(stage), "r"(key), "r"(function), "r"(status), "r"(main_thread) : "memory");
+}
+#endif
 
 namespace {
 namespace io = resource_pass::journal_detail;
@@ -300,6 +309,20 @@ public:
         std::memset(text, 0xff, sizeof(text));
         Require(effect_.value->AEGP_GetEffectMatchName(key, text) == 0);
         const auto length = strnlen(text, sizeof(text)); Require(length > 0 && length < sizeof(text));
+#ifdef AEHL_TRACE_IDENTITY
+        if (registry_observation && std::string(text, length) == calibration_match) {
+            Require(MainThread() && OperationAllowed());
+            const auto function = reinterpret_cast<std::uintptr_t>(effect_.value->AEGP_GetEffectMatchName);
+            AEHL_TraceReaderBoundary(1, key, function, 0, 1);
+            char repeated[AEGP_MAX_EFFECT_MATCH_NAME_SIZE]; std::memset(repeated, 0xff, sizeof(repeated));
+            const auto error = effect_.value->AEGP_GetEffectMatchName(key, repeated);
+            const auto repeated_length = strnlen(repeated, sizeof(repeated));
+            const bool same = error == 0 && repeated_length == length &&
+                repeated_length < sizeof(repeated) && std::memcmp(text, repeated, length) == 0;
+            AEHL_TraceReaderBoundary(2, key, function, same ? 0u : 1u, 1);
+            Require(same && OperationAllowed());
+        }
+#endif
         return std::string(text, length); }
     std::string Name(std::int32_t key) { diagnostic_stage="enumeration-sdk-name";
         char text[AEGP_MAX_EFFECT_NAME_SIZE]; std::memset(text, 0xff, sizeof(text));
