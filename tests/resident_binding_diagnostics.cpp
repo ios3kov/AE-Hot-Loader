@@ -19,7 +19,7 @@ template<class F> void Refused(const char* stage, F action) {
 }
 int main(int argc, char** argv) {
     try {
-        Require(argc >= 2);
+        Require(argc >= 2 && argv != nullptr);
         Refused("resident-image-parse", [] {
             AtStage("resident-image-parse", [] { return Parse({}, {"_owned"}); });
         });

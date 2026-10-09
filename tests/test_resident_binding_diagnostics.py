@@ -40,6 +40,15 @@ class BindingDiagnosticsTests(unittest.TestCase):
     def test_context_preserves_specific_refusal_and_allocation(self):
         self.assertIn(b'PASS binding predicate diagnostics', self.run_command([str(self.driver), 'context']))
 
+    def test_compile_when_native_branch_is_excluded(self):
+        # Exercise the portable branch with macOS's compiler too, retaining its
+        # standard-library platform macros. This is not a Linux runtime claim.
+        driver = self.base / 'portable-driver'
+        self.run_command(['clang++', '-std=c++17', '-Wall', '-Wextra', '-Wpedantic', '-Werror',
+                          *(['-D__arm64e__'] if NATIVE else []),
+                          str(ROOT / 'tests/resident_binding_diagnostics.cpp'), '-o', str(driver)])
+        self.assertIn(b'PASS binding predicate diagnostics', self.run_command([str(driver), 'context']))
+
     @unittest.skipUnless(NATIVE, 'requires macOS arm64 self-memory and file contract')
     def test_file_and_memory_predicates_keep_strict_failures(self):
         before = self.library.read_bytes()
