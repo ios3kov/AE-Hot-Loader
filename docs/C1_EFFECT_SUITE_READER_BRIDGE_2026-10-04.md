@@ -127,6 +127,25 @@ repairing the diagnostic path and locating the current refusal before public
 registry access. It is not a new published effect or product-readiness claim.
 Private primary archive and research-publication closeout follow separately.
 
+### Additional owned control after primary archive
+
+A separate corrected async control now fully collects PASS: unchanged own library
+baseline PASS/PASS, live software-breakpoint REFUSED, after removing that breakpoint
+PASS, process exit0 and cleanup_safe true. Actual unchanged ResidentImageBinding
+runs on the own library; no Adobe image or AE startup. Private checking-script
+setup failures remain preserved, including direct-stdin forwarding, initial-stop
+classification, invalid ID after breakpoint deletion and sync-event timeout.
+This additional control is in the final documentation closeout, not retrospectively
+inserted into the immutable primary archive.
+
+It proves conditional breakpoint/code-check interference on the owned control.
+It does not establish the AE refusal's internal predicate: the current partial
+phase adapter enables the adapter site and disables own marker/reader sentinels.
+Keep the native cause UNKNOWN. Next discriminating check: individual Snapshot /
+stability/path/file pin/Parse/header/text/final-snapshot predicates, first on owned
+images, preserving all strict identity checks. Do not mask differing bytes or
+assume changing breakpoint order alone fixes this native refusal.
+
 ### Primary private Evidence
 
 AEHL-refusal-diagnostics-d578835.zip:871 members, complete426-file exact SourceS

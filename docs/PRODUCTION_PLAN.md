@@ -8,8 +8,8 @@ PASS. ONE own AE startup PID98223 gives SDK REFUSED at request-resident-binding;
 current request/auth/PID/birth/deadline/module/executable passed, enumeration was
 not reached.4events/4stops reach PiPL; adapter/writer/key UNKNOWN. No retry,
 Apply/render/project mutation/private call. Normal owned-session quit and absence
-PASS; exact pair retired, other plugins unchanged. Possible software-breakpoint /
-code-check conflict remains a hypothesis with partially collected owned controls.
+PASS; exact pair retired, other plugins unchanged. Own control now proves conditional software-breakpoint/code-check interference;
+the actual internal predicate of the AE refusal remains UNKNOWN.
 C1PARTIAL/private append BLOCKED/C2NOT_RUN. Evidence/research CI closeout separate.
 [RF01–RF16 and exact limits](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#refusal-diagnosis-packet--2026-10-09).
 
