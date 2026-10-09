@@ -47,11 +47,11 @@ mutation, retry, cache/security/preference changes, main/merge/release.
 | RF09 | Actual adapter caller file research | PASS10 retained bodies/3699 instructions, exact current originals |
 | RF10 | Exact adapter register/site bytes | PASS aelib63b2c/x8/e0630091 unchanged; no profile/site relaxation |
 | RF11 | Negative diagnostic regression | PASS12 actual Idle refusals +5 actual Suite cases +8 supervisor checks |
-| RF12 | Full regression and exact SDK artifacts | NOT_RUN for new candidate |
-| RF13 | Actual complete/early-exit owned debugger controls | NOT_RUN for new candidate |
-| RF14 | Separate specification and quality review | NOT_RUN for new candidate |
-| RF15 | ONE conditional register-only AE startup | NOT_RUN; gates above required |
-| RF16 | Normal close, retirement, Evidence, research push/CI | Pending exact current artifacts |
+| RF12 | Full regression and exact SDK artifacts | PASS S d578835:565Python/62Node/22stages, SDK74pins/17 request-Suite cases |
+| RF13 | Actual complete/early-exit owned debugger controls | PASS13events/18stops/detach, exit23/ALREADY_EXITED; sandbox failure retained separately |
+| RF14 | Separate specification and quality review | PASS same-developer bounded review; scanner raw exit1/sole local CLI false positive retained |
+| RF15 | ONE conditional register-only AE startup | EXECUTED_ONCE / INCOMPLETE; SDK REFUSED request-resident-binding;4events/4stops, safe detach |
+| RF16 | Normal close, retirement, Evidence, research push/CI | Normal quit/absence and exact retirement PASS; archive/publication/CI closeout below |
 
 Original reproduction compiles and executes the original6a2457d observer against
 selected SDK headers, with owned files and no Adobe callback. Twelve malformed /
@@ -70,6 +70,77 @@ Private working evidence: build-ae-hot-loader/refusal-diagnostics-2026-10-09-d9e
 C1 PARTIAL; private append BLOCKED; C2/late-add NOT_RUN. Offline checks do not
 establish actual host suite availability, live writer/key correspondence, full
 render read set, lifetime or partial-failure recovery.
+
+### Refusal diagnosis reconciliation
+
+Implementation S d578835476aedc278ac11a1e1429c0b8dcebdebe, clean during all
+mandatory candidate checks.565Python(no skips)/62Node/22stages PASS. SDK74pins;
+3 marker registration controls,3 inert,13 backend,21 frame and17 request/Suite
+cases PASS with sanitizer build. Nested native cases are not added to Python count.
+Actual complete debugger control13events/18stops/detach PASS; early exit23 safely
+reported incomplete/ALREADY_EXITED. Initial sandbox control exits-1/no such process;
+fresh external owned control PASS, no source/profile/timeout relaxation.
+
+Scanner on complete426-file exact Git source snapshot:284 supported text files,
+142 unsupported, no omissions. Raw exit1/review_required, sole unchanged finding
+vibe.no_ratelimit_auth /tools/artifact_manifest.py:71 /e2999cfe8b5b3a6bd27f0a62
+reviewed as local argparse CLI false positive. No suppression or full security /
+runtime/dependency acceptance. Separate same-developer review, not independent
+reviewer. Reviewed source hashes still match the tested candidate.
+
+ONE own startup run ed9a2ce0491a4847b9225b243ed93803 /PID98223 /
+birth1791551813401539, manifest SHA256
+376983669d053c357314a03ae940dc42e6fb34317a33dda49ec906b555c6029f.
+4 events/4 stops: own callback/context/conversion/PiPL; phase adapter remains
+INCOMPLETE at original deadline. Safe detach PASS, observation and final result
+both preserved. No late call, Apply/render/project mutation, retry or second AE
+startup. Strict PiPL pointer/site contract retained.
+
+One SDK request SENT_ONCE. Native statusREFUSED, stage request-resident-binding,
+cleanupPASS; supervisor now preserves this refusal rather than opening absent
+names-0. Current request passed parse/auth/PID/birth/deadline/module/executable
+checks. Resolve of the own resident image refused before Backend construction,
+suite acquisition or public enumeration. The specific predicate inside Resolve
+is UNKNOWN; this does not retrospectively identify the earlier6a2457d refusal.
+Reader/key/writer identity and ordinary late-add acceptance remain unproved.
+
+File review identifies a possible instrumentation conflict: Resolve compares all
+own __text bytes, while software breakpoints can modify those bytes. A separate
+owned-library baseline prints PASS/PASS. A debugger control prints REFUSED/PASS
+with the breakpoint present then removed during detach, but its collector remains
+INCOMPLETE due checking-code setup faults; preserve the intermediate journals and
+call this a partial observation, not certified proof of the native cause. No
+Adobe image or second AE startup in those controls. Next: a fully collected owned
+breakpoint/readback control, then reconcile strict identity verification with
+observation order without masking code differences or weakening validation.
+
+Explicit normal-quit authority applied after verified PID/birth/executable and
+safe detach. Apple AppKit terminate() requests ordinary quit; sending the request
+does not prove exit. Private helper validates identity; requestSENT and fresh AE /
+aerender absence PASS. No forceTerminate, signal, save-discard or window/project
+read. Exact own pair retired outside discovery, every other entry unchanged.
+Old PID86960/pair closure is also reconciled in this packet; historical receipts
+and all five prior private archives retain their original bytes.
+
+C1PARTIAL; private append BLOCKED; C2/late-add NOT_RUN. The concrete progress is
+repairing the diagnostic path and locating the current refusal before public
+registry access. It is not a new published effect or product-readiness claim.
+Private primary archive and research-publication closeout follow separately.
+
+### Primary private Evidence
+
+AEHL-refusal-diagnostics-d578835.zip:871 members, complete426-file exact SourceS
+Git blobs and modes, SHA256
+4fe2b9d4b288972fa735b8a6a0284d4891dd35c5ec8b5e507386a1c568bd353d.
+CRC, complete inventory, every archived digest/mode and source coverage PASS.
+Includes original failure controls, fixed tests, exact SDK candidate, actual
+complete/early-exit debugger controls, one native run, reviewed normal-quit helper,
+refusal/observation/detach/absence/retirement and incomplete hypothesis controls.
+No SDK header bytes, Adobe binary bytes, user projects/recovery files or credentials.
+Five historical private archives retain original digests. Owned control sources,
+logs, binaries and exact pair retained; no uncertain/shared/history deletion.
+Documentation E is separate from tested implementation S; no executable change
+in this closeout. Exact research publication and CI are recorded below after push.
 
 ## Debugger lifecycle packet — 2026-10-09
 

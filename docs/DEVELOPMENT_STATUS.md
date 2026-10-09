@@ -1,16 +1,17 @@
 # AE Hot Loader — current development status
 
-## Active refusal diagnosis packet — 2026-10-09
+## Current refusal diagnosis packet — 2026-10-09
 
-Approved16-step packet under rules11.1.0/source04b6068. Old PID86960 absent;
-exact own pair retired outside discovery, other plugins unchanged. Both original
-parser/stale-stage defects reproduced on owned controls and corrected.8 supervisor
-checks and17 actual Idle/SDK refusal controls PASS; full current
-regression/SDK, actual debugger controls and separate review remain pending.
-ONE conditional register-only startup follows these gates; no Apply/render/private
-calls or retries. User authorized normal owned-session quit; preserve unknown
-unsaved work and require actual absence. C1PARTIAL/private append BLOCKED/C2NOT_RUN.
-[RF01–RF16 acceptance and current evidence](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#refusal-diagnosis-packet--2026-10-09).
+Rules11.1.0/source04b6068; sourceS d578835:565Python/62Node/22stages, exact SDK74pins,
+17 actual request/Suite controls, owned debugger13events/18stops and separate review
+PASS. ONE own AE startup PID98223 gives SDK REFUSED at request-resident-binding;
+current request/auth/PID/birth/deadline/module/executable passed, enumeration was
+not reached.4events/4stops reach PiPL; adapter/writer/key UNKNOWN. No retry,
+Apply/render/project mutation/private call. Normal owned-session quit and absence
+PASS; exact pair retired, other plugins unchanged. Possible software-breakpoint /
+code-check conflict remains a hypothesis with partially collected owned controls.
+C1PARTIAL/private append BLOCKED/C2NOT_RUN. Evidence/research CI closeout separate.
+[RF01–RF16 and exact limits](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#refusal-diagnosis-packet--2026-10-09).
 
 ## Current debugger lifecycle packet — 2026-10-09
 

@@ -39,6 +39,12 @@ third-party plug-ins, purge shared state, weaken security settings, or call
 unverified private teardown/reinitialization functions. Automate only within
 owned/authorized test workspaces.
 
+The user explicitly permits normal quit of owned diagnostic AE sessions without
+waiting for manual closure. Verify fresh PID/birth/executable and safe debugger
+detach, request ordinary quit, and independently confirm absence before retirement
+or another launch. Preserve unknown unsaved work; this is not permission for
+force termination, save-discard, unrelated window/project reads or shared changes.
+
 No installable artifact handoff until the mandatory checks pass for the exact
 clean, identified candidate. Source commit, Build IDs, final SHA-256, loaded
 runtime identity and evidence must be traceable.
