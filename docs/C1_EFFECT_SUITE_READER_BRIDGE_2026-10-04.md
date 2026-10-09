@@ -50,12 +50,12 @@ to the newly launched owned process and removed on detach; no disk image patch.
 | PT08 | Own public key/function→lookup | NOT_RUN: registry request NOT_SENT |
 | PT09 | Bounded refusal, detach, no signals/retry | PASS:163stops within cap; ambiguous stop refused; detach PASS |
 | PT10 | Identity/order/budget/admission/journal controls | PASS:12 focused controls; synthetic inputs do not count as host evidence |
-| PT11 | Separate spec/quality/native inventory review | Bounded review retained; post-run corrections pending final checks below |
-| PT12 | Exact clean candidate build/SDK/control checks | PASS:58a0673,532Python/62Node/22stages and SDK controls; corrected source checked separately |
+| PT11 | Separate spec/quality/native inventory review | PASS: bounded affected-function/spec/quality inventory; limits retained |
+| PT12 | Exact clean candidate build/SDK/control checks | PASS:a4ed9e8,534Python/62Node/22stages, SDK74pins and fresh real fixture; AE result stays58a0673 |
 | PT13 | Fresh own session and exact pair preservation | PASS: PID61529; user closed; absence confirmed; exact pair retired; other entries unchanged |
 | PT14 | Complete writer→reader identity trace | INCOMPLETE:4accepted events/163stops, phase spec |
 | PT15 | Preserve precise refusal and uncertainty | PASS: unexpected stop/simultaneous breakpoints; underlying reason UNKNOWN |
-| PT16 | Evidence/status/research publication/exact CI | Closeout in progress; no main/merge/release |
+| PT16 | Evidence/status/research publication/exact CI | Local closeout PASS; research publication/exact-head CI in separate bound receipt; no release |
 
 
 One-shot startup180s and subsequent native110/controller120s caps, at most256
@@ -162,6 +162,46 @@ not been run on AE and cannot retroactively repair this partial trace.
 Next bounded question: establish the actual PiPL-to-FCSpec dataflow and classify
 stop metadata. Do not relax identity equality or infer an own descriptor from
 adjacent pointers. C1 PARTIAL; private append BLOCKED; C2/late-add NOT_RUN.
+
+
+### Exact corrected-source verification and preserved Evidence
+
+Corrected implementation source `a4ed9e86049778fa05a1be14048e99310f754e1c`, clean:
+534Python tests (no skips/errors/failures),62Node tests and22stages PASS.
+Offline reportAEHL-checks-pfoap7zx.zip SHA
+0ce1e0e7e1f41aea7e785fbca0349de84b8e14b34359869152f568563e34f213.
+Actual SDK74pins; prepared pairc98e5689bf3b4832b075f968b046a1ac, adapter/inert3/
+backend13/frame21 and independent marker oracle PASS. Candidate manifestSHA
+26fc810f3583c66e4c9f81cb2b379377abfa3c10b2b4c29ead9e895883b2bb25.
+This corrected pair was not installed or launched on AE.
+
+Fresh real SIMD fixture3267119aee3248338022f2fd76856444 at this source:
+12accepted events/15stops, complete bounded synthetic correspondence and detach
+PASS. ResultSHA58c8964f3f0e1eb1141004426ce2cf1af9763940acf945e9b53d6a1c79ead081.
+File-only native admission PASS10sites/5modules; current real fixture admission
+PASS. Old execution admission refuses changed collector source; old transport
+refuses stale exact-source proof. Historical cleanup validation retains all pinned
+images/sites and candidate identities. No new AE operation followed these checks.
+
+Separate bounded spec/quality and five affected native function inventory recorded.
+Scanner exact tracked snapshot421files:280supported/141unsupported, no omissions,
+rawexit1 and findinge2999cfe8b5b3a6bd27f0a62 retained. Manual disposition: local
+argparse CLI tools/artifact_manifest.py:71 has no network/auth route; heuristic
+false positive. ScopeSHA b748cc84f34829fadcea493b6eef0823e48ffaa63df37d951044531cc2447240.
+Scanner is not native/runtime certification; full Adobe lifetime/readset/commit/
+compensation remain UNKNOWN.
+
+Private archiveAEHL-passive-startup-a4ed9e8.zip SHA
+8f602dd4ba84a5ba5b4686e3bdd766b6b14a80c60c677eeb62b7fa8cf9098b00:
+3147members, CRC/memberSHA/modes PASS. Five exact complete421-file source snapshots,
+all this packet's failed/successful owned controls, prepared candidates, partial AE
+trace, retained installation, reviews and five offline reports preserved.
+Original Adobe/SDK files, user projects, crash recovery, unrelated history and
+credentials excluded. SourceS, native observation source58a0673 and documentation/
+publication HEAD are separate identities. Subsequent documentation-only commit
+preserves all non-Markdown bytes from sourceS; exact published HEAD CI is checked
+separately and saved with its run/job identities in private closeout. It cannot
+promote PT14 or C1/C2/late-add. No merge/main/release.
 
 ## Startup operation chain packet — 2026-10-09
 

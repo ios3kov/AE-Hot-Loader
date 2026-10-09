@@ -5,8 +5,9 @@
 Approved16-step PT01–PT16 packet under rules11.0.1 reached one own startup trace:
 main-thread callback→conversion→PiPL confirmed, FCSpec/writer/reader UNKNOWN.
 The ambiguous stop was refused and debugger detached. User closed AE; exact pair
-retired outside discovery. Finish corrected-source tests, owned fixture, bounded
-review, private Evidence and research-branch exact-head CI. No second AE startup,
+retired outside discovery. Corrected-source tests, SDK build, fresh owned fixture,
+bounded review and private Evidence PASS; research-branch exact-head CI is recorded
+separately after publication. No second AE startup,
 Apply/frame/private call, main/merge/release in this packet.
 
 Next packet must resolve actual PiPL-to-FCSpec dataflow and the stop classification

@@ -10,8 +10,10 @@ refused an ambiguous stop and detached safely. Registry request NOT_SENT;
 Apply/render/project mutation NOT_RUN. User closed PID61529; fresh absence and
 exact pair retirement PASS; other plugin entries unchanged.
 
-Post-run journal publication and bounded stop-metadata corrections are under final
-verification; no second AE launch in this packet. C1 PARTIAL; private append
+Post-run journal publication and bounded stop-metadata corrections at a4ed9e8:
+534Python/62Node/22stages, SDK74pins and fresh owned SIMD control PASS.
+Evidence archive verified and retained; corrected pair not installed. No second AE
+launch in this packet. C1 PARTIAL; private append
 BLOCKED; C2/late-add NOT_RUN. Offline and transport success do not complete these
 gates. [Current checkpoint and bounded review](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#passive-owned-startup-trace--2026-10-09).
 
