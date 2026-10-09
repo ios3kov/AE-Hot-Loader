@@ -16,6 +16,170 @@ compensation remain open. This earlier checkpoint retains its original evidence
 and does not become a live registration/apply/render result.
 
 
+
+## Late READY continuation — 2026-10-09
+
+Baseline `d9fb66e0ccc921c37da24040cdb8f1a845be3e64`, clean research branch.
+Rules v11.0.0 / `e8b763ad2fefd0c5d79f865f7f017ff714cf7c23`: AI_ENTRYPOINT
+first; Process/API/state/closure, Native/thread/lifetime, Tools bounded original
+file research and Release validation. Standard research; private publication
+Critical/BLOCKED. User «продолжай» resumes the outstanding read-only observation.
+No repository native/controller bytes changed; private orchestration source and
+commands are retained separately. Existing d7225b4 build and tests are preserved.
+
+Fresh metadata confirmed same owned PID41222/birth1791488387.628645. READY and
+all eight startup boundaries had appeared, for the exact build, with no prior
+request/consumed/result/provider leaf. Observer entry→READY was about3ms. The
+long delay preceded observer entry; its cause remains UNKNOWN. Original180s
+startup timeout/result and its private archive are immutable, not converted to
+PASS. This is a separate **first, never-sent** observation on the already READY
+owned process, not a repeated failed request or new launch/deadline.
+
+### Acceptance and observed result
+
+| Task | Acceptance | Result |
+| --- | --- | --- |
+| LC01 | Exact PID/birth/host/build/manifest/code/signatures; untouched old NOT-SENT timeout | PASS; same d7225b4:46584b3e72bb4a229fe8873ca9ffac72 |
+| LC02 | No prior request or mutation; exclusive continuation receipt; one atomic first request and bounded deadline | PASS; SENT ONCE, existing reviewed request/publish/verify functions; no retry |
+| LC03 | Three own main-thread installed-key/name observations, stable count/revision, blank unchanged project, SDK cleanup | PASS: READ_ONLY_ENUMERATION_ONLY; key796, count/traversed787, revision1; sample elapsed7/1018/3097ms |
+| LC04 | Actual acquired slot provenance and supplied own callback provenance, without invoking/private-reading either | PASS: six slots in AEGPDriver; own callback in PluginSupport; module ownership NOT_ACQUIRED |
+| LC05 | Fresh complete selected original bodies, independent bounds/import/table reconciliation, Evidence and state | PASS bounded file research; archive/source closure recorded below; manual closure/retirement PASS |
+
+Native result LISTED_OBSERVED; cleanup PASS/cleanup_safe YES; Apply/render
+NOT_RUN. The observer refused nonblank projects before enumeration and confirmed
+blank/unchanged afterwards. No new install/launch, window read, script, fixture,
+private function call, callback replay, attachment/process-memory read or signal.
+The separate operation used120s monotonic controller/110s native limits; neither
+was renewed. Four enumeration slots were exercised; Apply/Reverse addresses were
+only described, not called. Three samples do not establish absence of races.
+
+### Actual acquired provider and reader bridge
+
+All six slots describe AEGPDriver.plugin/Contents/MacOS/AEGPDriver, runtime base
+13126713344. Original file SHA256
+`3d7a4a24505bb06d19509da4bacf963cf5e0b2b647a0791cbfdeccf6f496e778`,
+arm64 UUID `A1E61D11-11E0-31E5-80FC-1A594C5D1F31`.
+
+| Slot | Provider-relative function start | Complete original body instructions |
+| --- | --- | --- |
+| Count |41a4c|33|
+| Next |4220c|48|
+| Match |42554|67|
+| Name |422cc|162|
+| Apply |4110c|302|
+| Reverse |41ad0|31|
+| InstallEffectSuites, original file only |415c4|290|
+
+These seven original bodies total933instructions. Fresh bounded FAT-arm64,
+Mach-O sections/nlist and raw branch decoding confirm contiguous bodies and
+199direct branch destinations. The version5 registration at416bc uses string
+"AEGP Effect Suite", version5, count23, original table b9048. Exact SDK header
+layout gives zero-based Apply9/Reverse2/Count11/Next12/Name13/Match14; selected
+raw chained-pointer low address candidates match all six recorded function
+starts. They are not a performed live rebase or mapped-byte integrity proof.
+
+Actual provider import stubs98c10/98c40/98fc4 resolve via Mach-O indirect symbol
+entries and library ordinal18 to exact FLT.dylib: FLT_InqNumPF, FLT_InqPFInfo,
+FLTp_GetFCAddress. Ordinary Apply stub99084 resolves ordinal23 to BEE.dylib,
+BEE_CmdApplyEffect. U_SP_AddSPSuite stub98b38 resolves ordinal5/U.dylib.
+This extends loader-provider observation with **original-file dataflow**; it
+does not observe live imported targets or record addresses.
+
+The saved c28cb38 suite pointers now all subtract to the same page-aligned
+AEGPDriver base `0x300bdc000`. Its prior MEE deltas differed because a different
+provider implementation was used for comparison. This is fresh arithmetic
+reconciliation of a historical log, not retroactive c28 dladdr observation.
+The MEE implementation and earlier original-file analysis remain historical.
+
+For this target's ordinary path, Next starts NONE→703; Match and Apply validate
+and convert key K to signed16 index K−702. Reverse reads the sequence index and
+adds702. Public keys remain opaque; this is a build-specific file implementation,
+not an SDK guarantee. Own key796 yields candidate one-based index94; its actual live
+internal record/descriptor address remains UNKNOWN and was not read.
+
+Fresh complete FLT bodies establish the selected file bridge:
+Count fe30→registry root e9a30→vector begin/end+30/+38 under mutex+50;
+Match42554→FLT_InqPFInfo f674→checked lookup97ecc→GetInstance458c and
+GetFilterFromIndex4b9c; Apply41334→FLTp_GetFCAddress9839c→the same accessor and
+indexed lookup, then ordinary BEE apply41394 with the same signed16 index.
+GetFilterFromIndex obtains a separately retained FCSpec owner under mutex;
+lookup lifetime does not prove all nested dependencies or all render consumers.
+FLTp_AddEffect8b2d4 calls the same GetInstance458c at8b308 and passes its returned
+receiver to RegisterNewFilter5014 at8bd8c. Thus selected original readers and
+writer use the same singleton storage, not just similar symbol names. Full live
+startup writer→own descriptor→actual reader→render chain is still unobserved.
+
+### Actual own registration callback and transaction boundary
+
+Own normal startup callback address4656329108 maps to PluginSupport base
+4656021504, offset4b194, exact symbol ML::PluginDataCallback2. File SHA256
+`4d2c200b198124b43887bbb7e53c9e48514621a54feb36085822852978b45832`,
+arm64 UUID `64C01AC4-2413-3463-8822-17EE5543052A`. Own independent atomic
+samples show registration started/completed1, callback result0, main-thread1,
+arguments matching the exact marker configuration. Global/Param setup counters
+are0 in this observation. These are independent facts, not an atomic lifecycle
+snapshot or descriptor ownership proof.
+
+Complete original callback4b194–4b5b0 (263instructions) builds PluginData and
+appends/copies it into its supplied context's vector, then returns0. This is a
+metadata callback, not a demonstrated installed-registry publication entry.
+Its success cannot be promoted to completion of FLT publication. No callback
+replay or context access was performed.
+
+Fresh complete RegisterNewFilter5014–53f0 retains the known ordering: vector
+end5098, name-map5254, FCSpec index5300, preference update530c, unlock531c.
+Preferences5480–5854 and notify606c–60cc were recaptured. Preference failure
+and partial-insertion recovery remain unresolved; notify's byte is not a proven
+visibility/commit gate. Unregister is not required for committed append-only
+scope, but incomplete insertion handling remains required.
+
+### Reconciliation, Evidence and next gate
+
+LB01/LB02 now have actual current acquired-provider evidence; LB13 enumeration
+has a separate PASS receipt. The old startup timeout and LB13 record above are
+historical and unchanged. LB03 live record is UNKNOWN, LB04 live writer chain is
+PARTIAL, LB05/LB06 nested lifetime incomplete, LB07 full render readset UNKNOWN,
+LB08 commit UNKNOWN, LB09 compensation UNKNOWN; LB10 private append BLOCKED.
+C1 PARTIAL. The prior startup PNG control remains PASS; it is not late-add.
+C2 for a newly hot-added ordinary effect NOT_RUN. Async receipt lifetime UNKNOWN.
+
+Private original-file evidence includes exact commands (no dependents/attach/
+execution), hashes, complete bounds, imports and raw verification. Two utility
+errors were corrected: symbol lookup initially included duplicate STAB debug
+entries, and a diagnostic namespace omitted Path. Target files were unchanged;
+neither error is an AE/plugin failure. Existing14 controller tests passed again;
+full522Python/62Node/22stage and native checks apply to unchanged d7225b4 code,
+not new scripts or whole-host safety. Spec and quality review PASS for this
+bounded evidence/documentation delta; broader product/release gates stay open.
+
+The user confirmed manual closure of owned PID41222. Fresh AE/aerender absence
+PASS; exact two bundle file maps/signatures and original entry metadata verified
+before moving only AEHLStartupCalibration-46584b3e72bb to preserved
+live/retired-installation. Post-move hashes PASS; other entry metadata UNCHANGED.
+No signals, window read or deletion. Absence does not certify normal quit or
+crash-free shutdown. Original timeout JSON SHA256
+`11ec73b2db1bc8594b32eda12a7af5f2086dc1c4dd9395b38997e65a8e198e81`
+unchanged. No pending session action or repeated observation remains.
+
+Next: design a narrow trace of **normal startup publication and the same own
+reader lookup**, with exact actual provider/SDK identities and explicit bounded
+admission before any process-internal observation. Resolve own live descriptor
+identity and transfer, then its complete affected render dependencies and
+partial failure boundary. Do not attempt private late-add while these gates
+remain open. Source commit/push and its exact-head CI receipt are recorded separately.
+Supplemental private archive
+`private-evidence-2026-10-09/AEHL-live-provider-continuation-d7225b4-46584b3e72bb.zip`,
+SHA256 `a27cdb39489085c7be240ac982f50af6d14609aae61f44f86359d8bf260e912a`:
+487payload members, CRC and every payload SHA256 PASS. It preserves the exact
+pre-digest-footer documentation snapshot, unchanged owned sources, new query/
+provider/complete original-body receipts, private orchestration and retired own
+pair; no Adobe binaries, SDK sources or AE/recovery/project logs. Final source
+binding separately accounts for this digest footer; no circular archive hash.
+The prior timeout archive remains unchanged. Scanner412files/272supported/
+140unsupported/0omissions; rawexit1 is the same reviewed CLI false positive,
+not a clean scanner exit or release certification. Source publication changes
+only four Markdown checkpoints; no fresh native build/runtime acceptance claim.
+
 ## Current continuation — 2026-10-08
 
 Baseline `4107853d452e045fa1084b0f94aebd251be92918`, clean research branch.

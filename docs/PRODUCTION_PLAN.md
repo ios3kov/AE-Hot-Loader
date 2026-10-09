@@ -1,5 +1,19 @@
 # AE Hot Loader — current development and release plan
 
+## Current acquired reader bridge — 2026-10-09
+
+Same owned d7225b4 session reached late READY; first read-only query PASS:
+three own key796 samples, blank unchanged project and SDK cleanup. Six actual
+Effect Suite5 slots map to AEGPDriver, own callback to PluginSupport. Fresh
+original-file dataflow links acquired readers to the FLT singleton/writer;
+saved c28 pointer mismatch reconciled. Live record/owner/render readset/commit/
+partial rollback remain open. C1 PARTIAL; private late-add BLOCKED; C2 NOT RUN.
+No restart, Apply/render, private calls/reads or signals. User closed PID41222;
+absence confirmed, exact pair retained outside discovery, other entry metadata
+unchanged. Old timeout/Evidence remain immutable.
+See [single current checkpoint and LC01–LC05](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#late-ready-continuation--2026-10-09).
+
+
 
 ## Current reader/publication packet — 2026-10-08
 
