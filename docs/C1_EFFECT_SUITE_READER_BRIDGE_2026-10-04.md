@@ -159,7 +159,18 @@ No SDK header bytes, Adobe binary bytes, user projects/recovery files or credent
 Five historical private archives retain original digests. Owned control sources,
 logs, binaries and exact pair retained; no uncertain/shared/history deletion.
 Documentation E is separate from tested implementation S; no executable change
-in this closeout. Exact research publication and CI are recorded below after push.
+in this closeout. Exact implementation CI follows below; final documentation CI binds the private closeout.
+
+### Exact implementation publication
+
+SourceS d578835476aedc278ac11a1e1429c0b8dcebdebe research push PASS.
+Research CI37937556750 PASS: native-syntax113843324227 and
+panel-contract113843324491. macOS CI37937556921/build113843324364 PASS.
+These workflows cover the exact implementation commit; CI does not substitute
+for the distinct native refusal outcome or establish ordinary late-add.
+Final documentation head is published separately after this source verification;
+its exact SHA/runs/jobs, complete source blobs/modes, additional owned control
+and fresh cleanup receipt are preserved in the private final closeout.
 
 ## Debugger lifecycle packet — 2026-10-09
 
