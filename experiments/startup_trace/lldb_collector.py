@@ -48,7 +48,7 @@ def own_breakpoint_inventory(record, breaks):
     rows=[]
     for role, bp in breaks.items():
         site=record['sites'][role]
-        if site['module'] not in ('marker','observer','fixture'): continue
+        if site['module'] not in ('marker','reader','observer','fixture'): continue
         need(bp.IsValid() and bp.GetNumLocations()==1, 'own inventory breakpoint differs')
         location=bp.GetLocationAtIndex(0);address=location.GetAddress()
         pin=record['modules'][site['module']]

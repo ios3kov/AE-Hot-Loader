@@ -157,6 +157,22 @@ class StartupTraceTests(unittest.TestCase):
                                                    GetFileAddress=lambda:4100)
         with self.assertRaisesRegex(ValueError,'location differs'):own_breakpoint_inventory(record,{'reader':bp})
 
+    def test_native_profile_reader_module_label_is_in_own_inventory(self):
+        from types import SimpleNamespace
+        from lldb_collector import own_breakpoint_inventory
+        uuid='b'*36
+        address=SimpleNamespace(IsValid=lambda:True,GetModule=lambda:SimpleNamespace(GetUUIDString=lambda:uuid),
+                                GetFileAddress=lambda:1612)
+        location=SimpleNamespace(IsEnabled=lambda:False,GetAddress=lambda:address)
+        bp=SimpleNamespace(IsValid=lambda:True,GetNumLocations=lambda:1,GetLocationAtIndex=lambda _:location,
+                           IsEnabled=lambda:False,IsHardware=lambda:False)
+        # native_profile uses reader for the owned calibration image, whereas
+        # AEGP/FLT label Adobe images. Keep that exact production naming contract.
+        record={'sites':{'reader':{'module':'reader','offset':1612}},'modules':{'reader':{'uuid':uuid}}}
+        rows=own_breakpoint_inventory(record,{'reader':bp})['breakpoints']
+        self.assertEqual(len(rows),1);self.assertEqual(rows[0]['module'],'reader')
+        self.assertFalse(rows[0]['enabled'])
+
     def test_journal_publication_is_complete_and_never_replaces(self):
         import os
         from lldb_collector import write_once
