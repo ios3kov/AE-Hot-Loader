@@ -15,6 +15,14 @@ spec.loader.exec_module(live)
 
 
 class StartupLiveTests(unittest.TestCase):
+    def test_compiled_resource_binary_comments_do_not_change_hex_payload(self):
+        spec = importlib.util.spec_from_file_location('startup_build', ROOT / 'experiments/startup_calibration/build.py')
+        builder = importlib.util.module_from_spec(spec); spec.loader.exec_module(builder)
+        dump = b'data \'PiPL\' (16000) {\n $"0080 FF00" /* \x80\xff */\n $"1234"\n};'
+        self.assertEqual(builder.compiled_pipl(dump), b'\x00\x80\xff\x00\x12\x34')
+        self.assertNotEqual(builder.compiled_pipl(dump.replace(b'1234', b'1235')), b'\x00\x80\xff\x00\x12\x34')
+        self.assertEqual(builder.compiled_pipl(b'/* \x80 */'), b'')
+
     def test_compact_identity_preserves_96_bits_and_refuses_invalid_nonce(self):
         run = '9e09478c2faf48819b4d61f4e34a3103'
         match = live.identity.marker_match(run)

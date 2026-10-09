@@ -31,7 +31,7 @@ pipl = load("calibration_pipl", ROOT / "experiments/ordinary_discovery/build_reg
 identity = load("calibration_identity", Path(__file__).with_name("identity.py"))
 
 
-def run(*command):
+def run_bytes(*command):
     # Existing owned-child runner enforces deadline, output bound and process-group cleanup.
     with tempfile.TemporaryDirectory(prefix="aehl-calibration-command-") as directory:
         log = Path(directory) / "command.log"
@@ -39,7 +39,17 @@ def run(*command):
         data = log.read_bytes()
         if result["status"] != "PASS":
             raise subprocess.CalledProcessError(result.get("returncode") or 1, command, output=data)
-        return data.decode("utf-8", errors="strict")
+        return data
+
+
+def run(*command):
+    return run_bytes(*command).decode("utf-8", errors="strict")
+
+
+def compiled_pipl(dump):
+    # DeRez comments can contain arbitrary bytes from the resource. Parse only
+    # its ASCII hex literals, and leave text-only command decoding strict.
+    return bytes.fromhex(b"".join(re.findall(rb'\$"([0-9A-Fa-f ]+)"', dump)).decode("ascii"))
 
 
 def sha(path):
@@ -139,8 +149,10 @@ def main():
         run("Rez", "-useDF", "-i", str(sdk / "Resources"), str(resource), "-o", str(contents / "Resources" / (stem + ".rsrc")))
         if stem == marker:
             # Independently read the compiled resource, not the generated .r text.
-            dump = run("DeRez", "-useDF", "-only", "PiPL", str(contents / "Resources" / (stem + ".rsrc")))
-            compiled = bytes.fromhex("".join(re.findall(r'\$"([0-9A-Fa-f ]+)"', dump)))
+            dump = run_bytes("DeRez", "-useDF", "-only", "PiPL", str(contents / "Resources" / (stem + ".rsrc")))
+            dump_path = output / "marker-pipl-derez.bin"
+            dump_path.write_bytes(dump); dump_path.chmod(0o600)
+            compiled = compiled_pipl(dump)
             if compiled != data:
                 raise RuntimeError("compiled marker PiPL differs from the selected resource identity")
             resource_proof = {"status": "PASS", "match": resource_match,
