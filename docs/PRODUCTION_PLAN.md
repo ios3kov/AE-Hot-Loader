@@ -2,15 +2,14 @@
 
 ## Active PiPL-route packet — 2026-10-09
 
-Rules11.1.0 /04b6068 and actual local Codex skills reconciled.18-step packet
-addresses the partial trace and distinct resource/metadata PiPL creation paths.
-Own selected route and stop cause remain UNKNOWN. Typed bounded stop classification
-and ignored-site counters implemented; current checks/build/owned fixture pending.
-New AE startup/writer/public-reader operations BLOCKED until discriminating own
-identity exists; no repeat of the same unverified pointer assumption. C1 PARTIAL,
-private append BLOCKED, C2/late-add NOT_RUN. All historical Evidence retained.
-See the [single current checkpoint](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#pipl-route-and-stop-classification--2026-10-09).
-
+Rules11.1.0/source04b6068 and new local Codex skills reconciled. Exact source
+422007c: bounded stop diagnostics and strict identity counters PASS;540Python,
+62Node,22stages, fresh own debugger fixture and actual SDK offline controls PASS.
+Private629member Evidence verified; research publication/exact-head CI recorded
+in closeout. Own metadata/resource PiPL bridge remains UNKNOWN: conditional new
+AE writer/reader run BLOCKED / NOT_RUN. C1 PARTIAL, private append BLOCKED,
+C2/late-add NOT_RUN. Detailed acceptance, scope, review, digests and next prerequisite:
+[PiPL route checkpoint](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#pipl-route-and-stop-classification--2026-10-09).
 
 ## Active passive-trace closeout — 2026-10-09
 

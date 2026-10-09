@@ -54,17 +54,17 @@ conditional host operations; complete independent code/checks/Evidence.
 | PS05 | Copy/adaptation/ordering for own effect | UNKNOWN: interface type is not live object identity |
 | PS06 | Own PiPL→FCSpec→writer linkage | PARTIAL file scan/setup path; live own lane UNKNOWN |
 | PS07 | Exact original module/site/body/call pins | PASS:3modules,5body ranges,5direct branches rechecked |
-| PS08 | Bounded typed stop classification and missed-site counters | Implemented; exact candidate checks pending |
+| PS08 | Bounded typed stop classification and missed-site counters | PASS: source422007c, strict identity retained |
 | PS09 | Negative identity/shape/race/exception/bounds controls | PASS:18 focused tests; synthetic only |
-| PS10 | Fresh real owned debugger fixture | NOT_RUN until clean source committed |
-| PS11 | Separate spec/quality/affected code review | Pending |
-| PS12 | Exact SDK build/regression and source identity | Pending |
+| PS10 | Fresh real owned debugger fixture | PASS:12events/15stops, detach and process exit; owned executable only |
+| PS11 | Separate spec/quality/affected code review | PASS scoped separate review; no independent-agent claim |
+| PS12 | Exact SDK build/regression and source identity | PASS:540Python/62Node/22stages;74SDKpins and offline controls |
 | PS13 | Conditional one new owned AE startup | BLOCKED: discriminating own route not established |
 | PS14 | Live own writer correspondence | BLOCKED / NOT_RUN: PS06 prerequisite |
 | PS15 | Same record and public key/reader | BLOCKED / NOT_RUN: own writer identity prerequisite |
-| PS16 | Owned-state cleanup/preservation | No new host/install; earlier pair retired; controls retained |
-| PS17 | Private Evidence and checkpoint reconciliation | In progress |
-| PS18 | Research commit/push/exact-head CI | Pending; no release |
+| PS16 | Owned-state cleanup/preservation | PASS: fixture exited; no new host/install; earlier pair retained |
+| PS17 | Private Evidence and checkpoint reconciliation | PASS:629members, complete422file source, CRC/digests/modes verified |
+| PS18 | Research commit/push/exact-head CI | Source422007c PASS locally; docs-only Evidence commit and CI tracked in private closeout; no release |
 
 ### Route reconciliation and limits
 
@@ -95,6 +95,59 @@ future refusals; it does not retroactively identify or fix the old refusal.
 Counters retain ignored convert/spec/writer counts without foreign descriptor
 addresses. Complete same-pointer observation and unknown resource/metadata lane
 remain distinct from a host ownership/render/atomic-publication contract.
+
+### Exact candidate verification and Evidence
+
+Implementation sourceS422007c7e6b78fc92db61a421798149839b5f883 is clean and
+separate from the following documentation-only Evidence commitE. The full runner
+reported540Python,62Node and22stages PASS, zero skipped tests; exact tracked source
+unchanged before/after. AE/full product pipeline remains BLOCKED, not inferred
+from offline success. Check ZIP AEHL-checks-w1pveule.zip SHA
+666cb70b9c39b0217fffe6251a704649b1ac7256c7e2e4525ca9b7c10fe57643.
+
+Fresh owned fixture8df53fa555e24d92af74c3b218c0e38d/profile SHA
+b560513e4cdd0debffdf84aea39b2be5719ab195448e3e60f5bffaf7e0e25045;
+PID72224/birth1791545182923145. Initial isolated signal17 and stable StopID1
+observed;12accepted/15stops, ignored convert/spec/writer1each, detach PASS,
+owned process subsequently absent. No fixture-to-Adobe contract inference.
+Exact8file transport admission PASS; changed commit, missing/changed new helper,
+incomplete result and unsafe detach proofs all refuse without installation/launch.
+
+Fresh actual SDK25.6_61 build6c237d7a4b204c5faf0b15fdaf204e39 retains74header
+pins, two own signed bundles and manifest SHA
+cca666793dbe533b95f9be8e0c3aa5bb48c3a95f3b343766b37bff37847e56ac.
+Adapter/inert3/backend13/frame21 and exact marker pixel oracle PASS, zero Adobe
+calls. File-only native profile validates pinned modules/sites and new collector;
+installation, AE load, Apply/render and late registration NOT_RUN.
+
+Separate spec/quality review PASS for changed Python and Markdown. No new C++,
+SDK callback, deploy boundary or private ABI operation; unchanged native inventory
+and its unresolved complete host ownership/readset/atomicity remain explicit.
+Scanner completed bounded text scope281files/141unsupported/no omissions from the
+complete422file exact Git snapshot. Raw exit1/review_required retained: sole
+fingerprint e2999cfe8b5b3a6bd27f0a62 at tools/artifact_manifest.py:71 is manually
+confirmed local argparse CLI, not an auth route. No finding suppression and no
+scanner runtime/release certification. Scope digest
+71ae6303d491c57f06cd51ed983e9e826768b966c6ff4ec076b0e68b2adcb8ed.
+
+Private Evidence AEHL-pipl-route-422007c.zip in
+/Users/os3kov/Documents/Codex/2026-10-01/new-chat-2/private-evidence-2026-10-09,
+SHA e75772bbb134af646f77093ef73e7a6634266bdd68b965f77ca5b70c0711d9db;
+629members CRC/memberSHA/modes PASS. Includes complete sourceS, route/skill/review
+records, exact own fixture, prepared own SDK pair/controls and runner ZIP; original
+Adobe/SDK-header bytes, user projects, credentials and foreign sessions excluded.
+Earlier private archives retained by exact digest, no destructive cleanup.
+
+Closeout AEHL-pipl-route-E-closeout.zip records exact docs-onlyE/source binding,
+remote commit, both exact-E workflow/job conclusions and complete final422file
+source; its external binding JSON supplies its digest. Non-Markdown source must
+remain byte-identical toS. Research publication only; main/merge/release NOT_RUN.
+
+Status: C1 PARTIAL, private append BLOCKED, C2/late-add NOT_RUN. Next discriminating
+probe must establish own resource/metadata dataflow and writer ordering from pinned
+original-file bodies before any fresh AE startup. Same-pointer fixture success,
+match strings, timing or adjacency do not satisfy that prerequisite. PS03/05 remain
+UNKNOWN and PS13–15 BLOCKED rather than being reported as completed host steps.
 
 ## Passive owned startup trace — 2026-10-09
 
