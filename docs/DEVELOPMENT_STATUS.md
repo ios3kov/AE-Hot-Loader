@@ -1,5 +1,15 @@
 # AE Hot Loader — current development status
 
+## Current request timeline packet — 2026-10-09
+
+Rules11.1.0/source04b6068; baseline1e9854f. Approved16-step timing packet.
+System Sleep/DarkWake/Wake events support the prior expiry hypothesis; exclusive
+cause UNKNOWN. Paired publication/first Idle/deadline/binding clocks and injected
+normal/delay/forward/backward controls prepared; exact full checks and ONE
+conditional awake AE run pending. No guard weakening or clock/power changes.
+C1PARTIAL/private appendBLOCKED/C2NOT_RUN.
+[Single checkpoint and16-task mapping](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#request-deadline-timeline--2026-10-09).
+
 ## Current own-code classification packet — 2026-10-09
 
 Rules11.1.0/source04b6068. NativeS1:2e3ecb2; collector correctionS2:f0706ba.

@@ -17,6 +17,7 @@ from core import need
 from profile import read_json, validate, native_profile, transport_admission
 from lldb_collector import load_native, write_once
 from lifecycle import debugger_exit
+import timeline
 
 
 def drive(profile, digest, output):
@@ -163,6 +164,28 @@ def execute(manifest,digest,transport,transport_digest):
             except Exception as exc:receipt={'status':'FAIL_OR_UNKNOWN','reason':str(exc)}
         else:receipt={'status':'UNKNOWN','reason':'original request deadline expired; no retry'}
     write_once(base/'trace/sdk-receipt.json',receipt)
+    # Independent optional evidence; a malformed/missing timing record never
+    # converts a refused/unknown SDK operation into success or a replay.
+    timing={'status':'UNKNOWN','scope':'timing only; SDK receipt unchanged'}
+    try:
+        published=read_json(base/'trace/publication-timing.json',
+            hashlib.sha256((base/'trace/publication-timing.json').read_bytes()).hexdigest())
+        owned=result['owned_process'];birth=native.birth(owned)
+        need(published['status']=='OBSERVED' and (published['pid'],published['birth'],published['build_id'])==
+             (owned['pid'],birth,record['build_id']),'publication timing identity differs')
+        rows={}
+        for phase,leaf in enumerate(timeline.LEAVES):
+            if (control/leaf).exists():
+                rows[leaf]=timeline.parse_native(native.common.read(control/leaf,2048),record['build_id'],owned['pid'],birth,phase)
+        need('request-received' in rows,'first receipt timing absent')
+        timing={'status':'OBSERVED','publication':published,'native':rows,
+                'delivery':timeline.compare(published['sample'],rows['request-received']['sample'],published['deadline'])}
+        if 'request-deadline-check' in rows:
+            need(rows['request-deadline-check']['deadline']==published['deadline'],'native timing deadline differs')
+            timing['deadline_check']=timeline.compare(published['sample'],rows['request-deadline-check']['sample'],published['deadline'])
+    except Exception:
+        timing={'status':'UNKNOWN','scope':'missing/invalid timing; SDK receipt unchanged; no retry'}
+    write_once(base/'trace/request-timeline.json',timing)
     write_once(base/'trace/final.json',{'identity':result['status'],'sdk':receipt,'host_close':'MANUAL_REQUIRED',
         'late_add':'NOT_RUN','C1':'PARTIAL','C2':'NOT_RUN','private_append':'BLOCKED'})
     print(json.dumps({'trace':str(base/'trace'),'identity':result['status'],'sdk':receipt,'pid':result.get('pid')}),flush=True)

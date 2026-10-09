@@ -60,7 +60,22 @@ class RefusalReceiptTests(unittest.TestCase):
                 self.assertNotIn('own_text_difference',receipt)
                 self.assertEqual(reads,['result']);verifier.assert_not_called()
 
-    def run_supervisor(self, raw, samples=None, key=42, verified_key=42):
+    def test_actual_supervisor_retains_sleep_timeline_without_changing_refusal(self):
+        raw=b'AEHL-CAL-RESULT-2\nbuild=owned-build\nstatus=REFUSED\nstage=request-deadline\ncleanup=PASS\n'
+        receipt,reads,verifier,timing=self.run_supervisor(raw,timing_mode='sleep')
+        self.assertEqual(receipt['stage'],'request-deadline');verifier.assert_not_called()
+        self.assertEqual(timing['status'],'OBSERVED')
+        self.assertTrue(timing['delivery']['suspension_observed'])
+        self.assertEqual(timing['deadline_check']['deadline_window'],'EXPIRED')
+        self.assertNotIn('names-0',reads)
+
+    def test_foreign_timing_stays_unknown_without_losing_actual_refusal(self):
+        raw=b'AEHL-CAL-RESULT-2\nbuild=owned-build\nstatus=REFUSED\nstage=request-deadline\ncleanup=PASS\n'
+        receipt,reads,verifier,timing=self.run_supervisor(raw,timing_mode='foreign')
+        self.assertEqual(receipt['stage'],'request-deadline');verifier.assert_not_called()
+        self.assertEqual(timing['status'],'UNKNOWN');self.assertNotIn('names-0',reads)
+
+    def run_supervisor(self, raw, samples=None, key=42, verified_key=42, timing_mode=None):
         with tempfile.TemporaryDirectory() as folder:
             base = Path(folder).resolve()
             control = base / 'control'; control.mkdir(mode=0o700)
@@ -83,19 +98,29 @@ class RefusalReceiptTests(unittest.TestCase):
             verifier = Mock(return_value={'installed_key': verified_key})
             native = SimpleNamespace(prepare=lambda *_: (record, base, plugins / 'own-pair'),
                 PLUGIN_ROOT=plugins, common=common, processes=lambda: [],
-                fields=native_verifier.fields, verify_observation=verifier)
+                fields=native_verifier.fields, verify_observation=verifier, birth=lambda _:99)
+            published={'status':'OBSERVED','pid':123,'birth':99,'build_id':'owned-build','deadline':1110,
+                'sample':dict(zip(launch.timeline.FIELDS,(1000000,1000,1000000000,2000000000,1,1)))}
             def drive(*_):
                 trace = base / 'trace'; trace.mkdir()
                 (trace / 'publication-intent.json').write_text(json.dumps({'monotonic_deadline': time.monotonic() + 1}))
-                return {'status': 'INCOMPLETE', 'publication': 'SENT_ONCE', 'pid': 123, 'key': key}
+                if timing_mode:
+                    (trace/'publication-timing.json').write_text(json.dumps(published))
+                    for phase,leaf in [(0,'request-received'),(2,'request-deadline-check')]:
+                        stamp=dict(zip(launch.timeline.FIELDS,(1180000,3000,3000000000,182000000000,1,1)))
+                        data='AEHL-CAL-TIMING-1\nbuild=owned-build\npid='+('456' if timing_mode=='foreign' else '123')+'\nbirth=99\nphase='+str(phase)+'\ndeadline='+('0' if phase==0 else '1110')+'\n'
+                        (control/leaf).write_text(data+''.join(k+'='+str(v)+'\n' for k,v in stamp.items()))
+                return {'status': 'INCOMPLETE', 'publication': 'SENT_ONCE', 'pid': 123, 'key': key,
+                        'owned_process':{'pid':123}}
             with contextlib.ExitStack() as stack:
                 for name, value in [('load_native', lambda: native), ('native_profile', lambda *_: {'kind': 'own-control'}),
                                     ('transport_admission', lambda *_: None), ('validate', lambda r: r),
-                                    ('read_json', lambda *_: {}), ('drive', drive)]:
+                                    ('read_json', lambda path,*_: published if Path(path).name=='publication-timing.json' else {}), ('drive', drive)]:
                     stack.enter_context(patch.object(launch, name, value))
                 stack.enter_context(patch.object(launch.subprocess, 'run', return_value=SimpleNamespace(returncode=0)))
                 launch.execute(base / 'manifest.json', 'digest', base / 'transport.json', 'transport-digest')
-            return json.loads((base / 'trace/sdk-receipt.json').read_text()), reads, verifier
+            output=json.loads((base / 'trace/sdk-receipt.json').read_text()), reads, verifier
+            return (*output,json.loads((base/'trace/request-timeline.json').read_text())) if timing_mode else output
 
     def test_refused_original_response_precedes_absent_samples(self):
         raw = b'AEHL-CAL-RESULT-2\nbuild=owned-build\nstatus=REFUSED\nstage=idle-registration\ncleanup=PASS\nrender=UNKNOWN\n'

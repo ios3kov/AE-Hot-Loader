@@ -22,6 +22,7 @@
 #include <filesystem>
 #include <libproc.h>
 #include <mach-o/dyld.h>
+#include <mach/mach_time.h>
 #include <pthread.h>
 #include <sstream>
 
@@ -71,11 +72,22 @@ std::string DiagnosticDetails() {
     return details;
 }
 void Require(bool okay) { if (!okay) throw std::runtime_error("calibration refused"); }
+#ifdef AEHL_CALIBRATION_DIAGNOSTIC_CLOCK_TEST
+// Only the owned request-test compilation defines this flag, never the bundle.
+struct DiagnosticClock { bool enabled=false; std::uint64_t wall_ms=0, monotonic_ms=0,
+    absolute_ticks=0, continuous_ticks=0; } diagnostic_clock;
+#endif
 std::uint64_t Now() {
+#ifdef AEHL_CALIBRATION_DIAGNOSTIC_CLOCK_TEST
+    if (diagnostic_clock.enabled) return diagnostic_clock.wall_ms / 1000;
+#endif
     return static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::seconds>(
         std::chrono::system_clock::now().time_since_epoch()).count());
 }
 std::uint64_t MonotonicMillis() {
+#ifdef AEHL_CALIBRATION_DIAGNOSTIC_CLOCK_TEST
+    if (diagnostic_clock.enabled) return diagnostic_clock.monotonic_ms;
+#endif
     return static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(
         std::chrono::steady_clock::now().time_since_epoch()).count());
 }
@@ -121,6 +133,33 @@ void Save(const char* name, const std::string& text) {
         Require(n > 0); offset += static_cast<std::size_t>(n);
     }
     Require(fsync(fd.get()) == 0 && fd.close_checked() && fsync(dir.get()) == 0);
+}
+// Fixed one-shot timing metadata only. Missing/failed diagnostics remain UNKNOWN
+// and cannot relax authorization, retry, mutate a project or skip cleanup.
+void RequestTiming(unsigned phase, std::uint64_t deadline=0) noexcept {
+    static constexpr const char* leaves[]={"request-received", "request-parsed",
+        "request-deadline-check", "request-binding-before", "request-binding-after"};
+    if (phase >= sizeof(leaves)/sizeof(leaves[0])) return;
+    try {
+        auto wall=static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count());
+        const auto monotonic=MonotonicMillis();
+        auto absolute=mach_absolute_time(), continuous=mach_continuous_time();
+        mach_timebase_info_data_t scale{};
+        Require(mach_timebase_info(&scale)==KERN_SUCCESS && scale.numer && scale.denom);
+#ifdef AEHL_CALIBRATION_DIAGNOSTIC_CLOCK_TEST
+        if (diagnostic_clock.enabled) {
+            wall=diagnostic_clock.wall_ms; absolute=diagnostic_clock.absolute_ticks;
+            continuous=diagnostic_clock.continuous_ticks; scale.numer=scale.denom=1;
+        }
+#endif
+        Save(leaves[phase], std::string("AEHL-CAL-TIMING-1\nbuild=")+calibration_build+
+            "\npid="+std::to_string(getpid())+"\nbirth="+std::to_string(Birth())+
+            "\nphase="+std::to_string(phase)+"\ndeadline="+std::to_string(deadline)+
+            "\nwall_ms="+std::to_string(wall)+"\nmonotonic_ms="+std::to_string(monotonic)+
+            "\nabsolute_ticks="+std::to_string(absolute)+"\ncontinuous_ticks="+std::to_string(continuous)+
+            "\ntimebase_numer="+std::to_string(scale.numer)+"\ntimebase_denom="+std::to_string(scale.denom)+"\n");
+    } catch (...) { /* No diagnostic write can change the operation's result. */ }
 }
 // Optional fixed metadata. Failure cannot change the SDK operation's result.
 void DescribeProvider(const char* leaf, std::uintptr_t address) noexcept {
@@ -791,12 +830,14 @@ A_Err Idle(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long*) noexcept {
         DiagnosticStage("request-discovery");
         if (!Exists("request")) return 0;
         consumed = true; // before parsing, acquisition, reentry or any host operation
+        RequestTiming(0);
         startup_calibration::Authorization request;
         std::string schema, ownership, binary, trailing;
         DiagnosticStage("request-read");
         std::istringstream input(Read("request"));
         DiagnosticStage("request-parse-fields");
         Require(static_cast<bool>(input >> schema >> request.token >> request.pid >> request.birth >> request.deadline >> ownership >> binary));
+        RequestTiming(1, request.deadline);
         DiagnosticStage("request-parse-contract");
         Require(!(input >> trailing) && schema == "AEHL-CAL-REQUEST-2" &&
             (ownership == "OWNED-STARTUP-APPLY-RENDER" || ownership == "OWNED-STARTUP-QUEUE-CONTROL" ||
@@ -808,10 +849,12 @@ A_Err Idle(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long*) noexcept {
         const startup_calibration::Authorization bound{calibration_token, getpid(), Birth(), 0, true};
         DiagnosticStage("request-token"); Require(request.token == bound.token);
         DiagnosticStage("request-process"); Require(request.pid == bound.pid && request.birth == bound.birth);
-        DiagnosticStage("request-deadline"); Require(request.deadline > Now() && request.deadline - Now() <= 120);
+        DiagnosticStage("request-deadline"); RequestTiming(2, request.deadline);
+        Require(request.deadline > Now() && request.deadline - Now() <= 120);
         DiagnosticStage("request-module-path"); Require(Module() == calibration_module);
         DiagnosticStage("request-executable-path"); Require(Executable() == calibration_executable);
         DiagnosticStage("request-resident-binding");
+        RequestTiming(3, request.deadline);
         const auto self = [&] {
             resident_binding::Difference difference;
             try { return resident_binding::Resolve({calibration_module, Digest(binary)}, {"_AEHL_CalibrationBuildIdentity"}, &difference); }
@@ -821,6 +864,7 @@ A_Err Idle(AEGP_GlobalRefcon, AEGP_IdleRefcon, A_long*) noexcept {
                 throw;
             }
         }();
+        RequestTiming(4, request.deadline);
         DiagnosticStage("request-resident-symbol");
         Require(self.functions.at("_AEHL_CalibrationBuildIdentity") == reinterpret_cast<void*>(&AEHL_CalibrationBuildIdentity));
         DiagnosticStage("request-names-allocation");

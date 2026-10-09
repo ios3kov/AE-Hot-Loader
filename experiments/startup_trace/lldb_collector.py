@@ -17,6 +17,7 @@ from core import Trace, need
 from stops import capture, select, initial as initial_stop
 from profile import validate, read_json, ROOT
 from lifecycle import stopped_event, same_stop
+import timeline
 
 
 def load_native():
@@ -152,7 +153,16 @@ def observe(debugger, profile_path, digest, output):
                     write_once(output/'publication-breakpoints.json', own_breakpoint_inventory(record,breaks))
                     publication='OUTCOME_UNKNOWN';deadline=now+120
                     write_once(output/'publication-intent.json',{'state':'OUTCOME_UNKNOWN','pid':observed['pid'],'build_id':candidate['build_id'],'monotonic_deadline':deadline})
-                    native.publish(control,native.request(candidate,observed,int(time.time())+110,observation_mode=True))
+                    native_deadline=int(time.time())+110
+                    timing={'status':'UNKNOWN','deadline':native_deadline}
+                    try: timing={'status':'OBSERVED','deadline':native_deadline,'sample':timeline.snapshot()}
+                    except Exception: pass
+                    timing.update(pid=observed['pid'],birth=native.birth(observed),build_id=candidate['build_id'])
+                    try:write_once(output/'publication-timing.json',timing)
+                    except Exception:report['publication_timing']='UNKNOWN'
+                    native.publish(control,native.request(candidate,observed,native_deadline,observation_mode=True))
+                    try:write_once(output/'publication-complete-timing.json',{'status':'OBSERVED','sample':timeline.snapshot()})
+                    except Exception:report['publication_complete_timing']='UNKNOWN'
                     publication='SENT_ONCE'
             event=lldb.SBEvent();received=listener.WaitForEvent(1,event)
             state=process.GetState()

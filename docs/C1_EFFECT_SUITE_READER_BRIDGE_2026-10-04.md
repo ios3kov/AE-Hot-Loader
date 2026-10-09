@@ -18,6 +18,59 @@ and does not become a live registration/apply/render result.
 
 
 
+## Request deadline timeline — 2026-10-09
+
+Rules11.1.0/source04b606845e0f73ab28b9807bb45682eae4d6ce34;
+baseline1e9854fc79256e2236fea009d50d6b0160cbb690. Critical/Development;
+context-discipline and production-engineering. Process1/3/4/7/10/11,
+Engineering14/16/34/41, Tools22, Native23, Skills43 and Delivery26 apply.
+User approved16 steps and ONE conditional owned registry-only startup. Normal
+owned quit authority persists. No private call, Apply/render/project mutation,
+clock change, forced sleep/termination, persistent power preference or release.
+
+| Task | Acceptance / evidence | Current state |
+| --- | --- | --- |
+| RT01 | Restore exact prior source/run/receipts | PASS1e9854f and own b5cf2e54c8ea |
+| RT02 | Preserve timing and historical Evidence | PASS31 private ZIP hashes inventoried |
+| RT03 | Narrow actual Sleep/Wake correlation | PASS system sleep overlaps deadline; temporal support, exclusive cause UNKNOWN |
+| RT04 | Paired publication clocks and completion | Implemented; exact source verification pending |
+| RT05 | First request receipt/parse/deadline clocks | Actual owned Idle controls PASS; AE NOT_RUN |
+| RT06 | Binding-before/after timing, strict supervisor identity/schema | Implemented; own malformed/foreign controls PASS |
+| RT07 | Normal delivery control | PASS pure timing and actual owned Idle |
+| RT08 | Active delay/sleep interval control | PASS injected clocks; no real OS sleep/clock changes |
+| RT09 | Forward wall change control | PASS injected expired request retains refusal |
+| RT10 | Backward wall change control | PASS injected future-window request retains refusal |
+| RT11 | Full offline regression | Pending clean identified source |
+| RT12 | Exact SDK/build | Pending fresh own pair; no old artifact relabel |
+| RT13 | Review/scanner/fresh debugger control | Pending exact source |
+| RT14 | ONE awake conditional AE observation | NOT_RUN until admission; no retry |
+| RT15 | Safe detach/normal owned quit/absence/retirement | Conditional; no save discard or force |
+| RT16 | Immutable Evidence/checkpoint/research CI | Pending; no main/merge/release |
+
+Old request published near18:44:50UTC, deadline18:46:40UTC, result19:11:23UTC.
+Scoped system power records show Sleep18:45:01/18:45:09 and19:00:33UTC.
+Exact private epochs are authoritative. Full Wake19:10:12UTC is after
+the deadline. Several DarkWake events do not establish AE main-thread execution.
+First parser included Wake Requests planning lines; corrected exact-label parser
+excludes them. Retained both summaries; no conclusion depends on that error.
+Sleep hypothesis is supported, lid-specific cause not proven by the recorded
+Maintenance categories. Prior run lacks first Idle clocks: processing delay and
+sleep contribution cannot be fully separated retroactively.
+
+New own timing records capture wall/steady milliseconds and absolute/continuous
+Mach ticks with explicit timebase. Apple declares continuous time advances during
+sleep in [mach_time.h](https://github.com/apple/darwin-xnu/blob/main/osfmk/mach/mach_time.h).
+Local system header availability/units verified before native build; no Apple
+implementation copied. Metadata only, no deadline renewal, retry or changed
+authorization. Snapshot sampling is sequential;1second diagnostic tolerance and
+causal limits retained. Time evidence cannot complete C1 or authorize late-add.
+Actual signed bundle never defines the test-clock injection flag; only the owned
+request-test compilation does. Existing deadline/code/PID/birth/auth guards remain.
+
+C1PARTIAL/private appendBLOCKED/C2late-addNOT_RUN. Working Evidence:
+build-ae-hot-loader/request-timeline-2026-10-09-1e9854f. Final results will replace
+only this current packet; all historical sections and obligations remain intact.
+
 ## Own text mismatch classification — 2026-10-09
 
 Rules11.1.0/source04b606845e0f73ab28b9807bb45682eae4d6ce34;

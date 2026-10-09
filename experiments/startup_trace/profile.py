@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[2]
 HOST = Path('/Applications/Adobe After Effects 2025/Adobe After Effects 2025.app/Contents/MacOS/After Effects')
 HOST_SHA = '464ad678ca19ba78478e2989c42f42bea3fd95e51c9180c1556c53c973457df6'
 BASE = HOST.parents[1]
-COLLECTOR_SOURCES=tuple('experiments/startup_trace/'+name for name in ('core.py','image.py','profile.py','lldb_collector.py','launch.py','fixture.py','fixture.cpp','stops.py','lifecycle.py'))
+COLLECTOR_SOURCES=tuple('experiments/startup_trace/'+name for name in ('core.py','image.py','profile.py','lldb_collector.py','launch.py','fixture.py','fixture.cpp','stops.py','lifecycle.py','timeline.py'))
 
 def collector_hashes():
     return {name:hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in COLLECTOR_SOURCES}

@@ -173,6 +173,8 @@ def main():
             (test_config / "CalibrationConfig.hpp").write_text(test_text)
             (test_config / "CalibrationConfig.hpp").chmod(0o600)
             test_common = [part if part != "-I" + str(output) else "-I" + str(test_config) for part in common]
+            if label == "request":
+                test_common = test_common + ["-DAEHL_CALIBRATION_DIAGNOSTIC_CLOCK_TEST=1"]
         command = test_common + ["-fsanitize=address,undefined", "-fno-omit-frame-pointer", str(test)]
         if label == "adapter":
             command += [str(Path(__file__).with_name("MarkerEffect.cpp"))]

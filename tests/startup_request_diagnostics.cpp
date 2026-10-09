@@ -89,6 +89,33 @@ int main(int argc, char** argv) {
         Require(difference_details == "mismatch_relative_offset=6\nmismatch_file_offset=4102\nmismatch_expected_word=67305985\nmismatch_actual_word=67699201\n");
         DiagnosticStage("resident-text-read");
         Require(DiagnosticDetails().empty()); // A later error cannot leak stale code details.
+#ifdef AEHL_CALIBRATION_DIAGNOSTIC_CLOCK_TEST
+        // Actual Idle on owned files with injected clocks; never changes OS time.
+        // Normal delivery reaches the deliberate module-path refusal; expired
+        // active/sleep/forward-clock and backward-clock requests stop earlier.
+        for (unsigned mode=0; mode<5; ++mode) {
+            const auto path=base+"/clock-"+std::to_string(mode);
+            Require(std::filesystem::create_directory(path) && chmod(path.c_str(),0700)==0);
+            calibration_control=path.c_str();calibration_module=module_before;consumed=false;cleanup_ok=true;
+            diagnostic_clock={true, mode==0?1002000ULL:mode==4?820000ULL:1180000ULL,
+                mode==1?180000ULL:2000ULL,mode==1?181000000000ULL:3000000000ULL,
+                mode==1||mode==2?182000000000ULL:4000000000ULL};
+            Save("request",std::string("AEHL-CAL-REQUEST-2 ")+calibration_token+" "+
+                std::to_string(getpid())+" "+std::to_string(Birth())+
+                " 1110 OWNED-STARTUP-REGISTRY-OBSERVATION "+std::string(64,'0')+"\n");
+            Idle(nullptr,nullptr,nullptr);
+            const auto result=Read("result");
+            Require(result.find(std::string("\nstage=")+(mode==0?"request-module-path":"request-deadline")+"\n")!=std::string::npos);
+            Require(Exists("request-received") && Exists("request-parsed") && Exists("request-deadline-check"));
+            Require(!Exists("request-binding-before") && !Exists("begin") && !names);
+            const auto timing=Read("request-deadline-check");
+            Require(timing.find("\ndeadline=1110\n")!=std::string::npos &&
+                timing.find("\nwall_ms="+std::to_string(diagnostic_clock.wall_ms)+"\n")!=std::string::npos);
+            Idle(nullptr,nullptr,nullptr);Require(Read("result")==result && Read("request-deadline-check")==timing);
+        }
+        diagnostic_clock.enabled=false;
+        std::cout<<"PASS:5 actual Idle clock scenarios; one-shot timing; OS_clock_changes=0; Adobe_calls=0\n";
+#endif
         SuiteCases();
         std::cout << "PASS:14 owned request refusals; 5 owned SDK-acquisition cases; actual Idle stage and replay guards; Adobe_calls=0\n";
         return 0;
