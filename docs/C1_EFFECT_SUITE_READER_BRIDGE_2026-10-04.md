@@ -26,27 +26,28 @@ competing hypotheses. Preserve product goal, source/Evidence and owned normal-qu
 authority. ONE conditional debugger-free normal-startup SDK observation; no private
 invocation, late-add, Apply/render, worker AEGP, preferences or foreign-session access.
 
-| Step | Observable acceptance | Preparation state |
+| Step | Observable acceptance | Final scoped state |
 | --- | --- | --- |
 | RH01 | Restore clean branch/source and original Evidence | PASS d603581; prior exact research/macOS CI PASS |
 | RH02 | Adopted entrypoint/modules/skills | PASS pinned11.1.0; no automatic latest-main adoption |
 | RH03 | Target SDK registration and reader contracts | PASS local25.6_61; registration entry distinct from selectors; NONE/previous-key enumeration |
 | RH04 | Metadata preparation versus ordinary publication | PASS selected original callback/context/conversion; live commit not inferred |
-| RH05 | Enumerate fallback/cache/setup routes | PARTIAL static alternatives; actual own lane UNKNOWN |
+| RH05 | Enumerate fallback/cache/setup routes | PARTIAL static alternatives; actual R identity listed, exclusive call graph UNKNOWN |
 | RH06 | Interface copies and ownership edges | PARTIAL static retained interfaces; actual transfer UNKNOWN |
 | RH07 | Backward reader/index/storage slice | PASS selected exact file lane/shared FLT; live own record UNKNOWN |
 | RH08 | Forward callback/context/PiPL slice | PASS selected file slice; actual producer-to-writer gap remains |
-| RH09 | Reconcile seven hypotheses and discrimination | PREPARED contrast metadata/resource names; missing trace is not impossibility |
-| RH10 | Scoped observer and controls | 21 focused Python cases PASS; full exact-source checks/SDK build pending |
-| RH11 | ONE admitted normal-startup observation | NOT_RUN at preparation; no debugger or host object reads |
-| RH12 | Final review/Evidence/checkpoint/source/CI | Pending; no product or release gate promoted |
+| RH09 | Reconcile seven hypotheses and discrimination | PARTIAL actual resource-only contrast narrows target; no live writer identity or impossibility conclusion |
+| RH10 | Scoped observer and controls | PASS S3 595Python/62Node/22stages, SDK74 pins; M-only/R-only/both three-sample native controls and direct mutation refusals |
+| RH11 | ONE admitted normal-startup observation | PARTIAL S2: one complete R-only traversal; old M-only guard refused. S3 actual AE NOT_RUN |
+| RH12 | Final review/Evidence/checkpoint/source/CI | Separate critical review and verified private archive PASS; research publication/CI closeout below; no product gate promoted |
 
 The existing marker has the same match name in PluginDataEntryFunction2 and its
 resource PiPL. Its installed presence cannot distinguish which registration lane
 produced the record. Opt-in builder now emits compact resource AEHL.R.<nonce>
 versus unchanged callback AEHL.M.<nonce>, with the same unique display name.
-Native MarkerEffect/CalibrationObserver code, SDK API, flags, binding, deadline
-and observation guards are unchanged. DeRez reads the compiled PiPL back and
+S1/S2 preserve native MarkerEffect/CalibrationObserver code, SDK API, flags,
+binding and deadline. Corrected S3 changes only the read-only identity selection
+and blocks direct mutating requests in the contrast observer. DeRez reads the compiled PiPL back and
 compares full bytes. Resource identity enters the candidate manifest. Controller
 refuses this candidate in Apply/queue/render mode before installation; trace
 sentinels cannot be combined. Three complete SDK traversals compare metadata
@@ -59,13 +60,88 @@ route; old scripting-only late signal; copied identity; startup context dependen
 separate metadata/FLT/canonical/UI projections; multiple module/root generations.
 Selected original-file evidence already establishes shared FLT backing storage.
 Do not restart that proven static question or equate it with actual own live identity.
-Current software reader-sentinel breakpoint can interfere with strict resident
+The earlier software reader-sentinel breakpoint can interfere with strict resident
 code checks. This experiment uses the established debugger-free witness. Hardware
 LLDB scripting API was researched but not implemented/admitted as an AE remedy.
 
 Private state/evidence: build-ae-hot-loader/route-hypotheses-2026-10-09-d603581.
-C1 PARTIAL / private append BLOCKED / C2 late-add NOT_RUN. Final actual result
-will be appended here; historical sections below remain unchanged.
+C1 PARTIAL / private append BLOCKED / C2 late-add NOT_RUN. Historical sections
+below remain unchanged.
+
+### Actual resource contrast and observer correction
+
+S1 8a1280e088e82ca153053ea4189c0e5223ae93f6 passed591Python/62Node/22stages.
+Its SDK build stopped before installation: DeRez's resource comments contain
+non-UTF8 bytes. S2 eaec31ee30dc980fbb6ee1b62bf436cec1585480 extracts only ASCII
+hex literals from preserved raw output and compares the complete PiPL bytes;
+strict text decoding for all other commands is unchanged. S2 passed592Python,
+22stages/62Node and fresh SDK74 pins/offline controls/signatures/exports.
+
+ONE actual debugger-free S2 run4d7cf20bfe374e85a19fb7d186d885f1:
+AE25.6x101 arm64, PID70077/birth1791578959271577, manifest SHA256
+4893048e686463cd7279b91c58c62dd10a09bb10fd6c25ce41e5725bf22ab6b0.
+An acquired Effect Suite5 traversal is complete: count/traversed787, revision1,
+one own effect, key796, resource match AEHL.R.4d7cf20bfe374e85a19fb7d1.
+Callback match AEHL.M.4d7cf20bfe374e85a19fb7d1 is absent from that traversal.
+Exact own resident marker counters show registration started/completed1,
+mainthread1/callback result0; GLOBAL_SETUP0/PARAM_SETUP0. Six acquired reader/apply
+slot addresses map to pinned AEGPDriver; callback maps to PluginSupport4b194.
+File UUID/hash/offset correspondence is rechecked; no descriptor read is claimed.
+
+The old native observer required the M identity and REFUSED at
+registry-observation-own-marker after saving names-0. Names-1/2 were never taken;
+the supervisor's missing-file reason is secondary to this native refusal. This
+is one complete traversal, **not** a three-sample PASS. The actual observation
+shows that callback success did not entail publication of its unmodified M
+identity. It does not prove an exclusive resource call graph, exclude cached or
+overridden metadata, or establish any pointer/lifetime/writer/late-add contract.
+Next tracing must follow resource identity and possible identity overrides,
+without assuming the earlier callback PiPL is the installed descriptor producer.
+
+Normal quit of the exact owned PID through AppKit, independent process absence
+and exact pair retirement outside discovery PASS; other discovery entries are
+unchanged. No debugger, private call, Apply, render, project mutation, force quit
+or save-discard occurred. No fresh native cleanup-safe receipt existed; normal
+quit/absence is recorded separately rather than inventing SDK cleanup acceptance.
+
+Corrected S3 734c0a1b5682035c123aab6ee41387cd26791afd selects M-only/R-only/both
+only in the opt-in read-only observer. It requires complete traversal, exact
+owned display/match identity, unique nonzero keys and stable M/R key sets across
+three samples; default single-identity behavior remains. Contrast native parsing
+also rejects direct Apply/queue requests before binding/Backend. Supervisor now
+reports native refusal before opening unperformed samples. Twelve native route
+selection controls, three actual observer finish branches and two direct request
+refusals PASS with fake SDK callbacks. S3 full595Python/62Node/22stages, no skips;
+SDK74 pins, resource readback, signatures/exports and all existing adapter checks
+PASS. Fresh run511e21933ab544898709a3bf89c149e9, manifest SHA256
+18c0fd832a8170248b0cdf2c09c6ebb6c6fa5300ca063b84d54d7a309f91c581.
+**S3 installation/AE loading/three actual samples NOT_RUN:** the packet's single
+host attempt was already consumed. Own SDK controls do not complete that criterion.
+
+Separate final critical same-developer review retains all unmet criteria.
+Complete S1/S2/S3 scanner inventories each288supported/143unsupported, no
+omissions. One heuristic auth-rate-limit finding at tools/artifact_manifest.py71
+is a reviewed false positive: local argparse mode selection, no HTTP/auth route.
+Selected original-file23bodies/6094instructions/1712branches and current four
+provider pins were independently reverified in fresh private copies; historical
+artifacts were not overwritten. These reused static facts are not new live proof.
+
+Private archive AEHL-route-discriminator-734c0a1.zip: SHA256
+4c9ee8f1facb7ae20bf9e6d19d4674e967ed9dc58ea3b9b3c6e9ed03cc3384ec,
+750entries/6806739bytes. Full member hashes/modes and CRC roundtrip PASS. Includes
+all three source snapshots, selected file proofs, failed S1 build, S2 actual
+journals/normal quit/retirement, S3 preparation and exact regression archives.
+Adobe original binaries/full SDK headers/user projects excluded. Documentation E
+and CI closeout are separate; earlier primary archives remain immutable.
+
+S3 exact-source CI PASS:
+[research37990192109](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37990192109)
+and [macOS37990192217](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37990192217);
+all expected jobs completed successfully. Documentation E/its exact CI remain
+separate, with full non-document implementation byte invariance to S3 verified.
+Offline success does not complete live writer/ownership/readset/commit or
+late-registration/apply/frame gates. Next: one separately scoped corrected
+three-sample contrast control, then a resource-identity-to-spec/writer trace.
 
 
 ## Three decisive questions: debugger-free SDK baseline — 2026-10-09

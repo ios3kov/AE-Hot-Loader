@@ -1,5 +1,22 @@
 # AE Hot Loader — current development status
 
+## Current competing route block — 2026-10-09
+
+Rules11.1.0/source04b6068. ONE actual debugger-free S2 eaec31e startup is PARTIAL:
+callback M completed once/mainthread/result0, but one complete SDK5 traversal lists
+resource R at key796, M absent, count787/revision1. Old M-only guard REFUSED before
+samples1/2; missing-file supervisor reason was secondary. No Apply/render/mutation.
+Normal owned quit/absence/exact pair retirement PASS; no fresh SDK cleanup receipt.
+Corrected S3 734c0a1:595Python/62Node/22stages and SDK74pins PASS; actual observer
+M-only/R-only/both controls and direct mutation refusals PASS. S3 AE NOT_RUN.
+Separate final critical review/scanner findings reviewed;750member private Evidence
+verified. Source publication/CI closeout stays separate from S2 runtime evidence.
+C1 PARTIAL / private append BLOCKED / C2 late-add NOT_RUN. New constraint: successful
+metadata callback does not establish its unmodified identity in installed effects.
+Next: corrected three-sample resource contrast, then resource identity→spec/writer;
+exclusive resource call graph and live descriptor/lifetime/commit remain UNKNOWN.
+[Single checkpoint and RH01–RH12 reconciliation](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#competing-route-hypotheses-and-discriminator--2026-10-09).
+
 ## Current decisive research block — 2026-10-09
 
 Historical original evidence re-audited: dynamic match appeared in the same

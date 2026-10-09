@@ -162,15 +162,23 @@ confirmed an empty project; normal Quit and exact owned-bundle retirement are
 recorded separately. Current stages distinguish every enumeration rejection
 without weakening acceptance or logging other effect names. The diagnostic
 repair is offline until a fresh identified run is reviewed.
-# Registration route discriminator
+## Registration route discriminator
 
 `build.py --discriminate-registration-route` preserves the safe marker code and
 host-supplied metadata callback but gives the resource PiPL a different compact
 match name (`AEHL.R.` versus callback `AEHL.M.`), with the same unique display
 name. DeRez reads the compiled resource back and verifies its full PiPL bytes.
 This opt-in candidate permits only `run.py --observe-registry`; Apply, queue and
-render requests refuse before installation. It cannot mix trace sentinels.
+render requests refuse before installation and in native request parsing. It cannot mix trace sentinels.
 Three complete SDK samples distinguish metadata-name presence and resource-name
 presence. This is a normal-startup name-route observation, not live pointer
-identity, cache exclusion, complete registration or hot-add proof. A missing
-metadata name preserves the native refusal and original complete/partial sample.
+identity, cache exclusion, complete registration or hot-add proof. The corrected
+observer accepts exactly M-only, R-only or both, requires stable identity/key sets
+across all three samples, and rejects aliases/duplicates/wrong display names.
+The default build still requires its original single metadata identity. Native
+refusals are reported before trying to open unperformed samples.
+
+Actual S2 eaec31e listed only R at key796 in one complete startup SDK traversal;
+its older M-only guard refused before sample1. This is PARTIAL, not a three-sample
+PASS. Corrected S3 734c0a1 passed offline target-SDK observer/request controls;
+its AE installation/loading/observation are NOT_RUN in that packet.
