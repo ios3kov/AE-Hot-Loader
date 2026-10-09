@@ -2,10 +2,15 @@
 
 ## Current own-code classification packet — 2026-10-09
 
-Authorized16-step packet on rules11.1.0/source04b6068, baseline6a3982e.
-Preparing bounded first-byte/instruction diagnostics, own debugger metadata and
-original-file classification; validation and conditional AE run pending.
-C1PARTIAL/private append BLOCKED/C2NOT_RUN. Exact task/acceptance/Evidence:
+Rules11.1.0/source04b6068. NativeS1:2e3ecb2; collector correctionS2:f0706ba.
+Own first-byte/instruction and breakpoint-removal controls PASS. S2 fixes omitted
+reader metadata label; corrected AE inventory NOT_RUN.576Python/62Node/22stages,
+S1SDK74pins and exact Linux/macOS CI PASS. ONE AE observation REFUSED at
+request-deadline before binding/enumeration; actual byte cause UNKNOWN. Safe
+detach/normal owned quit/absence/exact pair retirement PASS. Primary private
+Evidence verified; final documentation E CI retained separately.
+C1PARTIAL/private append BLOCKED/C2NOT_RUN. Next: paired wall/monotonic publish/
+first Idle timeline, preserving strict deadline/code checks. Exact16-task limits:
 [single checkpoint](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#own-text-mismatch-classification--2026-10-09).
 
 ## Current binding predicate packet — 2026-10-09

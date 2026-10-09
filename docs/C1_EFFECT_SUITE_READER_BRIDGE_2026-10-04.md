@@ -22,40 +22,124 @@ and does not become a live registration/apply/render result.
 
 Rules11.1.0/source04b606845e0f73ab28b9807bb45682eae4d6ce34;
 baseline6a3982eca4c96768078253e938809e4a2c826028, clean research branch.
-User authorizes the discussed16-step packet, including ONE conditional owned
-startup after fresh regression/SDK/debugger admission and normal owned quit.
-Critical risk / Development delivery. Existing C1 PARTIAL, private append BLOCKED,
-C2/late-add NOT_RUN persist. No acceptance of changed bytes, private call,
-Apply/render, project mutation, foreign-session read, force termination or release.
-Necessary local context-discipline and production-engineering skills reused;
-canonical Process1/3/4/7/10/11, Engineering14/16/34/41, Tools22, Native23,
-Skills43 and Delivery26 selected. Other product/render obligations remain open.
+User authorized16 steps including ONE conditional owned startup and normal owned
+quit. Critical risk / Development delivery. C1 PARTIAL, private append BLOCKED,
+C2/late-add NOT_RUN persist. No changed-byte acceptance, private call, Apply/render,
+project mutation, foreign-session read, force termination or release.
+Local context-discipline and production-engineering skills applied; canonical
+Process1/3/4/7/10/11, Engineering14/16/34/41, Tools22, Native23, Skills43 and
+Delivery26 selected. Other product/render obligations remain open.
 
-| Task | Requirement / observable acceptance | Check / current state |
+| Task | Requirement / acceptance | Result and limits |
 | --- | --- | --- |
-| TM01 | Restore exact run/source/artifacts and preserve older Evidence | clean6a3982e; private baseline inventory |
-| TM02 | Bounded first own mismatch offset and four-byte instruction | diagnostic implementation; validation pending |
-| TM03 | Read failures distinct from byte mismatch; no stale details | native memory/refusal controls pending |
-| TM04 | Map relative/file offsets, including fat slice and alignment | original-file classifier controls pending |
-| TM05 | Identify nearest own symbol; no invented function boundaries | actual own-file symtab mapping pending |
-| TM06 | Inspect original fixup/relocation metadata, not assume cause | bounded file classification pending |
-| TM07 | Actual own breakpoint UUID/file-address/enabled/hardware metadata | collector snapshots and own control pending |
-| TM08 | Own library patch control, strict refusal retained | actual debugger control pending |
-| TM09 | Own removal restores whole code equality | same owned control pending |
-| TM10 | Owned loader without debugger | plain-driver execution pending |
-| TM11 | Actual Idle serialization and supervisor reject malformed detail | actual SDK/offline adapter checks pending |
-| TM12 | Full regression and exact SDK build | pending identified clean source |
-| TM13 | Separate spec/quality/native/scanner review and fresh debugger admission | pending exact source |
-| TM14 | ONE conditional registry-only AE run; otherwise explicit blocker | NOT_RUN pending prerequisites |
-| TM15 | Safe detach, normal own quit, absence and exact pair retirement | conditional; no force/discard |
-| TM16 | Immutable private Evidence, current checkpoint/research CI reconciliation | pending; no merge/release |
+| TM01 | Exact sources/artifacts; historical Evidence preserved | PASS full429-file S1/S2 Git blobs/modes;28 older archives unchanged |
+| TM02 | Bounded first mismatch offset and one four-byte instruction | PASS owned library; actual AE capture NOT_RUN |
+| TM03 | Read failure/mismatch/stale detail distinguished | PASS ASan/UBSan equality/read-error/reset/chunk-boundary controls |
+| TM04 | Relative/file offset, fat slice and alignment mapping | PASS own original-file positive/negative controls; AE NOT_RUN |
+| TM05 | Nearest own symbol without invented function boundaries | PASS AEHL_OwnUnused distance0; true function boundaries UNKNOWN |
+| TM06 | Original relocation/fixup metadata | PASS bounded metadata; resident text fixup/cause UNKNOWN |
+| TM07 | Own breakpoint UUID/file-address/enabled/hardware metadata | PARTIAL S1 native: reader label omitted; S2 regression fix PASS; corrected AE inventory NOT_RUN |
+| TM08 | Own library software-breakpoint strict refusal | PASS actual first-instruction difference; not AE root-cause proof |
+| TM09 | Removing own breakpoint restores strict equality | PASS same owned process; no host byte masking |
+| TM10 | Plain owned loader | PASS FIRST/SECOND equality without debugger |
+| TM11 | Actual Idle serialization; malformed supervisor detail refused | PASS14Idle+5Suite cases,2 serializer checks, malformed schema/range/stage controls |
+| TM12 | Full regression and exact SDK/build | PASS S1:575Python; S2:576Python; both62Node/22stages, no skips; S1SDK74pins |
+| TM13 | Separate bounded spec/quality/native/scanner/debugger review | PASS own scope; same-developer review, not independent runtime certification |
+| TM14 | ONE conditional registry-only AE observation | EXECUTED_ONCE, REFUSED request-deadline; actual classification BLOCKED; enumeration NOT_RUN |
+| TM15 | Safe detach, normal own quit, absence, exact retirement | PASS PID34540; exact pair retained outside discovery, other entries unchanged |
+| TM16 | Immutable Evidence/checkpoint/research CI | SourceS1/S2 exact CI PASS; primary archive verified below; documentation E CI recorded separately |
 
-The original runtime predicate is resident-text-mismatch in b7a95c5; exact
-changed bytes/cause remain UNKNOWN. Original controls and source are retained.
-BRK encoding classification uses LLVM20.1.0 primary instruction definitions:
+### Own-code implementation and controls
+
+Native implementation/build S1:2e3ecb20f98fe5db050ca0c593cde4e119b6ce7c.
+EqualMemory captures only the first difference from the already-read bounded chunk:
+relative/file offsets and one aligned instruction. The same typed refusal remains;
+no extra memory read, ignored bytes, changed admission predicate or backend call.
+Actual Idle serializes four fixed numeric fields only for resident-text-mismatch;
+new stages reset stale detail. Supervisor rejects partial/extra/wrong-stage/range
+or inconsistent first-byte records. Other callers keep the original default path.
+
+Classifier reads only the pinned original own file, rechecks its digest and maps
+thin/fat slice, section, alignment and nearest symbol. Symbol proximity is not a
+function boundary. Bounded relocation/chained-fixup metadata does not establish
+resident text modifications. BRK encoding uses LLVM20.1.0 primary definitions:
 [AArch64InstrInfo](https://github.com/llvm/llvm-project/blob/llvmorg-20.1.0/llvm/lib/Target/AArch64/AArch64InstrInfo.td#L3068),
 [AArch64InstrFormats](https://github.com/llvm/llvm-project/blob/llvmorg-20.1.0/llvm/lib/Target/AArch64/AArch64InstrFormats.td#L4749).
-Encoding or matching breakpoint metadata alone is not proof of AE root cause.
+Encoding or breakpoint metadata alone is not proof of AE root cause.
+
+Own library control UUID072eb6f9-0836-390b-a6d2-7237f3de28b5, unused export
+AEHL_OwnUnused, relative0/file848: original instruction0x52800920, resident
+0xd4200000 with own software breakpoint enabled. Strict binding REFUSED; after
+removing that breakpoint in the same process, full strict equality PASS. The plain
+loader also passed twice. Own library had0text relocations and48bytes of chained-
+fixup command metadata; fixup effect UNKNOWN. This proves conditional debugger
+interference in the owned control, not the cause of the older AE mismatch.
+Actual memory controls also cover a mismatch beyond the8192-byte chunk boundary.
+
+S1 collector filtered marker/observer/fixture labels but the native profile names
+the helper reader. Native inventory therefore omitted that helper. S2f0706bad68249b0bf8dc36631ef4190fbe14bfde adds reader and an exact regression:
+saved S1 function fails0!=1; corrected function passes. One initial comparison
+setup imported the saved module first and shadowed the current path; that setup
+failure is retained separately. Corrected comparison loads current first.
+Only collector/test changed in S2; native C++/builder/SDK inputs and S1 artifact
+remain identical. No rebuilt artifact or corrected native observation is claimed.
+
+### Single AE observation and cleanup
+
+Runb5cf2e54c8ea4392b9cc4c388aad0742; S1 manifest SHA256
+6ad181c2032393ef1351040f084fb580c56be3ee005201b8c8f1f59653c3c257.
+Owned PID34540/birth1791567242524925.4events/4stops reached adapter phase;
+collector BLOCKED_OR_INCOMPLETE at the original trace deadline. Descriptor/root/
+writer/public key remain UNKNOWN. Request SENT_ONCE; native and supervisor both
+preserve REFUSED / request-deadline / cleanupPASS. Binding and byte capture were
+not reached. The old b7a95c5 resident-text-mismatch remains historical; this run
+neither reproduces nor localizes it. Expiry cause UNKNOWN: no inferred clock jump,
+startup delay, extended deadline or second AE run. No project/Apply/render changes.
+
+Debugger safe detach PASS. Fresh PID/birth/executable checked before reviewed
+ordinary quit; request SENT and independent absence PASS. Exact two owned bundles
+retired with hashes preserved; other discovery entries unchanged. Final scoped
+AE/aerender and own fixture process absence PASS. No window/project reads, signals,
+save discard, force termination or shared preference/plugin changes.
+
+### Validation and Evidence
+
+S1local575Python/62Node/22stages PASS; S2local576Python/62Node/22stages PASS,
+no skips. Nested native cases are not added to Python count. Exact SDK74file pins:
+3marker/3inert/13backend/21frame controls and14Idle+5Suite+2serializer checks PASS.
+These own offline checks invoke no Adobe callbacks and certify no private ABI.
+Fresh S1 and S2 debugger fixtures each complete13events/18stops with safe detach;
+S2early-exit23 correctly produces incomplete/ALREADY_EXITED/cleanup_safePASS.
+
+Complete429-file S1/S2 scanner inventories:286supported/143unsupported, no omissions.
+Raw scanner1/review_required; sole unchanged vibe.no_ratelimit_auth at
+tools/artifact_manifest.py:71, fingerprint e2999cfe8b5b3a6bd27f0a62, reviewed as a
+local argparse CLI false positive. No suppression or dependency/runtime/security
+certification. Separate spec/quality reviews are bounded same-developer reviews.
+
+Exact-source Linux/macOS CI PASS:
+S1[research37966539686](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37966539686)
+and[macOS37966539833](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37966539833);
+S2[research37979044778](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37979044778)
+and[macOS37979044813](https://github.com/ios3kov/AE-Hot-Loader/actions/runs/37979044813).
+Private primary archive AEHL-text-mismatch-f0706ba.zip, SHA256
+4e9d23b021ceced03ec6b35bd5b018d12f5331c159486fde7e5a11db5e535a05,
+1273entries/4981057bytes: full429-file S1/S2 blobs/modes, own controls/build/
+receipts, exact CI and reviews; every archived byte/mode/CRC verified. SDK headers,
+Adobe binaries and user projects are excluded. S2 regression archive SHA256
+20c94cb7cea386e507bad6064f1b998513b818c6a25f55d689799e77b865d5c2.
+Working receipts:build-ae-hot-loader/text-mismatch-2026-10-09-6a3982e.
+Final documentation E/source-inheritance/CI receipt is stored separately without
+reattributing the S1 native run or S2 controls to documentation E. No main/merge/
+release or product-completion claim. Initial publication approval rejection was
+resolved by exact origin/permission/payload proof; no outstanding approval block.
+
+Next bounded packet: capture paired wall/monotonic publication and first Idle
+receipt times, distinguish request processing delay from clock behavior, and use
+the corrected own reader inventory. Preserve strict deadline/code predicates;
+do not extend the timeout blindly. Only after that gate can actual own-byte
+classification be attempted. Live writer identity, late host entry, full render
+read set/lifetime and partial-publication recovery remain required product work.
 
 ## Binding predicate packet — 2026-10-09
 

@@ -5,7 +5,7 @@ and select the applicable canonical modules before each significant stage.
 Adopted on 2026-10-09 at the user's explicit migration request:
 AE-Development-Rules **11.1.0**, tag `v11.1.0`, peeled source
 `04b606845e0f73ab28b9807bb45682eae4d6ce34`.
-See [current binding-predicate scope and native reconciliation](docs/C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#binding-predicate-packet--2026-10-09).
+See [current own-code diagnostic scope and native reconciliation](docs/C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#own-text-mismatch-classification--2026-10-09).
 Previous v11.0.1 and v11.0.0 adoptions remain historical.
 Previous v8.0.0 adoption and Evidence remain historical and unchanged.
 Before a significant step, select risk/component/delivery rules and relevant
