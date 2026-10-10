@@ -1,5 +1,16 @@
 # Resource-first correlation preparation
 
+## Initializer patterns and cross-exec identity
+
+`python3 -m experiments.resource_trace.fsref_initializer /absolute/fresh/output`
+builds an owned actual-system initializer control. Five prefills, two alignment
+classes, same-content A/B, serial address reuse and a failed URL are observed.
+`--sanitizers` selects ASan/UBSan. Independent exec comparators check both file
+identities with both creation orders. A wrong identity is retained as an observed
+counterexample, never admitted for AE. Return-window refusals are MODEL_ONLY.
+No debugger/AE operation or new capture admission. See
+[initializer checkpoint](../../docs/C1_FSREF_INITIALIZER_2026-10-10.md).
+
 ## FSRef between processes and through the owned debugger
 
 `fsref_ipc.py /absolute/fresh/output` builds an owned Carbon emitter/comparator;
@@ -13,7 +24,9 @@ must refuse cross-invocation correlation. Only typed initialized own spans and
 A's copy are captured. No expression/attach/Adobe operation. Process/debugger
 timeouts preserve the unknown outcome for attention instead of killing it.
 
-These controls establish the exercised own process behavior, not permission or
+The later initializer controls expose creation-order-dependent wrong matches;
+raw FSRef IPC is BLOCKED as a source selector. These earlier controls establish
+only the exercised own process behavior, not permission or
 lifetime for ASL's stack output. [Checkpoint](../../docs/C1_FSREF_IPC_2026-10-10.md).
 
 ## Source identity controls

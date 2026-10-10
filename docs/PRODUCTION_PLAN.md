@@ -1,5 +1,14 @@
 # AE Hot Loader — current development and release plan
 
+## FSRef initializer and cross-exec identity — 2026-10-10
+
+Own initialized prefill/reuse observation implemented; cross-exec comparison
+produced wrong file identity in reverse/creation-order controls. Previous narrow
+IPC receipts remain historical; raw IPC is BLOCKED as an AE source selector.
+Final clean-source native/regression/CI receipts pending. AE NOT_RUN;
+C1 PARTIAL/private append BLOCKED/C2 NOT_RUN.
+[IN01–IN06 checkpoint](C1_FSREF_INITIALIZER_2026-10-10.md).
+
 ## Owned FSRef IPC and nested capture — 2026-10-10
 
 FI01–FI06: clean e8ae60e ordinary and ASan/UBSan IPC/debugger/nested/unwind
