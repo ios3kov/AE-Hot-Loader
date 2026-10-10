@@ -10,8 +10,18 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <sstream>
 #include <vector>
 #include <unistd.h>
+#ifdef AEHL_RESOURCE_DEBUGGER
+#include <pthread.h>
+// Owned wire buffer remains alive and unchanged until this exact NOP returns.
+// This is the fixture's contract; no Adobe layout/ownership is inferred.
+extern "C" __attribute__((naked, noinline, used)) void resource_probe(
+    const char*, std::uint64_t, const char*, std::uint64_t, std::uint64_t) {
+    asm volatile(".globl _resource_probe_site\n_resource_probe_site:\nnop\nret\n");
+}
+#endif
 
 namespace {
 std::string run, module, origin, fault;
@@ -28,16 +38,30 @@ std::string json_text(const std::string& s) {
 std::string number(std::uint64_t n) { return std::to_string(n); }
 using Fields = std::vector<std::pair<std::string, std::string>>;
 void emit(const std::string& role, const Fields& fields) {
-    std::cout << "{\"run_id\":" << json_text(run) << ",\"pid\":" << getpid()
-              << ",\"thread\":1,\"sequence\":" << sequence++
+    std::uint64_t thread = 1;
+#ifdef AEHL_RESOURCE_DEBUGGER
+    if (pthread_threadid_np(nullptr, &thread) != 0) throw std::runtime_error("thread identity");
+#endif
+    std::ostringstream encoded;
+    encoded << "{\"run_id\":" << json_text(run) << ",\"pid\":" << getpid()
+              << ",\"thread\":" << thread << ",\"sequence\":" << sequence++
               << ",\"role\":" << json_text(role) << ",\"values\":{";
     bool comma = false;
     for (const auto& field : fields) {
-        if (comma) std::cout << ',';
+        if (comma) encoded << ',';
         comma = true;
-        std::cout << json_text(field.first) << ':' << field.second;
+        encoded << json_text(field.first) << ':' << field.second;
     }
-    std::cout << "}}\n";
+    encoded << "}}";
+    const std::string wire = encoded.str();
+#ifdef AEHL_RESOURCE_DEBUGGER
+#ifdef AEHL_RESOURCE_BAD_EXTENT
+    resource_probe(wire.data(), 4097, wire.data(), wire.size(), pthread_main_np());
+#else
+    resource_probe(wire.data(), wire.size(), wire.data(), wire.size(), pthread_main_np());
+#endif
+#endif
+    std::cout << wire << '\n';
 }
 struct PiPLModel { std::vector<char> bytes; std::string name; };
 struct Descriptor { std::array<char, 32> name{}; std::shared_ptr<int> routine; };

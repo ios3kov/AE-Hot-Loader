@@ -18,6 +18,37 @@ and does not become a live registration/apply/render result.
 
 
 
+## Owned resource debugger transport — 2026-10-10
+
+Rules11.1.0/source04b6068; baselineef07547; Development diagnostic scope.
+Added a separate actual LLDB collector and stop-scoped byte-copy guard for the
+owned resource fixture. Target admission is restricted to a freshly built private
+arm64 fixture executable, exact source/image/site/resource digests, fresh PID/birth,
+OS main-thread assertion, isolated owned breakpoint and unchanged stop/mapping.
+No expressions, attach, arbitrary memory search, Adobe target or private calls.
+Returned bytes are copies of a reviewed immutable fixture-call buffer; mapping
+alone is not ownership proof. The fixture remains a model of Adobe dataflow.
+
+RT01 refreshes18 original-file bodies and13 candidate observation points, covering
+bundle/URL/module/cache paths, PiPL getter, bounded name copy/result, writer/index
+and retained reader. These are file-verified candidates, **not admitted Adobe
+sites**: own-object filtering, return pairing, actual backing spans and lifetime
+remain required. Cache labels are still fixture labels, not observed AE provenance.
+
+RT02–RT06 acceptance: reject bad/overflowing extents before read; reject foreign /
+stale process or stop, unreadable/executable/crossing mapping, short reads and
+mapping changes; capture ten events through actual LLDB; refuse alias/writer failure
+and bad extent controls; remove own breakpoints, detach and independently confirm
+fixture absence. Preserve old metadata collector bytes/admission. Actual transport
+checks are pending for the clean candidate; standalone/model PASS is insufficient.
+RT07–RT08 require separate review, regression, report and source-bound Evidence.
+
+C1 PARTIAL; safe private append BLOCKED; late-add/C2 NOT_RUN. No AE launch/install /
+memory read/Apply/render in this source preparation. Next admission depends on
+actual transport result and an independently reviewed Adobe borrow/load-context
+profile; it cannot be inferred from the fixture. Private Evidence location:
+`build-ae-hot-loader/resource-transport-2026-10-10-ef07547`.
+
 ## Resource-first correlation preparation — 2026-10-10
 
 Rules11.1.0/source04b6068; clean baseline5a3b195, same research branch.

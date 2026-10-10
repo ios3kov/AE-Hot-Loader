@@ -1,5 +1,13 @@
 # AE Hot Loader — current development and release plan
 
+## Owned resource debugger transport — 2026-10-10
+
+Separate stop-scoped read/LLDB fixture collector implemented; source-bound actual
+transport checks pending.18 original bodies/13 candidate points freshly verified
+file-only. Adobe borrowed strings/site/load-context admission remains BLOCKED;
+C1 PARTIAL/C2 NOT_RUN. No AE operation.
+[RT01–RT08 acceptance and scope](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#owned-resource-debugger-transport--2026-10-10).
+
 ## Resource-first correlation preparation — 2026-10-10
 
 RF01–RF07 bounded preparation/review complete: resource-first model contract,

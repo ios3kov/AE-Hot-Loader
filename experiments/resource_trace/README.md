@@ -64,3 +64,23 @@ own-object selection, detach and lifecycle on an owned debugger fixture. Then a
 known-good **startup** observation may prove the continuous own PiPL→FCSpec→
 writer→public key relation. Legal late context, full reader/lifetime coverage,
 partial failure and post-launch registration remain separate unproved gates.
+
+## Actual owned debugger transport
+
+`python3 -m experiments.resource_trace.debug_fixture` builds a clean-source private
+arm64 fixture with one exact NOP probe, then uses a dedicated LLDB listener. It
+reads only the probe's immutable wire buffer while that call is stopped, checking
+PID/birth/executable, OS main-thread assertion, UUID/file PC, backing extent,
+non-executable readable mapping and stop before/after access. No expressions,
+attach, broad memory search or Adobe target. Bytes are copied immediately.
+`--fault alias` / `writer-failure` / `wrong-owner` / `read-name` exercise correlation
+refusal; `--bad-extent` refuses a4097-byte request before process-memory access.
+Cleanup removes its breakpoint, detaches without killing, then independently
+checks fixture absence. Ambiguous cleanup retains the debugger for attention.
+
+The actual transport receipt is separate from standalone model receipts. It can
+validate fixture capture, not Adobe ABI, string backing/lifetime, resource/cache
+provenance, installed keys or late registration. The old metadata collector and
+its admission are unchanged; this collector cannot admit AE at all.
+LLDB API references: [SBProcess](https://lldb.llvm.org/python_api/lldb.SBProcess.html)
+and [SBMemoryRegionInfo](https://lldb.llvm.org/python_api/lldb.SBMemoryRegionInfo.html).
