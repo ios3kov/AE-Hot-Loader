@@ -4,7 +4,6 @@ import hashlib
 import json
 import os
 import shlex
-import signal
 import sys
 import time
 
@@ -15,7 +14,7 @@ from experiments.resource_trace.transport_profile import read_profile, validate
 from experiments.resource_trace.borrow import read
 # Reuse the reviewed event classification, PID/birth identity and cleanup paths.
 from experiments.startup_trace.lldb_collector import load_native, reg, write_once, finalize
-from experiments.startup_trace.stops import capture, select, initial
+from experiments.startup_trace.stops import capture, select
 from experiments.startup_trace.lifecycle import same_stop, stopped_event
 
 
@@ -50,7 +49,10 @@ def observe(debugger, profile_path, expected, output):
         launch.SetArguments([record['resource'], record['run_id'], pin['sha256'], record['origin'], record['fault']], False)
         launch.SetExecutableFile(lldb.SBFileSpec(pin['path']), True)
         launch.SetWorkingDirectory(str(output)); launch.SetDetachOnError(True)
-        launch.SetLaunchFlags(lldb.eLaunchFlagDebug | lldb.eLaunchFlagStopAtEntry)
+        # The probe is armed before launch. Do not request an extra entry stop:
+        # Apple debugserver may deliver a second startup SIGSTOP after resume.
+        # Only owned probe stops are accepted; unknown stops still refuse.
+        launch.SetLaunchFlags(lldb.eLaunchFlagDebug)
         launch.AddOpenFileAction(0, '/dev/null', True, False)
         for fd, leaf in ((1, 'fixture-stdout.log'), (2, 'fixture-stderr.log')):
             handle = os.open(output/leaf, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
@@ -63,7 +65,7 @@ def observe(debugger, profile_path, expected, output):
         need(observed['executable'] == pin['path'], 'launched executable differs')
         report['owned_process'] = observed
         write_once(output/'launch.json', observed)
-        unique = process.GetUniqueID(); first = True; last = None; thread_id = None
+        unique = process.GetUniqueID(); last = None; thread_id = None
         deadline = time.monotonic() + 60
 
         def identity():
@@ -82,11 +84,12 @@ def observe(debugger, profile_path, expected, output):
             stop = process.GetStopID()
             if stop == last: continue
             last = stop; snapshot = capture(process, lldb)
-            if first and not any(t['breakpoint'] for t in snapshot['threads']):
-                first = False; initial(snapshot, lldb, int(signal.SIGSTOP))
-                need(process.Continue().Success(), 'initial continue refused'); continue
-            first = False; report['stops'] += 1
-            selected, _ = select(snapshot, lldb.eStateStopped, {bp.GetID(): 'probe'}, thread_id)
+            report['stops'] += 1
+            try:
+                selected, _ = select(snapshot, lldb.eStateStopped, {bp.GetID(): 'probe'}, thread_id)
+            except ValueError as exc:
+                snapshot['refusal'] = str(exc); write_once(output/'unexpected-stop.json', snapshot)
+                raise
             same_stop(process, stop, lldb); identity()
             thread = process.GetThreadAtIndex(selected); frame = thread.GetFrameAtIndex(0)
             pc = frame.GetPCAddress()
