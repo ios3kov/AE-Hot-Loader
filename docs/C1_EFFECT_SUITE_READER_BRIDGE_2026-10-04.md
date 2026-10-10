@@ -18,6 +18,165 @@ and does not become a live registration/apply/render result.
 
 
 
+## Resource-to-writer mechanism — 2026-10-10
+
+Rules11.1.0/source04b6068; clean baseline7b3e3dc, research branch.
+Standard original-file/SDK/web research, Development delivery. Context Discipline
+and Production Engineering applied to selective source reuse, native ownership /
+exception review, exact evidence and final claim reconciliation. No native source
+or collector changed; no AE launch, installation, private call, Apply or render.
+
+### Result and exact scope
+
+The selected original-file creation mechanism is now more specific:
+
+`resource bytes or cached PiPL bytes → ML::PiPL → IPiPL getters →
+FLTp_FiltSetup → FCSpec name/routine preparation → FLTp_AddEffect →
+FLT_FilterRegistry::RegisterNewFilter → indexed/name-addressable FCSpec`.
+
+This is a selected static dataflow, **not an observed continuous trace of our
+resource-only marker**, and not an admitted post-launch call contract. Earlier
+actual sourceaab0d40/run581a8dbee08b4de3a405d0766386a47c remains the separate
+three-sample resource-only startup control (key796, no metadata entry, no global /
+parameter setup). It is not relabelled as this documentation candidate's run.
+C1 remains PARTIAL; safe private append BLOCKED; C2/late-add NOT_RUN.
+
+Fresh full-file SHA256/arm64 UUID checks cover FLT, PLUG, PluginSupport, aelib,
+BEE and TDB. FLT SHA227f0688d4272b1c0be2b2066d53b702e2363fca6002f873ea0acdc6a4d01256,
+UUIDc8786a71-e313-3b20-9494-359fb56d705a; PluginSupport
+SHA4d2c200b198124b43887bbb7e53c9e48514621a54feb36085822852978b45832,
+UUID64c01ac4-2413-3463-8822-17ee5543052a. Offsets below are unslid module-relative
+addresses in these files; no process addresses or live object types are inferred.
+
+### Findings that change the next experiment
+
+1. **Resolved selected virtual calls, rather than guessed names.** PiPL allocation
+   at46358 installs its primary address pointab138. Exact chained-fixup membership
+   and pointer format2/6 decoding, independently compared with Apple's local
+   `dyld_info`, resolve slots30/40/b0 to GetKind461cc / GetMatchName461dc /
+   IsCreatedFromResource46304. The latter two inspect PiPL+38 and its raw vector
+   +8/+10 respectively. FCSpec ctor5cc60 is a tail branch to the previously checked
+   base ctor5cae4; its primary table slot30 resolves to GetMatchName5e0fc, returning
+   FCSpec+40. Matching a static vtable does not identify an actual live receiver.
+2. **A concrete copying bridge.** SetPiPLValues searches property`eMNA`, matching
+   exact SDK Resources/AE_General.r503. It creates the PiPL+38 immutable string.
+   FiltSetup obtains the match-name interface at slot40, performs the selected
+   name/version transformations and UTF conversion, and calls SetMatchName at8d840.
+   SetMatchName5dfd8 copies through U_CopyString into the inline FCSpec+40 buffer
+   with a32-byte bound and an exception on error. The writer obtains that FCSpec
+   getter at50a8 for its name map. This explains why equality of the input string
+   storage and descriptor storage is the wrong requirement: contents are copied.
+   The PLUG routine owner is a separate retained dependency, not that name buffer.
+3. **Resource provenance needs more than an internal Boolean.**
+   IsCreatedFromResource only tests whether the saved raw PiPL vector is nonempty.
+   ReadFromRegistry41eb0 can fill the same vector via GetBinaryValue41f74 and then
+   invoke SetPiPLValues41f9c. Therefore this Boolean cannot independently distinguish
+   a current resource-file read from restored cache bytes. No cache was read or
+   changed in a running AE; actual cache use remains UNKNOWN.
+4. **Another resource producer exists.** AEPlugin::LoadPiPLs210c can load an ASL
+   module and call InternalLoadPiPLs4ca10. The latter enumerates bundle resources
+   of type`PiPL` with CFBundleCopyResourceURLsOfType4cabc, uses the URL overload,
+   or follows its module-resource fallback. This is separate from previously
+   captured PLUGp_GetPiPL10074 legacy resource-handle reads. Both are candidates;
+   neither is established as our actual marker's producer. CFURL/module overload
+   and interface adapters must be distinguished rather than collapsed by name.
+5. **Normalization is conditional.** SetPiPLValues405bc–405cc invokes
+   ChangeMatchNameBasedOnTypeOfPlugin when its raw vector is empty on that branch;
+   its eFKT case builds an`AE.` prefix. PopulateFromPluginData44260 is another
+   direct caller. Raw resource data follows a different branch. This is a concrete
+   intermediate transformation to record, not evidence that callback M became R.
+   Prefix handling alone does not establish substitution of their different nonce
+   identities. Actual callback/resource dominance remains a separate question.
+6. **The writer serves additional kinds of records.** The FLT __text direct-BL
+   inventory finds RegisterNewFilter callers at8bd8c (AddEffect),996f4 (missing
+   effect placeholder) and99a68 (compound effect). The freshly inspected compound
+   path9984c allocates a544-byte FCSpec, prepares flags/procedure/name and registers
+   it. This is an unexpected comparison path for host-generated descriptors; it
+   does not load an ordinary third-party module or establish invocation timing.
+   Four other selected images have no identified direct-BL import path to the
+   compound function. Indirect calls / other images remain outside that result.
+7. **Creation, insertion and readiness are different boundaries.** FiltSetup can
+   accept an existing owner or allocate a new FCSpec; its ordinary branches retain
+   a routine descriptor and run post-setup before AddEffect. An optional
+   ReadyFilter/lazy setup can follow insertion. RegisterNewFilter updates the
+   retained-owner vector, name map, short index and preferences under a recursive
+   mutex. NotifyFilterLoadingDone606c only sets registry+48 under its lock; it is
+   not a proven commit, barrier, notification delivery or late-call permission.
+   Rechecked exception exits release local resources/locks, but compensation of
+   partially visible vector/map/index state is still not established.
+
+### Eight hypotheses and discriminators
+
+| Hypothesis | Current result | Next discriminating observation |
+| --- | --- | --- |
+| H1 resource PiPL directly prepares the ordinary writer argument | Selected file bridge strengthened; actual own producer UNKNOWN | Bind own R bytes to IPiPL, then FCSpec and writer |
+| H2 an adapter/copy explains differing addresses | Name copy established for selected path; actual receiver UNKNOWN | Record content transfer and retained owner, not pointer equality alone |
+| H3 publication/readiness are separate phases | Multiple boundaries established statically; failure rule UNKNOWN | Identify first reader-visible insertion and all fallible steps after it |
+| H4 reader sees another index/snapshot | Prior selected reader/writer root bridge freshly rechecked; complete live/render coverage UNKNOWN | Same live key lookup and storage, including intermediary/version |
+| H5 match name joins separate objects | Inline copy and writer getter resolved; same-name identity insufficient | Continuous allocation/owner/index transfer for unique own nonce |
+| H6 module/context selects another host route | ASL/resource/provider lanes exist; actual choice UNKNOWN | Observe admitted producer/caller context without retaining callback context |
+| H7 cache/alternate resource bypasses the assumed producer | Cache can populate the same raw vector; second resource loader found | Record producer event and byte identity, not resource Boolean |
+| H8 selected writer belongs to another registry/kind | Selected FLT class serves ordinary/placeholder/compound callers; own live lane UNKNOWN | Observe ordinary routine/module owner in the same reader-addressable record |
+
+### Conditions for a post-launch experiment
+
+The smallest private writer is not yet an executable solution. Before a late-add
+we need (a) a legal ordinary module/routine/descriptor preparation context,
+(b) a continuous own record→public key lookup in live AE, (c) actual conflicting
+catalog/descriptor/UI/render readers and lifetime/locking rules, and (d) either
+non-failing commit after preparation or compensation for partial insertion.
+Keeping the new module until session end simplifies unload only; it does not
+supply these publication guarantees. Public SDK worker AEGP calls, Pause/Flush,
+GLOBAL_SETUP exclusivity and repeated successful frames cannot substitute them.
+
+The existing startup collector begins at the metadata-entry sentinel, follows
+metadata conversion/adapter events, and requires trace-identity sentinels. It
+cannot simply be reused for the resource-only zero-entry candidate: that candidate
+omits its mandatory first event and its resource provenance is not admitted by
+that profile. A resource-first collector must first discriminate producer/type,
+handle copied names and fixture-test bounded identity/borrowed-object/lifecycle
+reads while leaving strict resident checks intact. That implementation, fixture
+and live observation are NOT_RUN in this research packet; no unreviewed private
+invocation or broadened process-memory access was attempted.
+
+### RW01–RW16 acceptance and verification
+
+RW01 baseline/scope PASS; RW02 web search PASS as executed search, target internal
+contract still UNKNOWN; RW03 six exact SDK source files PASS; RW04 six original
+image pins PASS; RW05 actual producer PARTIAL; RW06 selected vtables PASS;
+RW07 selected creation PASS; RW08 name-copy bridge PASS; RW09 actual ownership /
+lifetime PARTIAL; RW10 callers PASS bounded direct-BL inventory, legal late context
+UNKNOWN; RW11 readiness PARTIAL; RW12 recovery PARTIAL; RW13 reader counterpart
+PARTIAL (static bridge rechecked, actual own object UNKNOWN); RW14 independent
+verification PASS; RW15 separate critical claim/source-fidelity review PASS for
+this bounded research report; RW16 documentation/publication receipt separate.
+
+Fresh18 selected next-symbol-bounded bodies /4700 instructions /1266 direct and
+conditional branch targets independently agree with raw arm64 bytes. Changed
+boundary refused. Four selected vtable targets in two images agree with independent
+native dyld decoding; changed target and non-chain location refused. Historical
+23-body/6094-instruction/1712-branch capture freshly reverified without editing it.
+These are static bounds/decoding checks, not complete callgraph or runtime coverage.
+No native implementation changed, so previous exact runtime remains historical;
+current documentation candidate's repository CI is recorded separately.
+
+Private raw Evidence and local reproducible capture/verification helpers:
+`build-ae-hot-loader/resource-writer-2026-10-10-7b3e3dc`. Original Adobe binaries,
+full SDK files, credentials and session configs are not included in public docs.
+No cleanup candidates: original private Evidence and retired bundles preserved.
+
+Sources checked2026-10-10: exact local SDK25.6_61 headers/resources/Checkout sample;
+[Adobe SDK Guide PiPL chapter](https://ae-plugins.docsforadobe.dev/intro/pipl-resources/)
+(metadata/resource contract, not internal implementation),
+[Adobe Effect Manager](https://helpx.adobe.com/after-effects/desktop/apply-effects-and-animation-presets/effects-and-animation-presets/effect-manager.html)
+(restart product signal only), and
+[Apple dyld fixup definitions](https://github.com/apple-oss-distributions/dyld/blob/main/include/mach-o/fixup-chains.h)
+(pointer-format authority, compared with local dyld_info).
+Current web EXT3/search-description text concerns SDK26.5/Premiere Beta27.0 and is
+not imported into the target25.6_61 contract. Focused primary web search found no
+independent target ordinary PiPL→FCSpec→safe late-add contract; this is a search
+limit, not an impossibility proof. Names/crash stacks alone remain insufficient.
+
 ## Resource-only export control — 2026-10-10
 
 Rules11.1.0/04b6068; baseline357b508; Development/Critical native observation.

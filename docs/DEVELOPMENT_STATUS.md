@@ -1,5 +1,16 @@
 # AE Hot Loader — current development status
 
+## Resource-to-writer mechanism — 2026-10-10
+
+Exact SDK/original-file research resolves selected PiPL getter→copied FCSpec name→
+writer lookup. Cache and alternative resource producers require discrimination;
+compound records reach the same writer.18 bodies/4700 instructions +4 vtable slots
+independently verified; prior23 bodies rechecked. No new AE run/native changes.
+C1 PARTIAL; safe private append BLOCKED; C2 NOT_RUN. Next: resource-first provenance
+collector with exact own-identity/fixture admission; legal late context, lifetime /
+reader coverage and partial-failure recovery remain UNKNOWN.
+[RW01–RW16 findings, hypotheses and limits](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#resource-to-writer-mechanism--2026-10-10).
+
 ## Resource-only startup result — 2026-10-10
 
 Source aab0d40 actual3sample PASS: resource key796 present without metadata entry
