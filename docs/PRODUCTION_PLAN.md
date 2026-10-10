@@ -1,5 +1,13 @@
 # AE Hot Loader — current development and release plan
 
+## Current resource/context packet — 2026-10-10
+
+The corrected startup3sample name-route criterion is PASS on unchanged734c0a1.
+Next prioritize R resource-to-FCSpec/AddEffect provenance; own host-context and
+resource-only metadata-export A/B variants are DESIGN_ONLY/NOT_RUN. Live writer,
+lifetime/readset/partial-failure contracts remain open. C1 PARTIAL, private append
+BLOCKED, C2 late-add NOT_RUN. [Single BR01–BR14 checkpoint](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#resource-route-and-context-discrimination--2026-10-10).
+
 ## Current competing route block — 2026-10-09
 
 Rules11.1.0/source04b6068. ONE actual debugger-free S2 eaec31e startup is PARTIAL:

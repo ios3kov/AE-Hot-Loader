@@ -1,5 +1,15 @@
 # AE Hot Loader — current development status
 
+## Current resource/context packet — 2026-10-10
+
+Corrected source734c0a1 now has actual read-only startup3sample PASS: resource R
+key796 stable, callback M absent at3/1026/3072ms; callback1/main/result0 and
+GLOBAL_SETUP0/PARAM_SETUP0. Normal owned quit/absence/exact pair retirement PASS.
+New6-body/338-instruction file slice narrows host-context and endian-handler
+assumptions. Live own record-to-writer still UNKNOWN; C1 PARTIAL, private append
+BLOCKED, C2 late-add NOT_RUN. Source/Evidence/CI closure remains separate from
+runtime identity. [Single BR01–BR14 checkpoint and next discriminators](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#resource-route-and-context-discrimination--2026-10-10).
+
 ## Current competing route block — 2026-10-09
 
 Rules11.1.0/source04b6068. ONE actual debugger-free S2 eaec31e startup is PARTIAL:

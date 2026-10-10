@@ -18,6 +18,114 @@ and does not become a live registration/apply/render result.
 
 
 
+## Resource route and context discrimination — 2026-10-10
+
+Rules11.1.0/04b6068, clean baseline5df2cfa, research branch. Context Discipline
+and Production Engineering govern source reuse, observable acceptance and a
+separate critical review. User requested combined internet/official-source/SDK/
+reverse research plus the maximum dependent block. ONE corrected debugger-free
+read-only startup control; no private invocation, late-add, Apply/render, worker
+AEGP, preferences, foreign session, force quit or save-discard.
+
+### Actual corrected three-sample control
+
+Prepared sourceS3 734c0a1b5682035c123aab6ee41387cd26791afd was executed unchanged:
+run511e21933ab544898709a3bf89c149e9, manifest SHA256
+18c0fd832a8170248b0cdf2c09c6ebb6c6fa5300ca063b84d54d7a309f91c581.
+Fresh signatures/bundle hashes/all non-Markdown source hashes and74 SDK pins
+PASS; clean baselineE differs from S3 only in documentation. Earlier exact S3
+595Python/62Node/22stage and both CI receipts are reused, not rerun or relabelled.
+
+AE25.6x101 arm64, own PID95985/birth1791606205118105. **PASS scoped name-route
+observation:** all3 complete acquired Effect Suite5 traversals have count787,
+revision1, one own effect, resource match AEHL.R.511e21933ab544898709a3bf,
+key796 and metadata match AEHL.M.511e21933ab544898709a3bf absent. Sample elapsed
+times3/1026/3072ms are relative to observation start, not application launch.
+Later promotion beyond this3.072-second window remains UNKNOWN. The same
+numeric key as earlier runs does not prove a cross-session identity/allocation.
+
+Own resident marker: registration started/completed1, mainthread1, result0;
+GLOBAL_SETUP0/PARAM_SETUP0. All7 actual acquired slot/callback addresses match
+current pinned AEGPDriver/PluginSupport hashes, UUIDs and offsets. This is loader/
+file correspondence, not a descriptor read or retain. Native LISTED_OBSERVED,
+cleanupPASS/cleanup_safeYES, Apply/renderNOT_RUN. Project blank/revision1 remained
+unchanged. Supervisor preserved the owned process rather than signalling it;
+normal AppKit quit under existing user authority freshly verified PID/birth/path,
+then independent absence PASS. Exact own pair retired outside discovery; other
+entries' inode/mtime/mode unchanged. No second launch in this packet.
+
+This supersedes only S3's NOT_RUN three-sample criterion from the previous packet.
+Earlier S2 refusal/one-sample PARTIAL is preserved unchanged. C1 is still PARTIAL:
+live own resource/IPiPL/FCSpec/writer data transfer is not yet observed.
+
+### Combined hypotheses and useful exclusions
+
+| ID | Competing explanation | Evidence and limit | Distinguishing next check |
+| --- | --- | --- | --- |
+| BH1 | Metadata and ordinary publication use separate lanes | M callback success with R-only SDK3samples; both static producers exist. Actual lane UNKNOWN | Own resource-only marker without metadata export, or actual R producer-to-FLT trace |
+| BH2 | M is overwritten/canonicalized to R | Compatible with observation; no actual name-transfer trace | Follow own nonce through resource handle, IPiPL, FCSpec and writer argument |
+| BH3 | M is published later | Not observed within3.072s; later UNKNOWN | Longer bounded observation or separately scoped lazy-setup control |
+| BH4 | Cache/alternate representation bypasses adapter | PLUG handle duplication and PluginImpl cached-interface/fallback branches exist; never-installed own nonce narrows old-own-cache explanation | Observe actual source/cache branch; do not purge shared state |
+| BH5 | Interface copy hides backing identity | New MetaPluginModule GetPiPL file body copies24-byte interface and retains owner | Follow allocation/field/retain transfer, not pointer equality |
+| BH6 | Startup host context chooses catalog | SDK supplies hostName/version; PRM dynamically gets app metadata. Actual strings UNKNOWN | Bounded own-callback context logging plus resource trace |
+| BH7 | Different provider/root generation | All7 current acquired addresses match pinned providers; root identity UNKNOWN | Track same live root/allocation generation |
+| BH8 | PiPLFlipper is registry transaction/barrier | New ctor/dtor install/restore endian callback for rsrc/PiPL; no registry barrier established | Exclude as barrier evidence; require actual mutation/commit edges |
+
+New file-only slice:6 exact bodies/338arm64 instructions, full function bytes/
+boundaries pinned; independent raw BL targets agree with disassembler and changed
+instruction hash controls refuse. PluginSupport GetPFPluginData transfers
+MF::GetSPBasicSuite and PRM::GetApplicationName/GetExactApplicationVersion results
+into entry arguments. Import ordinals resolve PRM.framework and MediaFoundation.
+PRM+0x365c and+0x3774 use cached dvacore GetAppShortName/GetAppVersionString:
+the PRM name does not establish a Premiere caller or a separate live catalog.
+PluginSupport MetaPluginModule GetPiPLFromResource+0x3ca18 calls guarded meta-plugin
+selectors and PiPL::Create; it is not automatically the ordinary PLUG resource
+path. Its GetPiPL+0x3ccf4 returns a retained vector entry. The flipper is an endian
+handler, not an admitted late publication entry or synchronization primitive.
+
+### Source/version reconciliation
+
+Fresh [Adobe developer SDK entry](https://developer.adobe.com/after-effects/)
+is the official distribution route, not internal registry documentation.
+The [SDK Guide PiPL page](https://ae-plugins.docsforadobe.dev/intro/pipl-resources/)
+describes resource metadata and stable match identity; its current EXT3/search/
+description discussion is SDK26.5/Premiere Beta27.0, not this SDK25.6_61 contract.
+Exact local Headers/AE_PluginData.h81–95, Util/entry.h55 and
+Effect/Checkout/Checkout.cpp260–278 define/illustrate EXT2 registration in
+PluginDataEntryFunction2, separate from GLOBAL_SETUP. No EXT3 in target entry.h.
+The [Premiere cache description](https://ae-plugins.docsforadobe.dev/ppro/plug-ins-reloaded/)
+does not prove AE's catalog or a late append trigger.
+[Adobe Effect Manager](https://helpx.adobe.com/after-effects/desktop/apply-effects-and-animation-presets/effects-and-animation-presets/effect-manager.html)
+applies enable/disable on restart; this remains a product signal, not internal
+append impossibility or descriptor-layout proof. Apple
+[CoreEndian](https://developer.apple.com/documentation/coreservices/1575610-coreendianflipdata)
+provides byte-order callbacks, consistent with the selected flipper imports.
+No admitted independent web source supplies the missing target live writer bridge.
+
+### Fourteen-step reconciliation and next packet
+
+BR01–02 baseline/rules/skills PASS. BR03–04 primary-source/version/SDK boundaries
+PASS. BR05 temporal interpretation PASS scoped3samples, session-wide promotion
+UNKNOWN. BR06–09 cache/projection/copy/context hypotheses PARTIAL file-supported,
+live discrimination open. BR10 resource/context slice PASS file-only; own writer
+UNKNOWN. BR11 candidate integrity/admission PASS. BR12 actual3sample control PASS
+scoped, normal quit/absence/exact retirement PASS. BR13 hypothesis reconciliation
+PASS, with unresolved alternatives retained. BR14 separate review/source/Evidence/
+CI closeout recorded separately; no product gate promoted.
+
+Private Evidence: build-ae-hot-loader/bridge-route-2026-10-10-5df2cfa and the exact
+candidate's original control/live journals. Source snapshots, full raw journals,
+selected disassembly and prior exact-check receipts retained privately; Adobe
+binaries, full SDK headers and user projects excluded. Historical Evidence stays
+immutable. Source publication remains on research branch; no main/merge/release.
+
+Next: prioritize own R resource-to-FCSpec/AddEffect provenance; prepare bounded
+host-context logging and a resource-only metadata-export A/B control with separate
+observer acceptance for zero registration calls. These new variants/probes are
+DESIGN_ONLY/NOT_IMPLEMENTED/NOT_RUN; do not relax current marker witness silently.
+No private late call until live bridge/lifetime/readset/partial-failure contracts.
+C1 PARTIAL / private append BLOCKED / C2 late-add NOT_RUN.
+
 ## Competing route hypotheses and discriminator — 2026-10-09
 
 Rules11.1.0/04b6068; baseline d603581. Critical/Development, Context Discipline

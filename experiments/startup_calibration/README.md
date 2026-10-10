@@ -182,3 +182,11 @@ Actual S2 eaec31e listed only R at key796 in one complete startup SDK traversal;
 its older M-only guard refused before sample1. This is PARTIAL, not a three-sample
 PASS. Corrected S3 734c0a1 passed offline target-SDK observer/request controls;
 its AE installation/loading/observation are NOT_RUN in that packet.
+
+The separately admitted2026-10-10 run executed that exact prepared S3 unchanged.
+All3 complete actual Effect Suite5 samples list only resource R at key796, with
+count787/revision1 stable, at3/1026/3072ms from observation start. Callback M
+completed once/main/result0; GLOBAL_SETUP0/PARAM_SETUP0. Scoped observation PASS;
+later promotion beyond this window, descriptor/writer identity and late-add
+remain UNKNOWN/NOT_RUN. Normal owned quit and exact pair retirement PASS.
+See the [current resource/context checkpoint](../../docs/C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#resource-route-and-context-discrimination--2026-10-10).
