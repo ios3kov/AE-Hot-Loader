@@ -62,6 +62,59 @@ writer call, Apply/render, prefs, foreign session/project, force quit/save-disca
 C1 remains PARTIAL; live own R→IPiPL→FCSpec→writer/lifetime/partial-failure UNKNOWN,
 private append BLOCKED and C2 NOT_RUN.
 
+### Actual resource-only result
+
+Runtime sourceS aab0d40417bb825098e728ff4e05ec37fd6e8c69,
+run581a8dbee08b4de3a405d0766386a47c; manifest SHA256
+ dda970d546fafbdd2a97cc82cf3a3686fac08e7ded50c0d16aaa0dd6b67baab9.
+AE25.6x101 arm64, own PID2879/birth1791607400581214. PASS scoped necessity control:
+3 complete acquired Effect Suite5 samples at3/1004/3084ms from observation start,
+count787/traversed787/revision1, exact resource match
+AEHL.R.581a8dbee08b4de3a405d076 at key796; metadata match absent. Signed full nm
+contains no PluginDataEntryFunction symbol, not just an excluded export.
+At every native sample the exact hash/build/resident ABI4 witness required no
+metadata entry and zero started/completed/callback address/main/context. Original
+final witness also reports GLOBAL_SETUP0/PARAM_SETUP0. Blank project unchanged;
+Apply/render NOT_RUN. Observer cleanupPASS/safeYES. Supervisor exit1 preserves
+owned session under its manual-close convention; result.json scoped PASS, then
+separate fresh identity-checked normal AppKit quit/independent absence PASS.
+Own exact pair moved outside discovery; other entries inode/mtime/mode unchanged.
+No debugger, second AE launch, force/save-discard, preferences or foreign reads.
+
+**Established:** this owned ordinary marker can enter startup installed-effect
+enumeration without PluginDataEntryFunction2. Its entry/callback cannot be a
+necessary writer for this control. PiPL/resource-driven startup provenance is the
+priority; this is not proof of a complete exclusive call graph or all plug-ins.
+BH1 separate lanes gains discriminating evidence; BH2 callback-name override can
+still describe the earlier callback-present run, but is not needed to explain
+resource-only listing. BH3 later metadata promotion is not tested session-wide;
+BH4 cache/alternate representation and BH5 copied-interface backing remain open.
+Same numeric key796 in another process is not descriptor/allocation identity.
+
+Fresh sourceS checks:597 Python/no skips,62 Node,22 local stages PASS; native
+builder/ASan/UBSan signed resource-only/inert/backend/frame/request controls PASS;
+74 exact target SDK pins freshly rehashed. Existing fake backend/request mode
+explicitly retained: it does not claim actual resource-only resident acceptance.
+Scanner288 supported/143 unsupported/zero omissions; review_required/exit1 sole
+unchanged argparse-mode heuristic reviewed false positive, not security certification.
+Default callback forwarding/first-context-copy fixture PASS; new actual normal
+hostName/version logging remains NOT_RUN because only resource-only AE ran.
+
+RO01–04 restored scope/SDK/explicit implementation PASS. RO05 context PARTIAL:
+implementation/native checks PASS, actual strings NOT_RUN. RO06–09 exports/build/
+regression/admission PASS. RO10 actual three-sample zero-entry control PASS scoped.
+RO11 owned lifecycle/retirement PASS. RO12 separate critical review/source snapshots/
+exact CI/private archive closeout recorded separately. Runtime sourceS is never
+relabelled as later documentation commit. Prior dated checkpoint/Evidence retained.
+Private Evidence: build-ae-hot-loader/resource-only-2026-10-10-357b508, exact
+candidate original control/live journals and private archive receipt.
+
+Next: one narrowly admitted ownR resource→IPiPL→FCSpec/AddEffect/writer provenance
+trace, using exact ABI and owned fixtures before live debugger admission; capture
+normal-entry host strings separately only if they distinguish an actual route.
+No private writer invocation until same live storage/index/lifetime and partial
+failure contracts are established. C1 PARTIAL/private append BLOCKED/C2 NOT_RUN.
+
 ## Resource route and context discrimination — 2026-10-10
 
 Rules11.1.0/04b6068, clean baseline5df2cfa, research branch. Context Discipline

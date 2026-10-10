@@ -1,12 +1,15 @@
 # AE Hot Loader — current development and release plan
 
-## Resource-only control preparation — 2026-10-10
+## Resource-only startup result — 2026-10-10
 
-New explicit no-metadata-entry marker and ABI4 resident zero-registration witness;
-normal entry adds bounded immutable host-context copies. Startup control only,
-no private publication or Apply/render. Actual new variant AE NOT_RUN pending
-exact build/regression/admission. [RO01–RO12 acceptance and scope](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#resource-only-export-control--2026-10-10).
-C1 PARTIAL / private append BLOCKED / C2 NOT_RUN.
+Source aab0d40 actual3sample PASS: resource key796 present without metadata entry
+implementation/export; exact own resident ABI4 zero-registration witness,
+GLOBAL_SETUP0/PARAM_SETUP0. Blank project unchanged, Apply/render NOT_RUN.
+Normal quit/absence/exact-pair retirement PASS.597Python/62Node/22stages + SDK74
+pins PASS. Default bounded context code/native fixtures PASS; actual strings NOT_RUN.
+This proves metadata-entry non-necessity for this owned startup control; prioritize
+own R→IPiPL→FCSpec→writer provenance. C1 PARTIAL/private append BLOCKED/C2 NOT_RUN.
+[RO01–RO12 result, limits and next step](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#resource-only-export-control--2026-10-10).
 
 ## Current resource/context packet — 2026-10-10
 

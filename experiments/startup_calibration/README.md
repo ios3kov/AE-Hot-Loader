@@ -202,3 +202,9 @@ callback and now publish bounded FIRST hostName/version copies; no pointer survi
 Null/complete/truncated context statuses are separate. The synthetic backend/request
 controls use their existing mode; own no-entry/witness controls are separate.
 No late-add, Apply/render, runtime context or writer bridge is claimed by compilation.
+
+Actual aab0d40 control581a8dbee08b4de3a405d0766386a47c:3 complete SDK5 samples
+PASS Rkey796 with exact own resident zero metadata witness, no entry symbol,
+GLOBAL_SETUP0/PARAM_SETUP0. Normal owned quit/absence/exact retirement PASS.
+This establishes metadata-entry non-necessity for this startup marker, not late-add.
+Default first-host context logging still has no new AE runtime result.
