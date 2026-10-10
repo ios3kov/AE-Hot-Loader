@@ -8,11 +8,11 @@ C2/late-add NOT_RUN. No AE launch/install/attach/target-memory read/private call
 
 | ID | Observable criterion | Result |
 | --- | --- | --- |
-| SA01 | Query the real owned child's open file using kernel metadata | PASS focused native control; exact candidate receipt separate |
+| SA01 | Query the real owned child's open file using kernel metadata | PASS actual clean source9f1384a; native-clean receipt |
 | SA02 | Same fd number, byte-identical second file via actual dup2 | PASS specific SOURCE_FILE_CHANGED; child payload reads0 |
 | SA03 | Same inode, changed bytes | PASS specific SOURCE_CONTENT_CHANGED; child payload reads0 |
 | SA04 | Identify one selected producer's data/length/allocation/release operations | PASS_FILE_ONLY7 bodies/648 instructions; live target UNKNOWN |
-| SA05 | Critical review, applicable regression, identified source and preserved Evidence | Final candidate receipts separate |
+| SA05 | Critical review, applicable regression, identified source and preserved Evidence | Separate scoped review complete; exact final regression/CI receipts remain separately identified |
 
 `source_anchor.cpp` forks only its own cooperative child. The parent pins birth,
 UID/parent PID and asks `proc_pidfdinfo(PROC_PIDFDVNODEINFO)` for exactly that
@@ -100,3 +100,27 @@ contract at ASL0x28630, then allocation→read→copy→release for the same inv
 Private receipt root: `build-ae-hot-loader/source-anchor-2026-10-10-9a56e13`.
 Raw Adobe binaries/full SDK are not redistributed. Preserve original transcripts,
 failed/preliminary run identity and exact final native/verification receipts.
+
+## Exact owned execution and critical review
+
+All four control scenarios (three fd/content variants plus FSRef copy/twin)
+executed on clean source`9f1384a13535aadf95fda585c94c0e00cf186ca2` in both ordinary
+and ASan/UBSan builds. Both receipts bind source and executable SHA-256; all
+cooperative children reaped normally, no force termination, no sanitizer diagnostics.
+The later documentation change does not relabel these runtime bytes.
+
+Separate requirement and native-quality review covered numeric/count bounds,
+initialized own pipe messages, descriptor ownership/cleanup, cooperative timing,
+source/binary identity and intended-negative oracles. Found and corrected during
+development: source pin must precede compilation; runner source must remain stable;
+FSRef timeout must preserve the unexpected live process rather than subprocess.run
+implicitly killing it. No final observed code defect remains in the bounded scope.
+SDK/CF internals and Adobe code are not instrumented by the owned sanitizer run.
+
+The critical review also retained the host blockers: initialized80-byte FSRef
+output extent across natural return/unwind is not yet admitted; a kernel fd
+snapshot is not a lifetime lease or a Carbon fork identity; copying a reference
+inside our process does not verify reading/using one captured from AE.
+Scanner reports no findings in8 supported text files;3 C++ files unsupported by
+the scanner remain a separate native-review/compile/sanitizer scope. Release
+readiness is not assessed. No cleanup of historical/unknown material performed.
