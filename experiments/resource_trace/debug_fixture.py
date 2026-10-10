@@ -101,6 +101,33 @@ def drive(profile, digest):
     return result
 
 
+def verify_control(result, fault='none', bad_extent=False):
+    need(result.get('cleanup_safe') is True and result.get('process_absence') == 'PASS' and
+         result.get('debugger_exit_code') == 0, 'fixture lifecycle not verified')
+    if bad_extent:
+        need(result.get('status') == 'REFUSED_OR_INCOMPLETE' and result.get('reason') == 'borrow byte budget' and
+             result.get('stops') == 1 and result.get('reads') == [] and result.get('trace') is None,
+             'expected extent refusal was not observed')
+    elif fault == 'none':
+        need(result.get('status') == 'OWNED_RESOURCE_TRANSPORT_OBSERVED' and result.get('stops') == 10 and
+             len(result.get('reads', [])) == 10 and result.get('trace', {}).get('status') == 'FIXTURE_CHAIN_OBSERVED',
+             'complete transport control was not observed')
+    else:
+        acceptance = {'alias': (3, 'copy was replaced by source alias'),
+                      'writer-failure': (6, 'writer failure; recovery UNKNOWN'),
+                      'wrong-owner': (8, 'object/owner continuity differs'),
+                      'read-name': (9, 'copied name identity differs'),
+                      'cross-reader': (8, 'object/owner continuity differs'),
+                      'aba': (8, 'object/owner continuity differs')}
+        need(fault in acceptance, 'unknown control')
+        count, reason = acceptance[fault]
+        trace = result.get('trace') or {}
+        need(result.get('status') == 'REFUSED_OR_INCOMPLETE' and result.get('reason') == reason and
+             result.get('stops') == count + 1 and len(result.get('reads', [])) == count + 1 and
+             trace.get('status') == 'REFUSED' and trace.get('accepted_events') == count,
+             'expected negative control was not observed; unrelated refusal is not PASS')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--origin', choices=('bundle-resource', 'legacy-resource', 'cache'), default='bundle-resource')
@@ -110,7 +137,4 @@ if __name__ == '__main__':
     print(json.dumps({'profile': str(profile), 'sha256': digest}), flush=True)
     result = drive(profile, digest)
     print(json.dumps({k: result.get(k) for k in ('status', 'cleanup_safe', 'process_absence', 'reason')}), flush=True)
-    need(result.get('cleanup_safe') is True and result.get('process_absence') == 'PASS' and
-         result.get('debugger_exit_code') == 0, 'fixture lifecycle not verified')
-    expected = 'REFUSED_OR_INCOMPLETE' if args.fault != 'none' or args.bad_extent else 'OWNED_RESOURCE_TRANSPORT_OBSERVED'
-    need(result['status'] == expected, 'control outcome differs')
+    verify_control(result, args.fault, args.bad_extent)
