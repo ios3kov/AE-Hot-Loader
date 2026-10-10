@@ -11,6 +11,9 @@
 #include "ImageProvenance.hpp"
 #include <memory>
 #include "CalibrationConfig.hpp" // Generated only by the offline builder.
+#if defined(AEHL_RESOURCE_ONLY_MARKER) && !defined(AEHL_REGISTRATION_ROUTE_RESOURCE_MATCH)
+#error Resource-only observer requires an explicit read-only resource discriminator
+#endif
 #include "../ordinary_discovery/ResourcePassJournal.hpp"
 #include "../ordinary_discovery/ResidentImageBinding.hpp"
 #include <chrono>
@@ -567,6 +570,21 @@ resident_binding::Digest Digest(const std::string& binary) {
     return digest;
 }
 
+startup_marker::StartupState ReadMarkerStartup() {
+    const auto marker = resident_binding::Resolve({calibration_marker_module, Digest(calibration_marker_sha256)},
+        {"_AEHL_MarkerBuildIdentity", "_AEHL_MarkerStartupState"});
+    using Build = const char* (*)();
+    Require(std::strcmp(reinterpret_cast<Build>(const_cast<void*>(
+        marker.functions.at("_AEHL_MarkerBuildIdentity")))(), calibration_build) == 0);
+    startup_marker::StartupState state;
+    Require(reinterpret_cast<startup_marker::ReadStartupState>(const_cast<void*>(
+        marker.functions.at("_AEHL_MarkerStartupState")))(&state));
+    Require(strnlen(state.registration_name, sizeof(state.registration_name)) < sizeof(state.registration_name) &&
+            strnlen(state.registration_match, sizeof(state.registration_match)) < sizeof(state.registration_match) &&
+            strnlen(state.host_name, sizeof(state.host_name)) < sizeof(state.host_name) &&
+            strnlen(state.host_version, sizeof(state.host_version)) < sizeof(state.host_version));
+    return state;
+}
 // Optional diagnostic of our exact already-resident marker only. Never loads
 // a module or calls its registration/EffectMain. Failure does not change the
 // original refusal or resource cleanup outcome.
@@ -575,16 +593,7 @@ void ObserveMarkerStartup() noexcept {
     std::string text = std::string("AEHL-CAL-MARKER-STARTUP-1\nbuild=") + calibration_build +
         "\nsampling=INDEPENDENT_COUNTERS_NOT_LIFETIME_PROOF\n";
     try {
-        const auto marker = resident_binding::Resolve({calibration_marker_module, Digest(calibration_marker_sha256)},
-            {"_AEHL_MarkerBuildIdentity", "_AEHL_MarkerStartupState"});
-        using Build = const char* (*)();
-        Require(std::strcmp(reinterpret_cast<Build>(const_cast<void*>(
-            marker.functions.at("_AEHL_MarkerBuildIdentity")))(), calibration_build) == 0);
-        startup_marker::StartupState state;
-        Require(reinterpret_cast<startup_marker::ReadStartupState>(const_cast<void*>(
-            marker.functions.at("_AEHL_MarkerStartupState")))(&state));
-        Require(strnlen(state.registration_name, sizeof(state.registration_name)) < sizeof(state.registration_name) &&
-                strnlen(state.registration_match, sizeof(state.registration_match)) < sizeof(state.registration_match));
+        const auto state = ReadMarkerStartup();
         text += "binding=EXACT_OWN_RESIDENT_IMAGE\nregistration_started=" + std::to_string(state.registration_started) +
             "\nregistration_completed=" + std::to_string(state.registration_completed) +
             "\nlast_callback_result=" + std::to_string(state.last_callback_result) +
@@ -592,6 +601,13 @@ void ObserveMarkerStartup() noexcept {
             "\nparameter_setup_calls=" + std::to_string(state.parameter_setup_calls) +
             "\ncallback_address=" + std::to_string(state.callback_address) +
             "\nregistration_on_main=" + std::to_string(state.registration_on_main) +
+            "\nmetadata_entry_present=" + std::to_string(state.metadata_entry_present) +
+            "\nmetadata_argument_scope=" + (state.metadata_entry_present ? std::string("CALLBACK_ARRAYS") : std::string("CONFIGURED_ONLY")) +
+            "\ncontext_ready=" + std::to_string(state.context_ready) +
+            "\nhost_name_status=" + std::to_string(state.host_name_status) +
+            "\nhost_version_status=" + std::to_string(state.host_version_status) +
+            "\nhost_name_hex=" + Hex(state.host_name) +
+            "\nhost_version_hex=" + Hex(state.host_version) +
             "\nregistration_name_hex=" + Hex(state.registration_name) +
             "\nregistration_match_hex=" + Hex(state.registration_match) +
             "\narguments_equal_config=" + (std::string(state.registration_name)==calibration_name &&
@@ -801,6 +817,10 @@ bool PollNames() {
 #endif
         );
         Require(selected.valid);
+#ifdef AEHL_RESOURCE_ONLY_MARKER
+        diagnostic_stage="resource-only-marker-witness";
+        Require(startup_marker::ResourceOnlyWitness(ReadMarkerStartup()) && selected.metadata == 0 && selected.resource != 0);
+#endif
         const auto key = selected.Key();
         if (index == 0) { names->key = key; names->count = snapshot.count; names->selection = selected; }
         Require(selected.metadata == names->selection.metadata && selected.resource == names->selection.resource);

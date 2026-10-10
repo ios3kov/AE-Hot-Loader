@@ -15,6 +15,47 @@ spec.loader.exec_module(live)
 
 
 class StartupLiveTests(unittest.TestCase):
+    def test_resource_only_requires_r_listing_and_zero_exact_resident_metadata_witness(self):
+        result, samples = self.route_observation()
+        samples = [s.replace(b'exact=1',b'exact=0').replace(b'AEHL.M.fixture'.hex().encode(),
+                   b'AEHL.R.fixture'.hex().encode()) for s in samples]
+        self.record['resource_only_marker'] = True
+        self.assertEqual(live.verify_observation(self.record, result, samples)['resource_key'], 42)
+        witness = ('AEHL-CAL-MARKER-STARTUP-1\nbuild=' + self.record['build_id'] +
+            '\nbinding=EXACT_OWN_RESIDENT_IMAGE\n' + ''.join(f'{key}=0\n' for key in
+            ('registration_started','registration_completed','last_callback_result','callback_address',
+             'registration_on_main','metadata_entry_present','context_ready','host_name_status','host_version_status')) +
+            'host_name_hex=\nhost_version_hex=\n').encode()
+        self.assertEqual(live.verify_resource_only_marker(self.record,witness)['registration'],'ZERO')
+        for old, new in [(b'binding=EXACT_OWN_RESIDENT_IMAGE',b'binding=UNKNOWN'),
+                         (b'build=',b'build=wrong'), (b'host_name_hex=',b'host_name_hex=41')]:
+            with self.subTest(new=new), self.assertRaises(ValueError):
+                live.verify_resource_only_marker(self.record,witness.replace(old,new))
+        for key in ('registration_started','registration_completed','last_callback_result','callback_address',
+                    'registration_on_main','metadata_entry_present','context_ready','host_name_status','host_version_status'):
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                live.verify_resource_only_marker(self.record,witness.replace((key+'=0').encode(),(key+'=1').encode()))
+        result, samples = self.route_observation(43)
+        self.record['resource_only_marker'] = True
+        with self.assertRaisesRegex(ValueError,'resource-only'): live.verify_observation(self.record,result,samples)
+
+    def test_resource_only_flag_requires_strict_boolean_and_explicit_contrast_before_host_checks(self):
+        import hashlib
+        run = 'a'*32
+        record = {'schema':'AEHL-STARTUP-CALIBRATION-1','source':{'clean':True,'commit':'d'*40},
+                  'observer_host_binding':'PROSPECTIVE_ONLY_NOT_AUTHORIZATION','install':'NOT RUN',
+                  'AE_load':'NOT RUN','AE_render':'NOT RUN','late_registration':'NOT RUN','run_id':run,
+                  'token':'c'*32,'build_id':'d'*40+':'+run,'match_name':live.identity.marker_match(run),
+                  'seed':int(run[:6],16),'resource_only_marker':True,'registration_route_discriminator':False}
+        with tempfile.TemporaryDirectory() as temp:
+            path=Path(temp)/'manifest.json'
+            for flag in (True,1,'yes'):
+                record['resource_only_marker']=flag
+                raw=json.dumps(record).encode();path.write_bytes(raw);path.chmod(0o600)
+                with patch.object(live.common,'no_links') as check, self.assertRaisesRegex(ValueError,'resource-only'):
+                    live.prepare(path,hashlib.sha256(raw).hexdigest())
+                self.assertEqual(check.call_count,1)
+
     def test_compiled_resource_binary_comments_do_not_change_hex_payload(self):
         spec = importlib.util.spec_from_file_location('startup_build', ROOT / 'experiments/startup_calibration/build.py')
         builder = importlib.util.module_from_spec(spec); spec.loader.exec_module(builder)

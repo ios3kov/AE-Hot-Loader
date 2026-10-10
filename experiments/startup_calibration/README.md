@@ -190,3 +190,15 @@ completed once/main/result0; GLOBAL_SETUP0/PARAM_SETUP0. Scoped observation PASS
 later promotion beyond this window, descriptor/writer identity and late-add
 remain UNKNOWN/NOT_RUN. Normal owned quit and exact pair retirement PASS.
 See the [current resource/context checkpoint](../../docs/C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#resource-route-and-context-discrimination--2026-10-10).
+
+### Resource-only startup control
+
+`--resource-only-marker --discriminate-registration-route` removes the metadata
+entry implementation/export and is read-only. The observer requires an exact own
+resident zero-registration ABI4 witness at each of three complete R-only samples;
+missing residency/partial evidence refuses. The supervisor independently checks
+signed marker export inventory and the final witness. Default builds retain the
+callback and now publish bounded FIRST hostName/version copies; no pointer survives.
+Null/complete/truncated context statuses are separate. The synthetic backend/request
+controls use their existing mode; own no-entry/witness controls are separate.
+No late-add, Apply/render, runtime context or writer bridge is claimed by compilation.

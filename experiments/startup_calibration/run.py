@@ -208,7 +208,22 @@ def verify_observation(record, raw_result, samples):
                       route_observation='BOTH_NAMES_LISTED' if metadata and resource else
                       'METADATA_NAME_LISTED_RESOURCE_NAME_ABSENT' if metadata else
                       'RESOURCE_NAME_LISTED_METADATA_NAME_ABSENT')
+    if record.get('resource_only_marker', False):
+        need(answer.get('metadata_key') is None and answer.get('resource_key') is not None,
+             'resource-only candidate requires resource key only')
     return answer
+
+
+def verify_resource_only_marker(record, raw):
+    s = fields(raw, 'AEHL-CAL-MARKER-STARTUP-1')
+    need(s.get('build') == record['build_id'] and s.get('binding') == 'EXACT_OWN_RESIDENT_IMAGE',
+         'resource-only resident marker identity missing')
+    for field in ('registration_started', 'registration_completed', 'last_callback_result',
+                  'callback_address', 'registration_on_main', 'metadata_entry_present', 'context_ready',
+                  'host_name_status', 'host_version_status'):
+        need(s.get(field) == '0', 'resource-only unexpected metadata activity: ' + field)
+    need(s.get('host_name_hex') == s.get('host_version_hex') == '', 'resource-only context unexpectedly present')
+    return {'metadata_entry': 'ABSENT', 'registration': 'ZERO', 'resident_binding': 'EXACT_OWN_RESIDENT_IMAGE'}
 
 
 def native_complete(record, raw_result):
@@ -305,6 +320,9 @@ def prepare(manifest, expected_hash):
     need(record['build_id'] == record['source']['commit'] + ':' + run and
          record['match_name'] == identity.marker_match(run) and record['seed'] == int(run[:6], 16), 'candidate identity differs')
     route = record.get('registration_route_discriminator', False)
+    resource_only = record.get('resource_only_marker', False)
+    need(type(resource_only) is bool and (not resource_only or route is True),
+         'resource-only marker requires explicit route discriminator')
     need(type(route) is bool and record.get('resource_match_name', record['match_name']) ==
          identity.resource_match(run, route), 'resource route identity differs')
     need(not route or record.get('trace_identity') is False, 'route discriminator cannot mix debugger trace')
@@ -336,6 +354,12 @@ def prepare(manifest, expected_hash):
         binary = bundle / 'Contents/MacOS' / bundle.stem
         need(common.sha(binary) == item['binary_sha256'], 'signed executable changed')
         subprocess.run(['codesign', '--verify', '--strict', str(bundle)], check=True, capture_output=True, timeout=30)
+        if resource_only and item is record['bundles'][0]:
+            exports = subprocess.run(['nm', '-arch', 'arm64', '-gU', str(binary)], check=True,
+                                     capture_output=True, text=True, timeout=30).stdout
+            need({line.split()[-1] for line in exports.splitlines()} ==
+                 {'_EffectMain', '_AEHL_MarkerBuildIdentity', '_AEHL_MarkerStartupState'},
+                 'resource-only exported ABI differs')
     # Current code must match the exact tested/build source; documentation-only follow-up is allowed.
     for name, digest in record['source']['tracked_sha256'].items():
         path = Path(name); need(not path.is_absolute() and '..' not in path.parts, 'invalid source path')
@@ -418,6 +442,9 @@ def run(manifest, digest, execute, queue_mode=False, observation_mode=False):
                  'read-only request unexpectedly entered mutation/render')
             comparison = verify_observation(record, raw_result,
                 [common.read(control / f'names-{i}', 8192) for i in range(3)])
+            if record.get('resource_only_marker', False):
+                comparison['marker_witness'] = verify_resource_only_marker(record,
+                    common.read(control / 'marker-startup', 8192))
         elif queue_mode:
             need(report['native_result'].get('status') == 'LISTED_APPLIED_QUEUE_EXPORTED',
                  'queue control refused/incomplete; no exported pixels accepted')

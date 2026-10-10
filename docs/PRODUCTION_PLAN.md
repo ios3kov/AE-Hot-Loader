@@ -1,5 +1,13 @@
 # AE Hot Loader — current development and release plan
 
+## Resource-only control preparation — 2026-10-10
+
+New explicit no-metadata-entry marker and ABI4 resident zero-registration witness;
+normal entry adds bounded immutable host-context copies. Startup control only,
+no private publication or Apply/render. Actual new variant AE NOT_RUN pending
+exact build/regression/admission. [RO01–RO12 acceptance and scope](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#resource-only-export-control--2026-10-10).
+C1 PARTIAL / private append BLOCKED / C2 NOT_RUN.
+
 ## Current resource/context packet — 2026-10-10
 
 The corrected startup3sample name-route criterion is PASS on unchanged734c0a1.

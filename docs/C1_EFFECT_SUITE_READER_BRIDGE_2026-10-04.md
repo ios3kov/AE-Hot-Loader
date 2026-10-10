@@ -18,6 +18,50 @@ and does not become a live registration/apply/render result.
 
 
 
+## Resource-only export control — 2026-10-10
+
+Rules11.1.0/04b6068; baseline357b508; Development/Critical native observation.
+Context Discipline and Production Engineering apply. User authorized the next
+maximum block. Twelve tasks: RO01 restore source/Evidence; RO02 acceptance; RO03
+SDK contract; RO04 explicit resource-only build; RO05 bounded context; RO06 export
+proof; RO07 signed build; RO08 regression; RO09 owned admission; RO10 actual
+three-sample observation; RO11 normal lifecycle/retirement; RO12 separate review,
+source/Evidence/CI reconciliation. Historical results remain unchanged.
+
+New --resource-only-marker requires --discriminate-registration-route and no
+trace. PluginDataEntryFunction2 is excluded from implementation/export; EffectMain,
+PiPL and own read-only diagnostic exports remain. Default entry still forwards
+the exact registration arrays. Own StartupState ABI4 rejects ABI3. Resource-only
+observer requires exact resident source/build/hash binding and no metadata entry,
+zero registration counters/address/main/context at each sample; the supervisor
+requires all3 complete R-only traversals plus the exact own marker witness.
+Unknown residency or partial observations refuse rather than synthesizing zeros.
+Mutating/direct Apply/render requests remain forbidden for contrast artifacts.
+
+The normal SDK entry now copies the FIRST hostName/version into fixed96-byte
+buffers, no borrowed pointers; an atomic claim and release/acquire readiness
+publish immutable copies. Null/complete/truncated states remain distinct. A prefix
+is not a complete context fact. LocalSDK25.6_61 AE_PluginData.h81–95 establishes
+host-supplied strings; no new/private host API. These are callback context facts,
+not registry ownership or synchronization. No context exists in resource-only mode.
+Configured registration-name arrays there are not evidence of callback arguments.
+
+Offline native ASan/UBSan controls cover the default callback/result forwarding,
+first-context immutability, null/empty/boundary/truncation, resource no-entry/zero
+witness and refusals. Fake SDK backend/request controls retain their original mode;
+they do not simulate authenticated resident resource-only admission. Actual ABI/
+export/resource/signature proof is performed by the builder; live behavior remains
+NOT_RUN until a fresh owned launch is recorded below. This is a necessity test for
+the metadata entry on ordinary STARTUP, not a late publication experiment.
+
+Acceptance: no default behavior relaxation; explicit read-only resource variant;
+exact signed no-entry marker/PiPL;3 complete R-only samples with resident zero
+witness OR explicit refused/partial result; safe owned normal quit and unchanged
+foreign entries; source/Evidence identity and separate critical review. No private
+writer call, Apply/render, prefs, foreign session/project, force quit/save-discard.
+C1 remains PARTIAL; live own R→IPiPL→FCSpec→writer/lifetime/partial-failure UNKNOWN,
+private append BLOCKED and C2 NOT_RUN.
+
 ## Resource route and context discrimination — 2026-10-10
 
 Rules11.1.0/04b6068, clean baseline5df2cfa, research branch. Context Discipline

@@ -75,12 +75,16 @@ def main():
     parser.add_argument("--trace-identity", action="store_true", help="enable inert register boundary sentinels and bounded own-key repeat; never a private call")
     parser.add_argument("--discriminate-registration-route", action="store_true",
                         help="give resource PiPL a distinct match name; read-only startup experiment, no trace/Apply/render")
+    parser.add_argument("--resource-only-marker", action="store_true",
+                        help="omit metadata entry implementation/export; requires read-only route discriminator")
     parser.add_argument("--run-id", help="fresh 32-character lowercase hex identity for a concrete prospective installation")
     parser.add_argument("--prospective-host", type=Path, help="future authorized host executable; this argument performs no host operation")
     parser.add_argument("--prospective-module", type=Path, help="future exact observer executable location; no installation")
     args = parser.parse_args()
     if args.discriminate_registration_route and args.trace_identity:
         parser.error("route discriminator must run without debugger trace sentinels")
+    if args.resource_only_marker and not args.discriminate_registration_route:
+        parser.error("resource-only marker requires the explicit route discriminator")
     if bool(args.prospective_host) != bool(args.prospective_module):
         parser.error("prospective host and observer location must be supplied together")
     if platform.system() != "Darwin" or platform.machine() != "arm64":
@@ -128,9 +132,13 @@ def main():
         common += ["-DAEHL_TRACE_IDENTITY=1"]
     if args.discriminate_registration_route:
         common += ["-DAEHL_REGISTRATION_ROUTE_RESOURCE_MATCH=" + cpp(resource_match)]
+    if args.resource_only_marker:
+        common += ["-DAEHL_RESOURCE_ONLY_MARKER=1"]
     for stem, source_name, exports in [
         (marker, "MarkerEffect.cpp", ["_EffectMain", "_AEHL_MarkerBuildIdentity", "_PluginDataEntryFunction2", "_AEHL_MarkerStartupState"]),
         (observer, "CalibrationObserver.cpp", ["_EntryPointFunc", "_AEHL_CalibrationBuildIdentity"])]:
+        if stem == marker and args.resource_only_marker:
+            exports.remove("_PluginDataEntryFunction2")
         if args.trace_identity:
             exports = exports + (["_AEHL_TraceMarkerBoundary"] if stem == marker else ["_AEHL_TraceReaderBoundary"])
         bundle = output / (stem + ".plugin"); contents = bundle / "Contents"
@@ -189,6 +197,9 @@ def main():
         binary = output / (label + "-test")
         test_common = common
         if label in ("backend", "request"):
+            # Fake SDK adapters do not establish authenticated resident admission.
+            # Resource-only marker/witness controls are exercised separately.
+            test_common = [part for part in common if part != "-DAEHL_RESOURCE_ONLY_MARKER=1"]
             # The actual SDK adapter calls only our fake callbacks here. Its separate
             # test configuration cannot activate the signed observer or its journal.
             test_config = output / (label + "-test-config"); test_config.mkdir(mode=0o700)
@@ -200,7 +211,7 @@ def main():
                                                   "static const char* " + field)
             (test_config / "CalibrationConfig.hpp").write_text(test_text)
             (test_config / "CalibrationConfig.hpp").chmod(0o600)
-            test_common = [part if part != "-I" + str(output) else "-I" + str(test_config) for part in common]
+            test_common = [part if part != "-I" + str(output) else "-I" + str(test_config) for part in test_common]
             if label == "request":
                 test_common = test_common + ["-DAEHL_CALIBRATION_DIAGNOSTIC_CLOCK_TEST=1"]
         command = test_common + ["-fsanitize=address,undefined", "-fno-omit-frame-pointer", str(test)]
@@ -228,6 +239,7 @@ def main():
         raise RuntimeError("source/SDK changed during build")
     record = {"schema": "AEHL-STARTUP-CALIBRATION-1", "trace_identity": args.trace_identity, "source": source, "build_id": build,
               "registration_route_discriminator": args.discriminate_registration_route, "resource_match_name": resource_match,
+              "resource_only_marker": args.resource_only_marker,
               "sdk_files": pins, "compiler": run("clang++", "--version"), "system_sdk": run("xcrun", "--show-sdk-version"),
               "run_id": run_id, "match_name": match, "seed": seed, "token": token, "config": config,
               "bundles": bundles, "offline_tests": results, "resource_pipl_identity": resource_proof,

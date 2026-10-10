@@ -26,6 +26,12 @@ static std::atomic<std::int32_t> last_callback_result{0};
 static std::atomic<std::uint64_t> global_setup_calls{0}, parameter_setup_calls{0};
 static std::atomic<std::uint64_t> callback_address{0};
 static std::atomic<std::uint32_t> registration_on_main{0};
+#ifndef AEHL_RESOURCE_ONLY_MARKER
+static std::atomic_flag context_claimed = ATOMIC_FLAG_INIT;
+#endif
+static std::atomic<bool> context_ready{false};
+static char host_name_copy[96]{}, host_version_copy[96]{};
+static std::uint32_t host_name_status = 0, host_version_status = 0;
 // The exact same immutable byte arrays are passed to the host callback and
 // exposed by the own diagnostic getter. Counter observations remain separate.
 static constexpr char registration_name[] = AEHL_MARKER_NAME;
@@ -35,7 +41,7 @@ static_assert(sizeof(registration_name) <= 64 && sizeof(registration_match) <= 6
 
 extern "C" __attribute__((visibility("default")))
 bool AEHL_MarkerStartupState(startup_marker::StartupState* state) noexcept {
-    if (!state || state->magic != 0x41454853 || state->version != 3 || state->reserved != 0 || state->reserved2 != 0) return false;
+    if (!state || state->magic != 0x41454853 || state->version != 4 || state->reserved != 0 || state->reserved2 != 0) return false;
     state->registration_completed = registration_completed.load(std::memory_order_acquire);
     state->last_callback_result = last_callback_result.load(std::memory_order_acquire);
     state->registration_started = registration_started.load(std::memory_order_acquire);
@@ -47,6 +53,21 @@ bool AEHL_MarkerStartupState(startup_marker::StartupState* state) noexcept {
     std::memset(state->registration_match, 0, sizeof(state->registration_match));
     std::memcpy(state->registration_name, registration_name, sizeof(registration_name));
     std::memcpy(state->registration_match, registration_match, sizeof(registration_match));
+#ifdef AEHL_RESOURCE_ONLY_MARKER
+    state->metadata_entry_present = 0;
+#else
+    state->metadata_entry_present = 1;
+#endif
+    state->context_ready = context_ready.load(std::memory_order_acquire) ? 1u : 0u;
+    state->host_name_status = state->host_version_status = 0;
+    std::memset(state->host_name, 0, sizeof(state->host_name));
+    std::memset(state->host_version, 0, sizeof(state->host_version));
+    // One writer publishes immutable copies; later entries cannot overwrite them.
+    if (state->context_ready) {
+        state->host_name_status = host_name_status; state->host_version_status = host_version_status;
+        std::memcpy(state->host_name, host_name_copy, sizeof(state->host_name));
+        std::memcpy(state->host_version, host_version_copy, sizeof(state->host_version));
+    }
     return true;
 }
 
@@ -61,9 +82,15 @@ void AEHL_TraceMarkerBoundary(unsigned stage, PF_PluginDataPtr context,
 #endif
 
 // Standard SDK host-invoked startup callback only. Never called by the observer.
+#ifndef AEHL_RESOURCE_ONLY_MARKER
 extern "C" __attribute__((visibility("default")))
 PF_Err PluginDataEntryFunction2(PF_PluginDataPtr data, PF_PluginDataCB2 callback,
-                              struct SPBasicSuite*, const char*, const char*) noexcept {
+                              struct SPBasicSuite*, const char* host_name, const char* host_version) noexcept {
+    if (!context_claimed.test_and_set(std::memory_order_relaxed)) {
+        host_name_status = startup_marker::CopyContext(host_name_copy, host_name);
+        host_version_status = startup_marker::CopyContext(host_version_copy, host_version);
+        context_ready.store(true, std::memory_order_release);
+    }
     registration_started.fetch_add(1, std::memory_order_release);
     callback_address.store(reinterpret_cast<std::uintptr_t>(callback), std::memory_order_release);
     registration_on_main.store(pthread_main_np() == 1 ? 1u : 0u, std::memory_order_release);
@@ -84,6 +111,7 @@ PF_Err PluginDataEntryFunction2(PF_PluginDataPtr data, PF_PluginDataCB2 callback
     registration_completed.fetch_add(1, std::memory_order_release);
     return result;
 }
+#endif
 
 static_assert(AEHL_MARKER_SEED <= 0xffffffu, "24-bit marker seed required");
 static_assert(sizeof(PF_Pixel8) == 4 && offsetof(PF_Pixel8, alpha) == 0 &&

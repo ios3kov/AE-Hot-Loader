@@ -12,8 +12,10 @@
 #include <vector>
 extern "C" PF_Err EffectMain(PF_Cmd, PF_InData*, PF_OutData*, PF_ParamDef*[], PF_LayerDef*, void*) noexcept;
 void Check(bool value) { if (!value) throw std::runtime_error("adapter assertion"); }
+#ifndef AEHL_RESOURCE_ONLY_MARKER
 extern "C" PF_Err PluginDataEntryFunction2(PF_PluginDataPtr, PF_PluginDataCB2,
     struct SPBasicSuite*, const char*, const char*) noexcept;
+#endif
 extern "C" bool AEHL_MarkerStartupState(startup_marker::StartupState*) noexcept;
 static const char* expected_name = "AEHL Offline Marker";
 static const char* expected_match = "AEHL.Offline.Marker";
@@ -35,13 +37,22 @@ A_Err Registration(PF_PluginDataPtr data, const A_u_char* name,
 int main(int argc, char** argv) {
     try {
         auto effect = &EffectMain;
+#ifdef AEHL_RESOURCE_ONLY_MARKER
+        PluginDataEntryFunction2Ptr registration = nullptr;
+#else
         PluginDataEntryFunction2Ptr registration = &PluginDataEntryFunction2;
+#endif
         startup_marker::ReadStartupState startup = &AEHL_MarkerStartupState;
         void* library = nullptr;
         if (argc == 5) {
             library = dlopen(argv[1], RTLD_NOW | RTLD_LOCAL); Check(library);
             effect = reinterpret_cast<decltype(effect)>(dlsym(library, "EffectMain")); Check(effect);
-            registration = reinterpret_cast<decltype(registration)>(dlsym(library, "PluginDataEntryFunction2")); Check(registration);
+            registration = reinterpret_cast<decltype(registration)>(dlsym(library, "PluginDataEntryFunction2"));
+#ifdef AEHL_RESOURCE_ONLY_MARKER
+            Check(!registration);
+#else
+            Check(registration);
+#endif
             startup = reinterpret_cast<decltype(startup)>(dlsym(library, "AEHL_MarkerStartupState")); Check(startup);
             expected_name = argv[3]; expected_match = argv[4];
             using Identity = const char* (*)();
@@ -51,13 +62,26 @@ int main(int argc, char** argv) {
         startup_marker::StartupState state;
         Check(!startup(nullptr));
         state.magic = 0; Check(!startup(&state)); state.magic = 0x41454853;
-        state.version = 1; Check(!startup(&state)); state.version = 3;
+        state.version = 3; Check(!startup(&state)); state.version = 4;
         state.reserved = 1; Check(!startup(&state)); state.reserved = 0;
         Check(startup(&state) && state.registration_started == 0 && state.registration_completed == 0 &&
               state.global_setup_calls == 0 && state.parameter_setup_calls == 0 && state.callback_address == 0);
         Check(std::strcmp(state.registration_name, expected_name) == 0 &&
               std::strcmp(state.registration_match, expected_match) == 0);
-        Check(registration(nullptr, nullptr, nullptr, nullptr, nullptr) == PF_Err_INVALID_CALLBACK && registrations == 0);
+        char context[4];
+        Check(startup_marker::CopyContext(context, nullptr) == 0 && context[0] == 0);
+        Check(startup_marker::CopyContext(context, "") == 1 && context[0] == 0);
+        Check(startup_marker::CopyContext(context, "abc") == 1 && std::strcmp(context,"abc") == 0);
+        Check(startup_marker::CopyContext(context, "abcdef") == 2 && std::strcmp(context,"abc") == 0);
+#ifdef AEHL_RESOURCE_ONLY_MARKER
+        Check(!registration && registrations == 0 && startup_marker::ResourceOnlyWitness(state));
+        auto bad = state; bad.registration_started = 1; Check(!startup_marker::ResourceOnlyWitness(bad));
+        bad = state; bad.callback_address = 1; Check(!startup_marker::ResourceOnlyWitness(bad));
+        bad = state; bad.context_ready = 1; Check(!startup_marker::ResourceOnlyWitness(bad));
+        bad = state; bad.metadata_entry_present = 1; Check(!startup_marker::ResourceOnlyWitness(bad));
+#else
+        Check(!startup_marker::ResourceOnlyWitness(state));
+        Check(registration(nullptr, nullptr, nullptr, "test-host", "test-version") == PF_Err_INVALID_CALLBACK && registrations == 0);
         int sentinel = 1; expected_data = reinterpret_cast<PF_PluginDataPtr>(&sentinel);
         Check(registration(expected_data, Registration, nullptr, "test-host", "test-version") == 0 && registrations == 1);
         callback_result = 37;
@@ -67,6 +91,9 @@ int main(int argc, char** argv) {
               state.callback_address == reinterpret_cast<std::uintptr_t>(&Registration) && state.registration_on_main == 1);
         Check(std::strcmp(state.registration_name, expected_name) == 0 &&
               std::strcmp(state.registration_match, expected_match) == 0);
+        Check(state.context_ready == 1 && state.host_name_status == 1 && state.host_version_status == 1 &&
+            std::strcmp(state.host_name,"test-host") == 0 && std::strcmp(state.host_version,"test-version") == 0);
+#endif
         PF_OutData out{};
         Check(effect(PF_Cmd_GLOBAL_SETUP, nullptr, &out, nullptr, nullptr, nullptr) == 0);
         Check(out.my_version == 0x8001 && !out.out_flags && !out.out_flags2);
@@ -95,14 +122,23 @@ int main(int argc, char** argv) {
         Check(effect(PF_Cmd_RENDER, nullptr, nullptr, nullptr, &world, nullptr) != 0 && pixels == before);
         Check(effect(PF_Cmd_SMART_RENDER, nullptr, nullptr, nullptr, &world, nullptr) != 0);
         Check(effect(PF_Cmd_RENDER, nullptr, nullptr, nullptr, nullptr, nullptr) != 0);
-        Check(startup(&state) && state.global_setup_calls == 2 && state.parameter_setup_calls == 1 && registrations == 2);
+        Check(startup(&state) && state.global_setup_calls == 2 && state.parameter_setup_calls == 1);
+#ifdef AEHL_RESOURCE_ONLY_MARKER
+        Check(registrations == 0 && startup_marker::ResourceOnlyWitness(state));
+#else
+        Check(registrations == 2);
+#endif
         if (library) {
             std::cout << "FRAME_ARGB8_HEX=";
             for (std::size_t i = 8; i < pixels.size() - 8; ++i)
                 std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(pixels[i]);
             std::cout << '\n'; Check(dlclose(library) == 0);
         }
-        std::cout << "PASS: real SDK adapter, three startup registration checks, read-only state/refusal checks, synthetic worlds; AE_render=NOT_RUN\n";
+#ifdef AEHL_RESOURCE_ONLY_MARKER
+        std::cout << "PASS: resource-only SDK marker, metadata export absent, zero-registration witness/refusals, synthetic worlds; AE_render=NOT_RUN\n";
+#else
+        std::cout << "PASS: real SDK adapter, three startup registration checks, immutable bounded host context, read-only state/refusal checks, synthetic worlds; AE_render=NOT_RUN\n";
+#endif
         return 0;
     } catch (const std::exception& error) { std::cerr << error.what() << '\n'; return 1; }
 }
