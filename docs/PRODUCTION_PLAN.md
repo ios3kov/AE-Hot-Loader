@@ -1,5 +1,15 @@
 # AE Hot Loader — current development and release plan
 
+## Source anchor and concrete ASL producer — 2026-10-10
+
+SA01–SA04: own fd/dup2/content-mutation and FSRef controls, plus selected
+file-only Carbon producer/byte-count/allocation/copy/release slice. SA05 final
+candidate regression/source/Evidence closure separate. Next admit natural FSRef
+output identity, then one scoped allocation/read/copy interval. Existing actual
+AE writer→reader, late context, lifetime/read-set and failure gates remain open.
+C1 PARTIAL/private append BLOCKED/C2 NOT_RUN.
+[Single source-anchor checkpoint](C1_SOURCE_ANCHOR_2026-10-10.md).
+
 ## Owned resource debugger transport — 2026-10-10
 
 Actual source112485c:10 owned LLDB controls PASS (3complete traces/7intended

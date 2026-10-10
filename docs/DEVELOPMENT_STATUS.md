@@ -1,5 +1,14 @@
 # AE Hot Loader — current development status
 
+## Source anchor and concrete ASL producer — 2026-10-10
+
+Owned kernel-source controls distinguish actual dup2 twin and same-inode byte
+mutation; local FSRef copied-value/twin control PASS. Selected file-only ASL URL
+path uses FSOpenFork/new[]/FSReadFork, then PiPL copy and delete[]. Fork reference
+is not admitted as POSIX fd; own-source/stack-output/lifetime/actual vtable gates
+remain BLOCKED. Exact candidate regression/native receipts separate. No AE run.
+C1 PARTIAL/C2 NOT_RUN. [SA01–SA05 and next contract](C1_SOURCE_ANCHOR_2026-10-10.md).
+
 ## Owned resource debugger transport — 2026-10-10
 
 Actual source112485c:10 owned LLDB controls PASS (3complete traces/7intended

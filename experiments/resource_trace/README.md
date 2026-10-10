@@ -1,5 +1,19 @@
 # Resource-first correlation preparation
 
+## Source identity controls
+
+`source_anchor.py` builds two owned native controls: a cooperative child with real
+kernel fd metadata, actual dup2 and same-inode mutation refusals; and an own-file
+FSRef copied-value/twin comparison. Neither launches AE nor reads target memory.
+The receipt binds the actual source/binary hashes and exact expected refusal.
+These are source-identity controls, not an Adobe capture profile. See
+[producer contract](../../docs/C1_SOURCE_ANCHOR_2026-10-10.md) for the selected
+ASL Carbon fork path and why its fork reference is not a POSIX fd.
+
+```sh
+python3 experiments/resource_trace/source_anchor.py /absolute/fresh/private/output
+```
+
 This is the first implementation boundary of the resource-first collector,
 separate from the metadata-entry collector in `../startup_trace`. It does not
 modify that collector's strict identity equality, sites or transport admission.

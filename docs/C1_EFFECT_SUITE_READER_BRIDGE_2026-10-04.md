@@ -1,6 +1,7 @@
 # C1 — static Effect Suite reader bridge
 
 Date: 2026-10-04. Branch: `research/ordinary-plugin-discovery`.
+Latest continuation: [source identity and selected ASL producer](C1_SOURCE_ANCHOR_2026-10-10.md).
 Clean baseline: `f22671b88e91945423e8ae87935d4caec780e1b3`.
 Rules8.0.0 / `132b7cd32873ba7328e3128ffbb33e1929b74d45`, AI_ENTRYPOINT
 first; API-SOURCE-001, AI-STATE-001, TASK-CLOSE-001 and CLEANUP-001.
