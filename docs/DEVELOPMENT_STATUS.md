@@ -1,5 +1,16 @@
 # AE Hot Loader — current development status
 
+## Resource-first correlation preparation — 2026-10-10
+
+Implemented strict resource-first fixture transcript contract and actual owned
+native copy/insertion/retained lookup model.17 focused tests/no skips, three
+origin-labelled controls and four negative native controls PASS. Model proof
+deliberately cannot admit AE; existing metadata collector unchanged. Exact-source
+regression/CI receipts separate. Actual resource sites/borrowed reads/debugger
+transport and own continuous writer→key still require proof. No AE operation.
+C1 PARTIAL/private append BLOCKED/C2 NOT_RUN.
+[RF01–RF09 scope, checks and next dependency](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#resource-first-correlation-preparation--2026-10-10).
+
 ## Resource-to-writer mechanism — 2026-10-10
 
 Exact SDK/original-file research resolves selected PiPL getter→copied FCSpec name→

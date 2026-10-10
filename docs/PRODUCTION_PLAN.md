@@ -1,5 +1,16 @@
 # AE Hot Loader — current development and release plan
 
+## Resource-first correlation preparation — 2026-10-10
+
+RF01–RF07 bounded preparation/review complete: resource-first model contract,
+native copy/retained-reader controls and terminal refusals; old collector intact.
+RF08–RF09 exact-source regression/CI/publication/Evidence receipts separate.
+Next implement reviewed resource-site/borrowed-name capture and verify actual
+debugger transport before any known-good startup run. Model-labelled producer /
+owner tokens are not actual Adobe provenance/lifetime. C1 PARTIAL; safe private
+append BLOCKED; C2 NOT_RUN. No late private call/Apply/render or main merge/release.
+[Single RF01–RF09 checkpoint](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#resource-first-correlation-preparation--2026-10-10).
+
 ## Resource-to-writer mechanism — 2026-10-10
 
 Exact SDK/original-file research resolves selected PiPL getter→copied FCSpec name→

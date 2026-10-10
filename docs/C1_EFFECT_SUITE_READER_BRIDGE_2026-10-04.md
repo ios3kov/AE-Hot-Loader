@@ -18,6 +18,66 @@ and does not become a live registration/apply/render result.
 
 
 
+## Resource-first correlation preparation — 2026-10-10
+
+Rules11.1.0/source04b6068; clean baseline5a3b195, same research branch.
+Development scope: implement and verify the first resource-first correlation
+boundary on owned inputs. No Adobe collector profile, launch/install/attach,
+memory access, private call, cache/preferences change, Apply or render.
+
+Added [resource contract and native model](../experiments/resource_trace/README.md),
+separate from the unchanged metadata-entry collector. Ten ordered events bind
+producer bytes/module/run/PID/thread token→PiPL model/getter→copied name in another
+buffer→descriptor/routine/owner→writer/root/index→retained reader and copied output.
+Missing events remain INCOMPLETE; mismatch, replay, malformed input, byte/event
+budget, owner/name substitution or writer failure terminally refuse. Cache-labelled
+bytes cannot claim a current resource read. A fixture proof cannot admit AE.
+
+The native control actually reads its own file, allocates/copies names, inserts
+vector/name-map entries and retains the selected descriptor while reading it.
+Its eMNA wire format, PiPL/descriptor classes, origin labels, thread token and
+owner tokens are explicitly models, not Adobe resource/layout/Boost/PID-birth
+proof. Three origin-labelled controls PASS; alias/writer-failure/changed-owner/
+changed-output native controls correctly REFUSE.17 focused tests PASS/no skips,
+including changed/unknown binary pre-launch refusal and timeout identity retention.
+Input/module/source digests agree before/after, and normal fixture exit is observed.
+No debugger transport or actual Adobe provenance was established by this model.
+
+| Task | Acceptance / evidence | State |
+| --- | --- | --- |
+| RF01 | Restore exact source/rules/current resource-only result | PASS baseline5a3b195; prior live evidence preserved |
+| RF02 | Resource-first bounded correlation without metadata sentinel | PASS model-only, exact fields/order/digests/refusals |
+| RF03 | Actual copied storage, descriptor insertion and retained lookup in owned control | PASS native model; not Adobe ABI |
+| RF04 | Distinguish labelled bundle/legacy/cache scenarios | PASS model; actual producer UNKNOWN |
+| RF05 | Negative ownership/copy/name/failure and replay/identity/budget controls | PASS17 focused tests and four native negative variants |
+| RF06 | Preserve strict old admission and refuse model-as-AE evidence | PASS old collector files unchanged; model rejected |
+| RF07 | Separate final native/claim/source-fidelity review | PASS for bounded preparatory result; lifetime/recovery UNKNOWN |
+| RF08 | Exact clean candidate regression and repository CI | Receipt separate; fixture checks do not replace host gates |
+| RF09 | Report, Git publication and preserved private Evidence | Receipt separate; no main merge/release |
+
+Next: independently verified original-file resource sites/registers/return scopes,
+bounded borrowed-name backing spans, resource-only candidate/reader sentinel,
+then actual resource-first debugger fixture with stable PID/birth/main-thread/
+image/stop budgets and safe detach. Only that collector/transport contract can
+admit a known-good startup observation. Continuous own startup writer→key remains
+UNKNOWN. Legal late context, conflicting readers/lifetime and partial recovery
+remain unproved. C1 PARTIAL; safe private append BLOCKED; C2 late-add NOT_RUN.
+The requested continuation did not authorize implementing an alternative product
+or treating model success as the late-call prerequisite.
+
+A subsequent supplied historical-main review was checked read-only: remote main
+cf338bc and docs-only bac8709→9a8b6de exist; the latter records preview/render
+success98seconds after the former left them pending. This timing is not a
+disproof, and absence of a tracked frame is not proof that private/user evidence
+never existed. The public main wording is not exact-current runtime certification.
+The call_once static-plugin lane does not alone prove all ML::LoadPlugins paths
+are one-shot; filters semantics and a legal repeat remain unestablished.
+No main edit, unsafe replay/filter trial or change of current research goal.
+
+Private receipts: build-ae-hot-loader/resource-contract-2026-10-10-5a3b195 and
+the exact source-bound resource-fixture directory recorded there. Historical
+Evidence and installed/retired bundles retained; no cleanup candidates.
+
 ## Resource-to-writer mechanism — 2026-10-10
 
 Rules11.1.0/source04b6068; clean baseline7b3e3dc, research branch.
