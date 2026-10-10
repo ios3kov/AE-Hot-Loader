@@ -1,13 +1,17 @@
 """Scope/refusal controls; only the explicit CLI launches an owned debugger."""
 import copy
+import contextlib
+import io
 from pathlib import Path
 import platform
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from experiments.resource_trace.fsref_ipc import Chain, build, ipc, compare
+from experiments.resource_trace.fsref_debug import preserve_debugger
 
 
 def event(phase,inv=1,parent=0,**kwargs):
@@ -92,6 +96,22 @@ class ChainTests(unittest.TestCase):
     def test_truncated_ipc_refused_before_exec(self):
         with self.assertRaisesRegex(ValueError,'FSREF_WIRE_LENGTH'):
             compare(Path('/not-launched'),Path('/not-read'),b'x'*79,Path('/not-written'))
+
+    def test_ambiguous_detach_keeps_debugger_input_open(self):
+        class OwnedDebugger:
+            pid=77
+            def __init__(self): self.stdin=io.BytesIO(); self.polls=0
+            def poll(self):
+                if self.stdin.closed: raise AssertionError('EOF while debugger still supervised')
+                if self.stdin.getvalue(): raise AssertionError('implicit quit sent')
+                self.polls+=1
+                return 0 if self.polls==3 else None
+        child=OwnedDebugger()
+        with tempfile.TemporaryDirectory(prefix='aehl-attention-model-') as directory:
+            with patch('experiments.resource_trace.fsref_debug.time.sleep'),contextlib.redirect_stdout(io.StringIO()):
+                result=preserve_debugger(child,Path(directory),'detach UNKNOWN')
+        self.assertFalse(result['cleanup_safe']); self.assertEqual(child.polls,3)
+        self.assertTrue(child.stdin.closed)
 
 
 class NativeIPCTests(unittest.TestCase):

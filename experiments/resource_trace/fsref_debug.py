@@ -188,6 +188,17 @@ def __lldb_init_module(debugger,_):
     debugger.HandleCommand('command script add -s asynchronous -f fsref_debug.command aehl-fsref-fixture')
 
 
+def preserve_debugger(child,output,reason):
+    # Keep stdin and the supervising process alive. Returning/destroying Popen
+    # could send EOF to LLDB and implicitly quit a still-attached debugger.
+    failure={'status':'ATTENTION','debugger_pid':child.pid,'reason':reason,'cleanup_safe':False}
+    if not (output/'attention.json').exists(): write_once(output/'attention.json',failure)
+    print('ATTENTION: owned debugger retained; no automatic quit or kill',flush=True)
+    while child.poll() is None: time.sleep(0.25)
+    child.stdin.close()
+    return failure
+
+
 def drive(profile,mode):
     profile=Path(profile); digest=hashlib.sha256(profile.read_bytes()).hexdigest(); record=admitted(profile,digest)
     output=profile.parent/('capture-'+mode); output.mkdir(mode=0o700)
@@ -200,18 +211,16 @@ def drive(profile,mode):
         child.stdin.write(('\n'.join(commands)+'\n').encode()); child.stdin.flush(); deadline=time.monotonic()+85
         while not (output/'result.json').exists():
             if time.monotonic()>deadline or child.poll() is not None:
-                failure={'status':'ATTENTION','debugger_pid':child.pid,'detach':'UNKNOWN','cleanup_safe':False}
-                write_once(output/'attention.json',failure); return failure
+                return preserve_debugger(child,output,'missing final receipt; detach UNKNOWN')
             if console.stat().st_size>1048576 and not (output/'cancel').exists():
                 write_once(output/'cancel',{'reason':'console budget'})
             time.sleep(0.2)
         result=json.loads((output/'result.json').read_text())
-        if not result.get('cleanup_safe'): return result
+        if not result.get('cleanup_safe'): return preserve_debugger(child,output,'detach not proven')
         child.stdin.write(b'quit\n'); child.stdin.flush()
         try: child.wait(timeout=10)
         except subprocess.TimeoutExpired:
-            write_once(output/'attention.json',{'status':'ATTENTION','debugger_pid':child.pid,'reason':'debugger quit'})
-            return {'status':'ATTENTION','cleanup_safe':False}
+            return preserve_debugger(child,output,'debugger quit did not finish')
         child.stdin.close(); result['debugger_exit_code']=child.returncode
     owned=result.get('owned_process')
     if owned:
