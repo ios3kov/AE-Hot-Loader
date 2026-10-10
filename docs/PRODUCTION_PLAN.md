@@ -5,7 +5,9 @@
 Own initialized prefill/reuse observation implemented; cross-exec comparison
 produced wrong file identity in reverse/creation-order controls. Previous narrow
 IPC receipts remain historical; raw IPC is BLOCKED as an AE source selector.
-Final clean-source native/regression/CI receipts pending. AE NOT_RUN;
+Clean a67341a ordinary + ASan/UBSan reproduce 43/86 wrong ordered identities;
+40 prefill calls and failed-call stale bytes observed, 10 focused tests PASS.
+Exact final regression/CI/archive receipts separate. AE NOT_RUN;
 C1 PARTIAL/private append BLOCKED/C2 NOT_RUN.
 [IN01–IN06 checkpoint](C1_FSREF_INITIALIZER_2026-10-10.md).
 

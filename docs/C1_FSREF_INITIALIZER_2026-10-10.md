@@ -10,11 +10,11 @@ foreign memory read or project/preferences change. C1 PARTIAL / C2 NOT_RUN.
 
 | ID | Observable requirement | Scope / status |
 | --- | --- | --- |
-| IN01 | Real CFURLGetFSRef: five fully initialized prefills, alignment classes 0/8 mod16, A/B same-content distinct-inode files, two repetitions | Actual native observation; final source receipt pending |
-| IN02 | Same owned output address reused for three successful A calls and one nonexistent-file call; preserve Boolean and bytes independently | Actual native observation; final source receipt pending |
-| IN03 | Reject stale generation, missing entry/return, failed call, expired scope and duplicate capture; accept legitimate repeated successful calls | MODEL_ONLY; final regression pending |
-| IN04 | Separate-process comparison in both directions and A→B / B→A creation orders, identical loaded system image UUIDs | OBSERVED_MISMATCH in development attempt; final source receipt pending |
-| IN05 | Warnings-as-errors, ordinary and ASan/UBSan execution, applicable regression, separate critical review, exact source/Evidence/publication | Pending |
+| IN01 | Real CFURLGetFSRef: five fully initialized prefills, alignment classes 0/8 mod16, A/B same-content distinct-inode files, two repetitions | PASS_OWNED_ONLY on clean a67341a, ordinary and ASan/UBSan |
+| IN02 | Same owned output address reused for three successful A calls and one nonexistent-file call; preserve Boolean and bytes independently | PASS_OWNED_ONLY on clean a67341a, ordinary and ASan/UBSan |
+| IN03 | Reject stale generation, missing entry/return, failed call, expired scope and duplicate capture; accept legitimate repeated successful calls | 9 pure model tests + 1 actual native test passed; final regression receipt separate |
+| IN04 | Separate-process comparison in both directions and A→B / B→A creation orders, identical loaded system image UUIDs | FAIL_FOR_SOURCE_SELECTOR on both clean native runs; observations retained |
+| IN05 | Warnings-as-errors, ordinary and ASan/UBSan execution, applicable regression, separate critical review, exact source/Evidence/publication | Native/compiler/review complete; exact final regression/CI/archive receipt separate |
 | IN06 | Decide natural AE output admission without substituting own results for live frame/initializer/source identity | BLOCKED; source selector and AE frame pairing not established |
 
 ## Experiment and interpretation
@@ -44,7 +44,7 @@ No raw FSRef field is decoded into an inode, pointer or private cache identifier
 
 ## New discrepancy and supersession
 
-Development attempt 2: all 40 successful matrix outputs have the correct semantic
+Both clean a67341a runs (and development attempt 2): all 40 successful matrix outputs have the correct semantic
 identity within their producer; outputs are identical within each file/alignment
 group across prefills. The failed URL call returns false and retains prior valid
 A bytes. Both facts require invocation/normal-return gating.
@@ -90,4 +90,15 @@ layout assumption is authorized by this checkpoint. Actual ASL producer→fork�
 allocation→read→PluginSupport copy and writer→installed key remain UNKNOWN.
 
 Private Evidence: `build-ae-hot-loader/fsref-initializer-2026-10-10-fac2124`.
-Final clean source, review, regression, CI and archive receipts remain separate.
+Final native/controller source: a67341a74681d93229b1679d77b1c75eda6c823f.
+Ordinary producer PID68748 and ASan/UBSan PID68749 both exit0, stderr empty;
+each has 40 matrix + 4 reuse calls, 43 successful outputs, 86 ordered comparisons,
+43 wrong BA identities and 23 legacy wrong twin matches. Source/binary/input
+pins and identical system image UUIDs verified. All own compiler warnings are
+errors; legacy deprecation suppression is local to the intentional control.
+Apple system code is not sanitizer-instrumented; write coverage, races and AE
+behavior are not certified. Separate final review corrects the IPC assumption,
+validates the five actual prefills and preserves future native-test error files.
+Original collectors/native helpers remain byte-identical to baseline.
+Exact final documentation candidate, regression/CI and archive receipts remain
+separate; a docs-only commit does not rerun or relabel these actual native runs.
