@@ -37,7 +37,7 @@ def run(target, directory, origin='bundle-resource', fault='none'):
     need(str(target) in _built and
          hashlib.sha256(target.read_bytes()).hexdigest() == _built[str(target)]['binary'] and
          source_hashes() == _built[str(target)]['sources'], 'fixture was not built here or has changed')
-    need(origin in ORIGINS and fault in ('none', 'alias', 'writer-failure', 'wrong-owner', 'read-name'), 'fixture variant')
+    need(origin in ORIGINS and fault in ('none', 'alias', 'writer-failure', 'wrong-owner', 'read-name', 'cross-reader', 'aba'), 'fixture variant')
     run_id = uuid.uuid4().hex
     name = 'AEHLR' + run_id[:12]
     payload = b'eMNA:' + name.encode('ascii') + b'\0'
@@ -60,7 +60,7 @@ def run(target, directory, origin='bundle-resource', fault='none'):
     need(len(output) <= 16384 and len(output.splitlines()) == 10, 'fixture output bounds')
     need(hashlib.sha256(target.read_bytes()).hexdigest() == module_sha and source_hashes() == sources and
          resource.read_bytes() == payload, 'fixture inputs changed')
-    profile = {'schema': 'AEHL-RESOURCE-FIXTURE-1', 'kind': 'owned-fixture',
+    profile = {'schema': 'AEHL-RESOURCE-FIXTURE-2', 'kind': 'owned-fixture',
                'run_id': run_id, 'pid': process.pid, 'thread': 1, 'origin': origin,
                'module_sha256': module_sha, 'payload_sha256': hashlib.sha256(payload).hexdigest(), 'match_name': name}
     trace = Trace(profile)

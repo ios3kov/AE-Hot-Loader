@@ -19,7 +19,7 @@ from experiments.resource_trace import core, fixture
 
 def profile():
     name = 'AEHLR0123456789ab'
-    return {'schema': 'AEHL-RESOURCE-FIXTURE-1', 'kind': 'owned-fixture',
+    return {'schema': 'AEHL-RESOURCE-FIXTURE-2', 'kind': 'owned-fixture',
             'run_id': 'a' * 32, 'pid': 123, 'thread': 1, 'origin': 'bundle-resource',
             'module_sha256': 'b' * 64,
             'payload_sha256': hashlib.sha256(b'eMNA:' + name.encode() + b'\0').hexdigest(), 'match_name': name}
@@ -30,8 +30,8 @@ def events():
     values = [
         (10, 'bundle-resource', p['module_sha256'], (b'eMNA:' + n.encode() + b'\0').hex()),
         (10, 20, 21, 22, n), (10, 20, 22, n),
-        (10, 20, 30, 31, 32, 22, 33, n), (30, 31, 32, 40, 33, n),
-        (30, 40, 6), (40, 0), (709, 50), (30, 31, 32, 40, 7), (709, 50, 0, 60, n)]
+        (10, 20, 30, 31, 32, 1, 22, 33, n), (30, 31, 32, 1, 40, 33, n),
+        (30, 40, 6), (40, 0), (709, 50), (30, 31, 32, 1, 40, 7), (709, 50, 0, 60, n)]
     return [{'run_id': p['run_id'], 'pid': p['pid'], 'thread': p['thread'], 'sequence': i,
              'role': role, 'values': dict(zip(core.FIELDS[role], row))}
             for i, (role, row) in enumerate(zip(core.ROLES, values))]
@@ -87,7 +87,7 @@ class ResourceTraceTests(unittest.TestCase):
                  (4,'descriptor',99), (4,'descriptor_owner',99), (4,'routine_owner',99),
                  (4,'target_storage',99), (5,'root',99), (5,'descriptor',99), (5,'index',8192),
                  (6,'root',99), (6,'status',1), (7,'key',77), (8,'descriptor',99),
-                 (8,'descriptor_owner',99), (8,'routine_owner',99), (8,'root',99), (8,'index',6),
+                 (8,'descriptor_owner',99), (8,'descriptor_generation',2), (8,'routine_owner',99), (8,'root',99), (8,'index',6),
                  (9,'key',77), (9,'function',99), (9,'status',1), (9,'output_storage',33),
                  (9,'name','AEHLRffffffffffff')]
         for i, field, value in cases:
@@ -155,6 +155,22 @@ class ResourceNativeFixtureTests(unittest.TestCase):
                 self.assertEqual(receipt['result']['status'], 'REFUSED')
                 self.assertTrue(receipt['process_exited'])
                 self.assertEqual(receipt['result']['failure_recovery'], 'UNKNOWN')
+
+    def test_same_name_twin_and_same_address_new_generation_refuse(self):
+        for fault in ('cross-reader', 'aba'):
+            with self.subTest(fault=fault):
+                receipt=fixture.run(self.target, self.directory, fault=fault)
+                self.assertEqual(receipt['result']['status'], 'REFUSED')
+                self.assertEqual(receipt['result']['accepted_events'], 8)
+                before, after = receipt['events'][4]['values'], receipt['events'][8]['values']
+                if fault == 'aba':
+                    for key in ('descriptor', 'descriptor_owner', 'routine_owner', 'root'):
+                        self.assertEqual(before[key], after[key])
+                    self.assertNotEqual(before['descriptor_generation'], after['descriptor_generation'])
+                else:
+                    self.assertNotEqual(before['descriptor'], after['descriptor'])
+                    self.assertNotEqual(before['root'], after['root'])
+                self.assertEqual(receipt['events'][4]['values']['name'], receipt['events'][9]['values']['name'])
 
     def test_unknown_executable_refused_before_launch(self):
         with tempfile.TemporaryDirectory(prefix='aehl-other-fixture-') as d:

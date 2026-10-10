@@ -8,6 +8,7 @@
 #include <iterator>
 #include <map>
 #include <memory>
+#include <new>
 #include <stdexcept>
 #include <string>
 #include <sstream>
@@ -64,7 +65,13 @@ void emit(const std::string& role, const Fields& fields) {
     std::cout << wire << '\n';
 }
 struct PiPLModel { std::vector<char> bytes; std::string name; };
-struct Descriptor { std::array<char, 32> name{}; std::shared_ptr<int> routine; };
+unsigned generation = 0;
+struct Descriptor {
+    std::array<char, 32> name{};
+    std::shared_ptr<int> routine;
+    unsigned epoch;
+    Descriptor() noexcept : epoch(++generation) {}
+};
 struct Registry {
     std::vector<std::shared_ptr<Descriptor>> records;
     std::map<std::string, std::shared_ptr<Descriptor>> names;
@@ -78,7 +85,8 @@ int main(int argc, char** argv) {
         run = argv[2]; module = argv[3]; origin = argv[4]; fault = argv[5];
         if (!hex(run, 32) || !hex(module, 64) ||
             (origin != "bundle-resource" && origin != "legacy-resource" && origin != "cache") ||
-            (fault != "none" && fault != "alias" && fault != "writer-failure" && fault != "wrong-owner" && fault != "read-name")) return 2;
+            (fault != "none" && fault != "alias" && fault != "writer-failure" && fault != "wrong-owner" &&
+             fault != "read-name" && fault != "cross-reader" && fault != "aba")) return 2;
         std::ifstream file(argv[1], std::ios::binary);
         std::vector<char> bytes;
         for (char c; file.get(c);) {
@@ -105,21 +113,39 @@ int main(int argc, char** argv) {
         const auto target = id(descriptor->name.data());
         emit("copy", {{"call",number(call)}, {"pipl",number(p)}, {"descriptor",number(d)},
              {"descriptor_owner",number(owner)}, {"routine_owner",number(routine)},
+             {"descriptor_generation",number(descriptor->epoch)},
              {"source_storage",number(source)}, {"target_storage",number(fault == "alias" ? source : target)}, {"name",json_text(descriptor->name.data())}});
         Registry registry; const auto root = id(&registry);
         emit("writer", {{"descriptor",number(d)}, {"descriptor_owner",number(owner)}, {"routine_owner",number(routine)},
+             {"descriptor_generation",number(descriptor->epoch)},
              {"root",number(root)}, {"target_storage",number(target)}, {"name",json_text(descriptor->name.data())}});
         registry.records.push_back(descriptor); registry.names.emplace(descriptor->name.data(), descriptor);
         emit("index", {{"descriptor",number(id(registry.records.at(0).get()))}, {"root",number(root)}, {"index","0"}});
         emit("writer_return", {{"root",number(root)}, {"status",fault == "writer-failure" ? "1" : "0"}});
         const auto function = id(reinterpret_cast<const void*>(&reader_probe));
         emit("reader_start", {{"key","703"}, {"function",number(function)}});
-        auto retained = registry.records.at(0);
-        if (registry.names.at(name).get() != retained.get()) return 2;
+        Registry other;
+        if (fault == "cross-reader") {
+            auto twin = std::make_shared<Descriptor>(); twin->routine = descriptor->routine;
+            std::memcpy(twin->name.data(), descriptor->name.data(), twin->name.size());
+            other.records.push_back(twin); other.names.emplace(name, twin);
+        }
+        if (fault == "aba") {
+            // End lifetime and reconstruct the SAME type/storage/control block.
+            // Address, name, routine and owner tokens match; generation differs.
+            auto saved = descriptor->routine;
+            descriptor->~Descriptor(); new (descriptor.get()) Descriptor();
+            descriptor->routine = saved;
+            std::memcpy(descriptor->name.data(), name.c_str(), name.size() + 1);
+        }
+        auto retained = fault == "cross-reader" ? other.records.at(0) : registry.records.at(0);
+        const auto& selected_registry = fault == "cross-reader" ? other : registry;
+        if (selected_registry.names.at(name).get() != retained.get()) return 2;
         emit("lookup", {{"descriptor",number(id(retained.get()))},
              // The fixture token denotes its initial owner, NOT a Boost ABI/control block.
              {"descriptor_owner",number(fault == "wrong-owner" ? owner + 1 : owner)},
-             {"routine_owner",number(id(retained->routine.get()))}, {"root",number(root)}, {"index","1"}});
+             {"routine_owner",number(id(retained->routine.get()))}, {"descriptor_generation",number(retained->epoch)},
+             {"root",number(fault == "cross-reader" ? id(&other) : root)}, {"index","1"}});
         std::array<char,32> output{};
         std::memcpy(output.data(), retained->name.data(), output.size());
         if (fault == "read-name") output[0] = 'X';

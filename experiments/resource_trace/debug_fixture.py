@@ -22,7 +22,7 @@ from experiments.startup_trace.lldb_collector import write_once
 def build(origin='bundle-resource', fault='none', bad_extent=False):
     need(platform.system() == 'Darwin' and platform.machine() == 'arm64', 'owned debugger fixture needs macOS arm64')
     need(origin in ('bundle-resource', 'legacy-resource', 'cache') and
-         fault in ('none', 'alias', 'writer-failure', 'wrong-owner', 'read-name') and
+         fault in ('none', 'alias', 'writer-failure', 'wrong-owner', 'read-name', 'cross-reader', 'aba') and
          type(bad_extent) is bool, 'fixture variant')
     source = clean_source(); before = hashes(); run = uuid.uuid4().hex
     directory = ROOT/'build-ae-hot-loader'/('resource-debug-' + run)
@@ -87,10 +87,11 @@ def drive(profile, digest):
     if owned:
         deadline = time.monotonic() + 10
         while True:
-            exists = subprocess.run(['ps', '-p', str(owned['pid']), '-o', 'pid='],
-                                    capture_output=True, text=True, timeout=5)
-            need(exists.returncode in (0, 1) and not exists.stderr, 'process absence query unavailable')
-            if not exists.stdout.strip(): break
+            # Signal zero queries existence; it does not deliver a signal or quit.
+            # A reused PID conservatively blocks absence rather than being touched.
+            try: os.kill(owned['pid'], 0)
+            except ProcessLookupError: break
+            except PermissionError: raise ValueError('process absence query unavailable')
             need(time.monotonic() < deadline, 'owned fixture remains; preserve it')
             time.sleep(0.1)
         result['process_absence'] = 'PASS'
@@ -103,7 +104,7 @@ def drive(profile, digest):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--origin', choices=('bundle-resource', 'legacy-resource', 'cache'), default='bundle-resource')
-    parser.add_argument('--fault', choices=('none', 'alias', 'writer-failure', 'wrong-owner', 'read-name'), default='none')
+    parser.add_argument('--fault', choices=('none', 'alias', 'writer-failure', 'wrong-owner', 'read-name', 'cross-reader', 'aba'), default='none')
     parser.add_argument('--bad-extent', action='store_true')
     args = parser.parse_args(); profile, digest = build(args.origin, args.fault, args.bad_extent)
     print(json.dumps({'profile': str(profile), 'sha256': digest}), flush=True)

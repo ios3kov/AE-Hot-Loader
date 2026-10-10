@@ -4,7 +4,7 @@ This is the first implementation boundary of the resource-first collector,
 separate from the metadata-entry collector in `../startup_trace`. It does not
 modify that collector's strict identity equality, sites or transport admission.
 
-`core.py` accepts only `AEHL-RESOURCE-FIXTURE-1 / owned-fixture` transcripts.
+`core.py` accepts only `AEHL-RESOURCE-FIXTURE-2 / owned-fixture` transcripts.
 It correlates ten ordered events: producer, PiPL model, getter, copied descriptor
 name, writer, index, writer return, reader start, retained lookup, reader return.
 One run/PID/main-thread token is fixed; input bytes and compiled module digests
@@ -84,3 +84,10 @@ provenance, installed keys or late registration. The old metadata collector and
 its admission are unchanged; this collector cannot admit AE at all.
 LLDB API references: [SBProcess](https://lldb.llvm.org/python_api/lldb.SBProcess.html)
 and [SBMemoryRegionInfo](https://lldb.llvm.org/python_api/lldb.SBMemoryRegionInfo.html).
+
+Schema2 adds a fixture constructor-generation witness. Cross-reader controls use
+a separate same-name descriptor/registry; ABA controls end and reconstruct the
+same object type at exactly the same address, preserving name/routine/owner
+tokens but changing generation. Both must refuse before joining the reader.
+Generation is instrumented fixture evidence, not an inferred Adobe lifetime.
+Old schema1 receipts remain historical and are not reinterpreted as schema2.

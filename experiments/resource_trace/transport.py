@@ -108,7 +108,7 @@ def observe(debugger, profile_path, expected, output):
                 return row
             row = json.loads(raw, object_pairs_hook=unique_keys)
             if trace is None:
-                trace = Trace({'schema': 'AEHL-RESOURCE-FIXTURE-1', 'kind': 'owned-fixture',
+                trace = Trace({'schema': 'AEHL-RESOURCE-FIXTURE-2', 'kind': 'owned-fixture',
                                'run_id': record['run_id'], 'pid': observed['pid'], 'thread': thread_id,
                                'origin': record['origin'], 'module_sha256': pin['sha256'],
                                'payload_sha256': record['payload_sha256'], 'match_name': record['match_name']})

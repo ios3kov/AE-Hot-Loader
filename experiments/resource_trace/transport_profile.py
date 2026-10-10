@@ -64,7 +64,7 @@ def validate(record):
     need(raw == b'eMNA:' + record['match_name'].encode() + b'\0' and digest(record['payload_sha256']) and
          hashlib.sha256(raw).hexdigest() == record['payload_sha256'], 'resource changed')
     need(record['origin'] in ('bundle-resource', 'legacy-resource', 'cache') and
-         record['fault'] in ('none', 'alias', 'writer-failure', 'wrong-owner', 'read-name'), 'fixture variant')
+         record['fault'] in ('none', 'alias', 'writer-failure', 'wrong-owner', 'read-name', 'cross-reader', 'aba'), 'fixture variant')
     return record
 
 

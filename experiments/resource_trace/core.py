@@ -16,14 +16,14 @@ FIELDS = {
     'producer': ('call', 'origin', 'module_sha256', 'payload_hex'),
     'pipl': ('call', 'pipl', 'pipl_owner', 'source_storage', 'name'),
     'getter': ('call', 'pipl', 'source_storage', 'name'),
-    'copy': ('call', 'pipl', 'descriptor', 'descriptor_owner', 'routine_owner',
+    'copy': ('call', 'pipl', 'descriptor', 'descriptor_owner', 'routine_owner', 'descriptor_generation',
              'source_storage', 'target_storage', 'name'),
-    'writer': ('descriptor', 'descriptor_owner', 'routine_owner', 'root',
+    'writer': ('descriptor', 'descriptor_owner', 'routine_owner', 'descriptor_generation', 'root',
                'target_storage', 'name'),
     'index': ('descriptor', 'root', 'index'),
     'writer_return': ('root', 'status'),
     'reader_start': ('key', 'function'),
-    'lookup': ('descriptor', 'descriptor_owner', 'routine_owner', 'root', 'index'),
+    'lookup': ('descriptor', 'descriptor_owner', 'routine_owner', 'descriptor_generation', 'root', 'index'),
     'reader_return': ('key', 'function', 'status', 'output_storage', 'name'),
 }
 ROLES = tuple(FIELDS)
@@ -48,7 +48,7 @@ class Trace:
         need(type(profile) is dict and set(profile) == {
             'schema', 'kind', 'run_id', 'pid', 'thread', 'origin',
             'module_sha256', 'payload_sha256', 'match_name'}, 'profile fields')
-        need(profile['schema'] == 'AEHL-RESOURCE-FIXTURE-1' and
+        need(profile['schema'] == 'AEHL-RESOURCE-FIXTURE-2' and
              profile['kind'] == 'owned-fixture', 'AE resource observation is not admitted')
         need(type(profile['run_id']) is str and
              re.fullmatch('[0-9a-f]{32}', profile['run_id']) is not None, 'run identity')
@@ -110,9 +110,9 @@ class Trace:
         elif role == 'copy':
             self._same(v, b, ('call', 'pipl', 'source_storage'))
             need(v['source_storage'] != v['target_storage'], 'copy was replaced by source alias')
-            b.update({k: v[k] for k in ('descriptor', 'descriptor_owner', 'routine_owner', 'target_storage')})
+            b.update({k: v[k] for k in ('descriptor', 'descriptor_owner', 'routine_owner', 'descriptor_generation', 'target_storage')})
         elif role == 'writer':
-            self._same(v, b, ('descriptor', 'descriptor_owner', 'routine_owner', 'target_storage'))
+            self._same(v, b, ('descriptor', 'descriptor_owner', 'routine_owner', 'descriptor_generation', 'target_storage'))
             b['root'] = v['root']
         elif role == 'index':
             self._same(v, b, ('descriptor', 'root'))
@@ -126,7 +126,7 @@ class Trace:
             need(v['key'] == b['index'] + 703, 'selected index/key conversion')
             b.update({k: v[k] for k in ('key', 'function')})
         elif role == 'lookup':
-            self._same(v, b, ('descriptor', 'descriptor_owner', 'routine_owner', 'root'))
+            self._same(v, b, ('descriptor', 'descriptor_owner', 'routine_owner', 'descriptor_generation', 'root'))
             need(v['index'] == b['index'] + 1, 'reader index differs')
         elif role == 'reader_return':
             self._same(v, b, ('key', 'function'))
