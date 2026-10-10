@@ -3,15 +3,17 @@
 Native model evidence is intentionally rejected by the existing AE transport gate.
 It does not use Adobe layouts, memory, modules, suites or registration calls.
 """
-import copy
 import hashlib
 import json
 from pathlib import Path
 import shutil
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
 
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 from experiments.resource_trace import core, fixture
 
 
@@ -184,7 +186,6 @@ class ResourceNativeFixtureTests(unittest.TestCase):
 
     def test_fixture_does_not_satisfy_existing_debugger_admission(self):
         import importlib.util
-        import sys
         root=Path(__file__).resolve().parents[1]
         sys.path.insert(0, str(root/'experiments/startup_trace'))
         spec=importlib.util.spec_from_file_location('resource_existing_profile', root/'experiments/startup_trace/profile.py')
