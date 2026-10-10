@@ -6,7 +6,7 @@ Adopted on 2026-10-09 at the user's explicit migration request:
 AE-Development-Rules **11.1.0**, tag `v11.1.0`, peeled source
 `04b606845e0f73ab28b9807bb45682eae4d6ce34`.
 See [current owned resource transport and reconciliation](docs/C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#owned-resource-debugger-transport--2026-10-10).
-Latest bounded block: [source identity and ASL fork producer](docs/C1_SOURCE_ANCHOR_2026-10-10.md).
+Latest bounded block: [owned FSRef IPC and nested capture](docs/C1_FSREF_IPC_2026-10-10.md).
 Previous v11.0.1 and v11.0.0 adoptions remain historical.
 Previous v8.0.0 adoption and Evidence remain historical and unchanged.
 Before a significant step, select risk/component/delivery rules and relevant

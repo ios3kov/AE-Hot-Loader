@@ -1,5 +1,21 @@
 # Resource-first correlation preparation
 
+## FSRef between processes and through the owned debugger
+
+`fsref_ipc.py /absolute/fresh/output` builds an owned Carbon emitter/comparator;
+each is initialized through exec. A's reference is accepted and a different file
+with identical bytes is rejected. `--sanitizers` enables ASan/UBSan.
+
+`python3 -m experiments.resource_trace.fsref_debug` additionally requires clean
+source and launches only its own fixture through LLDB. An actual nested twin
+read and actual C++ unwind validate scope separation; a modified captured journal
+must refuse cross-invocation correlation. Only typed initialized own spans and
+A's copy are captured. No expression/attach/Adobe operation. Process/debugger
+timeouts preserve the unknown outcome for attention instead of killing it.
+
+These controls establish the exercised own process behavior, not permission or
+lifetime for ASL's stack output. [Checkpoint](../../docs/C1_FSREF_IPC_2026-10-10.md).
+
 ## Source identity controls
 
 `source_anchor.py` builds two owned native controls: a cooperative child with real

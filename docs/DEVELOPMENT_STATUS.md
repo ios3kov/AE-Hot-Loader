@@ -2652,3 +2652,9 @@ procedure; PICA ordinary-effect publication remains unverified, not disproved.
 No product loader, installed Agent/shell/panel, third-party plugin, user project,
 preferences or main changed. No merge, release, installation, restart or live
 Adobe call. Proprietary inputs and raw dumps remain private, outside Git.
+# Owned FSRef IPC and nested capture preparation — 2026-10-10
+
+Exec IPC, typed own-output debugger capture and nested/unwind controls prepared.
+Clean-source actual debugger/IPC and final regression receipts pending. Actual
+ASL output admission remains BLOCKED; no AE operation. C1 PARTIAL/C2 NOT_RUN.
+[Single FI01–FI08 checkpoint](C1_FSREF_IPC_2026-10-10.md).
