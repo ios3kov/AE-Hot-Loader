@@ -83,6 +83,7 @@ def observe(debugger,profile,digest,mode,output):
         admitted(profile,digest)
         write_once(output/'launch-intent.json',{'executable':pin['path'],'state':'OUTCOME_UNKNOWN'})
         process=target.Launch(launch,error)
+        report['launch_outcome']={'error':str(error),'pid':int(process.GetProcessID()),'state':int(process.GetState())}
         need(error.Success() and process.IsValid() and process.GetProcessID()>0,'owned launch refused')
         observed=native.common.process_identity(int(process.GetProcessID()))
         need(observed['executable']==pin['path'],'launched executable differs')
@@ -102,6 +103,13 @@ def observe(debugger,profile,digest,mode,output):
             last=stop; snapshot=capture(process,lldb)
             try: selected,_=select(snapshot,lldb.eStateStopped,{bp.GetID():'probe'},thread_id)
             except ValueError as exc:
+                # Bounded debugger metadata of this owned fixture, no byte reads.
+                for item in snapshot['threads']:
+                    if item['none']: continue
+                    stopped=process.GetThreadAtIndex(item['index']); top=stopped.GetFrameAtIndex(0)
+                    item['owned_exception_metadata']={'pc':int(top.GetPC()),'function':top.GetFunctionName(),
+                        'reason_words':[int(stopped.GetStopReasonDataAtIndex(i)) for i in
+                                        range(min(stopped.GetStopReasonDataCount(),3))]}
                 snapshot['refusal']=str(exc); write_once(output/'unexpected-stop.json',snapshot); raise
             identity(); same_stop(process,stop,lldb)
             thread=process.GetThreadAtIndex(selected); frame=thread.GetFrameAtIndex(0); pc=frame.GetPCAddress()
@@ -213,12 +221,14 @@ def drive(profile,mode):
             except ProcessLookupError: break
             need(time.monotonic()<deadline,'owned process still present; preserve'); time.sleep(0.1)
         result['process_absence']='PASS'
-        stdout=(output/'fixture.stdout').read_bytes(); stderr=(output/'fixture.stderr').read_bytes()
-        need(stderr==b'' and json.loads(stdout)=={'pid':owned['pid'],'status':'OWNED_COMPLETE'},'owned fixture did not complete normally')
+        if result['status'] in ('OWNED_NESTED_FSREF_OBSERVED','OWNED_UNWIND_OBSERVED'):
+            stdout=(output/'fixture.stdout').read_bytes(); stderr=(output/'fixture.stderr').read_bytes()
+            need(stderr==b'' and stdout and json.loads(stdout)=={'pid':owned['pid'],'status':'OWNED_COMPLETE'},
+                 'owned fixture did not complete normally')
     admitted(profile,digest); write_once(output/'supervisor.json',result)
     expected='OWNED_NESTED_FSREF_OBSERVED' if mode=='nested' else 'OWNED_UNWIND_OBSERVED'
     need(result['status']==expected and result['cleanup_safe'] and result.get('process_absence')=='PASS' and
-         result['debugger_exit_code']==0,'intended debugger control not observed')
+         result['debugger_exit_code']==0,'intended debugger control not observed: '+str(result.get('reason')))
     return result
 
 
