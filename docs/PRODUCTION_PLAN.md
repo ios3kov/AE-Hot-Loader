@@ -2,11 +2,14 @@
 
 ## Owned resource debugger transport — 2026-10-10
 
-Separate stop-scoped read/LLDB fixture collector implemented; source-bound actual
-transport checks pending.18 original bodies/13 candidate points freshly verified
-file-only. Adobe borrowed strings/site/load-context admission remains BLOCKED;
+Actual source112485c:10 owned LLDB controls PASS (3complete traces/7intended
+refusals), detach and independent absence confirmed for all. Twin/ABA generations
+cannot join the wrong reader; unrelated debugger refusal cannot count as PASS.
+12borrow/18model/4oracle tests PASS.18 original bodies/13 candidate sites refreshed
+file-only. Old metadata collector unchanged. Exact regression/CI receipts separate.
+Actual Adobe borrow/load-context/invocation/site admission remains BLOCKED;
 C1 PARTIAL/C2 NOT_RUN. No AE operation.
-[RT01–RT08 acceptance and scope](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#owned-resource-debugger-transport--2026-10-10).
+[RT01–RT08 results, corrections and next dependency](C1_EFFECT_SUITE_READER_BRIDGE_2026-10-04.md#owned-resource-debugger-transport--2026-10-10).
 
 ## Resource-first correlation preparation — 2026-10-10
 

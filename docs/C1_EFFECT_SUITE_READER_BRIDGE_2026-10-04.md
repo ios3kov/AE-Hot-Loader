@@ -20,34 +20,92 @@ and does not become a live registration/apply/render result.
 
 ## Owned resource debugger transport — 2026-10-10
 
-Rules11.1.0/source04b6068; baselineef07547; Development diagnostic scope.
-Added a separate actual LLDB collector and stop-scoped byte-copy guard for the
-owned resource fixture. Target admission is restricted to a freshly built private
-arm64 fixture executable, exact source/image/site/resource digests, fresh PID/birth,
-OS main-thread assertion, isolated owned breakpoint and unchanged stop/mapping.
-No expressions, attach, arbitrary memory search, Adobe target or private calls.
-Returned bytes are copies of a reviewed immutable fixture-call buffer; mapping
-alone is not ownership proof. The fixture remains a model of Adobe dataflow.
+Rules11.1.0/source04b6068; clean baselineef07547; same research branch.
+Development scope: actual LLDB capture of an owned immutable wire buffer; no
+Adobe install/launch/attach/memory read/private call/Apply/render. Actual controls
+executed on clean native/collector source112485c2386c206fe5a2cae4309cc8e4c67831bc.
+Later report edits do not relabel those runtime bytes as another source's run.
 
-RT01 refreshes18 original-file bodies and13 candidate observation points, covering
-bundle/URL/module/cache paths, PiPL getter, bounded name copy/result, writer/index
-and retained reader. These are file-verified candidates, **not admitted Adobe
-sites**: own-object filtering, return pairing, actual backing spans and lifetime
-remain required. Cache labels are still fixture labels, not observed AE provenance.
+### Implemented and observed
 
-RT02–RT06 acceptance: reject bad/overflowing extents before read; reject foreign /
-stale process or stop, unreadable/executable/crossing mapping, short reads and
-mapping changes; capture ten events through actual LLDB; refuse alias/writer failure
-and bad extent controls; remove own breakpoints, detach and independently confirm
-fixture absence. Preserve old metadata collector bytes/admission. Actual transport
-checks are pending for the clean candidate; standalone/model PASS is insufficient.
-RT07–RT08 require separate review, regression, report and source-bound Evidence.
+Added a separate collector restricted to a freshly built private arm64 fixture.
+It verifies source/image/site/resource digests, fresh PID/birth/executable,
+OS main-thread assertion, isolated owned breakpoint and unchanged stop epoch.
+The exact stopped probe supplies an immutable string's address and byte extent;
+read guards check uint64 overflow,4KiB diagnostic cap, complete non-executable
+readable mapping, exact byte count/error and unchanged mapping/stop after access.
+Returned bytes are copies; readable mapping alone is not an ownership proof.
+No expressions, attach, broad memory search, host calls or arbitrary target.
 
-C1 PARTIAL; safe private append BLOCKED; late-add/C2 NOT_RUN. No AE launch/install /
-memory read/Apply/render in this source preparation. Next admission depends on
-actual transport result and an independently reviewed Adobe borrow/load-context
-profile; it cannot be inferred from the fixture. Private Evidence location:
-`build-ae-hot-loader/resource-transport-2026-10-10-ef07547`.
+**Ten actual LLDB controls PASS on source112485c:** three complete10-event traces
+(bundle/legacy/cache labels), plus seven intended refusals: cross-reader twin,
+ABA same-address new generation, writer failure, excessive extent, source alias,
+changed owner and changed output. Every control has safe breakpoint cleanup /
+detach and independent PID-absence evidence. Oversized4097-byte read refuses
+before any process-memory read. Cache-labelled completion cannot claim an actual
+current resource operation. Producer labels and copied fields remain fixture
+instrumentation, not independently observed Adobe producers/copy operands.
+
+Schema2 adds a constructor-generation witness. The twin has identical name but
+a different descriptor/root; ABA destroys and reconstructs the same descriptor
+at exactly the same address with the same name/routine/owner tokens, but a new
+generation. Both refuse at lookup after8 accepted events. Fixture generation is
+not a recipe for inferring lifetime of an uninstrumented Adobe object. All fixture
+phases are main-thread; an actual AE producer may use another thread. Only our
+AEGP observer calls must be confined to main-thread callbacks.
+
+### Corrected defects; rejected observations retained
+
+- First sandboxed run exited before any probe/read; target absence confirmed.
+  The supervisor's `ps` call was denied; existence-only signal-zero query replaces
+  it. The successful actual controls use the authorized owned debugger runtime.
+- Twin fixture self-check originally stopped before emitting the cross-reader;
+  selected-registry lookup fixed, original failing test retained.
+- An unexpected startup SIGSTOP was safely refused, but the wrapper initially
+  accepted any refusal as a negative PASS. Corrected oracle now requires exact
+  reason/phase/read count; unrelated refusal never qualifies. Four focused oracle
+  tests PASS. Added unexpected-stop metadata journal.
+- Removed the redundant launch-entry-stop request: the fixture probe is already
+  armed before launch. Unknown stops continue to refuse, not auto-resume.
+- Original-file inventory initially used the runtime UUID field against an
+  `arm64_uuid` pin; corrected schema lookup, failure receipt retained.
+- An earlier aggregate run's Python627 tests passed, then its source guard
+  correctly blocked remaining stages after source changed during repairs. That
+  partial run is not the final candidate's regression.
+
+| Task | Observable acceptance / evidence | State |
+| --- | --- | --- |
+| RT01 | Refresh original files and candidate instruction sites | PASS_FILE_ONLY18 bodies/13 candidates; live site admission BLOCKED |
+| RT02 | Stop-scoped bounds/process/mapping/read guards | PASS12 focused tests; actual oversized request reads0bytes |
+| RT03 | Genuine debugger capture with PID/birth/main-thread/image/site | PASS3 complete actual10-event traces |
+| RT04 | Intended negative observations, no unrelated-refusal PASS | PASS7 actual controls;18 model +4 oracle tests |
+| RT05 | Own breakpoint removal, detach and independent absence | PASS10 actual runs; no force termination |
+| RT06 | Preserve metadata collector and reject fixture-as-AE evidence | PASS old collector byte-identical; AE target not admitted |
+| RT07 | Separate native/source/claim review, aggregate regression/scanner | Bounded review PASS; exact regression/CI receipts separate |
+| RT08 | Report, ordinary branch publication, private Evidence preservation | Source-bound receipts separate; no main merge/release |
+
+### What still blocks actual AE tracing
+
+Fresh file-only points cover bundle/URL/module/cache producer candidates, PiPL
+getter,32-byte copy/result, writer/index and retained lookup. They are **not an
+admitted Adobe capture profile**. Before launch, establish own-object filtering,
+invocation/parent and return/unwind pairing, actual source-buffer lengths/backing
+owners and borrow lifetimes, legitimate thread transitions and acquired public
+reader/output boundaries. One scalar owner/address/name match cannot create an
+edge. The public installed key must come from enumeration, not private arithmetic.
+The supplied independent review reinforced these requirements; its pinned-repo /
+SDK claims were not relabelled as our live Adobe observation.
+
+Next is the narrowly scoped original-file contract for producer→PiPL→temporary
+name→copy destination and its own startup/reader sentinel. After admission, one
+known-good startup trace can close writer↔reader. Late context, conflicting render
+readers/nested module lifetime and partial-failure recovery remain separate.
+C1 PARTIAL; safe private append BLOCKED; C2/late-add NOT_RUN.
+
+Private Evidence: `build-ae-hot-loader/resource-transport-2026-10-10-ef07547`;
+exact ten run identities/source/image/profile/receipt hashes in actual-controls.json.
+Original rejected runs, standalone/model and previous archives remain preserved.
+No cleanup candidates or installed/foreign state changed.
 
 ## Resource-first correlation preparation — 2026-10-10
 
