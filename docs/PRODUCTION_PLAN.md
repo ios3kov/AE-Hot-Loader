@@ -2,8 +2,9 @@
 
 ## Owned FSRef IPC and nested capture — 2026-10-10
 
-FI01–FI07: independently initialized processes, actual own debugger/nested/
-unwind controls, source/Evidence/review closure. FI08 remains actual ASL output
+FI01–FI06: clean e8ae60e ordinary and ASan/UBSan IPC/debugger/nested/unwind
+controls PASS_OWNED_ONLY. FI07 exact source/Evidence/review closure separate;
+prior owned exception cause UNKNOWN. FI08 remains actual ASL output
 admission; fixture success cannot replace its initializer/frame/return contract.
 C1 PARTIAL/private append BLOCKED/C2 NOT_RUN; no AE operation.
 [Single FI01–FI08 checkpoint](C1_FSREF_IPC_2026-10-10.md).

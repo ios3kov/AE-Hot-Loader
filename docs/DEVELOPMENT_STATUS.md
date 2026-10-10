@@ -1,5 +1,14 @@
 # AE Hot Loader — current development status
 
+## Owned FSRef IPC and nested capture — 2026-10-10
+
+Clean e8ae60e ordinary and ASan/UBSan: exec IPC and4actual LLDB controls PASS;
+same-content twin differs, nested chain/replay refusal and real unwind verified.
+Detach/normal completion/absence PASS; prior owned exception cause UNKNOWN.
+Final candidate regression/CI/archive separate. ASL output admission BLOCKED;
+no AE operation. C1 PARTIAL/private append BLOCKED/C2 NOT_RUN.
+[Single FI01–FI08 checkpoint](C1_FSREF_IPC_2026-10-10.md).
+
 ## Source anchor and concrete ASL producer — 2026-10-10
 
 Owned kernel-source controls distinguish actual dup2 twin and same-inode byte
@@ -2652,9 +2661,3 @@ procedure; PICA ordinary-effect publication remains unverified, not disproved.
 No product loader, installed Agent/shell/panel, third-party plugin, user project,
 preferences or main changed. No merge, release, installation, restart or live
 Adobe call. Proprietary inputs and raw dumps remain private, outside Git.
-# Owned FSRef IPC and nested capture preparation — 2026-10-10
-
-Exec IPC, typed own-output debugger capture and nested/unwind controls prepared.
-Clean-source actual debugger/IPC and final regression receipts pending. Actual
-ASL output admission remains BLOCKED; no AE operation. C1 PARTIAL/C2 NOT_RUN.
-[Single FI01–FI08 checkpoint](C1_FSREF_IPC_2026-10-10.md).
